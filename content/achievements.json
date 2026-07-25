@@ -1,0 +1,202 @@
+{
+  "achievements": [
+    {
+      "id": "first_blood",
+      "icon": "swords",
+      "rarity": "common",
+      "condition": { "type": "counter_gte", "key": "duels_won", "value": 1 },
+      "name": { "en": "First Blood", "es": "Primera Sangre" },
+      "description": {
+        "en": "Win your first duel.",
+        "es": "Gana tu primer duelo."
+      }
+    },
+    {
+      "id": "duelist",
+      "icon": "swords",
+      "rarity": "uncommon",
+      "condition": { "type": "counter_gte", "key": "duels_won", "value": 5 },
+      "name": { "en": "Duelist", "es": "Duelista" },
+      "description": {
+        "en": "Win five duels in a single life.",
+        "es": "Gana cinco duelos en una sola vida."
+      }
+    },
+    {
+      "id": "untouchable",
+      "icon": "shield",
+      "rarity": "rare",
+      "condition": { "type": "counter_gte", "key": "duels_won", "value": 10 },
+      "name": { "en": "Untouchable", "es": "Intocable" },
+      "description": {
+        "en": "Win ten duels without dying.",
+        "es": "Gana diez duelos sin morir."
+      }
+    },
+    {
+      "id": "deep_pockets",
+      "icon": "coins",
+      "rarity": "uncommon",
+      "condition": { "type": "gold_gte", "value": 500 },
+      "name": { "en": "Deep Pockets", "es": "Bolsillos Profundos" },
+      "description": {
+        "en": "Hold 500 gold at once.",
+        "es": "Ten 500 de oro a la vez."
+      }
+    },
+    {
+      "id": "merchant_prince",
+      "icon": "coins",
+      "rarity": "rare",
+      "condition": { "type": "gold_gte", "value": 2000 },
+      "name": { "en": "Merchant Prince", "es": "Príncipe Mercader" },
+      "description": {
+        "en": "Hold 2000 gold at once.",
+        "es": "Ten 2000 de oro a la vez."
+      }
+    },
+    {
+      "id": "renowned",
+      "icon": "star",
+      "rarity": "uncommon",
+      "condition": { "type": "fame_gte", "value": 50 },
+      "name": { "en": "Renowned", "es": "Renombrado" },
+      "description": {
+        "en": "Reach 50 fame.",
+        "es": "Alcanza 50 de fama."
+      }
+    },
+    {
+      "id": "legend",
+      "icon": "crown",
+      "rarity": "epic",
+      "condition": { "type": "fame_gte", "value": 150 },
+      "name": { "en": "Living Legend", "es": "Leyenda Viviente" },
+      "description": {
+        "en": "Reach 150 fame in a single life.",
+        "es": "Alcanza 150 de fama en una sola vida."
+      }
+    },
+    {
+      "id": "iron_will",
+      "icon": "dumbbell",
+      "rarity": "rare",
+      "condition": { "type": "stat_gte", "stat": "strength", "value": 25 },
+      "name": { "en": "Iron Will", "es": "Voluntad de Hierro" },
+      "description": {
+        "en": "Reach 25 strength.",
+        "es": "Alcanza 25 de fuerza."
+      }
+    },
+    {
+      "id": "silver_tongue",
+      "icon": "message-circle",
+      "rarity": "rare",
+      "condition": { "type": "stat_gte", "stat": "charisma", "value": 25 },
+      "name": { "en": "Silver Tongue", "es": "Lengua de Plata" },
+      "description": {
+        "en": "Reach 25 charisma.",
+        "es": "Alcanza 25 de carisma."
+      }
+    },
+    {
+      "id": "archmage",
+      "icon": "sparkles",
+      "rarity": "epic",
+      "condition": { "type": "stat_gte", "stat": "intelligence", "value": 30 },
+      "name": { "en": "Archmage", "es": "Archimago" },
+      "description": {
+        "en": "Reach 30 intelligence.",
+        "es": "Alcanza 30 de inteligencia."
+      }
+    },
+    {
+      "id": "survivor",
+      "icon": "heart-pulse",
+      "rarity": "uncommon",
+      "condition": { "type": "age_gte", "value": 40 },
+      "name": { "en": "Survivor", "es": "Superviviente" },
+      "description": {
+        "en": "Live to age 40.",
+        "es": "Vive hasta los 40 años."
+      }
+    },
+    {
+      "id": "elder",
+      "icon": "hourglass",
+      "rarity": "epic",
+      "condition": { "type": "age_gte", "value": 60 },
+      "name": { "en": "Grey Elder", "es": "Anciano Gris" },
+      "description": {
+        "en": "Live to age 60.",
+        "es": "Vive hasta los 60 años."
+      }
+    },
+    {
+      "id": "retired_hero",
+      "icon": "tent",
+      "rarity": "rare",
+      "condition": { "type": "ending", "value": "retired" },
+      "name": { "en": "Quiet Retirement", "es": "Retiro Tranquilo" },
+      "description": {
+        "en": "Retire on your own terms.",
+        "es": "Retírate en tus propios términos."
+      }
+    },
+    {
+      "id": "glorious_end",
+      "icon": "flame",
+      "rarity": "legendary",
+      "condition": { "type": "score_gte", "value": 5000 },
+      "name": { "en": "Glorious End", "es": "Final Glorioso" },
+      "description": {
+        "en": "Finish a life with a score of 5000 or more.",
+        "es": "Termina una vida con una puntuación de 5000 o más."
+      }
+    },
+    {
+      "id": "faction_champion",
+      "icon": "flag",
+      "rarity": "epic",
+      "condition": { "type": "reputation_gte", "value": 60 },
+      "name": { "en": "Faction Champion", "es": "Campeón de Facción" },
+      "description": {
+        "en": "Reach 60 reputation with any faction.",
+        "es": "Alcanza 60 de reputación con cualquier facción."
+      }
+    },
+    {
+      "id": "outlaw",
+      "icon": "skull",
+      "rarity": "rare",
+      "condition": { "type": "reputation_lte", "value": -50 },
+      "name": { "en": "Wanted Outlaw", "es": "Forajido Buscado" },
+      "description": {
+        "en": "Drop to -50 reputation with any faction.",
+        "es": "Cae a -50 de reputación con cualquier facción."
+      }
+    },
+    {
+      "id": "collector",
+      "icon": "gem",
+      "rarity": "uncommon",
+      "condition": { "type": "rare_cards_gte", "value": 3 },
+      "name": { "en": "Card Collector", "es": "Coleccionista de Cartas" },
+      "description": {
+        "en": "Draw three or more rare-or-better cards in one life.",
+        "es": "Roba tres o más cartas raras o mejores en una vida."
+      }
+    },
+    {
+      "id": "lucky",
+      "icon": "clover",
+      "rarity": "epic",
+      "condition": { "type": "legendary_cards_gte", "value": 1 },
+      "name": { "en": "Touched by Fate", "es": "Tocado por el Destino" },
+      "description": {
+        "en": "Draw a legendary card.",
+        "es": "Roba una carta legendaria."
+      }
+    }
+  ]
+}

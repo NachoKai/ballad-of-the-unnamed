@@ -1,0 +1,118 @@
+[
+  {
+    "id": "court_audience",
+    "minAge": 20,
+    "maxAge": 99,
+    "weight": 8,
+    "narrative": {
+      "en": "The Crownguard grants you an audience. A misstep here echoes through every hall.",
+      "es": "La Guardia de la Corona te concede una audiencia. Un paso en falso aquí resuena en cada salón."
+    },
+    "choices": [
+      {
+        "id": "professional",
+        "label": { "en": "Speak with measured respect", "es": "Hablar con respeto medido" },
+        "tag": "Professional",
+        "rarity": "uncommon",
+        "statDeltas": { "charisma": 2, "intelligence": 1 },
+        "fameDelta": 4,
+        "reputationDelta": 6,
+        "reputationFaction": "crownguard",
+        "narrative": {
+          "en": "You leave with the court's cautious favor and a name worth watching.",
+          "es": "Salís con el favor cauteloso de la corte y un nombre digno de vigilar."
+        }
+      },
+      {
+        "id": "cocky",
+        "label": { "en": "Boast of your deeds", "es": "Alardear de tus hazañas" },
+        "tag": "Cocky",
+        "rarity": "rare",
+        "statDeltas": { "charisma": 4 },
+        "fameDelta": 8,
+        "reputationDelta": -4,
+        "reputationFaction": "crownguard",
+        "narrative": {
+          "en": "The commons love it; the nobles less so. Fame rises, favor cools.",
+          "es": "Al pueblo le encanta; a los nobles menos. La fama sube, el favor se enfría."
+        }
+      }
+    ]
+  },
+  {
+    "id": "court_intrigue",
+    "minAge": 24,
+    "maxAge": 99,
+    "weight": 7,
+    "narrative": {
+      "en": "A {npcRole} offers you gold to carry a lie into a rival's household.",
+      "es": "Un {npcRole} te ofrece oro por llevar una mentira a la casa de un rival."
+    },
+    "choices": [
+      {
+        "id": "refuse",
+        "label": { "en": "Refuse to be their knife", "es": "Negarte a ser su cuchillo" },
+        "tag": "Leader",
+        "rarity": "uncommon",
+        "statDeltas": { "charisma": 2, "constitution": 1 },
+        "reputationDelta": 5,
+        "reputationFaction": "crownguard",
+        "countersDelta": { "declined_offers": 1 },
+        "narrative": {
+          "en": "You will not be spent so cheaply. It costs you coin and wins you standing.",
+          "es": "No te dejás usar tan barato. Te cuesta monedas y te gana prestigio."
+        }
+      },
+      {
+        "id": "scheme",
+        "label": { "en": "Play both sides", "es": "Jugar a dos bandas" },
+        "tag": "Strategic",
+        "rarity": "volatile",
+        "statDeltas": { "intelligence": 7 },
+        "tradeoffDeltas": { "charisma": -3, "constitution": -2 },
+        "goldDelta": 180,
+        "narrative": {
+          "en": "You bleed both houses for coin. Brilliant, exhausting, and never quite safe again.",
+          "es": "Sacás oro de ambas casas. Brillante, agotador, y nunca del todo seguro otra vez."
+        }
+      }
+    ]
+  },
+  {
+    "id": "court_patron",
+    "minAge": 24,
+    "maxAge": 99,
+    "weight": 6,
+    "narrative": {
+      "en": "A wealthy patron offers a steady stipend in exchange for your public loyalty.",
+      "es": "Un mecenas adinerado ofrece un estipendio fijo a cambio de tu lealtad pública."
+    },
+    "choices": [
+      {
+        "id": "accept",
+        "label": { "en": "Accept the patronage", "es": "Aceptar el mecenazgo" },
+        "tag": "Professional",
+        "rarity": "common",
+        "statDeltas": { "charisma": 1 },
+        "goldDelta": 140,
+        "fameDelta": 3,
+        "narrative": {
+          "en": "Gold in hand, banner raised. Comfortable, if a little owned.",
+          "es": "Oro en mano, estandarte en alto. Cómodo, aunque un poco poseído."
+        }
+      },
+      {
+        "id": "independent",
+        "label": { "en": "Keep your independence", "es": "Conservar tu independencia" },
+        "tag": "Stoic",
+        "rarity": "uncommon",
+        "statDeltas": { "constitution": 2, "intelligence": 1 },
+        "countersDelta": { "declined_offers": 1 },
+        "narrative": {
+          "en": "No leash, no stipend. Your name stays entirely your own.",
+          "es": "Sin correa, sin estipendio. Tu nombre sigue siendo enteramente tuyo."
+        }
+      }
+    ]
+  }
+]

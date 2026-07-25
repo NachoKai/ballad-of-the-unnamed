@@ -1,0 +1,37 @@
+{
+  "npcRole": [
+    { "en": "merchant", "es": "mercader" },
+    { "en": "guard captain", "es": "capitán de la guardia" },
+    { "en": "hooded stranger", "es": "desconocido encapuchado" },
+    { "en": "traveling bard", "es": "bardo viajero" },
+    { "en": "grizzled mercenary", "es": "mercenario curtido" },
+    { "en": "temple acolyte", "es": "acólito del templo" },
+    { "en": "disgraced knight", "es": "caballero deshonrado" },
+    { "en": "fortune teller", "es": "adivina" }
+  ],
+  "npcName": [
+    { "en": "Halvard", "es": "Halvard" },
+    { "en": "Mira", "es": "Mira" },
+    { "en": "Osric", "es": "Osric" },
+    { "en": "Yelena", "es": "Yelena" },
+    { "en": "Bram", "es": "Bram" },
+    { "en": "Sable", "es": "Sable" },
+    { "en": "Corwin", "es": "Corwin" },
+    { "en": "Nadia", "es": "Nadia" }
+  ],
+  "locationName": [
+    { "en": "the tavern's back room", "es": "el reservado de la taberna" },
+    { "en": "the old bridge", "es": "el puente viejo" },
+    { "en": "the market square", "es": "la plaza del mercado" },
+    { "en": "a rain-slick alley", "es": "un callejón resbaladizo por la lluvia" },
+    { "en": "the guildhall steps", "es": "las escaleras del gremio" },
+    { "en": "a moonlit crossroads", "es": "una encrucijada bajo la luna" }
+  ],
+  "creatureName": [
+    { "en": "a mangy dire-wolf", "es": "un lobo terrible y sarnoso" },
+    { "en": "a marsh troll", "es": "un troll de los pantanos" },
+    { "en": "a pack of goblins", "es": "una manada de goblins" },
+    { "en": "a cave wyrm", "es": "un sierpe de caverna" },
+    { "en": "a cursed revenant", "es": "un renaciente maldito" }
+  ]
+}

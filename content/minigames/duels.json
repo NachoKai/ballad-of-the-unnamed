@@ -1,0 +1,127 @@
+[
+  {
+    "id": "duel_final_blow",
+    "type": "minigame",
+    "subtype": "duel_strike",
+    "minAge": 18,
+    "maxAge": 99,
+    "weight": 7,
+    "primaryStat": "strength",
+    "narrative": {
+      "en": "A duel to first blood. Your opponent circles, guard tight. One clean strike ends it.",
+      "es": "Un duelo a primera sangre. Tu rival gira en círculo, con la guardia cerrada. Un golpe limpio lo termina."
+    },
+    "cards": [
+      { "id": "high_left", "icon": "sword", "label": { "en": "Strike high-left", "es": "Golpe arriba a la izquierda" } },
+      { "id": "high_right", "icon": "sword", "label": { "en": "Strike high-right", "es": "Golpe arriba a la derecha" } },
+      { "id": "low_disarm", "icon": "shield-off", "label": { "en": "Aim low, disarm", "es": "Bajo, para desarmar" } },
+      { "id": "feint_center", "icon": "wind", "label": { "en": "Feint to center", "es": "Amague al medio" } }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.45,
+      "statInfluence": { "strength": 0.01, "dexterity": 0.005 },
+      "cardModifiers": { "feint_center": { "winChanceDelta": 0.1, "critChanceDelta": 0.05 } }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": { "strength": 2 },
+        "fameDelta": 6,
+        "goldDelta": 200,
+        "countersDelta": { "battles_won": 1, "duels_won": 1, "clutch_duels": 1 },
+        "narrative": {
+          "en": "You read the guard perfectly and end it in one breath. The crowd will tell this story for years.",
+          "es": "Leés la guardia a la perfección y lo terminás en un suspiro. La multitud contará esto durante años."
+        }
+      },
+      "success": {
+        "fameDelta": 2,
+        "countersDelta": { "battles_won": 1, "duels_won": 1 },
+        "narrative": {
+          "en": "A solid hit lands. Your opponent yields, breathing hard.",
+          "es": "Un golpe sólido acierta. Tu rival se rinde, respirando con dificultad."
+        }
+      },
+      "partial": {
+        "injuryRiskDelta": 0.1,
+        "countersReset": ["duel_streak"],
+        "narrative": {
+          "en": "You trade blows and scrape a win, but you'll feel it tomorrow.",
+          "es": "Intercambian golpes y arañás la victoria, pero lo vas a sentir mañana."
+        }
+      },
+      "fail": {
+        "injuryRiskDelta": 0.3,
+        "reputationDelta": -3,
+        "reputationFaction": "ironhold",
+        "countersReset": ["duel_streak"],
+        "narrative": {
+          "en": "They see it coming. Steel bites, and you go down in the dust.",
+          "es": "Lo ven venir. El acero muerde, y caés en el polvo."
+        }
+      }
+    }
+  },
+  {
+    "id": "negotiation_gambit",
+    "type": "minigame",
+    "subtype": "negotiation",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 7,
+    "primaryStat": "charisma",
+    "narrative": {
+      "en": "A tense standoff. Words, not blades, will decide who walks away richer.",
+      "es": "Un enfrentamiento tenso. Las palabras, no las hojas, decidirán quién se va más rico."
+    },
+    "cards": [
+      { "id": "humble", "icon": "hand", "label": { "en": "Appeal humbly", "es": "Apelar con humildad" } },
+      { "id": "strategic", "icon": "brain", "label": { "en": "Lay out the logic", "es": "Exponer la lógica" } },
+      { "id": "cocky", "icon": "flame", "label": { "en": "Call their bluff", "es": "Desafiar su farol" } },
+      { "id": "supportive", "icon": "heart-handshake", "label": { "en": "Find common ground", "es": "Buscar puntos en común" } }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.42,
+      "statInfluence": { "charisma": 0.012, "intelligence": 0.004 },
+      "cardModifiers": { "strategic": { "winChanceDelta": 0.08 } }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": { "charisma": 2 },
+        "goldDelta": 150,
+        "countersDelta": { "negotiation_streak": 1, "negotiations_won": 1 },
+        "narrative": {
+          "en": "You read them exactly and walk away with more than you asked for.",
+          "es": "Los leés con exactitud y te vas con más de lo que pediste."
+        }
+      },
+      "success": {
+        "goldDelta": 60,
+        "countersDelta": { "negotiation_streak": 1, "negotiations_won": 1 },
+        "narrative": {
+          "en": "A fair deal, on your terms. Handshakes all around.",
+          "es": "Un trato justo, en tus términos. Apretones de mano por todos lados."
+        }
+      },
+      "partial": {
+        "goldDelta": 20,
+        "countersReset": ["negotiation_streak"],
+        "narrative": {
+          "en": "You avoid a fight but take a worse deal than you wanted.",
+          "es": "Evitás una pelea pero aceptás un trato peor del que querías."
+        }
+      },
+      "fail": {
+        "reputationDelta": -2,
+        "reputationFaction": "greywater",
+        "injuryRiskDelta": 0.08,
+        "countersReset": ["negotiation_streak"],
+        "narrative": {
+          "en": "You misjudge the room. Tempers flare and the deal collapses.",
+          "es": "Malinterpretás el ambiente. Los ánimos se encienden y el trato se derrumba."
+        }
+      }
+    }
+  }
+]

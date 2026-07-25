@@ -1,0 +1,16 @@
+{
+  "tiers": {
+    "stranger": { "en": "Stranger", "es": "Desconocido" },
+    "known": { "en": "Known", "es": "Conocido" },
+    "respected": { "en": "Respected", "es": "Respetado" },
+    "renowned": { "en": "Renowned", "es": "Renombrado" },
+    "legend": { "en": "Legend", "es": "Leyenda" }
+  },
+  "factions": {
+    "greywater": { "en": "Greywater Town", "es": "Villa Aguagrís" },
+    "ironhold": { "en": "Ironhold Guild", "es": "Gremio de Fuertehierro" },
+    "thornwood": { "en": "Thornwood Wardens", "es": "Guardianes de Espinar" },
+    "arcanum": { "en": "The Arcanum", "es": "El Arcanum" },
+    "crownguard": { "en": "The Crownguard", "es": "La Guardia de la Corona" }
+  }
+}

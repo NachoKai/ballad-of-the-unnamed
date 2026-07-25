@@ -1,0 +1,164 @@
+[
+  {
+    "id": "tavern_stranger",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 12,
+    "location": "greywater",
+    "narrative": {
+      "en": "A {npcRole} named {npcName} blocks your path out of {locationName}, eyes measuring your worth.",
+      "es": "Un {npcRole} llamado {npcName} te corta el paso al salir de {locationName}, midiéndote con la mirada."
+    },
+    "choices": [
+      {
+        "id": "humble",
+        "label": { "en": "Ask what they want, politely", "es": "Preguntar qué quieren, con cortesía" },
+        "tag": "Humble",
+        "rarity": "common",
+        "statDeltas": { "charisma": 1 },
+        "reputationDelta": 2,
+        "reputationFaction": "greywater",
+        "narrative": {
+          "en": "{npcName} nods slowly; respect flickers in their eyes.",
+          "es": "{npcName} asiente despacio; un destello de respeto cruza sus ojos."
+        }
+      },
+      {
+        "id": "strategic",
+        "label": { "en": "Read them before you speak", "es": "Leerlos antes de hablar" },
+        "tag": "Strategic",
+        "rarity": "uncommon",
+        "statDeltas": { "intelligence": 2, "charisma": 1 },
+        "narrative": {
+          "en": "You catch the tell in their stance and steer the talk your way.",
+          "es": "Detectás el gesto que los delata y llevás la charla a tu terreno."
+        }
+      },
+      {
+        "id": "aggressive",
+        "label": { "en": "Draw your weapon", "es": "Desenvainar el arma" },
+        "tag": "Aggressive",
+        "rarity": "volatile",
+        "statDeltas": { "strength": 6 },
+        "tradeoffDeltas": { "charisma": -3, "constitution": -2 },
+        "goldDelta": -10,
+        "injuryRiskDelta": 0.1,
+        "narrative": {
+          "en": "Steel rings out. {npcName} backs off, but the room remembers your temper.",
+          "es": "Suena el acero. {npcName} retrocede, pero la sala recuerda tu carácter."
+        }
+      }
+    ]
+  },
+  {
+    "id": "tavern_gamble",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 10,
+    "narrative": {
+      "en": "A dice game rattles on in the corner of {locationName}. The pot is fat and the players are drunk.",
+      "es": "Una partida de dados repica en un rincón de {locationName}. El bote está gordo y los jugadores, borrachos."
+    },
+    "choices": [
+      {
+        "id": "walk",
+        "label": { "en": "Walk away, keep your coin", "es": "Irte y guardar tu moneda" },
+        "tag": "Professional",
+        "rarity": "common",
+        "statDeltas": { "intelligence": 1 },
+        "narrative": {
+          "en": "A quiet win: you leave with everything you came in with.",
+          "es": "Una victoria silenciosa: te vas con todo lo que trajiste."
+        }
+      },
+      {
+        "id": "cheat",
+        "label": { "en": "Palm a loaded die", "es": "Cambiar un dado cargado" },
+        "tag": "Cocky",
+        "rarity": "rare",
+        "statDeltas": { "dexterity": 3 },
+        "goldDelta": 80,
+        "injuryRiskDelta": 0.08,
+        "narrative": {
+          "en": "Gold slides your way. Nobody saw it. Probably.",
+          "es": "El oro se desliza hacia vos. Nadie lo vio. Probablemente."
+        }
+      }
+    ]
+  },
+  {
+    "id": "tavern_recruiter",
+    "minAge": 16,
+    "maxAge": 70,
+    "weight": 9,
+    "narrative": {
+      "en": "A {npcRole} slides onto the bench beside you. \"There's a quest,\" they murmur, \"if you've the spine.\"",
+      "es": "Un {npcRole} se sienta en el banco a tu lado. «Hay una misión», murmura, «si tenés agallas»."
+    },
+    "choices": [
+      {
+        "id": "accept",
+        "label": { "en": "Take the job", "es": "Aceptar el trabajo" },
+        "tag": "Confident",
+        "rarity": "uncommon",
+        "statDeltas": { "strength": 1, "dexterity": 1 },
+        "goldDelta": 60,
+        "countersDelta": { "quests_completed": 1 },
+        "reputationDelta": 4,
+        "reputationFaction": "ironhold",
+        "narrative": {
+          "en": "Hard work, honest pay. Ironhold marks your name as reliable.",
+          "es": "Trabajo duro, paga honesta. Fuertehierro anota tu nombre como confiable."
+        }
+      },
+      {
+        "id": "decline",
+        "label": { "en": "Not tonight", "es": "Esta noche no" },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": { "constitution": 1 },
+        "narrative": {
+          "en": "You finish your drink in peace. The offer drifts to someone else.",
+          "es": "Terminás tu trago en paz. La oferta va a parar a otro."
+        }
+      }
+    ]
+  },
+  {
+    "id": "tavern_song",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 8,
+    "narrative": {
+      "en": "A {npcRole} challenges you to trade tales for the crowd of {locationName}.",
+      "es": "Un {npcRole} te reta a intercambiar relatos ante la multitud de {locationName}."
+    },
+    "choices": [
+      {
+        "id": "funny",
+        "label": { "en": "Tell it for the laughs", "es": "Contarlo para hacer reír" },
+        "tag": "Funny",
+        "rarity": "common",
+        "statDeltas": { "charisma": 1 },
+        "fameDelta": 2,
+        "narrative": {
+          "en": "The room roars. You are, briefly, everyone's favorite.",
+          "es": "La sala estalla. Sos, por un momento, el favorito de todos."
+        }
+      },
+      {
+        "id": "leader",
+        "label": { "en": "Turn it into a rallying speech", "es": "Convertirlo en un discurso que una a todos" },
+        "tag": "Leader",
+        "rarity": "rare",
+        "statDeltas": { "charisma": 4 },
+        "reputationDelta": 5,
+        "reputationFaction": "greywater",
+        "narrative": {
+          "en": "By the last line the whole tavern is on its feet. They remember faces like yours.",
+          "es": "Para el último verso, toda la taberna está de pie. Recuerdan caras como la tuya."
+        }
+      }
+    ]
+  }
+]

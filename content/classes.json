@@ -1,0 +1,46 @@
+[
+  {
+    "id": "warrior",
+    "name": { "en": "Warrior", "es": "Guerrero" },
+    "description": {
+      "en": "Steel and grit. Strong and hardy, built to outlast the blade.",
+      "es": "Acero y temple. Fuerte y resistente, hecho para sobrevivir al filo."
+    },
+    "base": { "strength": 8, "dexterity": 5, "constitution": 7, "intelligence": 3, "charisma": 4 },
+    "startingGold": 120,
+    "startingFaction": "ironhold"
+  },
+  {
+    "id": "wizard",
+    "name": { "en": "Wizard", "es": "Mago" },
+    "description": {
+      "en": "Keeper of the arcane. Brilliant but fragile, power bought with study.",
+      "es": "Guardián de lo arcano. Brillante pero frágil, con poder ganado a base de estudio."
+    },
+    "base": { "strength": 3, "dexterity": 4, "constitution": 4, "intelligence": 9, "charisma": 5 },
+    "startingGold": 90,
+    "startingFaction": "arcanum"
+  },
+  {
+    "id": "rogue",
+    "name": { "en": "Rogue", "es": "Pícaro" },
+    "description": {
+      "en": "Shadow and wit. Quick hands, quicker exits, a smile you can't trust.",
+      "es": "Sombra e ingenio. Manos rápidas, salidas más rápidas, y una sonrisa que no conviene creer."
+    },
+    "base": { "strength": 4, "dexterity": 9, "constitution": 4, "intelligence": 5, "charisma": 6 },
+    "startingGold": 150,
+    "startingFaction": "greywater"
+  },
+  {
+    "id": "ranger",
+    "name": { "en": "Ranger", "es": "Montaraz" },
+    "description": {
+      "en": "Warden of the wild. Balanced, watchful, at home where roads end.",
+      "es": "Guardián de lo salvaje. Equilibrado, atento, en casa donde terminan los caminos."
+    },
+    "base": { "strength": 6, "dexterity": 7, "constitution": 6, "intelligence": 5, "charisma": 5 },
+    "startingGold": 110,
+    "startingFaction": "thornwood"
+  }
+]
