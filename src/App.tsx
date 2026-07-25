@@ -15,7 +15,7 @@ import { GameScreen } from "./components/GameScreen"
 import { EndingScreen } from "./components/EndingScreen"
 import { LeaderboardScreen } from "./components/LeaderboardScreen"
 import { Toasts, useAchievementToasts } from "./components/Toasts"
-import { LinkBtn } from "./components/Shared"
+import { LinkBtn } from "./components/ui/Button"
 
 type Screen = "creation" | "game" | "ending" | "leaderboard"
 

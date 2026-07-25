@@ -1,11 +1,4 @@
-import { styled } from "../styled"
-
-export const Panel = styled.div`
-  background: linear-gradient(180deg, ${({ theme }) => theme.colors.panel} 0%, ${({ theme }) => theme.colors.ink2} 100%);
-  border: 1px solid ${({ theme }) => theme.colors.line};
-  border-radius: ${({ theme }) => theme.radii.lg};
-  box-shadow: ${({ theme }) => theme.shadow};
-`
+import { styled } from "../../styled"
 
 export const BtnPrimary = styled.button<{ $block?: boolean }>`
   display: inline-flex;
@@ -71,22 +64,4 @@ export const LinkBtn = styled.button`
     color: ${({ theme }) => theme.colors.goldBright};
     border-color: ${({ theme }) => theme.colors.line2};
   }
-`
-
-export const TextBalance = styled.span`
-  text-wrap: balance;
-`
-
-export const TextPretty = styled.p`
-  text-wrap: pretty;
-`
-
-export const Faint = styled.span`
-  color: ${({ theme }) => theme.colors.muted};
-`
-
-export const Num = styled.span`
-  font-variant-numeric: tabular-nums;
-  color: ${({ theme }) => theme.colors.parchment};
-  font-weight: 600;
 `

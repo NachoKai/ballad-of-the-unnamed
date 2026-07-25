@@ -1,10 +1,13 @@
-import type { CharacterState, Locale } from "@shared/types"
-import { STAT_KEYS } from "@shared/types"
-import { t as translate } from "../i18n/strings"
+import type { CharacterState, Locale } from "@shared/types";
+import { STAT_KEYS } from "@shared/types";
+import { styled } from "styled-components";
+import { t as translate } from "../i18n/strings";
+import { Panel } from "./ui/Panel"
+import { Faint } from "./ui/Text";
 
 interface Props {
-  character: CharacterState
-  locale: Locale
+  character: CharacterState;
+  locale: Locale;
 }
 
 const STAT_ABBR: Record<string, string> = {
@@ -13,51 +16,137 @@ const STAT_ABBR: Record<string, string> = {
   constitution: "CON",
   intelligence: "INT",
   charisma: "CHA",
-}
+};
 
 export function Hud({ character: c, locale }: Props) {
-  const t = (k: string) => translate(locale, k)
-  const className = t(`class_${c.class}`)
+  const t = (k: string) => translate(locale, k);
+  const className = t(`class_${c.class}`);
   const momentumKey =
     c.momentum === "rising"
       ? "momentumRising"
       : c.momentum === "falling"
         ? "momentumFalling"
-        : "momentumNormal"
+        : "momentumNormal";
 
   return (
-    <div className="panel hud-wrap">
-      <div className="hud">
-        <span className="name">
-          {c.name} <span className="faint">· {className}</span>
-        </span>
-        <span className="meter">
+    <HudWrap>
+      <HudInner>
+        <Name>
+          {c.name} <Faint>· {className}</Faint>
+        </Name>
+        <Meter>
           {t("age")} <b>{c.age}</b>
-        </span>
-        <span className="meter">
+        </Meter>
+        <Meter>
           {t("health")} <b>{c.health}</b>
-        </span>
-        <span className="meter">
+        </Meter>
+        <Meter>
           {t("gold")} <b>{c.gold}</b>
-        </span>
-        <span className="meter">
+        </Meter>
+        <Meter>
           {t("fame")} <b>{c.fame}</b>
-        </span>
-        <span className="meter">
+        </Meter>
+        <Meter>
           {t("power")} <b>{c.powerLevel}</b>
-        </span>
-        <span className={`momentum ${c.momentum}`}>{t(momentumKey)}</span>
-      </div>
-      <div className="stats-strip">
-        {STAT_KEYS.map((k) => (
-          <span key={k} className="stat-pill">
+        </Meter>
+        <MomentumBadge $variant={c.momentum}>{t(momentumKey)}</MomentumBadge>
+      </HudInner>
+      <StatsStrip>
+        {STAT_KEYS.map(k => (
+          <StatPill key={k}>
             {STAT_ABBR[k]} <b>{c[k]}</b>
-          </span>
+          </StatPill>
         ))}
-        <span className="stat-pill">
+        <StatPill>
           {t("turn")} <b>{c.turn}</b>
-        </span>
-      </div>
-    </div>
-  )
+        </StatPill>
+      </StatsStrip>
+    </HudWrap>
+  );
 }
+
+const HudWrap = styled(Panel)`
+  position: sticky;
+  top: 78px;
+  z-index: 10;
+`;
+
+const HudInner = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  padding: 16px 18px;
+`;
+
+const Name = styled.span`
+  flex: 1 1 100%;
+  font-family: ${({ theme }) => theme.fonts.display};
+  font-size: 20px;
+  color: ${({ theme }) => theme.colors.goldBright};
+`;
+
+const Meter = styled.span`
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 5px 12px;
+  background: ${({ theme }) => theme.colors.ink3};
+  border: 1px solid ${({ theme }) => theme.colors.line};
+  border-radius: 999px;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: ${({ theme }) => theme.colors.muted};
+  text-transform: uppercase;
+
+  b {
+    font-size: 16px;
+    font-variant-numeric: tabular-nums;
+    color: ${({ theme }) => theme.colors.parchment};
+    text-transform: none;
+  }
+`;
+
+const MomentumBadge = styled.span<{ $variant: string }>`
+  margin-left: auto;
+  padding: 5px 12px;
+  border: 1px solid ${({ theme }) => theme.colors.line2};
+  border-radius: 999px;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: ${({ $variant, theme }) =>
+    $variant === "falling" ? theme.colors.bloodBright : theme.colors.sage};
+  border-color: ${({ $variant, theme }) =>
+    $variant === "falling" ? theme.colors.bloodBright : theme.colors.sage};
+`;
+
+const StatsStrip = styled.div`
+  flex: 1 1 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-top: 4px;
+  padding: 12px 18px 16px;
+  border-top: 1px solid ${({ theme }) => theme.colors.line};
+`;
+
+const StatPill = styled.span`
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  background: ${({ theme }) => theme.colors.ink3};
+  border: 1px solid ${({ theme }) => theme.colors.line};
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-size: 13px;
+  color: ${({ theme }) => theme.colors.parchment};
+
+  b {
+    font-size: 15px;
+    font-variant-numeric: tabular-nums;
+    color: ${({ theme }) => theme.colors.parchment};
+    font-weight: 600;
+  }
+`;

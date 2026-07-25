@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { styled, keyframes } from "styled-components"
 import type { AchievementContent } from "@shared/types"
 import { AchIcon } from "./AchIcon"
 
@@ -38,11 +39,11 @@ export function Toasts({
   onExpire: (id: string) => void
 }) {
   return (
-    <div className="toast-wrap" aria-live="polite">
+    <ToastWrap aria-live="polite">
       {items.map((item) => (
         <ToastCard key={item.id} item={item} onExpire={onExpire} />
       ))}
-    </div>
+    </ToastWrap>
   )
 }
 
@@ -59,14 +60,59 @@ function ToastCard({
   }, [item.id, onExpire])
 
   return (
-    <div className="toast" role="status">
-      <span className="ach-icon">
+    <Toast role="status">
+      <ToastIcon>
         <AchIcon name={item.icon} size={26} />
-      </span>
+      </ToastIcon>
       <div>
-        <div className="t-title">{item.title}</div>
-        <div className="t-desc">{item.desc}</div>
+        <ToastTitle>{item.title}</ToastTitle>
+        <ToastDesc>{item.desc}</ToastDesc>
       </div>
-    </div>
+    </Toast>
   )
 }
+
+const ToastWrap = styled.div`
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 100;
+`
+
+const toastIn = keyframes`
+  from { opacity: 0; transform: translateX(30px); }
+`
+
+const Toast = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 260px;
+  max-width: 340px;
+  padding: 14px 16px;
+  background: linear-gradient(180deg, ${({ theme }) => theme.colors.panel2}, ${({ theme }) => theme.colors.ink2});
+  border: 1px solid ${({ theme }) => theme.colors.gold};
+  border-radius: ${({ theme }) => theme.radii.sm};
+  box-shadow: ${({ theme }) => theme.shadow};
+  animation: ${toastIn} 0.35s ease both;
+`
+
+const ToastIcon = styled.span`
+  font-size: 26px;
+  color: ${({ theme }) => theme.colors.goldBright};
+`
+
+const ToastTitle = styled.div`
+  font-family: ${({ theme }) => theme.fonts.display};
+  font-size: 15px;
+  color: ${({ theme }) => theme.colors.goldBright};
+`
+
+const ToastDesc = styled.div`
+  font-size: 14px;
+  color: ${({ theme }) => theme.colors.parchmentDim};
+  line-height: 1.4;
+`

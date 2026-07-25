@@ -1,12 +1,13 @@
 import { useState } from "react";
-import { styled } from "styled-components";
-import type { CharacterState, ServedEvent } from "@shared/types";
+import { styled, keyframes } from "styled-components";
+import type { CharacterState, ServedEvent, Rarity } from "@shared/types";
 import type { Locale } from "@shared/types";
 import { t } from "../i18n/strings";
 import { AchIcon } from "./AchIcon";
 import { Hud } from "./Hud";
 import { StatTag } from "./StatTag";
-import { LinkBtn } from "./Shared";
+import { LinkBtn } from "./ui/Button"
+import { TextPretty } from "./ui/Text";
 
 interface Props {
   locale: Locale;
@@ -54,62 +55,186 @@ export function GameScreen({
   );
 
   return (
-    <div className="game-layout">
+    <GameLayout>
       <Hud locale={locale} character={character} />
 
-      <main className="scene" aria-live="polite">
-        {turnNarrative && <p className="scene-echo">{turnNarrative}</p>}
+      <Scene aria-live="polite">
+        {turnNarrative && <SceneEcho>{turnNarrative}</SceneEcho>}
 
         {event.isRetirementOffer && (
-          <div className="retire-banner" role="status">
-            {t(locale, "retirementOffered")}
-          </div>
+          <RetireBanner role="status">{t(locale, "retirementOffered")}</RetireBanner>
         )}
 
-        <p className="scene-narrative text-pretty">{event.narrative}</p>
+        <SceneNarrative>{event.narrative}</SceneNarrative>
 
-        <div className="choice-grid" role="group" aria-label={t(locale, "chooseAction")}>
+        <ChoiceGrid role="group" aria-label={t(locale, "chooseAction")}>
           {choices.map(c => (
-            <button
+            <ChoiceCard
               key={c.id}
               type="button"
-              className={`choice-card rarity-${c.rarity} ${
-                selected === c.id ? "is-selected" : ""
-              }`}
+              $rarity={c.rarity}
+              $selected={selected === c.id}
               onClick={() => pick(c.id)}
               disabled={busy}
             >
-              <span className={`rarity-pip rarity-${c.rarity}`} aria-hidden="true" />
-              <span className="choice-label text-pretty">
+              <RarityPip $rarity={c.rarity} aria-hidden="true" />
+              <ChoiceLabel>
                 {c.icon && <AchIcon name={c.icon} size={20} />}
                 {c.label}
-              </span>
-              <span className="choice-rarity">
+              </ChoiceLabel>
+              <ChoiceRarity $rarity={c.rarity}>
                 {t(locale, `rarity_${c.rarity}` as never)}
-              </span>
+              </ChoiceRarity>
               {(c.statDeltas || c.tradeoffDeltas) && (
-                <span className="choice-deltas">
+                <ChoiceDeltas>
                   {c.statDeltas && <StatTag locale={locale} deltas={c.statDeltas} />}
                   {c.tradeoffDeltas && (
-                    <StatTag
-                      locale={locale}
-                      deltas={c.tradeoffDeltas}
-                      className="tradeoff"
-                    />
+                    <StatTag locale={locale} deltas={c.tradeoffDeltas} tradeoff />
                   )}
-                </span>
+                </ChoiceDeltas>
               )}
-            </button>
+            </ChoiceCard>
           ))}
-        </div>
+        </ChoiceGrid>
 
         <AbandonBtn type="button" onClick={onAbandon} disabled={busy}>
           {t(locale, "abandonRun")}
         </AbandonBtn>
-      </main>
-    </div>
+      </Scene>
+    </GameLayout>
   );
 }
+
+const RARITY_COLOR: Record<Rarity, string> = {
+  common: "#9c8f74",
+  uncommon: "#6f8f6a",
+  rare: "#5a86c8",
+  volatile: "#c9803c",
+};
+
+const rise = keyframes`
+  from { opacity: 0; transform: translateY(10px); }
+`;
+
+const GameLayout = styled.div`
+  display: grid;
+  gap: 22px;
+  animation: ${rise} 0.35s ease both;
+`;
+
+const Scene = styled.main`
+  background: linear-gradient(
+    180deg,
+    ${({ theme }) => theme.colors.panel} 0%,
+    ${({ theme }) => theme.colors.ink2} 100%
+  );
+  border: 1px solid ${({ theme }) => theme.colors.line};
+  border-radius: ${({ theme }) => theme.radii.lg};
+  padding: 26px 28px;
+  box-shadow: ${({ theme }) => theme.shadow};
+
+  @media (max-width: 680px) {
+    padding: 20px;
+  }
+`;
+
+const SceneEcho = styled.p`
+  color: ${({ theme }) => theme.colors.sage};
+  font-style: italic;
+  font-size: 16px;
+  padding: 10px 14px;
+  border-left: 2px solid ${({ theme }) => theme.colors.sage};
+  background: rgba(111, 143, 106, 0.06);
+  border-radius: 0 ${({ theme }) => theme.radii.sm} ${({ theme }) => theme.radii.sm} 0;
+  margin-bottom: 18px;
+  animation: ${rise} 0.3s ease both;
+`;
+
+const SceneNarrative = styled(TextPretty)`
+  font-size: 21px;
+  line-height: 1.65;
+  color: ${({ theme }) => theme.colors.parchment};
+`;
+
+const RetireBanner = styled.div`
+  margin-top: 18px;
+  padding: 14px 16px;
+  border: 1px solid rgba(201, 164, 76, 0.4);
+  background: rgba(201, 164, 76, 0.08);
+  border-radius: ${({ theme }) => theme.radii.sm};
+  color: ${({ theme }) => theme.colors.goldBright};
+  font-style: italic;
+`;
+
+const ChoiceGrid = styled.div`
+  display: grid;
+  gap: 12px;
+  margin-top: 22px;
+`;
+
+const ChoiceCard = styled.button<{ $rarity: Rarity; $selected: boolean }>`
+  position: relative;
+  text-align: left;
+  background: ${({ theme }) => theme.colors.ink2};
+  border: 1px solid ${({ theme }) => theme.colors.line2};
+  border-left: 4px solid ${({ $rarity }) => RARITY_COLOR[$rarity]};
+  border-radius: ${({ theme }) => theme.radii.sm};
+  padding: 15px 18px;
+  color: ${({ theme }) => theme.colors.parchment};
+  font-size: 18px;
+  transition:
+    transform 0.12s,
+    border-color 0.15s,
+    background 0.15s;
+
+  &:hover:not(:disabled) {
+    transform: translateX(4px);
+    background: ${({ theme }) => theme.colors.ink3};
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: wait;
+  }
+`;
+
+const RarityPip = styled.span<{ $rarity: Rarity }>`
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: ${({ $rarity }) => RARITY_COLOR[$rarity]};
+`;
+
+const ChoiceLabel = styled(TextPretty)`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
+
+const ChoiceRarity = styled.span<{ $rarity: Rarity }>`
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: ${({ $rarity, theme }) =>
+    $rarity === "rare"
+      ? theme.colors.rarity.rare
+      : $rarity === "volatile"
+        ? theme.colors.rarity.volatile
+        : theme.colors.muted};
+`;
+
+const ChoiceDeltas = styled.span`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+  margin-top: 8px;
+`;
 
 const AbandonBtn = styled(LinkBtn)`
   margin-top: 20px;
