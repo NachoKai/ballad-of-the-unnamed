@@ -1,37 +1,562 @@
 {
   "npcRole": [
-    { "en": "merchant", "es": "mercader" },
-    { "en": "guard captain", "es": "capitán de la guardia" },
-    { "en": "hooded stranger", "es": "desconocido encapuchado" },
-    { "en": "traveling bard", "es": "bardo viajero" },
-    { "en": "grizzled mercenary", "es": "mercenario curtido" },
-    { "en": "temple acolyte", "es": "acólito del templo" },
-    { "en": "disgraced knight", "es": "caballero deshonrado" },
-    { "en": "fortune teller", "es": "adivina" }
+    {
+      "en": "merchant",
+      "es": "mercader"
+    },
+    {
+      "en": "guard captain",
+      "es": "capitán de la guardia"
+    },
+    {
+      "en": "hooded stranger",
+      "es": "desconocido encapuchado"
+    },
+    {
+      "en": "traveling bard",
+      "es": "bardo viajero"
+    },
+    {
+      "en": "grizzled mercenary",
+      "es": "mercenario curtido"
+    },
+    {
+      "en": "temple acolyte",
+      "es": "acólito del templo"
+    },
+    {
+      "en": "disgraced knight",
+      "es": "caballero deshonrado"
+    },
+    {
+      "en": "fortune teller",
+      "es": "adivina"
+    },
+    {
+      "en": "alchemist",
+      "es": "alquimista"
+    },
+    {
+      "en": "beggar king",
+      "es": "rey de los mendigos"
+    },
+    {
+      "en": "witch of the woods",
+      "es": "bruja del bosque"
+    },
+    {
+      "en": "escaped convict",
+      "es": "prófugo convicto"
+    },
+    {
+      "en": "drunken sailor",
+      "es": "marino borracho"
+    },
+    {
+      "en": "grave robber",
+      "es": "saqueador de tumbas"
+    },
+    {
+      "en": "heretic priest",
+      "es": "sacerdote hereje"
+    },
+    {
+      "en": "fence of stolen goods",
+      "es": "reducidor de objetos robados"
+    },
+    {
+      "en": "desert scout",
+      "es": "explorador del desierto"
+    },
+    {
+      "en": "dwarf smith",
+      "es": "herrero enano"
+    },
+    {
+      "en": "elf archer",
+      "es": "arquera elfa"
+    },
+    {
+      "en": "half-orc bouncer",
+      "es": "portero medio orco"
+    },
+    {
+      "en": "retired general",
+      "es": "general retirado"
+    },
+    {
+      "en": "court jester",
+      "es": "bufón de la corte"
+    },
+    {
+      "en": "poisoner",
+      "es": "envenenador"
+    },
+    {
+      "en": "shadow dancer",
+      "es": "bailarín de las sombras"
+    },
+    {
+      "en": "rat catcher",
+      "es": "cazador de ratas"
+    },
+    {
+      "en": "lighthouse keeper",
+      "es": "farero"
+    },
+    {
+      "en": "tattooed witch hunter",
+      "es": "cazador de brujas tatuado"
+    },
+    {
+      "en": "fallen paladin",
+      "es": "paladín caído"
+    },
+    {
+      "en": "gambler",
+      "es": "jugador"
+    },
+    {
+      "en": "shipwreck survivor",
+      "es": "superviviente de un naufragio"
+    },
+    {
+      "en": "plague doctor",
+      "es": "médico de la peste"
+    },
+    {
+      "en": "runescribe",
+      "es": "escriba de runas"
+    },
+    {
+      "en": "mountain hermit",
+      "es": "ermitaño de la montaña"
+    },
+    {
+      "en": "slave trader",
+      "es": "traficante de esclavos"
+    },
+    {
+      "en": "spy",
+      "es": "espía"
+    },
+    {
+      "en": "bounty hunter",
+      "es": "cazador de recompensas"
+    },
+    {
+      "en": "tomb guardian",
+      "es": "guardia de la tumba"
+    },
+    {
+      "en": "wandering monk",
+      "es": "monje errante"
+    }
   ],
   "npcName": [
-    { "en": "Halvard", "es": "Halvard" },
-    { "en": "Mira", "es": "Mira" },
-    { "en": "Osric", "es": "Osric" },
-    { "en": "Yelena", "es": "Yelena" },
-    { "en": "Bram", "es": "Bram" },
-    { "en": "Sable", "es": "Sable" },
-    { "en": "Corwin", "es": "Corwin" },
-    { "en": "Nadia", "es": "Nadia" }
+    {
+      "en": "Halvard",
+      "es": "Halvard"
+    },
+    {
+      "en": "Mira",
+      "es": "Mira"
+    },
+    {
+      "en": "Osric",
+      "es": "Osric"
+    },
+    {
+      "en": "Yelena",
+      "es": "Yelena"
+    },
+    {
+      "en": "Bram",
+      "es": "Bram"
+    },
+    {
+      "en": "Sable",
+      "es": "Sable"
+    },
+    {
+      "en": "Corwin",
+      "es": "Corwin"
+    },
+    {
+      "en": "Nadia",
+      "es": "Nadia"
+    },
+    {
+      "en": "Kaelen",
+      "es": "Kaelen"
+    },
+    {
+      "en": "Zephyra",
+      "es": "Zephyra"
+    },
+    {
+      "en": "Theron",
+      "es": "Theron"
+    },
+    {
+      "en": "Vex",
+      "es": "Vex"
+    },
+    {
+      "en": "Isolde",
+      "es": "Isolda"
+    },
+    {
+      "en": "Drogun",
+      "es": "Drogun"
+    },
+    {
+      "en": "Seraphine",
+      "es": "Serafina"
+    },
+    {
+      "en": "Grimm",
+      "es": "Grimm"
+    },
+    {
+      "en": "Lyra",
+      "es": "Lyra"
+    },
+    {
+      "en": "Torben",
+      "es": "Torben"
+    },
+    {
+      "en": "Vesper",
+      "es": "Vesper"
+    },
+    {
+      "en": "Aldric",
+      "es": "Aldric"
+    },
+    {
+      "en": "Morwen",
+      "es": "Morwen"
+    },
+    {
+      "en": "Silas",
+      "es": "Silas"
+    },
+    {
+      "en": "Rowan",
+      "es": "Rowan"
+    },
+    {
+      "en": "Elara",
+      "es": "Elara"
+    },
+    {
+      "en": "Fenris",
+      "es": "Fenris"
+    },
+    {
+      "en": "Lark",
+      "es": "Lark"
+    },
+    {
+      "en": "Orin",
+      "es": "Orin"
+    },
+    {
+      "en": "Petra",
+      "es": "Petra"
+    },
+    {
+      "en": "Rourke",
+      "es": "Rourke"
+    },
+    {
+      "en": "Sylas",
+      "es": "Sylas"
+    },
+    {
+      "en": "Thalia",
+      "es": "Thalia"
+    },
+    {
+      "en": "Umbra",
+      "es": "Umbra"
+    },
+    {
+      "en": "Gideon",
+      "es": "Gideon"
+    },
+    {
+      "en": "Ivy",
+      "es": "Ivy"
+    },
+    {
+      "en": "Jasper",
+      "es": "Jasper"
+    },
+    {
+      "en": "Kova",
+      "es": "Kova"
+    },
+    {
+      "en": "Lysandra",
+      "es": "Lisandra"
+    },
+    {
+      "en": "Mordecai",
+      "es": "Mordecai"
+    },
+    {
+      "en": "Nyx",
+      "es": "Nyx"
+    },
+    {
+      "en": "Odessa",
+      "es": "Odesa"
+    }
   ],
   "locationName": [
-    { "en": "the tavern's back room", "es": "el reservado de la taberna" },
-    { "en": "the old bridge", "es": "el puente viejo" },
-    { "en": "the market square", "es": "la plaza del mercado" },
-    { "en": "a rain-slick alley", "es": "un callejón resbaladizo por la lluvia" },
-    { "en": "the guildhall steps", "es": "las escaleras del gremio" },
-    { "en": "a moonlit crossroads", "es": "una encrucijada bajo la luna" }
+    {
+      "en": "the tavern's back room",
+      "es": "el reservado de la taberna"
+    },
+    {
+      "en": "the old bridge",
+      "es": "el puente viejo"
+    },
+    {
+      "en": "the market square",
+      "es": "la plaza del mercado"
+    },
+    {
+      "en": "a rain-slick alley",
+      "es": "un callejón resbaladizo por la lluvia"
+    },
+    {
+      "en": "the guildhall steps",
+      "es": "las escaleras del gremio"
+    },
+    {
+      "en": "a moonlit crossroads",
+      "es": "una encrucijada bajo la luna"
+    },
+    {
+      "en": "the city gallows",
+      "es": "la horca de la ciudad"
+    },
+    {
+      "en": "a forgotten crypt",
+      "es": "una cripta olvidada"
+    },
+    {
+      "en": "the harbor docks",
+      "es": "los muelles del puerto"
+    },
+    {
+      "en": "the ash-covered ruins",
+      "es": "las ruinas cubiertas de ceniza"
+    },
+    {
+      "en": "a withered grove",
+      "es": "un bosquecillo marchito"
+    },
+    {
+      "en": "the dwarven forge",
+      "es": "la forja enana"
+    },
+    {
+      "en": "the wyrm's cave",
+      "es": "la cueva del gusano"
+    },
+    {
+      "en": "a crumbling watchtower",
+      "es": "una torre de vigilancia en ruinas"
+    },
+    {
+      "en": "the bathhouse",
+      "es": "los baños públicos"
+    },
+    {
+      "en": "a blood-soaked arena",
+      "es": "una arena empapada en sangre"
+    },
+    {
+      "en": "the rooftop district",
+      "es": "el distrito de los tejados"
+    },
+    {
+      "en": "the hanging gardens",
+      "es": "los jardines colgantes"
+    },
+    {
+      "en": "the smuggler's tunnel",
+      "es": "el túnel de los contrabandistas"
+    },
+    {
+      "en": "a frozen lake",
+      "es": "un lago helado"
+    },
+    {
+      "en": "the crematorium",
+      "es": "el crematorio"
+    },
+    {
+      "en": "the oracle's sanctum",
+      "es": "el santuario del oráculo"
+    },
+    {
+      "en": "the leper colony",
+      "es": "la colonia de leprosos"
+    },
+    {
+      "en": "the great library's restricted section",
+      "es": "la sección restringida de la gran biblioteca"
+    },
+    {
+      "en": "a sinking ship",
+      "es": "un barco que se hunde"
+    },
+    {
+      "en": "the bandit camp",
+      "es": "el campamento de bandidos"
+    },
+    {
+      "en": "the royal catacombs",
+      "es": "las catacumbas reales"
+    },
+    {
+      "en": "the alchemist's laboratory",
+      "es": "el laboratorio del alquimista"
+    },
+    {
+      "en": "the masquerade ballroom",
+      "es": "el salón de baile de máscaras"
+    },
+    {
+      "en": "the edge of a bottomless chasm",
+      "es": "el borde de un abismo sin fondo"
+    }
   ],
   "creatureName": [
-    { "en": "a mangy dire-wolf", "es": "un lobo terrible y sarnoso" },
-    { "en": "a marsh troll", "es": "un troll de los pantanos" },
-    { "en": "a pack of goblins", "es": "una manada de goblins" },
-    { "en": "a cave wyrm", "es": "un sierpe de caverna" },
-    { "en": "a cursed revenant", "es": "un renaciente maldito" }
+    {
+      "en": "a mangy dire-wolf",
+      "es": "un lobo terrible y sarnoso"
+    },
+    {
+      "en": "a marsh troll",
+      "es": "un troll de los pantanos"
+    },
+    {
+      "en": "a pack of goblins",
+      "es": "una manada de goblins"
+    },
+    {
+      "en": "a cave wyrm",
+      "es": "un sierpe de caverna"
+    },
+    {
+      "en": "a cursed revenant",
+      "es": "un renaciente maldito"
+    },
+    {
+      "en": "a basilisk",
+      "es": "un basilisco"
+    },
+    {
+      "en": "a swarm of blood-flies",
+      "es": "un enjambre de moscas de sangre"
+    },
+    {
+      "en": "a harpy",
+      "es": "una arpía"
+    },
+    {
+      "en": "a mind-flayer spawn",
+      "es": "un engendro devoramentes"
+    },
+    {
+      "en": "a frost giant",
+      "es": "un gigante de hielo"
+    },
+    {
+      "en": "a shadow wraith",
+      "es": "un espectro de las sombras"
+    },
+    {
+      "en": "a chimera",
+      "es": "una quimera"
+    },
+    {
+      "en": "a giant spider",
+      "es": "una araña gigante"
+    },
+    {
+      "en": "a werewolf in mid-transformation",
+      "es": "un hombre lobo en plena transformación"
+    },
+    {
+      "en": "a cockatrice",
+      "es": "una cocatriz"
+    },
+    {
+      "en": "a mimic disguised as a chest",
+      "es": "un imitador disfrazado de cofre"
+    },
+    {
+      "en": "a banshee",
+      "es": "una banshee"
+    },
+    {
+      "en": "a gelatinous cube",
+      "es": "un cubo gelatinoso"
+    },
+    {
+      "en": "a hellhound",
+      "es": "un sabueso infernal"
+    },
+    {
+      "en": "a kraken tentacle",
+      "es": "un tentáculo de kraken"
+    },
+    {
+      "en": "a lamia",
+      "es": "una lamia"
+    },
+    {
+      "en": "a manticore",
+      "es": "una mantícora"
+    },
+    {
+      "en": "a necromancer's abomination",
+      "es": "una abominación de nigromante"
+    },
+    {
+      "en": "an ogre",
+      "es": "un ogro"
+    },
+    {
+      "en": "a phantom stallion",
+      "es": "un corcel fantasma"
+    },
+    {
+      "en": "a roc",
+      "es": "un roc"
+    },
+    {
+      "en": "a skeletal dragon",
+      "es": "un dragón esquelético"
+    },
+    {
+      "en": "a treant",
+      "es": "un treant"
+    },
+    {
+      "en": "a vampire spawn",
+      "es": "un engendro vampírico"
+    },
+    {
+      "en": "a will-o'-the-wisp",
+      "es": "un fuego fatuo"
+    }
   ]
 }

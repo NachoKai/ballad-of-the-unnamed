@@ -2,20 +2,13 @@ import type { CharacterState, Locale } from "@shared/types"
 import { STAT_KEYS } from "@shared/types"
 import { styled } from "styled-components"
 import { t as translate } from "../i18n/strings"
+import { STAT_ABBR } from "../constants"
 import { Panel } from "./ui/Panel"
 import { Faint } from "./ui/Text"
 
 interface Props {
   character: CharacterState
   locale: Locale
-}
-
-const STAT_ABBR: Record<string, string> = {
-  strength: "STR",
-  dexterity: "DEX",
-  constitution: "CON",
-  intelligence: "INT",
-  charisma: "CHA",
 }
 
 export function Hud({ character: c, locale }: Props) {
@@ -61,7 +54,7 @@ export function Hud({ character: c, locale }: Props) {
       <StatsStrip>
         {STAT_KEYS.map((k) => (
           <StatPill key={k}>
-            {STAT_ABBR[k]} <b>{c[k]}</b>
+            {t(STAT_ABBR[k])} <b>{c[k]}</b>
           </StatPill>
         ))}
       </StatsStrip>

@@ -3,6 +3,7 @@ import { styled } from "styled-components"
 import type { Locale, RunType } from "@shared/types"
 import { api, type ClassInfo } from "../api"
 import { t } from "../i18n/strings"
+import { STAT_ABBR } from "../constants"
 import { BtnPrimary } from "./ui/Button"
 import { TextPretty } from "./ui/Text"
 import { rise } from "./ui/Animation"
@@ -10,14 +11,6 @@ import { rise } from "./ui/Animation"
 interface Props {
   locale: Locale
   onStart: (name: string, classId: string, runType: RunType) => Promise<void>
-}
-
-const STAT_ABBR: Record<string, string> = {
-  strength: "STR",
-  dexterity: "DEX",
-  constitution: "CON",
-  intelligence: "INT",
-  charisma: "CHA",
 }
 
 export function CreationScreen({ locale, onStart }: Props) {
@@ -90,7 +83,7 @@ export function CreationScreen({ locale, onStart }: Props) {
               <StatRow>
                 {Object.entries(c.base).map(([k, v]) => (
                   <StatChip key={k}>
-                    <em>{STAT_ABBR[k] ?? k}</em> {v}
+                    <em>{t(locale, STAT_ABBR[k])}</em> {v}
                   </StatChip>
                 ))}
                 <GoldChip>

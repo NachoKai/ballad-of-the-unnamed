@@ -25,11 +25,15 @@ export const GAME_CONFIG = {
 // Reputation tiers (localized names live in content/reputationTiers.json later;
 // thresholds are language-neutral numbers).
 export const REPUTATION_TIERS: { min: number; id: string }[] = [
-  { min: 0, id: "stranger" },
-  { min: 25, id: "known" },
+  { min: 0, id: "outcast" },
+  { min: 5, id: "stranger" },
+  { min: 20, id: "known" },
+  { min: 35, id: "acquaintance" },
   { min: 50, id: "respected" },
-  { min: 75, id: "renowned" },
-  { min: 95, id: "legend" },
+  { min: 65, id: "notable" },
+  { min: 78, id: "renowned" },
+  { min: 90, id: "legend" },
+  { min: 99, id: "myth" },
 ]
 
 export function reputationTierId(value: number): string {

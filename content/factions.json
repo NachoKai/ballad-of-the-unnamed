@@ -1,16 +1,134 @@
 {
   "tiers": {
-    "stranger": { "en": "Stranger", "es": "Desconocido" },
-    "known": { "en": "Known", "es": "Conocido" },
-    "respected": { "en": "Respected", "es": "Respetado" },
-    "renowned": { "en": "Renowned", "es": "Renombrado" },
-    "legend": { "en": "Legend", "es": "Leyenda" }
+    "outcast": {
+      "en": "Outcast",
+      "es": "Marginado"
+    },
+    "stranger": {
+      "en": "Stranger",
+      "es": "Desconocido"
+    },
+    "known": {
+      "en": "Known",
+      "es": "Conocido"
+    },
+    "acquaintance": {
+      "en": "Acquaintance",
+      "es": "Conocido cercano"
+    },
+    "respected": {
+      "en": "Respected",
+      "es": "Respetado"
+    },
+    "notable": {
+      "en": "Notable",
+      "es": "Notable"
+    },
+    "renowned": {
+      "en": "Renowned",
+      "es": "Renombrado"
+    },
+    "legend": {
+      "en": "Legend",
+      "es": "Leyenda"
+    },
+    "myth": {
+      "en": "Myth",
+      "es": "Mito"
+    }
   },
   "factions": {
-    "greywater": { "en": "Greywater Town", "es": "Villa Aguagrís" },
-    "ironhold": { "en": "Ironhold Guild", "es": "Gremio de Fuertehierro" },
-    "thornwood": { "en": "Thornwood Wardens", "es": "Guardianes de Espinar" },
-    "arcanum": { "en": "The Arcanum", "es": "El Arcanum" },
-    "crownguard": { "en": "The Crownguard", "es": "La Guardia de la Corona" }
+    "greywater": {
+      "en": "Greywater Town",
+      "es": "Villa Aguagrís"
+    },
+    "ironhold": {
+      "en": "Ironhold Guild",
+      "es": "Gremio de Fuertehierro"
+    },
+    "thornwood": {
+      "en": "Thornwood Wardens",
+      "es": "Guardianes de Espinar"
+    },
+    "arcanum": {
+      "en": "The Arcanum",
+      "es": "El Arcanum"
+    },
+    "crownguard": {
+      "en": "The Crownguard",
+      "es": "La Guardia de la Corona"
+    },
+    "ashwalkers": {
+      "en": "Ashwalkers",
+      "es": "Caminacenizas"
+    },
+    "blacktide": {
+      "en": "Blacktide Corsairs",
+      "es": "Corsarios de Marea Negra"
+    },
+    "bronzehammer": {
+      "en": "Bronzehammer Clan",
+      "es": "Clan Martillobronce"
+    },
+    "crimsonveil": {
+      "en": "Crimson Veil",
+      "es": "Velo Carmesí"
+    },
+    "deepfolk": {
+      "en": "Deepfolk",
+      "es": "Gentes Profundas"
+    },
+    "embersworn": {
+      "en": "Embersworn",
+      "es": "Jurabrasas"
+    },
+    "frostwood_tribe": {
+      "en": "Frostwood Tribe",
+      "es": "Tribu del Bosque Helado"
+    },
+    "golden_lotus": {
+      "en": "Golden Lotus",
+      "es": "Loto Dorado"
+    },
+    "iron_covenant": {
+      "en": "Iron Covenant",
+      "es": "Pacto de Hierro"
+    },
+    "ivy_circle": {
+      "en": "Ivy Circle",
+      "es": "Círculo de la Hiedra"
+    },
+    "meridian_company": {
+      "en": "Meridian Company",
+      "es": "Compañía del Meridiano"
+    },
+    "nightfall_order": {
+      "en": "Nightfall Order",
+      "es": "Orden del Ocaso"
+    },
+    "rust_priests": {
+      "en": "Rust Priests",
+      "es": "Sacerdotes del Óxido"
+    },
+    "sandspear": {
+      "en": "Spear of the Sands",
+      "es": "Lanza de las Arenas"
+    },
+    "silver_mask": {
+      "en": "Silver Mask Syndicate",
+      "es": "Sindicato de la Máscara de Plata"
+    },
+    "stonewardens": {
+      "en": "Stonewardens",
+      "es": "Guardapiedras"
+    },
+    "sunken_church": {
+      "en": "Sunken Church",
+      "es": "Iglesia Sumergida"
+    },
+    "whispering_reed": {
+      "en": "Whispering Reed",
+      "es": "Caña Susurrante"
+    }
   }
 }
