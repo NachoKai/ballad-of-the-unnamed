@@ -7,9 +7,26 @@ __v0_jsx-dev-runtime.ts
 .vercel/
 
 # Environment variables
+.env
 .env*.local
 
-# Common ignores
-node_modules
+# Dependencies
+node_modules/
+
+# Build output
+dist/
 .next/
+
+# OS files
 .DS_Store
+Thumbs.db
+
+# IDE
+.vscode/settings.json
+.idea/
+
+# Debug logs
+*.log
+
+# pnpm
+pnpm-lock.yaml
