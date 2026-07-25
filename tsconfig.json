@@ -2,7 +2,11 @@
   "compilerOptions": {
     "target": "ES2022",
     "useDefineForClassFields": true,
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "module": "ESNext",
     "skipLibCheck": true,
     "moduleResolution": "bundler",
@@ -18,12 +22,23 @@
     "noFallthroughCasesInSwitch": true,
     "esModuleInterop": true,
     "allowJs": true,
-    "types": ["node"],
-    "baseUrl": ".",
+    "types": [
+      "node"
+    ],
     "paths": {
-      "@shared/*": ["./shared/*"],
-      "@/*": ["./src/*"]
+      "@shared/*": [
+        "./shared/*"
+      ],
+      "@/*": [
+        "./src/*"
+      ]
     }
   },
-  "include": ["src", "server", "shared", "scripts"]
+  "include": [
+    "src",
+    "server",
+    "shared",
+    "scripts",
+    "api"
+  ]
 }
