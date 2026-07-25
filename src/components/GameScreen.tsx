@@ -4,6 +4,7 @@ import type { Locale } from "@shared/types";
 import { t } from "../i18n/strings";
 import { AchIcon } from "./AchIcon";
 import { Hud } from "./Hud";
+import { StatTag } from "./StatTag";
 
 interface Props {
   locale: Locale;
@@ -84,6 +85,18 @@ export function GameScreen({
               <span className="choice-rarity">
                 {t(locale, `rarity_${c.rarity}` as never)}
               </span>
+              {(c.statDeltas || c.tradeoffDeltas) && (
+                <span className="choice-deltas">
+                  {c.statDeltas && <StatTag locale={locale} deltas={c.statDeltas} />}
+                  {c.tradeoffDeltas && (
+                    <StatTag
+                      locale={locale}
+                      deltas={c.tradeoffDeltas}
+                      className="tradeoff"
+                    />
+                  )}
+                </span>
+              )}
             </button>
           ))}
         </div>

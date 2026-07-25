@@ -702,6 +702,50 @@ button {
   color: var(--rarity-volatile);
 }
 
+.choice-deltas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+  margin-top: 8px;
+}
+
+.stat-tag-group {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+}
+
+.stat-tag-group.tradeoff {
+  opacity: 0.75;
+}
+
+.stat-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-tag-up {
+  background: rgba(111, 143, 106, 0.15);
+  color: var(--sage);
+  border: 1px solid rgba(111, 143, 106, 0.3);
+}
+
+.stat-tag-down {
+  background: rgba(160, 52, 52, 0.15);
+  color: var(--blood-bright);
+  border: 1px solid rgba(160, 52, 52, 0.3);
+}
+
 .rarity-pip {
   position: absolute;
   top: 14px;

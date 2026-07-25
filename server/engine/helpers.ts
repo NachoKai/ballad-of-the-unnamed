@@ -141,6 +141,8 @@ export function serveEvent(
       label: fillSlots(localize(ch.label, locale), locale, registry, rng),
       tag: ch.tag,
       rarity: ch.rarity,
+      statDeltas: ch.statDeltas,
+      tradeoffDeltas: ch.tradeoffDeltas,
     }));
     // Sort so rarer, more interesting choices read last (feels like a reveal).
     choices.sort(

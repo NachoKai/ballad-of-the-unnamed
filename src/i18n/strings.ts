@@ -1,9 +1,9 @@
-import type { Locale } from "@shared/types"
+import type { Locale } from "@shared/types";
 
 // UI chrome strings (labels, buttons). Content strings live in /content as
 // LocaleMaps and are resolved server-side. Same EN/ES parity discipline here so
 // switching the whole app to Spanish later is a one-line default change.
-type StringMap = Record<string, string>
+type StringMap = Record<string, string>;
 
 const en: StringMap = {
   title: "Ballad of the Unnamed",
@@ -61,7 +61,8 @@ const en: StringMap = {
   achievementsEarned: "Feats earned this life",
   viewLeaderboard: "Hall of Legends",
   playAgainShort: "Again",
-  retirementOffered: "You have lived long. You may lay down your burdens and retire in peace \u2014 or press on for glory.",
+  retirementOffered:
+    "You have lived long. You may lay down your burdens and retire in peace \u2014 or press on for glory.",
   chooseAction: "Choose your action",
   abandonRun: "Abandon this life",
   leaderboardTitle: "Hall of Legends",
@@ -77,11 +78,16 @@ const en: StringMap = {
   rarity_uncommon: "Uncommon",
   rarity_rare: "Rare",
   rarity_volatile: "Volatile",
+  stat_strength_tag: "STR",
+  stat_dexterity_tag: "DEX",
+  stat_constitution_tag: "CON",
+  stat_intelligence_tag: "INT",
+  stat_charisma_tag: "CHA",
   class_warrior: "Warrior",
   class_wizard: "Wizard",
   class_rogue: "Rogue",
   class_ranger: "Ranger",
-}
+};
 
 const es: StringMap = {
   title: "Balada del Innombrado",
@@ -139,7 +145,8 @@ const es: StringMap = {
   achievementsEarned: "Hazañas de esta vida",
   viewLeaderboard: "Salón de Leyendas",
   playAgainShort: "Otra vez",
-  retirementOffered: "Has vivido mucho. Puedes dejar tus cargas y retirarte en paz, o seguir en busca de gloria.",
+  retirementOffered:
+    "Has vivido mucho. Puedes dejar tus cargas y retirarte en paz, o seguir en busca de gloria.",
   chooseAction: "Elige tu acción",
   abandonRun: "Abandonar esta vida",
   leaderboardTitle: "Salón de Leyendas",
@@ -155,21 +162,26 @@ const es: StringMap = {
   rarity_uncommon: "Poco común",
   rarity_rare: "Raro",
   rarity_volatile: "Volátil",
+  stat_strength_tag: "FUE",
+  stat_dexterity_tag: "DES",
+  stat_constitution_tag: "CON",
+  stat_intelligence_tag: "INT",
+  stat_charisma_tag: "CAR",
   class_warrior: "Guerrero",
   class_wizard: "Mago",
   class_rogue: "Pícaro",
   class_ranger: "Montaraz",
-}
+};
 
-const TABLES: Record<Locale, StringMap> = { en, es }
+const TABLES: Record<Locale, StringMap> = { en, es };
 
 export function makeT(locale: Locale) {
-  const table = TABLES[locale] ?? en
-  return (key: string): string => table[key] ?? en[key] ?? key
+  const table = TABLES[locale] ?? en;
+  return (key: string): string => table[key] ?? en[key] ?? key;
 }
 
 // Direct helper: t(locale, key). Same lookup semantics as makeT.
 export function t(locale: Locale, key: string): string {
-  const table = TABLES[locale] ?? en
-  return table[key] ?? en[key] ?? key
+  const table = TABLES[locale] ?? en;
+  return table[key] ?? en[key] ?? key;
 }

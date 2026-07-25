@@ -192,6 +192,8 @@ export interface ServedChoice {
   icon?: string;
   tag?: PersonalityTag;
   rarity: Rarity;
+  statDeltas?: StatDeltas;
+  tradeoffDeltas?: StatDeltas;
 }
 
 export interface ServedEvent {
