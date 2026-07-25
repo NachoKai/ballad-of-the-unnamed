@@ -1,17 +1,18 @@
-import { useState } from "react"
-import type { CharacterState, ServedEvent } from "@shared/types"
-import type { Locale } from "@shared/types"
-import { t } from "../i18n/strings"
-import { Hud } from "./Hud"
+import { useState } from "react";
+import type { CharacterState, ServedEvent } from "@shared/types";
+import type { Locale } from "@shared/types";
+import { t } from "../i18n/strings";
+import { AchIcon } from "./AchIcon";
+import { Hud } from "./Hud";
 
 interface Props {
-  locale: Locale
-  character: CharacterState
-  event: ServedEvent
-  narrative: string | null
-  turnNarrative: string | null
-  onChoose: (choiceId: string) => Promise<void>
-  onAbandon: () => void
+  locale: Locale;
+  character: CharacterState;
+  event: ServedEvent;
+  narrative: string | null;
+  turnNarrative: string | null;
+  onChoose: (choiceId: string) => Promise<void>;
+  onAbandon: () => void;
 }
 
 const RARITY_ORDER: Record<string, number> = {
@@ -19,7 +20,7 @@ const RARITY_ORDER: Record<string, number> = {
   uncommon: 1,
   rare: 2,
   volatile: 3,
-}
+};
 
 export function GameScreen({
   locale,
@@ -29,34 +30,32 @@ export function GameScreen({
   onChoose,
   onAbandon,
 }: Props) {
-  const [busy, setBusy] = useState(false)
-  const [selected, setSelected] = useState<string | null>(null)
+  const [busy, setBusy] = useState(false);
+  const [selected, setSelected] = useState<string | null>(null);
 
   async function pick(id: string) {
-    if (busy) return
-    setBusy(true)
-    setSelected(id)
+    if (busy) return;
+    setBusy(true);
+    setSelected(id);
     try {
-      await onChoose(id)
+      await onChoose(id);
     } finally {
-      setBusy(false)
-      setSelected(null)
+      setBusy(false);
+      setSelected(null);
     }
   }
 
   // Sort choices by rarity so the "safe" option is first and rare/volatile pop last.
   const choices = [...event.choices].sort(
     (a, b) => (RARITY_ORDER[a.rarity] ?? 0) - (RARITY_ORDER[b.rarity] ?? 0),
-  )
+  );
 
   return (
     <div className="game-layout">
       <Hud locale={locale} character={character} />
 
       <main className="scene" aria-live="polite">
-        {turnNarrative && (
-          <p className="scene-echo">{turnNarrative}</p>
-        )}
+        {turnNarrative && <p className="scene-echo">{turnNarrative}</p>}
 
         {event.isRetirementOffer && (
           <div className="retire-banner" role="status">
@@ -67,7 +66,7 @@ export function GameScreen({
         <p className="scene-narrative text-pretty">{event.narrative}</p>
 
         <div className="choice-grid" role="group" aria-label={t(locale, "chooseAction")}>
-          {choices.map((c) => (
+          {choices.map(c => (
             <button
               key={c.id}
               type="button"
@@ -78,16 +77,26 @@ export function GameScreen({
               disabled={busy}
             >
               <span className={`rarity-pip rarity-${c.rarity}`} aria-hidden="true" />
-              <span className="choice-label text-pretty">{c.label}</span>
-              <span className="choice-rarity">{t(locale, `rarity_${c.rarity}` as never)}</span>
+              <span className="choice-label text-pretty">
+                {c.icon && <AchIcon name={c.icon} size={20} />}
+                {c.label}
+              </span>
+              <span className="choice-rarity">
+                {t(locale, `rarity_${c.rarity}` as never)}
+              </span>
             </button>
           ))}
         </div>
 
-        <button type="button" className="link-btn abandon" onClick={onAbandon} disabled={busy}>
+        <button
+          type="button"
+          className="link-btn abandon"
+          onClick={onAbandon}
+          disabled={busy}
+        >
           {t(locale, "abandonRun")}
         </button>
       </main>
     </div>
-  )
+  );
 }
