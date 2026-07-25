@@ -30,3 +30,6 @@ Thumbs.db
 
 # pnpm
 pnpm-lock.yaml
+
+.agents
+.claude
