@@ -1,0 +1,896 @@
+[
+  {
+    "id": "heist_lockpick",
+    "type": "minigame",
+    "subtype": "heist",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 7,
+    "primaryStat": "dexterity",
+    "narrative": {
+      "en": "The Arcanum vault breathes old magic. One wrong move and the wards scream. One right move and you're richer than a merchant prince.",
+      "es": "La bóveda del Arcanum respira magia antigua. Un movimiento en falso y las alarmas estallan. Uno acertado y serás más rico que un príncipe mercader."
+    },
+    "cards": [
+      {
+        "id": "pick_lock",
+        "icon": "lock",
+        "label": {
+          "en": "Pick the lock",
+          "es": "Forzar la cerradura"
+        }
+      },
+      {
+        "id": "distract_guard",
+        "icon": "eye-off",
+        "label": {
+          "en": "Distract the guard",
+          "es": "Distraer al guardia"
+        }
+      },
+      {
+        "id": "scale_wall",
+        "icon": "arrow-up-from-line",
+        "label": {
+          "en": "Scale the rear wall",
+          "es": "Escalar la pared trasera"
+        }
+      },
+      {
+        "id": "bribe_lookout",
+        "icon": "hand-coins",
+        "label": {
+          "en": "Bribe the lookout",
+          "es": "Sobornar al vigía"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.4,
+      "statInfluence": {
+        "dexterity": 0.012,
+        "intelligence": 0.005
+      },
+      "cardModifiers": {
+        "bribe_lookout": {
+          "winChanceDelta": 0.1
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "dexterity": 2
+        },
+        "goldDelta": 250,
+        "fameDelta": 5,
+        "countersDelta": {
+          "heists_won": 1,
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "You ghost through the vault like smoke. The Artificer's seal yields without a whisper. You leave with a relic worth a king's ransom — and leave no trace at all.",
+          "es": "Cruzas la bóveda como humo. El sello del Artífice cede sin un susurro. Te vas con una reliquia digna de un rey — sin dejar rastro."
+        }
+      },
+      "success": {
+        "goldDelta": 100,
+        "fameDelta": 2,
+        "countersDelta": {
+          "heists_won": 1
+        },
+        "narrative": {
+          "en": "The wards flicker but hold long enough. You grab what you came for and vanish into the night.",
+          "es": "Los sellos titilan pero aguantan lo suficiente. Agarrás lo que viniste a buscar y te esfumás en la noche."
+        }
+      },
+      "partial": {
+        "goldDelta": 30,
+        "injuryRiskDelta": 0.1,
+        "countersReset": [
+          "heist_streak"
+        ],
+        "narrative": {
+          "en": "You trigger a minor ward. You escape singed, pockets half-full, with guards on your tail.",
+          "es": "Activás un sello menor. Escapás chamuscado, los bolsillos a medio llenar, con guardias pisándote los talones."
+        }
+      },
+      "fail": {
+        "reputationDelta": -3,
+        "reputationFaction": "arcanum",
+        "injuryRiskDelta": 0.3,
+        "countersReset": [
+          "heist_streak"
+        ],
+        "narrative": {
+          "en": "The vault seals behind you. Magic binds your limbs as the Arcanum's wardens close in. This will cost you.",
+          "es": "La bóveda se sella detrás de vos. La magia atrapa tus miembros mientras los guardianes del Arcanum se acercan. Esto te va a costar."
+        }
+      }
+    }
+  },
+  {
+    "id": "drinking_contest",
+    "type": "minigame",
+    "subtype": "drinking",
+    "minAge": 18,
+    "maxAge": 99,
+    "weight": 6,
+    "primaryStat": "constitution",
+    "narrative": {
+      "en": "A weathered Greywater local slams a mug on the bar and grins. 'Last one standing buys the next round.' The room cheers.",
+      "es": "Un veterano de Villa Aguagrís golpea un jarro sobre la barra y sonríe. 'El último en pie invita la siguiente ronda.' El salón estalla en vítores."
+    },
+    "cards": [
+      {
+        "id": "match_gulp",
+        "icon": "beer",
+        "label": {
+          "en": "Match them gulp for gulp",
+          "es": "Igualarlos trago por trago"
+        }
+      },
+      {
+        "id": "tell_story",
+        "icon": "message-circle",
+        "label": {
+          "en": "Tell a tale to slow their pace",
+          "es": "Contar una historia para frenarlos"
+        }
+      },
+      {
+        "id": "spike_mug",
+        "icon": "flask-conical",
+        "label": {
+          "en": "Spike their drink on the sly",
+          "es": "Escabullir algo en su bebida"
+        }
+      },
+      {
+        "id": "throw_match",
+        "icon": "thumbs-down",
+        "label": {
+          "en": "Take a dive for the coin",
+          "es": "Dejarse ganar por la apuesta"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.45,
+      "statInfluence": {
+        "constitution": 0.012,
+        "charisma": 0.004
+      },
+      "cardModifiers": {
+        "tell_story": {
+          "winChanceDelta": 0.07
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "constitution": 2
+        },
+        "fameDelta": 4,
+        "goldDelta": 100,
+        "countersDelta": {
+          "drinks_won": 1,
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "They hit the floor before the mug leaves your hand. The crowd hoists you on their shoulders — you've got free drinks for a month in Greywater.",
+          "es": "Caen al suelo antes de que el jarro deje tu mano. La multitud te alza en hombros — tenés tragos gratis por un mes en Villa Aguagrís."
+        }
+      },
+      "success": {
+        "fameDelta": 2,
+        "goldDelta": 40,
+        "countersDelta": {
+          "drinks_won": 1
+        },
+        "narrative": {
+          "en": "You outlast them by half a mug. Respectful nods all around as they surrender.",
+          "es": "Los vencés por medio jarro. Asentimientos respetuosos mientras se rinden."
+        }
+      },
+      "partial": {
+        "goldDelta": -15,
+        "injuryRiskDelta": 0.05,
+        "countersReset": [
+          "drinking_streak"
+        ],
+        "narrative": {
+          "en": "You manage to finish, barely. You split the tab and stagger home with your pride dented.",
+          "es": "Lográs terminar, apenas. Dividen la cuenta y volvés tambaleándote con el orgullo abollado."
+        }
+      },
+      "fail": {
+        "goldDelta": -30,
+        "reputationDelta": -1,
+        "injuryRiskDelta": 0.15,
+        "countersReset": [
+          "drinking_streak"
+        ],
+        "narrative": {
+          "en": "The room spins. You slide off the stool and wake up face-down outside, missing a pouch and your dignity.",
+          "es": "La habitación da vueltas. Resbalás del taburete y despertás boca abajo afuera, sin una bolsa y sin dignidad."
+        }
+      }
+    }
+  },
+  {
+    "id": "chase_streets",
+    "type": "minigame",
+    "subtype": "chase",
+    "minAge": 14,
+    "maxAge": 99,
+    "weight": 8,
+    "primaryStat": "dexterity",
+    "narrative": {
+      "en": "A hooded figure bolts through the Greywater crowd, a stolen pouch in hand. The cobbles are slick. The alleys twist. You run.",
+      "es": "Una figura encapuchada dispara entre la multitud de Villa Aguagrís, una bolsa robada en la mano. Los adoquines están resbaladizos. Los callejones se retuercen. Corrés."
+    },
+    "cards": [
+      {
+        "id": "cut_through_market",
+        "icon": "shopping-basket",
+        "label": {
+          "en": "Cut through the market",
+          "es": "Atajar por el mercado"
+        }
+      },
+      {
+        "id": "leap_rooftops",
+        "icon": "building-2",
+        "label": {
+          "en": "Leap across the rooftops",
+          "es": "Saltar por los techos"
+        }
+      },
+      {
+        "id": "call_roadblock",
+        "icon": "megaphone",
+        "label": {
+          "en": "Raise the alarm ahead",
+          "es": "Gritar la alarma más adelante"
+        }
+      },
+      {
+        "id": "tackle_them",
+        "icon": "crosshair",
+        "label": {
+          "en": "Dive and tackle",
+          "es": "Tirarse a placar"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.45,
+      "statInfluence": {
+        "dexterity": 0.015
+      },
+      "cardModifiers": {
+        "cut_through_market": {
+          "winChanceDelta": 0.08
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "dexterity": 2
+        },
+        "goldDelta": 150,
+        "fameDelta": 5,
+        "countersDelta": {
+          "chases_won": 1,
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "You vault a cart, spring off a barrel, and land on them before they reach the docks. The crowd roars. The pouch is returned with interest.",
+          "es": "Saltás un carro, te impulsás en un barril y caés sobre elles antes de que lleguen al puerto. La multitud ruge. La bolsa es devuelta con intereses."
+        }
+      },
+      "success": {
+        "goldDelta": 60,
+        "fameDelta": 2,
+        "countersDelta": {
+          "chases_won": 1
+        },
+        "narrative": {
+          "en": "You corner them in a dead-end alley. They drop the pouch and scramble over a fence. You let them go — you got what matters.",
+          "es": "Los acorralás en un callejón sin salida. Sueltan la bolsa y trepan una cerca. Los dejás ir — tenés lo que importa."
+        }
+      },
+      "partial": {
+        "healthDelta": -5,
+        "injuryRiskDelta": 0.1,
+        "countersReset": [
+          "chase_streak"
+        ],
+        "narrative": {
+          "en": "You slip on wet cobbles and twist your ankle. A street vendor trips them, and you both limp away empty-handed.",
+          "es": "Resbalás en los adoquines mojados y te torcés el tobillo. Un vendedor callejero los hace tropezar, y ambos se van cojeando con las manos vacías."
+        }
+      },
+      "fail": {
+        "fameDelta": -2,
+        "injuryRiskDelta": 0.2,
+        "countersReset": [
+          "chase_streak"
+        ],
+        "narrative": {
+          "en": "They vanish into the sewers. You stand at the grate, gasping, as the echoes of their laughter fade below.",
+          "es": "Desaparecen en las alcantarillas. Te quedás frente a la reja, jadeando, mientras los ecos de su risa se apagan allá abajo."
+        }
+      }
+    }
+  },
+  {
+    "id": "gambling_den",
+    "type": "minigame",
+    "subtype": "gambling",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "primaryStat": "intelligence",
+    "narrative": {
+      "en": "Smoke and torchlight. A deck of worn cards. Across the table, a hooded dealer with a stone face and quick hands. The pot is deep.",
+      "es": "Humo y luz de antorcha. Una baraja de cartas gastadas. Al otro lado de la mesa, una crupier encapuchada con cara de piedra y manos rápidas. El pozo es tentador."
+    },
+    "cards": [
+      {
+        "id": "count_deck",
+        "icon": "layers",
+        "label": {
+          "en": "Count the deck",
+          "es": "Contar la baraja"
+        }
+      },
+      {
+        "id": "bluff_big",
+        "icon": "sparkles",
+        "label": {
+          "en": "Bluff with confidence",
+          "es": "Farolear con confianza"
+        }
+      },
+      {
+        "id": "read_dealer",
+        "icon": "eye",
+        "label": {
+          "en": "Read the dealer's tells",
+          "es": "Leer las señales de la crupier"
+        }
+      },
+      {
+        "id": "fold_early",
+        "icon": "hand",
+        "label": {
+          "en": "Fold and observe",
+          "es": "Irse al mazo y observar"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.4,
+      "statInfluence": {
+        "intelligence": 0.012,
+        "charisma": 0.005
+      },
+      "cardModifiers": {
+        "read_dealer": {
+          "winChanceDelta": 0.09,
+          "critChanceDelta": 0.05
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "goldDelta": 300,
+        "fameDelta": 3,
+        "countersDelta": {
+          "gambles_won": 1
+        },
+        "narrative": {
+          "en": "You read every tell, count every card. When you show your hand, the dealer's mask cracks. You rake in the pot with a quiet smile.",
+          "es": "Leés cada señal, contás cada carta. Cuando mostrás tu mano, la máscara de la crupier se quiebra. Recogés el pozo con una sonrisa tranquila."
+        }
+      },
+      "success": {
+        "goldDelta": 100,
+        "countersDelta": {
+          "gambles_won": 1
+        },
+        "narrative": {
+          "en": "A solid read pays off. You win a tidy sum and the dealer gives you a nod of respect.",
+          "es": "Una buena lectura da frutos. Ganás una suma decente y la crupier te concede un gesto de respeto."
+        }
+      },
+      "partial": {
+        "goldDelta": -30,
+        "countersReset": [
+          "gamble_streak"
+        ],
+        "narrative": {
+          "en": "You win a few rounds but lose more. You walk away near even — wiser, if poorer.",
+          "es": "Ganás algunas rondas pero perdés más. Te vas casi empatado — más sabio, si acaso más pobre."
+        }
+      },
+      "fail": {
+        "goldDelta": -100,
+        "reputationDelta": -1,
+        "countersReset": [
+          "gamble_streak"
+        ],
+        "narrative": {
+          "en": "The dealer was three moves ahead. You clean out your pockets and slink out into the rain, cleaned out.",
+          "es": "La crupier iba tres movimientos adelante. Vacías tus bolsillos y te escabullís bajo la lluvia, pelado."
+        }
+      }
+    }
+  },
+  {
+    "id": "survival_wilds",
+    "type": "minigame",
+    "subtype": "survival",
+    "minAge": 14,
+    "maxAge": 99,
+    "weight": 7,
+    "primaryStat": "constitution",
+    "narrative": {
+      "en": "The Thornwood stretches dark and endless around you. Night falls fast. The howls are getting closer. You need shelter, fire, and a plan.",
+      "es": "El Espinar se extiende oscuro e infinito a tu alrededor. La noche cae rápido. Los aullidos se acercan. Necesitás refugio, fuego y un plan."
+    },
+    "cards": [
+      {
+        "id": "build_shelter",
+        "icon": "tent",
+        "label": {
+          "en": "Build a sturdy shelter",
+          "es": "Construir un refugio firme"
+        }
+      },
+      {
+        "id": "forage_herbs",
+        "icon": "leaf",
+        "label": {
+          "en": "Forage for medicinal herbs",
+          "es": "Buscar hierbas medicinales"
+        }
+      },
+      {
+        "id": "set_snare",
+        "icon": "fish",
+        "label": {
+          "en": "Set a snare for food",
+          "es": "Armar una trampa para comida"
+        }
+      },
+      {
+        "id": "climb_tower",
+        "icon": "binoculars",
+        "label": {
+          "en": "Climb the old watchtower",
+          "es": "Trepar a la vieja torre vigía"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.45,
+      "statInfluence": {
+        "constitution": 0.01,
+        "intelligence": 0.005
+      },
+      "cardModifiers": {
+        "build_shelter": {
+          "winChanceDelta": 0.08
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "constitution": 2
+        },
+        "fameDelta": 4,
+        "goldDelta": 50,
+        "reputationDelta": 3,
+        "reputationFaction": "thornwood",
+        "countersDelta": {
+          "survivals_won": 1,
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "You master the wilds completely — warm fire, full belly, a shelter that holds against the night. A Thornwood warden finds you at dawn and nods in approval.",
+          "es": "Dominás la naturaleza por completo — fuego cálido, panza llena, un refugio que aguanta la noche. Una guardiana de Espinar te encuentra al amanecer y asiente con aprobación."
+        }
+      },
+      "success": {
+        "fameDelta": 1,
+        "reputationDelta": 1,
+        "reputationFaction": "thornwood",
+        "countersDelta": {
+          "survivals_won": 1
+        },
+        "narrative": {
+          "en": "You make it through the night. It's rough, but you wake alive and the Thornwood recognizes grit.",
+          "es": "Lográs pasar la noche. Es dura, pero despertás vivo y el Espinar reconoce el temple."
+        }
+      },
+      "partial": {
+        "healthDelta": -8,
+        "injuryRiskDelta": 0.12,
+        "countersReset": [
+          "survival_streak"
+        ],
+        "narrative": {
+          "en": "You endure, but barely. Cold and hunger gnaw at you. The Thornwood let you live — this time.",
+          "es": "Aguantás, pero apenas. El frío y el hambre te carcomen. El Espinar te dejó vivir — esta vez."
+        }
+      },
+      "fail": {
+        "healthDelta": -15,
+        "injuryRiskDelta": 0.3,
+        "countersReset": [
+          "survival_streak"
+        ],
+        "narrative": {
+          "en": "The night takes everything. You stumble out at dawn, frostbitten and lost, owing your life to a Thornwood patrol.",
+          "es": "La noche se lo lleva todo. Salís tambaleante al amanecer, congelado y perdido, debiéndole la vida a una patrulla de Espinar."
+        }
+      }
+    }
+  },
+  {
+    "id": "influence_crownguard",
+    "type": "minigame",
+    "subtype": "court",
+    "minAge": 18,
+    "maxAge": 99,
+    "weight": 7,
+    "primaryStat": "charisma",
+    "narrative": {
+      "en": "The Crownguard keep buzzes with whispers and ambition. A sealed missive sits in the seneschal's hand. Your future hangs on what happens next.",
+      "es": "La fortaleza de la Guardia de la Corona zumba en susurros y ambición. Un mensaje sellado descansa en la mano del senescal. Tu futuro pende de lo que suceda después."
+    },
+    "cards": [
+      {
+        "id": "flatter_seneschal",
+        "icon": "crown",
+        "label": {
+          "en": "Flatter the seneschal",
+          "es": "Adular al senescal"
+        }
+      },
+      {
+        "id": "quote_law",
+        "icon": "scroll-text",
+        "label": {
+          "en": "Quote the royal code",
+          "es": "Citar el código real"
+        }
+      },
+      {
+        "id": "expose_secret",
+        "icon": "key-round",
+        "label": {
+          "en": "Expose a well-placed secret",
+          "es": "Exponer un secreto bien ubicado"
+        }
+      },
+      {
+        "id": "pledge_service",
+        "icon": "handshake",
+        "label": {
+          "en": "Pledge your blade in service",
+          "es": "Ofrecer tu espada al servicio"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.42,
+      "statInfluence": {
+        "charisma": 0.01,
+        "intelligence": 0.006
+      },
+      "cardModifiers": {
+        "expose_secret": {
+          "winChanceDelta": 0.1
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "charisma": 2
+        },
+        "goldDelta": 200,
+        "fameDelta": 6,
+        "reputationDelta": 4,
+        "reputationFaction": "crownguard",
+        "countersDelta": {
+          "courtly_won": 1,
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "The seneschal rises. The room falls silent. You've not only won the day — you've earned a seat at the table. The Crownguard remembers names like yours.",
+          "es": "El senescal se pone de pie. La sala enmudece. No solo ganaste el día — te ganaste un asiento en la mesa. La Guardia de la Corona recuerda nombres como el tuyo."
+        }
+      },
+      "success": {
+        "goldDelta": 80,
+        "fameDelta": 3,
+        "reputationDelta": 2,
+        "reputationFaction": "crownguard",
+        "countersDelta": {
+          "courtly_won": 1
+        },
+        "narrative": {
+          "en": "Your words land well. The seneschal nods, and the missive is sealed in your favor.",
+          "es": "Tus palabras caen bien. El senescal asiente, y el mensaje se sella a tu favor."
+        }
+      },
+      "partial": {
+        "goldDelta": 20,
+        "reputationDelta": -1,
+        "reputationFaction": "crownguard",
+        "countersReset": [
+          "courtly_streak"
+        ],
+        "narrative": {
+          "en": "You hold your ground but fail to sway the room. A minor concession is granted — barely enough.",
+          "es": "Mantenés tu posición pero no lográs convencer a la sala. Te conceden una concesión menor — apenas suficiente."
+        }
+      },
+      "fail": {
+        "reputationDelta": -4,
+        "reputationFaction": "crownguard",
+        "fameDelta": -2,
+        "countersReset": [
+          "courtly_streak"
+        ],
+        "narrative": {
+          "en": "You misread the room badly. The seneschal's stare could cut glass. You're escorted out before you make things worse.",
+          "es": "Malinterpretás la sala por completo. La mirada del senescal podría cortar vidrio. Te escoltan fuera antes de que empeores las cosas."
+        }
+      }
+    }
+  },
+  {
+    "id": "smithing_contest",
+    "type": "minigame",
+    "subtype": "smithing",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "primaryStat": "strength",
+    "narrative": {
+      "en": "The Ironhold forge blazes hot. Two anvils. One champion. The Guild Master raises his hammer — and the contest begins.",
+      "es": "La forja de Fuertehierro arde. Dos yunques. Una campeona. El Maestro del Gremio alza su martillo — y la contienda comienza."
+    },
+    "cards": [
+      {
+        "id": "pump_bellows",
+        "icon": "fan",
+        "label": {
+          "en": "Pump the bellows white-hot",
+          "es": "Avivar los fuelles al blanco vivo"
+        }
+      },
+      {
+        "id": "fold_steel",
+        "icon": "sword",
+        "label": {
+          "en": "Fold the steel precisely",
+          "es": "Doblar el acero con precisión"
+        }
+      },
+      {
+        "id": "quench_right",
+        "icon": "droplets",
+        "label": {
+          "en": "Quench at the perfect moment",
+          "es": "Templar en el momento justo"
+        }
+      },
+      {
+        "id": "add_flourish",
+        "icon": "sparkles",
+        "label": {
+          "en": "Add an ornamental flourish",
+          "es": "Agregar un adorno decorativo"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.45,
+      "statInfluence": {
+        "strength": 0.012,
+        "intelligence": 0.004
+      },
+      "cardModifiers": {
+        "fold_steel": {
+          "winChanceDelta": 0.08,
+          "critChanceDelta": 0.04
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "strength": 2
+        },
+        "goldDelta": 180,
+        "fameDelta": 5,
+        "reputationDelta": 3,
+        "reputationFaction": "ironhold",
+        "countersDelta": {
+          "smithing_won": 1,
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "Your blade holds a keener edge than any the Guild has seen in a decade. The Master declares you Ironborn in name and spirit.",
+          "es": "Tu hoja tiene un filo más agudo que cualquier cosa que el Gremio haya visto en una década. El Maestro te declara Hijo del Hierro de nombre y espíritu."
+        }
+      },
+      "success": {
+        "goldDelta": 70,
+        "fameDelta": 2,
+        "reputationDelta": 1,
+        "reputationFaction": "ironhold",
+        "countersDelta": {
+          "smithing_won": 1
+        },
+        "narrative": {
+          "en": "A clean, solid blade. The Guild Master grunts approval. You earn a fair purse and a nod from the forge.",
+          "es": "Una hoja limpia y sólida. El Maestro del Gremio gruñe su aprobación. Ganás una bolsa justa y un gesto de la forja."
+        }
+      },
+      "partial": {
+        "goldDelta": 20,
+        "injuryRiskDelta": 0.08,
+        "countersReset": [
+          "smithing_streak"
+        ],
+        "narrative": {
+          "en": "The steel cools too fast and your edge chips. You salvage what you can, but the Guild's eyes say 'next time.'",
+          "es": "El acero se enfría muy rápido y el filo se astilla. Salvá lo que podés, pero la mirada del Gremio dice 'la próxima.'"
+        }
+      },
+      "fail": {
+        "goldDelta": -20,
+        "reputationDelta": -2,
+        "reputationFaction": "ironhold",
+        "injuryRiskDelta": 0.15,
+        "countersReset": [
+          "smithing_streak"
+        ],
+        "narrative": {
+          "en": "Your hammer lands wrong. The billet twists into scrap. You leave the forge to the sound of pitying murmurs.",
+          "es": "Tu martillo cae mal. El tocho se retuerce en chatarra. Dejás la forja entre murmullos de lástima."
+        }
+      }
+    }
+  },
+  {
+    "id": "archery_tournament",
+    "type": "minigame",
+    "subtype": "archery",
+    "minAge": 14,
+    "maxAge": 99,
+    "weight": 6,
+    "primaryStat": "dexterity",
+    "narrative": {
+      "en": "The tournament field stretches before you. Three targets. Three shots. The crowd holds its breath as you nock your first arrow.",
+      "es": "El campo del torneo se extiende ante vos. Tres blancos. Tres flechas. La multitud contiene la respiración mientras enganchás tu primera flecha."
+    },
+    "cards": [
+      {
+        "id": "aim_center",
+        "icon": "target",
+        "label": {
+          "en": "Aim dead center",
+          "es": "Apuntar al centro exacto"
+        }
+      },
+      {
+        "id": "shoot_move",
+        "icon": "person-running",
+        "label": {
+          "en": "Shoot on the move",
+          "es": "Disparar en movimiento"
+        }
+      },
+      {
+        "id": "mind_wind",
+        "icon": "wind",
+        "label": {
+          "en": "Read the wind carefully",
+          "es": "Leer el viento con cuidado"
+        }
+      },
+      {
+        "id": "trick_shot",
+        "icon": "arrow-up",
+        "label": {
+          "en": "Go for a trick shot",
+          "es": "Ir por un tiro de fantasía"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.45,
+      "statInfluence": {
+        "dexterity": 0.015
+      },
+      "cardModifiers": {
+        "mind_wind": {
+          "winChanceDelta": 0.08,
+          "critChanceDelta": 0.04
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "dexterity": 2
+        },
+        "fameDelta": 6,
+        "goldDelta": 150,
+        "countersDelta": {
+          "archery_won": 1,
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "Three arrows. Three perfect centers. The crowd erupts. They'll be telling tales of this shot at the fair for a generation.",
+          "es": "Tres flechas. Tres centros perfectos. La multitud estalla. Contarán esta historia en la feria por una generación."
+        }
+      },
+      "success": {
+        "fameDelta": 3,
+        "goldDelta": 60,
+        "countersDelta": {
+          "archery_won": 1
+        },
+        "narrative": {
+          "en": "Two in the ring, one close to center. Solid shooting. You place well and collect a respectable prize.",
+          "es": "Dos en el anillo, una cerca del centro. Buena puntería. Quedás bien ubicado y cobrás un premio respetable."
+        }
+      },
+      "partial": {
+        "fameDelta": -1,
+        "countersReset": [
+          "archery_streak"
+        ],
+        "narrative": {
+          "en": "You flinch on the last shot. It strays wide. The crowd sighs, and you step back with a shrug.",
+          "es": "Parpadeás en el último tiro. Se desvía. La multitud suspira, y retrocedés con un encogimiento de hombros."
+        }
+      },
+      "fail": {
+        "fameDelta": -3,
+        "goldDelta": -10,
+        "countersReset": [
+          "archery_streak"
+        ],
+        "narrative": {
+          "en": "The bowstring snaps on your second pull. Your shots go wild. You slink off as the next contender takes the line.",
+          "es": "La cuerda del arco se rompe en tu segundo tiro. Tus flechas se pierden. Te escabullís mientras la siguiente contendiente toma la línea."
+        }
+      }
+    }
+  }
+]
