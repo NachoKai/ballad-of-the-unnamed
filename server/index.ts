@@ -33,6 +33,7 @@ async function main() {
       // Load vite.config.ts so the @/@shared aliases apply in dev.
       configFile: join(projectRoot, "vite.config.ts"),
       root: join(projectRoot, "src"),
+      publicDir: join(projectRoot, "public"),
       server: {
         middlewareMode: true,
         // Attach HMR to our HTTP server so the WS upgrade rides the same port.
