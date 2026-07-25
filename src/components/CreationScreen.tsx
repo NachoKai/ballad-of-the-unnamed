@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { styled, keyframes } from "styled-components";
+import { styled } from "styled-components";
 import type { Locale, RunType } from "@shared/types";
 import { api, type ClassInfo } from "../api";
 import { t } from "../i18n/strings";
-import { BtnPrimary } from "./ui/Button"
+import { BtnPrimary } from "./ui/Button";
 import { TextBalance, TextPretty } from "./ui/Text";
+import { rise } from "./ui/Animation";
 
 interface Props {
   locale: Locale;
@@ -134,10 +135,6 @@ export function CreationScreen({ locale, onStart }: Props) {
     </CreationScreenRoot>
   );
 }
-
-const rise = keyframes`
-  from { opacity: 0; transform: translateY(10px); }
-`;
 
 const CreationScreenRoot = styled.div`
   animation: ${rise} 0.4s ease both;

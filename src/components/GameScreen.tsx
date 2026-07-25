@@ -1,13 +1,14 @@
 import { useState } from "react";
-import { styled, keyframes } from "styled-components";
+import { styled } from "styled-components";
 import type { CharacterState, ServedEvent, Rarity } from "@shared/types";
 import type { Locale } from "@shared/types";
 import { t } from "../i18n/strings";
 import { AchIcon } from "./AchIcon";
 import { Hud } from "./Hud";
 import { StatTag } from "./StatTag";
-import { LinkBtn } from "./ui/Button"
+import { LinkBtn } from "./ui/Button";
 import { TextPretty } from "./ui/Text";
+import { rise } from "./ui/Animation";
 
 interface Props {
   locale: Locale;
@@ -111,10 +112,6 @@ const RARITY_COLOR: Record<Rarity, string> = {
   rare: "#5a86c8",
   volatile: "#c9803c",
 };
-
-const rise = keyframes`
-  from { opacity: 0; transform: translateY(10px); }
-`;
 
 const GameLayout = styled.div`
   display: grid;

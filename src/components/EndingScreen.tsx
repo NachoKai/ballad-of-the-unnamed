@@ -1,20 +1,26 @@
-import { Castle, Landmark, Skull, Swords } from "lucide-react"
-import { styled, keyframes } from "styled-components"
-import type { AchievementContent, CharacterState, EndingType, Locale } from "@shared/types"
-import { t } from "../i18n/strings"
-import { AchIcon } from "./AchIcon"
-import { BtnPrimary, BtnGhost } from "./ui/Button"
-import { TextBalance, TextPretty } from "./ui/Text"
+import { Castle, Landmark, Skull, Swords } from "lucide-react";
+import { styled } from "styled-components";
+import type {
+  AchievementContent,
+  CharacterState,
+  EndingType,
+  Locale,
+} from "@shared/types";
+import { t } from "../i18n/strings";
+import { AchIcon } from "./AchIcon";
+import { BtnPrimary, BtnGhost } from "./ui/Button";
+import { TextBalance, TextPretty } from "./ui/Text";
+import { rise } from "./ui/Animation";
 
 interface Props {
-  locale: Locale
-  character: CharacterState
-  endingType: EndingType
-  epilogue: string
-  score: number
-  achievements: AchievementContent[]
-  onNewRun: () => void
-  onLeaderboard: () => void
+  locale: Locale;
+  character: CharacterState;
+  endingType: EndingType;
+  epilogue: string;
+  score: number;
+  achievements: AchievementContent[];
+  onNewRun: () => void;
+  onLeaderboard: () => void;
 }
 
 const ENDING_ICON: Record<EndingType, typeof Skull> = {
@@ -22,7 +28,7 @@ const ENDING_ICON: Record<EndingType, typeof Skull> = {
   peaceful_retirement: Castle,
   other_death: Skull,
   other_retirement: Landmark,
-}
+};
 
 export function EndingScreen({
   locale,
@@ -34,19 +40,17 @@ export function EndingScreen({
   onNewRun,
   onLeaderboard,
 }: Props) {
-  const Crest = ENDING_ICON[endingType]
+  const Crest = ENDING_ICON[endingType];
   return (
     <EndingScreenRoot>
       <EndingCard>
         <EndingCrest aria-hidden="true">
           <Crest size={52} strokeWidth={1.5} />
         </EndingCrest>
-        <EndingTitle>
-          {t(locale, `ending_${endingType}` as never)}
-        </EndingTitle>
+        <EndingTitle>{t(locale, `ending_${endingType}` as never)}</EndingTitle>
         <EndingName>
-          {character.name} &middot; {t(locale, `class_${character.class}` as never)} &middot;{" "}
-          {t(locale, "ageLabel")} {character.age}
+          {character.name} &middot; {t(locale, `class_${character.class}` as never)}{" "}
+          &middot; {t(locale, "ageLabel")} {character.age}
         </EndingName>
 
         <Epilogue>{epilogue}</Epilogue>
@@ -83,7 +87,7 @@ export function EndingScreen({
           <EndingAchievements>
             <h2>{t(locale, "achievementsEarned")}</h2>
             <ul>
-              {achievements.map((a) => (
+              {achievements.map(a => (
                 <AchChip key={a.id}>
                   <AchIconWrap>
                     <AchIcon name={a.icon} size={16} />
@@ -108,24 +112,24 @@ export function EndingScreen({
         </EndingActions>
       </EndingCard>
     </EndingScreenRoot>
-  )
+  );
 }
-
-const rise = keyframes`
-  from { opacity: 0; transform: translateY(10px); }
-`;
 
 const EndingScreenRoot = styled.div`
   display: grid;
   place-items: center;
   padding: 26px 0;
   animation: ${rise} 0.5s ease both;
-`
+`;
 
 const EndingCard = styled.div`
   width: 100%;
   max-width: 720px;
-  background: linear-gradient(180deg, ${({ theme }) => theme.colors.panel} 0%, ${({ theme }) => theme.colors.ink2} 100%);
+  background: linear-gradient(
+    180deg,
+    ${({ theme }) => theme.colors.panel} 0%,
+    ${({ theme }) => theme.colors.ink2} 100%
+  );
   border: 1px solid ${({ theme }) => theme.colors.line2};
   border-radius: ${({ theme }) => theme.radii.lg};
   padding: 34px;
@@ -135,25 +139,25 @@ const EndingCard = styled.div`
   @media (max-width: 680px) {
     padding: 22px;
   }
-`
+`;
 
 const EndingCrest = styled.div`
   font-size: 56px;
   color: ${({ theme }) => theme.colors.gold};
   line-height: 1;
-`
+`;
 
 const EndingTitle = styled(TextBalance)`
   font-size: clamp(26px, 4vw, 38px);
   color: ${({ theme }) => theme.colors.goldBright};
   margin-top: 6px;
-`
+`;
 
 const EndingName = styled.p`
   font-size: clamp(26px, 4vw, 38px);
   color: ${({ theme }) => theme.colors.goldBright};
   margin-top: 6px;
-`
+`;
 
 const Epilogue = styled(TextPretty)`
   margin: 22px auto 6px;
@@ -162,7 +166,7 @@ const Epilogue = styled(TextPretty)`
   line-height: 1.7;
   color: ${({ theme }) => theme.colors.parchment};
   font-style: italic;
-`
+`;
 
 const ScoreBanner = styled.div`
   margin: 24px auto;
@@ -173,14 +177,14 @@ const ScoreBanner = styled.div`
   border: 1px solid ${({ theme }) => theme.colors.line2};
   border-radius: ${({ theme }) => theme.radii.sm};
   background: ${({ theme }) => theme.colors.ink3};
-`
+`;
 
 const ScoreLabel = styled.span`
   font-size: 12px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: ${({ theme }) => theme.colors.muted};
-`
+`;
 
 const ScoreValue = styled.span`
   font-family: ${({ theme }) => theme.fonts.display};
@@ -188,7 +192,7 @@ const ScoreValue = styled.span`
   font-weight: 700;
   color: ${({ theme }) => theme.colors.goldBright};
   font-variant-numeric: tabular-nums;
-`
+`;
 
 const EndingStats = styled.dl`
   display: flex;
@@ -196,7 +200,7 @@ const EndingStats = styled.dl`
   justify-content: center;
   gap: 10px;
   margin: 8px 0 18px;
-`
+`;
 
 const StatCell = styled.div`
   display: flex;
@@ -220,7 +224,7 @@ const StatCell = styled.div`
     color: ${({ theme }) => theme.colors.muted};
     letter-spacing: 0.04em;
   }
-`
+`;
 
 const EndingAchievements = styled.div`
   margin: 22px 0 6px;
@@ -242,7 +246,7 @@ const EndingAchievements = styled.div`
     justify-content: center;
     gap: 10px;
   }
-`
+`;
 
 const AchChip = styled.li`
   display: inline-flex;
@@ -272,17 +276,17 @@ const AchChip = styled.li`
     color: ${({ theme }) => theme.colors.parchmentDim};
     margin-top: 2px;
   }
-`
+`;
 
 const AchIconWrap = styled.span`
   display: inline-flex;
   align-items: center;
   color: ${({ theme }) => theme.colors.goldBright};
-`
+`;
 
 const EndingActions = styled.div`
   display: flex;
   gap: 12px;
   justify-content: center;
   margin-top: 26px;
-`
+`;
