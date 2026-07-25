@@ -4,8 +4,15 @@
       "id": "first_blood",
       "icon": "swords",
       "rarity": "common",
-      "condition": { "type": "counter_gte", "key": "duels_won", "value": 1 },
-      "name": { "en": "First Blood", "es": "Primera Sangre" },
+      "condition": {
+        "type": "counter_gte",
+        "key": "duels_won",
+        "value": 1
+      },
+      "name": {
+        "en": "First Blood",
+        "es": "Primera Sangre"
+      },
       "description": {
         "en": "Win your first duel.",
         "es": "Gana tu primer duelo."
@@ -15,8 +22,15 @@
       "id": "duelist",
       "icon": "swords",
       "rarity": "uncommon",
-      "condition": { "type": "counter_gte", "key": "duels_won", "value": 5 },
-      "name": { "en": "Duelist", "es": "Duelista" },
+      "condition": {
+        "type": "counter_gte",
+        "key": "duels_won",
+        "value": 5
+      },
+      "name": {
+        "en": "Duelist",
+        "es": "Duelista"
+      },
       "description": {
         "en": "Win five duels in a single life.",
         "es": "Gana cinco duelos en una sola vida."
@@ -26,8 +40,15 @@
       "id": "untouchable",
       "icon": "shield",
       "rarity": "rare",
-      "condition": { "type": "counter_gte", "key": "duels_won", "value": 10 },
-      "name": { "en": "Untouchable", "es": "Intocable" },
+      "condition": {
+        "type": "counter_gte",
+        "key": "duels_won",
+        "value": 10
+      },
+      "name": {
+        "en": "Untouchable",
+        "es": "Intocable"
+      },
       "description": {
         "en": "Win ten duels without dying.",
         "es": "Gana diez duelos sin morir."
@@ -37,8 +58,14 @@
       "id": "deep_pockets",
       "icon": "coins",
       "rarity": "uncommon",
-      "condition": { "type": "gold_gte", "value": 500 },
-      "name": { "en": "Deep Pockets", "es": "Bolsillos Profundos" },
+      "condition": {
+        "type": "gold_gte",
+        "value": 500
+      },
+      "name": {
+        "en": "Deep Pockets",
+        "es": "Bolsillos Profundos"
+      },
       "description": {
         "en": "Hold 500 gold at once.",
         "es": "Ten 500 de oro a la vez."
@@ -48,8 +75,14 @@
       "id": "merchant_prince",
       "icon": "coins",
       "rarity": "rare",
-      "condition": { "type": "gold_gte", "value": 2000 },
-      "name": { "en": "Merchant Prince", "es": "Príncipe Mercader" },
+      "condition": {
+        "type": "gold_gte",
+        "value": 2000
+      },
+      "name": {
+        "en": "Merchant Prince",
+        "es": "Príncipe Mercader"
+      },
       "description": {
         "en": "Hold 2000 gold at once.",
         "es": "Ten 2000 de oro a la vez."
@@ -59,8 +92,14 @@
       "id": "renowned",
       "icon": "star",
       "rarity": "uncommon",
-      "condition": { "type": "fame_gte", "value": 50 },
-      "name": { "en": "Renowned", "es": "Renombrado" },
+      "condition": {
+        "type": "fame_gte",
+        "value": 50
+      },
+      "name": {
+        "en": "Renowned",
+        "es": "Renombrado"
+      },
       "description": {
         "en": "Reach 50 fame.",
         "es": "Alcanza 50 de fama."
@@ -70,8 +109,14 @@
       "id": "legend",
       "icon": "crown",
       "rarity": "epic",
-      "condition": { "type": "fame_gte", "value": 150 },
-      "name": { "en": "Living Legend", "es": "Leyenda Viviente" },
+      "condition": {
+        "type": "fame_gte",
+        "value": 150
+      },
+      "name": {
+        "en": "Living Legend",
+        "es": "Leyenda Viviente"
+      },
       "description": {
         "en": "Reach 150 fame in a single life.",
         "es": "Alcanza 150 de fama en una sola vida."
@@ -81,8 +126,15 @@
       "id": "iron_will",
       "icon": "dumbbell",
       "rarity": "rare",
-      "condition": { "type": "stat_gte", "stat": "strength", "value": 25 },
-      "name": { "en": "Iron Will", "es": "Voluntad de Hierro" },
+      "condition": {
+        "type": "stat_gte",
+        "stat": "strength",
+        "value": 25
+      },
+      "name": {
+        "en": "Iron Will",
+        "es": "Voluntad de Hierro"
+      },
       "description": {
         "en": "Reach 25 strength.",
         "es": "Alcanza 25 de fuerza."
@@ -92,8 +144,15 @@
       "id": "silver_tongue",
       "icon": "message-circle",
       "rarity": "rare",
-      "condition": { "type": "stat_gte", "stat": "charisma", "value": 25 },
-      "name": { "en": "Silver Tongue", "es": "Lengua de Plata" },
+      "condition": {
+        "type": "stat_gte",
+        "stat": "charisma",
+        "value": 25
+      },
+      "name": {
+        "en": "Silver Tongue",
+        "es": "Lengua de Plata"
+      },
       "description": {
         "en": "Reach 25 charisma.",
         "es": "Alcanza 25 de carisma."
@@ -103,8 +162,15 @@
       "id": "archmage",
       "icon": "sparkles",
       "rarity": "epic",
-      "condition": { "type": "stat_gte", "stat": "intelligence", "value": 30 },
-      "name": { "en": "Archmage", "es": "Archimago" },
+      "condition": {
+        "type": "stat_gte",
+        "stat": "intelligence",
+        "value": 30
+      },
+      "name": {
+        "en": "Archmage",
+        "es": "Archimago"
+      },
       "description": {
         "en": "Reach 30 intelligence.",
         "es": "Alcanza 30 de inteligencia."
@@ -114,8 +180,14 @@
       "id": "survivor",
       "icon": "heart-pulse",
       "rarity": "uncommon",
-      "condition": { "type": "age_gte", "value": 40 },
-      "name": { "en": "Survivor", "es": "Superviviente" },
+      "condition": {
+        "type": "age_gte",
+        "value": 40
+      },
+      "name": {
+        "en": "Survivor",
+        "es": "Superviviente"
+      },
       "description": {
         "en": "Live to age 40.",
         "es": "Vive hasta los 40 años."
@@ -125,8 +197,14 @@
       "id": "elder",
       "icon": "hourglass",
       "rarity": "epic",
-      "condition": { "type": "age_gte", "value": 60 },
-      "name": { "en": "Grey Elder", "es": "Anciano Gris" },
+      "condition": {
+        "type": "age_gte",
+        "value": 60
+      },
+      "name": {
+        "en": "Grey Elder",
+        "es": "Anciano Gris"
+      },
       "description": {
         "en": "Live to age 60.",
         "es": "Vive hasta los 60 años."
@@ -136,8 +214,14 @@
       "id": "retired_hero",
       "icon": "tent",
       "rarity": "rare",
-      "condition": { "type": "ending", "value": "retired" },
-      "name": { "en": "Quiet Retirement", "es": "Retiro Tranquilo" },
+      "condition": {
+        "type": "ending",
+        "value": "retired"
+      },
+      "name": {
+        "en": "Quiet Retirement",
+        "es": "Retiro Tranquilo"
+      },
       "description": {
         "en": "Retire on your own terms.",
         "es": "Retírate en tus propios términos."
@@ -147,8 +231,14 @@
       "id": "glorious_end",
       "icon": "flame",
       "rarity": "legendary",
-      "condition": { "type": "score_gte", "value": 5000 },
-      "name": { "en": "Glorious End", "es": "Final Glorioso" },
+      "condition": {
+        "type": "score_gte",
+        "value": 5000
+      },
+      "name": {
+        "en": "Glorious End",
+        "es": "Final Glorioso"
+      },
       "description": {
         "en": "Finish a life with a score of 5000 or more.",
         "es": "Termina una vida con una puntuación de 5000 o más."
@@ -158,8 +248,14 @@
       "id": "faction_champion",
       "icon": "flag",
       "rarity": "epic",
-      "condition": { "type": "reputation_gte", "value": 60 },
-      "name": { "en": "Faction Champion", "es": "Campeón de Facción" },
+      "condition": {
+        "type": "reputation_gte",
+        "value": 60
+      },
+      "name": {
+        "en": "Faction Champion",
+        "es": "Campeón de Facción"
+      },
       "description": {
         "en": "Reach 60 reputation with any faction.",
         "es": "Alcanza 60 de reputación con cualquier facción."
@@ -169,8 +265,14 @@
       "id": "outlaw",
       "icon": "skull",
       "rarity": "rare",
-      "condition": { "type": "reputation_lte", "value": -50 },
-      "name": { "en": "Wanted Outlaw", "es": "Forajido Buscado" },
+      "condition": {
+        "type": "reputation_lte",
+        "value": -50
+      },
+      "name": {
+        "en": "Wanted Outlaw",
+        "es": "Forajido Buscado"
+      },
       "description": {
         "en": "Drop to -50 reputation with any faction.",
         "es": "Cae a -50 de reputación con cualquier facción."
@@ -180,8 +282,14 @@
       "id": "collector",
       "icon": "gem",
       "rarity": "uncommon",
-      "condition": { "type": "rare_cards_gte", "value": 3 },
-      "name": { "en": "Card Collector", "es": "Coleccionista de Cartas" },
+      "condition": {
+        "type": "rare_cards_gte",
+        "value": 3
+      },
+      "name": {
+        "en": "Card Collector",
+        "es": "Coleccionista de Cartas"
+      },
       "description": {
         "en": "Draw three or more rare-or-better cards in one life.",
         "es": "Roba tres o más cartas raras o mejores en una vida."
@@ -191,11 +299,339 @@
       "id": "lucky",
       "icon": "clover",
       "rarity": "epic",
-      "condition": { "type": "legendary_cards_gte", "value": 1 },
-      "name": { "en": "Touched by Fate", "es": "Tocado por el Destino" },
+      "condition": {
+        "type": "legendary_cards_gte",
+        "value": 1
+      },
+      "name": {
+        "en": "Touched by Fate",
+        "es": "Tocado por el Destino"
+      },
       "description": {
         "en": "Draw a legendary card.",
         "es": "Roba una carta legendaria."
+      }
+    },
+    {
+      "id": "brawler",
+      "icon": "shield-off",
+      "rarity": "uncommon",
+      "condition": {
+        "type": "counter_gte",
+        "key": "brawls_won",
+        "value": 2
+      },
+      "name": {
+        "en": "Brawler",
+        "es": "Peleador"
+      },
+      "description": {
+        "en": "Win 2 bar brawls.",
+        "es": "Gana 2 peleas de taberna."
+      }
+    },
+    {
+      "id": "apprentice_mage",
+      "icon": "brain",
+      "rarity": "rare",
+      "condition": {
+        "type": "counter_gte",
+        "key": "arcane_duels_won",
+        "value": 2
+      },
+      "name": {
+        "en": "Apprentice Mage",
+        "es": "Aprendiz de Mago"
+      },
+      "description": {
+        "en": "Win 2 arcane duels.",
+        "es": "Gana 2 duelos arcanos."
+      }
+    },
+    {
+      "id": "tournament_victor",
+      "icon": "crown",
+      "rarity": "epic",
+      "condition": {
+        "type": "counter_gte",
+        "key": "tournaments_won",
+        "value": 1
+      },
+      "name": {
+        "en": "Tournament Victor",
+        "es": "Campeón de Torneo"
+      },
+      "description": {
+        "en": "Win a tournament.",
+        "es": "Gana un torneo."
+      }
+    },
+    {
+      "id": "cat_burglar",
+      "icon": "wind",
+      "rarity": "rare",
+      "condition": {
+        "type": "counter_gte",
+        "key": "heists_won",
+        "value": 2
+      },
+      "name": {
+        "en": "Cat Burglar",
+        "es": "Ladrón de Guante Blanco"
+      },
+      "description": {
+        "en": "Complete 2 heists.",
+        "es": "Completa 2 robos."
+      }
+    },
+    {
+      "id": "sharpshooter",
+      "icon": "star",
+      "rarity": "uncommon",
+      "condition": {
+        "type": "counter_gte",
+        "key": "archery_won",
+        "value": 2
+      },
+      "name": {
+        "en": "Sharpshooter",
+        "es": "Tirador Certero"
+      },
+      "description": {
+        "en": "Win 2 archery contests.",
+        "es": "Gana 2 concursos de tiro."
+      }
+    },
+    {
+      "id": "master_smith",
+      "icon": "sparkles",
+      "rarity": "rare",
+      "condition": {
+        "type": "counter_gte",
+        "key": "smithing_won",
+        "value": 2
+      },
+      "name": {
+        "en": "Master Smith",
+        "es": "Maestro Herrero"
+      },
+      "description": {
+        "en": "Win 2 smithing contests.",
+        "es": "Gana 2 concursos de herrería."
+      }
+    },
+    {
+      "id": "party_animal",
+      "icon": "heart-pulse",
+      "rarity": "common",
+      "condition": {
+        "type": "counter_gte",
+        "key": "drinks_won",
+        "value": 3
+      },
+      "name": {
+        "en": "Party Animal",
+        "es": "Fiestero"
+      },
+      "description": {
+        "en": "Win 3 drinking contests.",
+        "es": "Gana 3 concursos de bebida."
+      }
+    },
+    {
+      "id": "lucky_devil",
+      "icon": "clover",
+      "rarity": "rare",
+      "condition": {
+        "type": "counter_gte",
+        "key": "gambles_won",
+        "value": 3
+      },
+      "name": {
+        "en": "Lucky Devil",
+        "es": "Diablo con Suerte"
+      },
+      "description": {
+        "en": "Win 3 gambling games.",
+        "es": "Gana 3 juegos de azar."
+      }
+    },
+    {
+      "id": "diplomat",
+      "icon": "message-circle",
+      "rarity": "rare",
+      "condition": {
+        "type": "counter_gte",
+        "key": "negotiations_won",
+        "value": 5
+      },
+      "name": {
+        "en": "Diplomat",
+        "es": "Diplomático"
+      },
+      "description": {
+        "en": "Win 5 negotiations.",
+        "es": "Gana 5 negociaciones."
+      }
+    },
+    {
+      "id": "monster_slayer",
+      "icon": "skull",
+      "rarity": "rare",
+      "condition": {
+        "type": "counter_gte",
+        "key": "monsters_killed",
+        "value": 5
+      },
+      "name": {
+        "en": "Monster Slayer",
+        "es": "Matamonstruos"
+      },
+      "description": {
+        "en": "Kill 5 monsters.",
+        "es": "Mata 5 monstruos."
+      }
+    },
+    {
+      "id": "soulseller",
+      "icon": "gem",
+      "rarity": "epic",
+      "condition": {
+        "type": "counter_gte",
+        "key": "dark_pacts",
+        "value": 2
+      },
+      "name": {
+        "en": "Soulseller",
+        "es": "Vendedor de Almas"
+      },
+      "description": {
+        "en": "Make 2 dark pacts.",
+        "es": "Haz 2 pactos oscuros."
+      }
+    },
+    {
+      "id": "savior",
+      "icon": "heart-handshake",
+      "rarity": "rare",
+      "condition": {
+        "type": "counter_gte",
+        "key": "lives_saved",
+        "value": 2
+      },
+      "name": {
+        "en": "Savior",
+        "es": "Salvador"
+      },
+      "description": {
+        "en": "Save 2 lives.",
+        "es": "Salva 2 vidas."
+      }
+    },
+    {
+      "id": "peacemaker",
+      "icon": "shield",
+      "rarity": "uncommon",
+      "condition": {
+        "type": "counter_gte",
+        "key": "talked_down",
+        "value": 3
+      },
+      "name": {
+        "en": "Peacemaker",
+        "es": "Pacificador"
+      },
+      "description": {
+        "en": "Talk down 3 opponents.",
+        "es": "Disuade a 3 oponentes."
+      }
+    },
+    {
+      "id": "swift",
+      "icon": "wind",
+      "rarity": "rare",
+      "condition": {
+        "type": "stat_gte",
+        "stat": "dexterity",
+        "value": 20
+      },
+      "name": {
+        "en": "Swift",
+        "es": "Veloz"
+      },
+      "description": {
+        "en": "Reach 20 dexterity.",
+        "es": "Alcanza 20 de destreza."
+      }
+    },
+    {
+      "id": "ironhide",
+      "icon": "dumbbell",
+      "rarity": "rare",
+      "condition": {
+        "type": "stat_gte",
+        "stat": "constitution",
+        "value": 20
+      },
+      "name": {
+        "en": "Ironhide",
+        "es": "Piel de Hierro"
+      },
+      "description": {
+        "en": "Reach 20 constitution.",
+        "es": "Alcanza 20 de constitución."
+      }
+    },
+    {
+      "id": "tragic_hero",
+      "icon": "swords",
+      "rarity": "rare",
+      "condition": {
+        "type": "ending",
+        "value": "heroic_death"
+      },
+      "name": {
+        "en": "Tragic Hero",
+        "es": "Héroe Trágico"
+      },
+      "description": {
+        "en": "Die a heroic death.",
+        "es": "Muere como un héroe."
+      }
+    },
+    {
+      "id": "beloved",
+      "icon": "star",
+      "rarity": "epic",
+      "condition": {
+        "type": "fame_gte",
+        "value": 100
+      },
+      "name": {
+        "en": "Beloved",
+        "es": "Querido"
+      },
+      "description": {
+        "en": "Reach 100 fame.",
+        "es": "Alcanza 100 de fama."
+      }
+    },
+    {
+      "id": "completionist",
+      "icon": "flag",
+      "rarity": "epic",
+      "condition": {
+        "type": "counter_gte",
+        "key": "quests_completed",
+        "value": 5
+      },
+      "name": {
+        "en": "Completionist",
+        "es": "Completista"
+      },
+      "description": {
+        "en": "Complete 5 quests.",
+        "es": "Completa 5 misiones."
       }
     }
   ]

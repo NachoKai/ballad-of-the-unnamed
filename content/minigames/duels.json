@@ -15,36 +15,62 @@
       {
         "id": "high_left",
         "icon": "sword",
-        "label": { "en": "Strike high-left", "es": "Golpe arriba a la izquierda" }
+        "label": {
+          "en": "Strike high-left",
+          "es": "Golpe arriba a la izquierda"
+        }
       },
       {
         "id": "high_right",
         "icon": "sword",
-        "label": { "en": "Strike high-right", "es": "Golpe arriba a la derecha" }
+        "label": {
+          "en": "Strike high-right",
+          "es": "Golpe arriba a la derecha"
+        }
       },
       {
         "id": "low_disarm",
         "icon": "shield-off",
-        "label": { "en": "Aim low, disarm", "es": "Bajo, para desarmar" }
+        "label": {
+          "en": "Aim low, disarm",
+          "es": "Bajo, para desarmar"
+        }
       },
       {
         "id": "feint_center",
         "icon": "wind",
-        "label": { "en": "Feint to center", "es": "Amague al medio" }
+        "label": {
+          "en": "Feint to center",
+          "es": "Amague al medio"
+        }
       }
     ],
     "resolution": {
       "type": "weighted_hidden_match",
       "baseWinChance": 0.45,
-      "statInfluence": { "strength": 0.01, "dexterity": 0.005 },
-      "cardModifiers": { "feint_center": { "winChanceDelta": 0.1, "critChanceDelta": 0.05 } }
+      "statInfluence": {
+        "strength": 0.01,
+        "dexterity": 0.005
+      },
+      "cardModifiers": {
+        "feint_center": {
+          "winChanceDelta": 0.1,
+          "critChanceDelta": 0.05
+        }
+      }
     },
     "outcomes": {
       "critical": {
-        "statDeltas": { "strength": 2 },
+        "statDeltas": {
+          "strength": 2
+        },
         "fameDelta": 6,
         "goldDelta": 200,
-        "countersDelta": { "battles_won": 1, "duels_won": 1, "clutch_duels": 1 },
+        "countersDelta": {
+          "battles_won": 1,
+          "duels_won": 1,
+          "clutch_duels": 1
+        },
         "narrative": {
           "en": "You read the guard perfectly and end it in one breath. The crowd will tell this story for years.",
           "es": "Leés la guardia a la perfección y lo terminás en un suspiro. La multitud contará esto durante años."
@@ -52,7 +78,10 @@
       },
       "success": {
         "fameDelta": 2,
-        "countersDelta": { "battles_won": 1, "duels_won": 1 },
+        "countersDelta": {
+          "battles_won": 1,
+          "duels_won": 1
+        },
         "narrative": {
           "en": "A solid hit lands. Your opponent yields, breathing hard.",
           "es": "Un golpe sólido acierta. Tu rival se rinde, respirando con dificultad."
@@ -60,7 +89,9 @@
       },
       "partial": {
         "injuryRiskDelta": 0.1,
-        "countersReset": ["duel_streak"],
+        "countersReset": [
+          "duel_streak"
+        ],
         "narrative": {
           "en": "You trade blows and scrape a win, but you'll feel it tomorrow.",
           "es": "Intercambian golpes y arañás la victoria, pero lo vas a sentir mañana."
@@ -70,7 +101,9 @@
         "injuryRiskDelta": 0.3,
         "reputationDelta": -3,
         "reputationFaction": "ironhold",
-        "countersReset": ["duel_streak"],
+        "countersReset": [
+          "duel_streak"
+        ],
         "narrative": {
           "en": "They see it coming. Steel bites, and you go down in the dust.",
           "es": "Lo ven venir. El acero muerde, y caés en el polvo."
@@ -94,35 +127,59 @@
       {
         "id": "humble",
         "icon": "hand",
-        "label": { "en": "Appeal humbly", "es": "Apelar con humildad" }
+        "label": {
+          "en": "Appeal humbly",
+          "es": "Apelar con humildad"
+        }
       },
       {
         "id": "strategic",
         "icon": "brain",
-        "label": { "en": "Lay out the logic", "es": "Exponer la lógica" }
+        "label": {
+          "en": "Lay out the logic",
+          "es": "Exponer la lógica"
+        }
       },
       {
         "id": "cocky",
         "icon": "flame",
-        "label": { "en": "Call their bluff", "es": "Desafiar su farol" }
+        "label": {
+          "en": "Call their bluff",
+          "es": "Desafiar su farol"
+        }
       },
       {
         "id": "supportive",
         "icon": "heart-handshake",
-        "label": { "en": "Find common ground", "es": "Buscar puntos en común" }
+        "label": {
+          "en": "Find common ground",
+          "es": "Buscar puntos en común"
+        }
       }
     ],
     "resolution": {
       "type": "weighted_hidden_match",
       "baseWinChance": 0.42,
-      "statInfluence": { "charisma": 0.012, "intelligence": 0.004 },
-      "cardModifiers": { "strategic": { "winChanceDelta": 0.08 } }
+      "statInfluence": {
+        "charisma": 0.012,
+        "intelligence": 0.004
+      },
+      "cardModifiers": {
+        "strategic": {
+          "winChanceDelta": 0.08
+        }
+      }
     },
     "outcomes": {
       "critical": {
-        "statDeltas": { "charisma": 2 },
+        "statDeltas": {
+          "charisma": 2
+        },
         "goldDelta": 150,
-        "countersDelta": { "negotiation_streak": 1, "negotiations_won": 1 },
+        "countersDelta": {
+          "negotiation_streak": 1,
+          "negotiations_won": 1
+        },
         "narrative": {
           "en": "You read them exactly and walk away with more than you asked for.",
           "es": "Los leés con exactitud y te vas con más de lo que pediste."
@@ -130,7 +187,10 @@
       },
       "success": {
         "goldDelta": 60,
-        "countersDelta": { "negotiation_streak": 1, "negotiations_won": 1 },
+        "countersDelta": {
+          "negotiation_streak": 1,
+          "negotiations_won": 1
+        },
         "narrative": {
           "en": "A fair deal, on your terms. Handshakes all around.",
           "es": "Un trato justo, en tus términos. Apretones de mano por todos lados."
@@ -138,7 +198,9 @@
       },
       "partial": {
         "goldDelta": 20,
-        "countersReset": ["negotiation_streak"],
+        "countersReset": [
+          "negotiation_streak"
+        ],
         "narrative": {
           "en": "You avoid a fight but take a worse deal than you wanted.",
           "es": "Evitás una pelea pero aceptás un trato peor del que querías."
@@ -148,10 +210,475 @@
         "reputationDelta": -2,
         "reputationFaction": "greywater",
         "injuryRiskDelta": 0.08,
-        "countersReset": ["negotiation_streak"],
+        "countersReset": [
+          "negotiation_streak"
+        ],
         "narrative": {
           "en": "You misjudge the room. Tempers flare and the deal collapses.",
           "es": "Malinterpretás el ambiente. Los ánimos se encienden y el trato se derrumba."
+        }
+      }
+    }
+  },
+  {
+    "id": "bar_brawl",
+    "type": "minigame",
+    "subtype": "brawl",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 7,
+    "primaryStat": "strength",
+    "narrative": {
+      "en": "A bottle shatters behind you. The tavern erupts into chaos — fists, stools, and every dirty trick in the book. No rules, just the last one standing.",
+      "es": "Una botella estalla detrás de vos. La taberna estalla en caos — puños, taburetes y toda trampa sucia del libro. Sin reglas, solo el último en pie."
+    },
+    "cards": [
+      {
+        "id": "swing_wild",
+        "icon": "fist",
+        "label": {
+          "en": "Swing wild and hard",
+          "es": "Pegar salvaje y fuerte"
+        }
+      },
+      {
+        "id": "grab_stool",
+        "icon": "chair",
+        "label": {
+          "en": "Grab a stool as a club",
+          "es": "Agarrar un taburete como maza"
+        }
+      },
+      {
+        "id": "duck_cover",
+        "icon": "shield",
+        "label": {
+          "en": "Duck behind the bar",
+          "es": "Agacharse detrás de la barra"
+        }
+      },
+      {
+        "id": "turn_tables",
+        "icon": "rotate-3d",
+        "label": {
+          "en": "Flip a table and charge",
+          "es": "Volcar una mesa y cargar"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.42,
+      "statInfluence": {
+        "strength": 0.01,
+        "constitution": 0.006
+      },
+      "cardModifiers": {
+        "turn_tables": {
+          "winChanceDelta": 0.09
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "strength": 2
+        },
+        "fameDelta": 4,
+        "goldDelta": 80,
+        "countersDelta": {
+          "battles_won": 1,
+          "duels_won": 1,
+          "brawls_won": 1
+        },
+        "narrative": {
+          "en": "You clear the floor in a whirlwind of broken furniture. The last three yield at once. The barkeep sighs and hands you a mop — and a free tab.",
+          "es": "Despejás el piso en un torbellino de muebles rotos. Los últimos tres se rinden al mismo tiempo. El tabernero suspira y te da un trapo de piso — y una cuenta gratis."
+        }
+      },
+      "success": {
+        "fameDelta": 2,
+        "goldDelta": 30,
+        "countersDelta": {
+          "battles_won": 1,
+          "duels_won": 1
+        },
+        "narrative": {
+          "en": "You land more hits than you take. The brawl winds down with you still on your feet and a rowdy cheer in your name.",
+          "es": "Acertás más golpes de los que recibís. La pelea se calma con vos todavía en pie y un vítores a tu nombre."
+        }
+      },
+      "partial": {
+        "injuryRiskDelta": 0.15,
+        "countersReset": [
+          "duel_streak"
+        ],
+        "narrative": {
+          "en": "You hold your own but take a stool to the ribs. You're still standing when it's over — barely.",
+          "es": "Te mantenés pero te comés un taburete en las costillas. Todavía estás de pie cuando termina — apenas."
+        }
+      },
+      "fail": {
+        "healthDelta": -12,
+        "injuryRiskDelta": 0.25,
+        "reputationDelta": -1,
+        "countersReset": [
+          "duel_streak"
+        ],
+        "narrative": {
+          "en": "A sucker punch sends you into a barrel. You go down hard and wake up to the barkeep charging you for the damage.",
+          "es": "Un golpe traicionero te manda contra un barril. Caés fuerte y despertás con el tabernero cobrándote los daños."
+        }
+      }
+    }
+  },
+  {
+    "id": "mages_duel",
+    "type": "minigame",
+    "subtype": "arcane_duel",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "primaryStat": "intelligence",
+    "narrative": {
+      "en": "The air crackles. Your opponent traces a sigil in the glow — a challenge written in raw magic. The first to unravel the other's weave wins.",
+      "es": "El aire crepita. Tu oponente traza un sigilo en el resplandor — un desafío escrito en magia pura. El primero en deshacer el tejido del otro gana."
+    },
+    "cards": [
+      {
+        "id": "counter_spell",
+        "icon": "ban",
+        "label": {
+          "en": "Weave a counterspell",
+          "es": "Tejer un contrahechizo"
+        }
+      },
+      {
+        "id": "swift_strike",
+        "icon": "zap",
+        "label": {
+          "en": "Strike fast and raw",
+          "es": "Atacar rápido y en bruto"
+        }
+      },
+      {
+        "id": "glyph_trap",
+        "icon": "hexagon",
+        "label": {
+          "en": "Set a glyph trap",
+          "es": "Colocar un glifo trampa"
+        }
+      },
+      {
+        "id": "dispel_feint",
+        "icon": "wand",
+        "label": {
+          "en": "Feint with a dispel",
+          "es": "Amagar con una disipación"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.43,
+      "statInfluence": {
+        "intelligence": 0.014,
+        "charisma": 0.003
+      },
+      "cardModifiers": {
+        "glyph_trap": {
+          "winChanceDelta": 0.08,
+          "critChanceDelta": 0.06
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "fameDelta": 5,
+        "reputationDelta": 3,
+        "reputationFaction": "arcanum",
+        "countersDelta": {
+          "battles_won": 1,
+          "duels_won": 1,
+          "arcane_duels_won": 1
+        },
+        "narrative": {
+          "en": "You unravel their weave in three moves flat. Their own glyph backfires and lifts them off the ground. The Arcanum takes note.",
+          "es": "Deshacés su tejido en tres movimientos justos. Su propio glifo se vuelve en su contra y los levanta del suelo. El Arcanum toma nota."
+        }
+      },
+      "success": {
+        "fameDelta": 2,
+        "reputationDelta": 1,
+        "reputationFaction": "arcanum",
+        "countersDelta": {
+          "battles_won": 1,
+          "duels_won": 1
+        },
+        "narrative": {
+          "en": "Your sigil holds while theirs flickers out. A clean win by arcane attrition.",
+          "es": "Tu sigilo se mantiene mientras el de elles parpadea y se apaga. Una victoria limpia por desgaste arcano."
+        }
+      },
+      "partial": {
+        "healthDelta": -5,
+        "injuryRiskDelta": 0.08,
+        "countersReset": [
+          "duel_streak"
+        ],
+        "narrative": {
+          "en": "Your spell fizzles but you deflect the rebound. A draw that leaves both of you singed and suspicious.",
+          "es": "Tu hechizo falla pero desviás el rebote. Un empate que deja a ambos chamuscados y sospechosos."
+        }
+      },
+      "fail": {
+        "healthDelta": -10,
+        "injuryRiskDelta": 0.2,
+        "reputationDelta": -2,
+        "reputationFaction": "arcanum",
+        "countersReset": [
+          "duel_streak"
+        ],
+        "narrative": {
+          "en": "Your weave collapses. Magic lashes back, throwing you across the room. The Arcanum will remember this embarrassment.",
+          "es": "Tu tejido colapsa. La magia azota de vuelta y te lanza al otro lado de la sala. El Arcanum recordará esta vergüenza."
+        }
+      }
+    }
+  },
+  {
+    "id": "street_scrap",
+    "type": "minigame",
+    "subtype": "street_fight",
+    "minAge": 14,
+    "maxAge": 99,
+    "weight": 8,
+    "primaryStat": "dexterity",
+    "narrative": {
+      "en": "Three toughs block the alley. Knives glint in the dim light. They want your purse — you want to walk out breathing.",
+      "es": "Tres matones bloquean el callejón. Cuchillos brillan en la penumbra. Quieren tu bolsa — vos querés salir respirando."
+    },
+    "cards": [
+      {
+        "id": "quick_feet",
+        "icon": "footprints",
+        "label": {
+          "en": "Use speed, dodge and weave",
+          "es": "Usar velocidad, esquivar y tejer"
+        }
+      },
+      {
+        "id": "cheap_shot",
+        "icon": "siren",
+        "label": {
+          "en": "Go for a cheap shot",
+          "es": "Ir por un golpe bajo"
+        }
+      },
+      {
+        "id": "disarm_first",
+        "icon": "sword",
+        "label": {
+          "en": "Disarm the closest knife",
+          "es": "Desarmar el cuchillo más cercano"
+        }
+      },
+      {
+        "id": "scatter_dirt",
+        "icon": "cloud-fog",
+        "label": {
+          "en": "Throw dirt in their eyes",
+          "es": "Tirar tierra a los ojos"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.4,
+      "statInfluence": {
+        "dexterity": 0.012,
+        "strength": 0.004
+      },
+      "cardModifiers": {
+        "scatter_dirt": {
+          "winChanceDelta": 0.1
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "dexterity": 2
+        },
+        "goldDelta": 120,
+        "fameDelta": 3,
+        "countersDelta": {
+          "battles_won": 1,
+          "duels_won": 1,
+          "street_fights_won": 1
+        },
+        "narrative": {
+          "en": "You move like water — every dodge sets up a counter. The last one runs. The other two drop their knives and follow.",
+          "es": "Te movés como agua — cada esquiva prepara un contraataque. El último sale corriendo. Los otros dos sueltan los cuchillos y lo siguen."
+        }
+      },
+      "success": {
+        "goldDelta": 50,
+        "fameDelta": 1,
+        "countersDelta": {
+          "battles_won": 1,
+          "duels_won": 1
+        },
+        "narrative": {
+          "en": "You take one down hard and the other two think better of it. They scatter. Your purse stays yours.",
+          "es": "Derribás a uno con fuerza y los otros dos lo piensan mejor. Se dispersan. Tu bolsa se queda con vos."
+        }
+      },
+      "partial": {
+        "healthDelta": -6,
+        "goldDelta": -20,
+        "injuryRiskDelta": 0.12,
+        "countersReset": [
+          "duel_streak"
+        ],
+        "narrative": {
+          "en": "You fight them off but take a knife across the arm. They grab a few coins and vanish. Could've been worse.",
+          "es": "Los ahuyentás pero recibís un cuchillazo en el brazo. Agarran unas monedas y desaparecen. Podría haber sido peor."
+        }
+      },
+      "fail": {
+        "healthDelta": -15,
+        "goldDelta": -80,
+        "injuryRiskDelta": 0.3,
+        "countersReset": [
+          "duel_streak"
+        ],
+        "narrative": {
+          "en": "Too many. Too fast. You go down under a flurry of boots and blades. They take everything.",
+          "es": "Demasiados. Demasiado rápido. Caés bajo una lluvia de botas y cuchillas. Se llevan todo."
+        }
+      }
+    }
+  },
+  {
+    "id": "tournament_bout",
+    "type": "minigame",
+    "subtype": "tournament",
+    "minAge": 18,
+    "maxAge": 99,
+    "weight": 5,
+    "primaryStat": "strength",
+    "narrative": {
+      "en": "The herald calls your name. Across the field, a Crownguard knight in polished steel levels a lance. The crowd roars. The flag falls.",
+      "es": "El heraldo pronuncia tu nombre. Al otro lado del campo, una caballera de la Guardia de la Corona apunta con una lanza de acero bruñido. La multitud ruge. La bandera cae."
+    },
+    "cards": [
+      {
+        "id": "brace_charge",
+        "icon": "shield",
+        "label": {
+          "en": "Brace and meet the charge",
+          "es": "Firmar y enfrentar la carga"
+        }
+      },
+      {
+        "id": "feint_low",
+        "icon": "arrow-down",
+        "label": {
+          "en": "Feint low, strike high",
+          "es": "Amagar bajo, golpear alto"
+        }
+      },
+      {
+        "id": "unhorse_them",
+        "icon": "horse",
+        "label": {
+          "en": "Aim to unhorse",
+          "es": "Apuntar a derribar"
+        }
+      },
+      {
+        "id": "show_skill",
+        "icon": "sparkles",
+        "label": {
+          "en": "Show off your footwork",
+          "es": "Lucir tu juego de pies"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.4,
+      "statInfluence": {
+        "strength": 0.012,
+        "dexterity": 0.005
+      },
+      "cardModifiers": {
+        "unhorse_them": {
+          "winChanceDelta": 0.09,
+          "critChanceDelta": 0.05
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "strength": 2
+        },
+        "fameDelta": 8,
+        "goldDelta": 300,
+        "reputationDelta": 4,
+        "reputationFaction": "crownguard",
+        "countersDelta": {
+          "battles_won": 1,
+          "duels_won": 1,
+          "tournaments_won": 1
+        },
+        "narrative": {
+          "en": "Your lance finds the gap in their armor perfectly. The knight hits the dirt in a clatter of steel. The crowd chants your name — the Crown has its eye on you now.",
+          "es": "Tu lanza encuentra el hueco en su armadura a la perfección. La caballera golpea el polvo entre un estrépito de acero. La multitud corea tu nombre — la Corona te tiene en la mira ahora."
+        }
+      },
+      "success": {
+        "fameDelta": 4,
+        "goldDelta": 120,
+        "reputationDelta": 2,
+        "reputationFaction": "crownguard",
+        "countersDelta": {
+          "battles_won": 1,
+          "duels_won": 1
+        },
+        "narrative": {
+          "en": "A solid bout. You land a clean hit and earn the knight's salute. A respectable purse and a nod from the stands.",
+          "es": "Un combate sólido. Acertás un golpe limpio y te ganás el saludo de la caballera. Una bolsa respetable y un gesto desde las gradas."
+        }
+      },
+      "partial": {
+        "injuryRiskDelta": 0.1,
+        "fameDelta": 1,
+        "countersReset": [
+          "duel_streak"
+        ],
+        "narrative": {
+          "en": "You hold your ground but can't break through. The judges call it a draw. You live to fight another round.",
+          "es": "Mantenés el terreno pero no lográs abrirte paso. Los jueces declaran empate. Vivís para pelear otra ronda."
+        }
+      },
+      "fail": {
+        "injuryRiskDelta": 0.25,
+        "healthDelta": -10,
+        "fameDelta": -2,
+        "reputationDelta": -2,
+        "reputationFaction": "crownguard",
+        "countersReset": [
+          "duel_streak"
+        ],
+        "narrative": {
+          "en": "You miss the parry. The knight's blade connects with a crack. You go down in the dirt as the crowd sighs. A long walk back to the tents.",
+          "es": "Fallás la parada. La hoja de la caballera conecta con un chasquido. Caés en el polvo mientras la multitud suspira. Una larga caminata de vuelta a las carpas."
         }
       }
     }
