@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { styled } from "styled-components";
 import type { CharacterState, ServedEvent } from "@shared/types";
 import type { Locale } from "@shared/types";
 import { t } from "../i18n/strings";
 import { AchIcon } from "./AchIcon";
 import { Hud } from "./Hud";
 import { StatTag } from "./StatTag";
+import { LinkBtn } from "./Shared";
 
 interface Props {
   locale: Locale;
@@ -101,15 +103,21 @@ export function GameScreen({
           ))}
         </div>
 
-        <button
-          type="button"
-          className="link-btn abandon"
-          onClick={onAbandon}
-          disabled={busy}
-        >
+        <AbandonBtn type="button" onClick={onAbandon} disabled={busy}>
           {t(locale, "abandonRun")}
-        </button>
+        </AbandonBtn>
       </main>
     </div>
   );
 }
+
+const AbandonBtn = styled(LinkBtn)`
+  margin-top: 20px;
+  text-align: center;
+  color: ${({ theme }) => theme.colors.muted2};
+  font-size: 14px;
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.bloodBright};
+  }
+`;

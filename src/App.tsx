@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react"
+import { styled, keyframes } from "styled-components"
 import type {
   AchievementContent,
   CharacterState,
@@ -14,6 +15,7 @@ import { GameScreen } from "./components/GameScreen"
 import { EndingScreen } from "./components/EndingScreen"
 import { LeaderboardScreen } from "./components/LeaderboardScreen"
 import { Toasts, useAchievementToasts } from "./components/Toasts"
+import { LinkBtn } from "./components/Shared"
 
 type Screen = "creation" | "game" | "ending" | "leaderboard"
 
@@ -130,54 +132,52 @@ export default function App() {
 
   if (resuming) {
     return (
-      <div className="boot-screen">
-        <div className="boot-rune" aria-hidden="true">
+      <BootScreen>
+        <BootRune aria-hidden="true">
           {"\u16B1"}
-        </div>
+        </BootRune>
         <p>{t(locale, "loading")}</p>
-      </div>
+      </BootScreen>
     )
   }
 
   return (
-    <div className="app-shell">
-      <div className="top-bar">
-        <button
+    <AppShell>
+      <TopBar>
+        <Brand
           type="button"
-          className="brand"
           onClick={() => (screen === "game" ? undefined : setScreen("creation"))}
         >
-          <span className="brand-rune" aria-hidden="true">{"\u16B1"}</span>
+          <BrandRune aria-hidden="true">{"\u16B1"}</BrandRune>
           {t(locale, "appTitle")}
-        </button>
-        <div className="top-actions">
+        </Brand>
+        <TopActions>
           {screen !== "leaderboard" && screen !== "game" && (
-            <button
+            <LinkBtn
               type="button"
-              className="link-btn"
               onClick={() => setScreen("leaderboard")}
             >
               {t(locale, "leaderboard")}
-            </button>
+            </LinkBtn>
           )}
-          <div className="locale-switch" role="group" aria-label="language">
-            <button
+          <LocaleSwitch role="group" aria-label="language">
+            <LocaleBtn
               type="button"
-              className={locale === "en" ? "active" : ""}
+              $active={locale === "en"}
               onClick={() => changeLocale("en")}
             >
               EN
-            </button>
-            <button
+            </LocaleBtn>
+            <LocaleBtn
               type="button"
-              className={locale === "es" ? "active" : ""}
+              $active={locale === "es"}
               onClick={() => changeLocale("es")}
             >
               ES
-            </button>
-          </div>
-        </div>
-      </div>
+            </LocaleBtn>
+          </LocaleSwitch>
+        </TopActions>
+      </TopBar>
 
       {screen === "creation" && (
         <CreationScreen locale={locale} onStart={startRun} />
@@ -213,6 +213,91 @@ export default function App() {
       )}
 
       <Toasts items={toasts} onExpire={dismissToast} />
-    </div>
+    </AppShell>
   )
 }
+
+const pulse = keyframes`
+  0%, 100% { opacity: 0.4; transform: scale(0.96); }
+  50% { opacity: 1; transform: scale(1.04); }
+`
+
+const BootScreen = styled.div`
+  display: grid;
+  place-items: center;
+  min-height: 70vh;
+  gap: 16px;
+  color: ${({ theme }) => theme.colors.muted};
+`
+
+const BootRune = styled.div`
+  font-size: 48px;
+  color: ${({ theme }) => theme.colors.gold};
+  animation: ${pulse} 1.8s ease-in-out infinite;
+`
+
+const AppShell = styled.div`
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 0 20px 80px;
+  min-height: 100vh;
+`
+
+const TopBar = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 0 18px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.line};
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: linear-gradient(${({ theme }) => theme.colors.ink} 70%, transparent);
+`
+
+const Brand = styled.button`
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: ${({ theme }) => theme.fonts.display};
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: ${({ theme }) => theme.colors.goldBright};
+`
+
+const BrandRune = styled.span`
+  color: ${({ theme }) => theme.colors.gold};
+  font-size: 20px;
+  opacity: 0.85;
+`
+
+const TopActions = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 14px;
+`
+
+const LocaleSwitch = styled.div`
+  display: inline-flex;
+  border: 1px solid ${({ theme }) => theme.colors.line2};
+  border-radius: ${({ theme }) => theme.radii.sm};
+  overflow: hidden;
+`
+
+const LocaleBtn = styled.button<{ $active: boolean }>`
+  background: transparent;
+  border: none;
+  padding: 6px 12px;
+  color: ${({ $active, theme }) => ($active ? theme.colors.ink : theme.colors.muted)};
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  transition: background 0.15s, color 0.15s;
+  background: ${({ $active, theme }) => ($active ? theme.colors.gold : "transparent")};
+  font-weight: ${({ $active }) => ($active ? 600 : 400)};
+`
