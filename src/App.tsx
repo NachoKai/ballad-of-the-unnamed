@@ -38,19 +38,18 @@ export default function App() {
   const [event, setEvent] = useState<ServedEvent | null>(null)
   const [turnNarrative, setTurnNarrative] = useState<string | null>(null)
   const [ending, setEnding] = useState<EndingData | null>(null)
-  const [resuming, setResuming] = useState(true)
+  const [resuming, setResuming] = useState(() => localStorage.getItem(RUN_KEY) !== null)
   const runIdRef = useRef<string | null>(null)
-  const { toasts, push: pushToasts, remove: dismissToast } = useAchievementToasts(
-    (k) => makeT(locale)(k),
-  )
+  const {
+    toasts,
+    push: pushToasts,
+    remove: dismissToast,
+  } = useAchievementToasts((k) => makeT(locale)(k))
 
   // Resume an in-progress run after reload.
   useEffect(() => {
     const stored = localStorage.getItem(RUN_KEY)
-    if (!stored) {
-      setResuming(false)
-      return
-    }
+    if (!stored) return
     runIdRef.current = stored
     api
       .state(stored)
@@ -133,9 +132,7 @@ export default function App() {
   if (resuming) {
     return (
       <BootScreen>
-        <BootRune aria-hidden="true">
-          {"\u16B1"}
-        </BootRune>
+        <BootRune aria-hidden="true">{"\u16B1"}</BootRune>
         <p>{t(locale, "loading")}</p>
       </BootScreen>
     )
@@ -153,35 +150,22 @@ export default function App() {
         </Brand>
         <TopActions>
           {screen !== "leaderboard" && screen !== "game" && (
-            <LinkBtn
-              type="button"
-              onClick={() => setScreen("leaderboard")}
-            >
+            <LinkBtn type="button" onClick={() => setScreen("leaderboard")}>
               {t(locale, "leaderboard")}
             </LinkBtn>
           )}
           <LocaleSwitch role="group" aria-label="language">
-            <LocaleBtn
-              type="button"
-              $active={locale === "en"}
-              onClick={() => changeLocale("en")}
-            >
+            <LocaleBtn type="button" $active={locale === "en"} onClick={() => changeLocale("en")}>
               EN
             </LocaleBtn>
-            <LocaleBtn
-              type="button"
-              $active={locale === "es"}
-              onClick={() => changeLocale("es")}
-            >
+            <LocaleBtn type="button" $active={locale === "es"} onClick={() => changeLocale("es")}>
               ES
             </LocaleBtn>
           </LocaleSwitch>
         </TopActions>
       </TopBar>
 
-      {screen === "creation" && (
-        <CreationScreen locale={locale} onStart={startRun} />
-      )}
+      {screen === "creation" && <CreationScreen locale={locale} onStart={startRun} />}
 
       {screen === "game" && character && event && (
         <GameScreen
@@ -297,7 +281,9 @@ const LocaleBtn = styled.button<{ $active: boolean }>`
   color: ${({ $active, theme }) => ($active ? theme.colors.ink : theme.colors.muted)};
   font-size: 13px;
   letter-spacing: 0.08em;
-  transition: background 0.15s, color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s;
   background: ${({ $active, theme }) => ($active ? theme.colors.gold : "transparent")};
   font-weight: ${({ $active }) => ($active ? 600 : 400)};
 `

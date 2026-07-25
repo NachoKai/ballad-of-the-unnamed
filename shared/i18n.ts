@@ -10,13 +10,8 @@ export function t(map: LocaleMap | undefined, locale: Locale): string {
 }
 
 // Fill {placeholders} in a resolved string from a vars bag.
-export function interpolate(
-  text: string,
-  vars: Record<string, string | number> = {},
-): string {
-  return text.replace(/\{(\w+)\}/g, (_, key) =>
-    key in vars ? String(vars[key]) : `{${key}}`,
-  )
+export function interpolate(text: string, vars: Record<string, string | number> = {}): string {
+  return text.replace(/\{(\w+)\}/g, (_, key) => (key in vars ? String(vars[key]) : `{${key}}`))
 }
 
 export function isLocale(value: unknown): value is Locale {

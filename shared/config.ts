@@ -52,11 +52,7 @@ export function computeScore(input: {
   endingType: string
 }): number {
   const endingBonus =
-    input.endingType === "heroic_death"
-      ? 200
-      : input.endingType === "peaceful_retirement"
-        ? 100
-        : 0
+    input.endingType === "heroic_death" ? 200 : input.endingType === "peaceful_retirement" ? 100 : 0
   return Math.round(
     input.achievementsCount * 500 +
       input.battlesWon * 50 +

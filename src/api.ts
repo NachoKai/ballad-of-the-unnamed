@@ -66,16 +66,9 @@ async function jfetch<T>(url: string, opts: RequestInit = {}): Promise<T> {
 
 export const api = {
   classes: (locale: Locale) =>
-    jfetch<{ classes: ClassInfo[]; dailySeed: string }>(
-      `/api/meta/classes?locale=${locale}`,
-    ),
+    jfetch<{ classes: ClassInfo[]; dailySeed: string }>(`/api/meta/classes?locale=${locale}`),
 
-  newRun: (input: {
-    name: string
-    classId: string
-    runType: RunType
-    locale: Locale
-  }) =>
+  newRun: (input: { name: string; classId: string; runType: RunType; locale: Locale }) =>
     jfetch<NewRunResponse>("/api/game/new", {
       method: "POST",
       body: JSON.stringify(input),

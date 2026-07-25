@@ -1,8 +1,4 @@
-import type {
-  AchievementContent,
-  CharacterState,
-  EndingType,
-} from "../../shared/types.js"
+import type { AchievementContent, CharacterState, EndingType } from "../../shared/types.js"
 import { STAT_KEYS } from "../../shared/types.js"
 import type { ContentRegistry } from "../content/registry.js"
 import { peakReputation, primaryReputation } from "./helpers.js"
@@ -12,11 +8,7 @@ interface EvalContext {
   endingType?: EndingType
 }
 
-function conditionMet(
-  a: AchievementContent,
-  c: CharacterState,
-  ctx: EvalContext,
-): boolean {
+function conditionMet(a: AchievementContent, c: CharacterState, ctx: EvalContext): boolean {
   const cond = a.condition
   switch (cond.type) {
     case "counter_gte":

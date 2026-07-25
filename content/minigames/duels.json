@@ -12,10 +12,26 @@
       "es": "Un duelo a primera sangre. Tu rival gira en círculo, con la guardia cerrada. Un golpe limpio lo termina."
     },
     "cards": [
-      { "id": "high_left", "icon": "sword", "label": { "en": "Strike high-left", "es": "Golpe arriba a la izquierda" } },
-      { "id": "high_right", "icon": "sword", "label": { "en": "Strike high-right", "es": "Golpe arriba a la derecha" } },
-      { "id": "low_disarm", "icon": "shield-off", "label": { "en": "Aim low, disarm", "es": "Bajo, para desarmar" } },
-      { "id": "feint_center", "icon": "wind", "label": { "en": "Feint to center", "es": "Amague al medio" } }
+      {
+        "id": "high_left",
+        "icon": "sword",
+        "label": { "en": "Strike high-left", "es": "Golpe arriba a la izquierda" }
+      },
+      {
+        "id": "high_right",
+        "icon": "sword",
+        "label": { "en": "Strike high-right", "es": "Golpe arriba a la derecha" }
+      },
+      {
+        "id": "low_disarm",
+        "icon": "shield-off",
+        "label": { "en": "Aim low, disarm", "es": "Bajo, para desarmar" }
+      },
+      {
+        "id": "feint_center",
+        "icon": "wind",
+        "label": { "en": "Feint to center", "es": "Amague al medio" }
+      }
     ],
     "resolution": {
       "type": "weighted_hidden_match",
@@ -75,10 +91,26 @@
       "es": "Un enfrentamiento tenso. Las palabras, no las hojas, decidirán quién se va más rico."
     },
     "cards": [
-      { "id": "humble", "icon": "hand", "label": { "en": "Appeal humbly", "es": "Apelar con humildad" } },
-      { "id": "strategic", "icon": "brain", "label": { "en": "Lay out the logic", "es": "Exponer la lógica" } },
-      { "id": "cocky", "icon": "flame", "label": { "en": "Call their bluff", "es": "Desafiar su farol" } },
-      { "id": "supportive", "icon": "heart-handshake", "label": { "en": "Find common ground", "es": "Buscar puntos en común" } }
+      {
+        "id": "humble",
+        "icon": "hand",
+        "label": { "en": "Appeal humbly", "es": "Apelar con humildad" }
+      },
+      {
+        "id": "strategic",
+        "icon": "brain",
+        "label": { "en": "Lay out the logic", "es": "Exponer la lógica" }
+      },
+      {
+        "id": "cocky",
+        "icon": "flame",
+        "label": { "en": "Call their bluff", "es": "Desafiar su farol" }
+      },
+      {
+        "id": "supportive",
+        "icon": "heart-handshake",
+        "label": { "en": "Find common ground", "es": "Buscar puntos en común" }
+      }
     ],
     "resolution": {
       "type": "weighted_hidden_match",

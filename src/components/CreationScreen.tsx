@@ -1,15 +1,15 @@
-import { useEffect, useState } from "react";
-import { styled } from "styled-components";
-import type { Locale, RunType } from "@shared/types";
-import { api, type ClassInfo } from "../api";
-import { t } from "../i18n/strings";
-import { BtnPrimary } from "./ui/Button";
-import { TextBalance, TextPretty } from "./ui/Text";
-import { rise } from "./ui/Animation";
+import { useEffect, useState } from "react"
+import { styled } from "styled-components"
+import type { Locale, RunType } from "@shared/types"
+import { api, type ClassInfo } from "../api"
+import { t } from "../i18n/strings"
+import { BtnPrimary } from "./ui/Button"
+import { TextPretty } from "./ui/Text"
+import { rise } from "./ui/Animation"
 
 interface Props {
-  locale: Locale;
-  onStart: (name: string, classId: string, runType: RunType) => Promise<void>;
+  locale: Locale
+  onStart: (name: string, classId: string, runType: RunType) => Promise<void>
 }
 
 const STAT_ABBR: Record<string, string> = {
@@ -18,41 +18,41 @@ const STAT_ABBR: Record<string, string> = {
   constitution: "CON",
   intelligence: "INT",
   charisma: "CHA",
-};
+}
 
 export function CreationScreen({ locale, onStart }: Props) {
-  const [classes, setClasses] = useState<ClassInfo[]>([]);
-  const [dailySeed, setDailySeed] = useState("");
-  const [name, setName] = useState("");
-  const [classId, setClassId] = useState<string | null>(null);
-  const [runType, setRunType] = useState<RunType>("standard");
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [classes, setClasses] = useState<ClassInfo[]>([])
+  const [dailySeed, setDailySeed] = useState("")
+  const [name, setName] = useState("")
+  const [classId, setClassId] = useState<string | null>(null)
+  const [runType, setRunType] = useState<RunType>("standard")
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    let active = true;
+    let active = true
     api
       .classes(locale)
-      .then(res => {
-        if (!active) return;
-        setClasses(res.classes);
-        setDailySeed(res.dailySeed);
+      .then((res) => {
+        if (!active) return
+        setClasses(res.classes)
+        setDailySeed(res.dailySeed)
       })
-      .catch(e => active && setError(String(e.message)));
+      .catch((e) => active && setError(String(e.message)))
     return () => {
-      active = false;
-    };
-  }, [locale]);
+      active = false
+    }
+  }, [locale])
 
   async function begin() {
-    if (!classId || busy) return;
-    setBusy(true);
-    setError(null);
+    if (!classId || busy) return
+    setBusy(true)
+    setError(null)
     try {
-      await onStart(name.trim() || "Wanderer", classId, runType);
+      await onStart(name.trim() || "Wanderer", classId, runType)
     } catch (e) {
-      setError(String((e as Error).message));
-      setBusy(false);
+      setError(String((e as Error).message))
+      setBusy(false)
     }
   }
 
@@ -70,14 +70,14 @@ export function CreationScreen({ locale, onStart }: Props) {
           value={name}
           maxLength={24}
           placeholder={t(locale, "namePlaceholder")}
-          onChange={e => setName(e.target.value)}
+          onChange={(e) => setName(e.target.value)}
         />
       </CreationBlock>
 
       <CreationBlock>
         <BlockLabel as="span">{t(locale, "chooseClass")}</BlockLabel>
         <ClassGrid>
-          {classes.map(c => (
+          {classes.map((c) => (
             <ClassCard
               key={c.id}
               type="button"
@@ -113,11 +113,7 @@ export function CreationScreen({ locale, onStart }: Props) {
             <strong>{t(locale, "standard")}</strong>
             <span>{t(locale, "standardHint")}</span>
           </ModePill>
-          <ModePill
-            type="button"
-            $active={runType === "daily"}
-            onClick={() => setRunType("daily")}
-          >
+          <ModePill type="button" $active={runType === "daily"} onClick={() => setRunType("daily")}>
             <strong>{t(locale, "daily")}</strong>
             <span>
               {t(locale, "dailyHint")}
@@ -133,12 +129,12 @@ export function CreationScreen({ locale, onStart }: Props) {
         {busy ? t(locale, "loading") : t(locale, "begin")}
       </BeginBtn>
     </CreationScreenRoot>
-  );
+  )
 }
 
 const CreationScreenRoot = styled.div`
   animation: ${rise} 0.4s ease both;
-`;
+`
 
 const CreationHero = styled.header`
   text-align: center;
@@ -148,18 +144,18 @@ const CreationHero = styled.header`
     font-size: clamp(30px, 5vw, 46px);
     color: ${({ theme }) => theme.colors.goldBright};
   }
-`;
+`
 
 const Subtitle = styled(TextPretty)`
   color: ${({ theme }) => theme.colors.muted};
   font-style: italic;
   font-size: 18px;
   margin-top: 8px;
-`;
+`
 
 const CreationBlock = styled.section`
   margin-bottom: 24px;
-`;
+`
 
 const BlockLabel = styled.label`
   display: block;
@@ -169,7 +165,7 @@ const BlockLabel = styled.label`
   text-transform: uppercase;
   color: ${({ theme }) => theme.colors.gold};
   margin-bottom: 12px;
-`;
+`
 
 const NameInput = styled.input`
   width: 100%;
@@ -190,7 +186,7 @@ const NameInput = styled.input`
     border-color: ${({ theme }) => theme.colors.gold};
     box-shadow: 0 0 0 3px rgba(201, 164, 76, 0.15);
   }
-`;
+`
 
 const ClassGrid = styled.div`
   display: grid;
@@ -200,7 +196,7 @@ const ClassGrid = styled.div`
   @media (max-width: 680px) {
     grid-template-columns: 1fr;
   }
-`;
+`
 
 const ClassCard = styled.button<{ $selected: boolean }>`
   text-align: left;
@@ -209,8 +205,7 @@ const ClassCard = styled.button<{ $selected: boolean }>`
     ${({ theme }) => theme.colors.panel} 0%,
     ${({ theme }) => theme.colors.ink2} 100%
   );
-  border: 1px solid
-    ${({ $selected, theme }) => ($selected ? theme.colors.gold : theme.colors.line)};
+  border: 1px solid ${({ $selected, theme }) => ($selected ? theme.colors.gold : theme.colors.line)};
   border-radius: ${({ theme }) => theme.radii.lg};
   padding: 18px 18px 16px;
   transition:
@@ -230,20 +225,20 @@ const ClassCard = styled.button<{ $selected: boolean }>`
     font-size: 21px;
     margin-bottom: 6px;
   }
-`;
+`
 
 const ClassDesc = styled(TextPretty)`
   color: ${({ theme }) => theme.colors.parchmentDim};
   font-size: 16px;
   min-height: 48px;
-`;
+`
 
 const StatRow = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
   margin-top: 12px;
-`;
+`
 
 const StatChip = styled.span`
   display: inline-flex;
@@ -262,12 +257,12 @@ const StatChip = styled.span`
     font-size: 11px;
     letter-spacing: 0.06em;
   }
-`;
+`
 
 const GoldChip = styled(StatChip)`
   border-color: rgba(201, 164, 76, 0.4);
   color: ${({ theme }) => theme.colors.goldBright};
-`;
+`
 
 const RunModes = styled.div`
   display: grid;
@@ -277,18 +272,15 @@ const RunModes = styled.div`
   @media (max-width: 680px) {
     grid-template-columns: 1fr;
   }
-`;
+`
 
 const ModePill = styled.button<{ $active: boolean }>`
   text-align: left;
-  background: ${({ $active, theme }) =>
-    $active ? theme.colors.ink2 : theme.colors.ink2};
-  border: 1px solid
-    ${({ $active, theme }) => ($active ? theme.colors.gold : theme.colors.line)};
+  background: ${({ $active, theme }) => ($active ? theme.colors.ink2 : theme.colors.ink2)};
+  border: 1px solid ${({ $active, theme }) => ($active ? theme.colors.gold : theme.colors.line)};
   border-radius: ${({ theme }) => theme.radii.lg};
   padding: 16px;
-  color: ${({ $active, theme }) =>
-    $active ? theme.colors.parchment : theme.colors.parchmentDim};
+  color: ${({ $active, theme }) => ($active ? theme.colors.parchment : theme.colors.parchmentDim)};
   font-size: 16px;
   transition:
     border-color 0.15s,
@@ -299,8 +291,7 @@ const ModePill = styled.button<{ $active: boolean }>`
   strong {
     display: block;
     font-family: ${({ theme }) => theme.fonts.display};
-    color: ${({ $active, theme }) =>
-      $active ? theme.colors.goldBright : theme.colors.parchment};
+    color: ${({ $active, theme }) => ($active ? theme.colors.goldBright : theme.colors.parchment)};
     font-size: 17px;
     margin-bottom: 4px;
   }
@@ -313,17 +304,17 @@ const ModePill = styled.button<{ $active: boolean }>`
   &:hover {
     border-color: ${({ theme }) => theme.colors.line2};
   }
-`;
+`
 
 const FormError = styled.p`
   color: ${({ theme }) => theme.colors.bloodBright};
   font-size: 15px;
   margin-top: 8px;
-`;
+`
 
 const BeginBtn = styled(BtnPrimary)`
   margin-top: 26px;
   width: 100%;
   padding: 16px;
   font-size: 18px;
-`;
+`

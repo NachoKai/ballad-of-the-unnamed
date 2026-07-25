@@ -74,9 +74,9 @@ export function loadContent(): ContentRegistry {
     validateLocaleMap(name, `tier ${id}`)
   }
 
-  const achievements =
-    readJson<{ achievements: AchievementContent[] }>("achievements.json")
-      .achievements
+  const achievements = readJson<{ achievements: AchievementContent[] }>(
+    "achievements.json",
+  ).achievements
   for (const a of achievements) {
     validateLocaleMap(a.name, `achievement ${a.id} name`)
     validateLocaleMap(a.description, `achievement ${a.id} description`)
@@ -112,10 +112,7 @@ export function loadContent(): ContentRegistry {
         validateLocaleMap(card.label, `minigame ${mg.id} card ${card.id} label`)
       }
       for (const tier of ["critical", "success", "partial", "fail"] as const) {
-        validateLocaleMap(
-          mg.outcomes[tier]?.narrative,
-          `minigame ${mg.id} outcome ${tier}`,
-        )
+        validateLocaleMap(mg.outcomes[tier]?.narrative, `minigame ${mg.id} outcome ${tier}`)
       }
       minigames.push(mg)
     }

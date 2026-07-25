@@ -5,7 +5,11 @@ export const BtnPrimary = styled.button<{ $block?: boolean }>`
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background: linear-gradient(180deg, ${({ theme }) => theme.colors.goldBright}, ${({ theme }) => theme.colors.gold});
+  background: linear-gradient(
+    180deg,
+    ${({ theme }) => theme.colors.goldBright},
+    ${({ theme }) => theme.colors.gold}
+  );
   border: 1px solid ${({ theme }) => theme.colors.gold};
   border-radius: ${({ theme }) => theme.radii.sm};
   padding: 13px 28px;
@@ -15,7 +19,9 @@ export const BtnPrimary = styled.button<{ $block?: boolean }>`
   font-size: 16px;
   letter-spacing: 0.04em;
   box-shadow: 0 6px 20px rgba(201, 164, 76, 0.2);
-  transition: transform 0.12s, filter 0.15s;
+  transition:
+    transform 0.12s,
+    filter 0.15s;
   width: ${({ $block }) => ($block ? "100%" : "auto")};
 
   &:hover:not(:disabled) {
@@ -42,7 +48,9 @@ export const BtnGhost = styled.button`
   font-family: ${({ theme }) => theme.fonts.display};
   font-size: 15px;
   letter-spacing: 0.03em;
-  transition: border-color 0.15s, color 0.15s;
+  transition:
+    border-color 0.15s,
+    color 0.15s;
 
   &:hover {
     border-color: ${({ theme }) => theme.colors.gold};
@@ -58,7 +66,9 @@ export const LinkBtn = styled.button`
   color: ${({ theme }) => theme.colors.parchmentDim};
   font-size: 15px;
   letter-spacing: 0.03em;
-  transition: color 0.15s, border-color 0.15s;
+  transition:
+    color 0.15s,
+    border-color 0.15s;
 
   &:hover {
     color: ${({ theme }) => theme.colors.goldBright};

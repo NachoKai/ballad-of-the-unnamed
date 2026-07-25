@@ -64,14 +64,7 @@ export async function createRun(input: {
   await query(
     `INSERT INTO runs (id, run_type, seed, rng_state, locale, character, pending_event, finished)
      VALUES ($1, $2, $3, $4, $5, $6, NULL, false)`,
-    [
-      id,
-      input.runType,
-      input.seed,
-      input.rngState,
-      input.locale,
-      JSON.stringify(input.character),
-    ],
+    [id, input.runType, input.seed, input.rngState, input.locale, JSON.stringify(input.character)],
   )
   return {
     id,

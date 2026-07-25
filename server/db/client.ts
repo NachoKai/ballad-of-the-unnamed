@@ -19,7 +19,9 @@ function getSql(): NeonQueryFunction<false, false> {
 
 // Parameterized query helper. NEVER interpolate user input into SQL strings.
 // In this driver version the query function is invoked directly: sql(text, params).
-export const sql: NeonQueryFunction<false, false> = ((...args: Parameters<NeonQueryFunction<false, false>>) => {
+export const sql: NeonQueryFunction<false, false> = ((
+  ...args: Parameters<NeonQueryFunction<false, false>>
+) => {
   return getSql()(args[0], args[1])
 }) as NeonQueryFunction<false, false>
 

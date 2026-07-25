@@ -80,11 +80,7 @@ function isRetirementTurn(c: CharacterState): boolean {
 }
 
 // Pick the event/minigame for the upcoming turn. Deterministic via the run rng.
-export function selectEvent(
-  c: CharacterState,
-  registry: ContentRegistry,
-  rng: Rng,
-): EventContent {
+export function selectEvent(c: CharacterState, registry: ContentRegistry, rng: Rng): EventContent {
   // Occasionally offer a minigame instead of a normal event.
   const pool: EventContent[] = []
   const wantMinigame = rng.bool(0.28)
@@ -93,10 +89,7 @@ export function selectEvent(
     if (isEligible(ev, c)) pool.push(ev)
   }
   // Fallback: if the chosen pool is empty, try the other pool, then any event.
-  const finalPool =
-    pool.length > 0
-      ? pool
-      : registry.events.filter((e) => isEligible(e, c))
+  const finalPool = pool.length > 0 ? pool : registry.events.filter((e) => isEligible(e, c))
   if (finalPool.length === 0) {
     // Absolute fallback: first event ignoring gating.
     return registry.events[0]
@@ -192,11 +185,7 @@ function recordRarity(c: CharacterState, rarity: Rarity): void {
 // Death / aging
 // ---------------------------------------------------------------------------
 
-function rollDeath(
-  c: CharacterState,
-  pendingInjuryRisk: number,
-  rng: Rng,
-): boolean {
+function rollDeath(c: CharacterState, pendingInjuryRisk: number, rng: Rng): boolean {
   // Injury/accident risk from the chosen outcome, mitigated by constitution.
   const conMitigation = Math.min(0.4, c.constitution * 0.01)
   const injuryChance = Math.max(0, pendingInjuryRisk - conMitigation)
@@ -266,16 +255,12 @@ export function resolveChoice(
   if (choice.staminaDelta) c.stamina += choice.staminaDelta
   if (choice.healthDelta) c.health += choice.healthDelta
   if (choice.reputationDelta) {
-    adjustReputation(
-      c,
-      choice.reputationFaction ?? defaultFaction(c),
-      choice.reputationDelta,
-    )
+    adjustReputation(c, choice.reputationFaction ?? defaultFaction(c), choice.reputationDelta)
   }
 
   // Counters for scoring / achievements.
-  const wonBattle = Boolean(choice.countersDelta?.battles_won) ||
-    (event.location === "dungeon" && net > 0)
+  const wonBattle =
+    Boolean(choice.countersDelta?.battles_won) || (event.location === "dungeon" && net > 0)
   const completedQuest = Boolean(choice.countersDelta?.quests_completed)
   if (choice.countersDelta) {
     for (const [k, v] of Object.entries(choice.countersDelta)) bumpCounter(c, k, v)
@@ -298,12 +283,7 @@ export function resolveChoice(
     }
   }
 
-  const narrative = fillSlots(
-    localize(choice.narrative, c.locale),
-    c.locale,
-    registry,
-    rng,
-  )
+  const narrative = fillSlots(localize(choice.narrative, c.locale), c.locale, registry, rng)
 
   return {
     narrative,
@@ -360,11 +340,7 @@ export function resolveMinigame(
   if (outcome.goldDelta) c.gold += outcome.goldDelta
   if (outcome.fameDelta) c.fame += outcome.fameDelta
   if (outcome.reputationDelta) {
-    adjustReputation(
-      c,
-      outcome.reputationFaction ?? defaultFaction(c),
-      outcome.reputationDelta,
-    )
+    adjustReputation(c, outcome.reputationFaction ?? defaultFaction(c), outcome.reputationDelta)
   }
   if (outcome.countersDelta) {
     for (const [k, v] of Object.entries(outcome.countersDelta)) bumpCounter(c, k, v)
@@ -392,12 +368,7 @@ export function resolveMinigame(
     endingType = heroicOrPeaceful(c, "death")
   }
 
-  const narrative = fillSlots(
-    localize(outcome.narrative, c.locale),
-    c.locale,
-    registry,
-    rng,
-  )
+  const narrative = fillSlots(localize(outcome.narrative, c.locale), c.locale, registry, rng)
 
   return {
     narrative,
@@ -416,14 +387,10 @@ function defaultFaction(c: CharacterState): string {
 }
 
 // Classify the ending as heroic/peaceful vs. plain, based on standing.
-function heroicOrPeaceful(
-  c: CharacterState,
-  kind: "death" | "retirement",
-): EndingType {
+function heroicOrPeaceful(c: CharacterState, kind: "death" | "retirement"): EndingType {
   // Renown is reachable through any of three paths: standing with a faction,
   // widespread fame, or raw power accrued over a long, successful life.
-  const renowned =
-    primaryReputation(c) >= 55 || c.fame >= 60 || c.powerLevel >= 65
+  const renowned = primaryReputation(c) >= 55 || c.fame >= 60 || c.powerLevel >= 65
   if (kind === "death") return renowned ? "heroic_death" : "other_death"
   return renowned ? "peaceful_retirement" : "other_retirement"
 }

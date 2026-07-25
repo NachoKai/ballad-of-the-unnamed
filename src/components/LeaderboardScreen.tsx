@@ -1,15 +1,14 @@
-import { useEffect, useState } from "react";
-import { styled } from "styled-components";
-import type { EndingType, Locale, RunType } from "@shared/types";
-import { api, type LeaderboardEntryView } from "../api";
-import { t } from "../i18n/strings";
-import { BtnGhost } from "./ui/Button";
-import { TextBalance } from "./ui/Text";
-import { rise } from "./ui/Animation";
+import { useEffect, useState } from "react"
+import { styled } from "styled-components"
+import type { EndingType, Locale, RunType } from "@shared/types"
+import { api, type LeaderboardEntryView } from "../api"
+import { t } from "../i18n/strings"
+import { BtnGhost } from "./ui/Button"
+import { rise } from "./ui/Animation"
 
 interface Props {
-  locale: Locale;
-  onBack: () => void;
+  locale: Locale
+  onBack: () => void
 }
 
 const ENDING_COLOR: Record<EndingType, string> = {
@@ -17,33 +16,31 @@ const ENDING_COLOR: Record<EndingType, string> = {
   peaceful_retirement: "#6f8f6a",
   other_death: "#7d715a",
   other_retirement: "#b6a889",
-};
+}
 
 export function LeaderboardScreen({ locale, onBack }: Props) {
-  const [runType, setRunType] = useState<RunType>("standard");
-  const [entries, setEntries] = useState<LeaderboardEntryView[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [runType, setRunType] = useState<RunType>("standard")
+  const [entries, setEntries] = useState<LeaderboardEntryView[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    let alive = true;
-    setLoading(true);
-    setError(null);
+    let alive = true
     api
       .leaderboard(runType, locale)
-      .then(r => {
-        if (alive) setEntries(r.entries);
+      .then((r) => {
+        if (alive) setEntries(r.entries)
       })
-      .catch(e => {
-        if (alive) setError((e as Error).message);
+      .catch((e) => {
+        if (alive) setError((e as Error).message)
       })
       .finally(() => {
-        if (alive) setLoading(false);
-      });
+        if (alive) setLoading(false)
+      })
     return () => {
-      alive = false;
-    };
-  }, [runType, locale]);
+      alive = false
+    }
+  }, [runType, locale])
 
   return (
     <BoardScreen>
@@ -74,9 +71,7 @@ export function LeaderboardScreen({ locale, onBack }: Props) {
       {loading && <BoardMsg>{t(locale, "loading")}</BoardMsg>}
       {error && <BoardError>{error}</BoardError>}
 
-      {!loading && !error && entries.length === 0 && (
-        <BoardMsg>{t(locale, "noEntries")}</BoardMsg>
-      )}
+      {!loading && !error && entries.length === 0 && <BoardMsg>{t(locale, "noEntries")}</BoardMsg>}
 
       {!loading && entries.length > 0 && (
         <BoardTable role="table">
@@ -88,7 +83,7 @@ export function LeaderboardScreen({ locale, onBack }: Props) {
             <NumCell>{t(locale, "ageShort")}</NumCell>
             <NumCell>{t(locale, "scoreLabel")}</NumCell>
           </BoardRowHead>
-          {entries.map(e => (
+          {entries.map((e) => (
             <BoardRow role="row" key={e.id}>
               <Rank $rank={e.rank <= 3 ? e.rank : undefined}>{e.rank}</Rank>
               <CellName>{e.name}</CellName>
@@ -107,12 +102,12 @@ export function LeaderboardScreen({ locale, onBack }: Props) {
         {t(locale, "back")}
       </BackBtn>
     </BoardScreen>
-  );
+  )
 }
 
 const BoardScreen = styled.div`
   animation: ${rise} 0.4s ease both;
-`;
+`
 
 const BoardHeader = styled.header`
   display: flex;
@@ -124,7 +119,7 @@ const BoardHeader = styled.header`
     font-size: clamp(26px, 4vw, 38px);
     color: ${({ theme }) => theme.colors.goldBright};
   }
-`;
+`
 
 const BoardTabs = styled.div`
   display: inline-flex;
@@ -132,7 +127,7 @@ const BoardTabs = styled.div`
   border-radius: ${({ theme }) => theme.radii.sm};
   overflow: hidden;
   margin-bottom: 16px;
-`;
+`
 
 const TabBtn = styled.button<{ $active: boolean }>`
   background: ${({ $active, theme }) => ($active ? theme.colors.gold : "transparent")};
@@ -143,7 +138,7 @@ const TabBtn = styled.button<{ $active: boolean }>`
   font-size: 14px;
   letter-spacing: 0.04em;
   font-weight: ${({ $active }) => ($active ? 600 : 400)};
-`;
+`
 
 const BoardTable = styled.div`
   width: 100%;
@@ -151,7 +146,7 @@ const BoardTable = styled.div`
   border: 1px solid ${({ theme }) => theme.colors.line};
   border-radius: ${({ theme }) => theme.radii.lg};
   overflow: hidden;
-`;
+`
 
 const BoardRow = styled.div`
   display: grid;
@@ -181,7 +176,7 @@ const BoardRow = styled.div`
   &:not(&:first-child):hover {
     background: ${({ theme }) => theme.colors.ink3};
   }
-`;
+`
 
 const BoardRowHead = styled(BoardRow)`
   background: ${({ theme }) => theme.colors.ink3};
@@ -193,7 +188,7 @@ const BoardRowHead = styled(BoardRow)`
     text-transform: uppercase;
     color: ${({ theme }) => theme.colors.gold};
   }
-`;
+`
 
 const Rank = styled.span<{ $rank?: number }>`
   font-family: ${({ theme }) => theme.fonts.display};
@@ -206,43 +201,43 @@ const Rank = styled.span<{ $rank?: number }>`
           ? "#d59a5c"
           : theme.colors.goldBright};
   font-weight: 600;
-`;
+`
 
 const CellName = styled.span`
   color: ${({ theme }) => theme.colors.parchment};
   font-weight: 600;
-`;
+`
 
 const EndingTag = styled.span<{ $ending: EndingType }>`
   font-size: 12px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: ${({ $ending }) => ENDING_COLOR[$ending]};
-`;
+`
 
 const BoardMsg = styled.p`
   text-align: center;
   padding: 40px;
   color: ${({ theme }) => theme.colors.muted};
   font-style: italic;
-`;
+`
 
 const BoardError = styled(BoardMsg)`
   color: ${({ theme }) => theme.colors.bloodBright};
-`;
+`
 
 const BackBtn = styled(BtnGhost)`
   margin-top: 18px;
-`;
+`
 
 const NumCell = styled.span`
   text-align: right;
   font-variant-numeric: tabular-nums;
-`;
+`
 
 const ScoreNum = styled.span`
   color: ${({ theme }) => theme.colors.goldBright};
   font-weight: 600;
   text-align: right;
   font-variant-numeric: tabular-nums;
-`;
+`

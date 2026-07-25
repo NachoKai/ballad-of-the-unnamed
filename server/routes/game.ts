@@ -19,12 +19,7 @@ import {
   saveRun,
   type RunRecord,
 } from "../store/runStore.js"
-import type {
-  AchievementContent,
-  Locale,
-  RunType,
-  TurnResult,
-} from "../../shared/types.js"
+import type { AchievementContent, Locale, RunType, TurnResult } from "../../shared/types.js"
 
 export const gameRouter = Router()
 const registry = loadContent()
@@ -48,10 +43,7 @@ async function loadOwnedRun(req: Request): Promise<RunRecord | null> {
 }
 
 // -- Serialize the achievements to localized client shape.
-function serveAchievements(
-  list: AchievementContent[],
-  locale: Locale,
-): AchievementContent[] {
+function serveAchievements(list: AchievementContent[], locale: Locale): AchievementContent[] {
   return list.map((a) => ({
     ...a,
     name: { en: localize(a.name, locale), es: a.name.es },
@@ -62,7 +54,10 @@ function serveAchievements(
 // POST /api/game/new  { name, classId, runType, locale }
 gameRouter.post("/new", async (req: Request, res: Response) => {
   try {
-    const name = String(req.body?.name ?? "").trim().slice(0, 24) || "Wanderer"
+    const name =
+      String(req.body?.name ?? "")
+        .trim()
+        .slice(0, 24) || "Wanderer"
     const classId = String(req.body?.classId ?? "")
     const runType: RunType = req.body?.runType === "daily" ? "daily" : "standard"
     const locale = localeOf(req)
@@ -71,8 +66,7 @@ gameRouter.post("/new", async (req: Request, res: Response) => {
       return res.status(400).json({ error: "invalid_class" })
     }
 
-    const seed =
-      runType === "daily" ? todayDailySeed() : String(Date.now()) + Math.random()
+    const seed = runType === "daily" ? todayDailySeed() : String(Date.now()) + Math.random()
     const rng = new Rng(hashSeed(seed))
 
     const character = createCharacter({
@@ -128,7 +122,14 @@ gameRouter.get("/state", async (req: Request, res: Response) => {
     // resolution (use a throwaway rng for slot text so display stays stable-ish).
     const rng = new Rng(run.rngState)
     const { serveEvent } = await import("../engine/helpers.js")
-    served = serveEvent(run.pendingEvent, run.character, locale, registry, rng, run.pendingEvent.id === "__retirement_offer__")
+    served = serveEvent(
+      run.pendingEvent,
+      run.character,
+      locale,
+      registry,
+      rng,
+      run.pendingEvent.id === "__retirement_offer__",
+    )
   }
   return res.json({
     runId: run.id,
@@ -153,20 +154,8 @@ gameRouter.post("/choose", async (req: Request, res: Response) => {
     const isMinigame = event.type === "minigame" || Boolean(event.cards)
 
     const outcome = isMinigame
-      ? resolveMinigame(
-          run.character,
-          event,
-          String(req.body?.cardId ?? ""),
-          registry,
-          rng,
-        )
-      : resolveChoice(
-          run.character,
-          event,
-          String(req.body?.choiceId ?? ""),
-          registry,
-          rng,
-        )
+      ? resolveMinigame(run.character, event, String(req.body?.cardId ?? ""), registry, rng)
+      : resolveChoice(run.character, event, String(req.body?.choiceId ?? ""), registry, rng)
 
     // Track quests for scoring.
     if (outcome.completedQuest) {
@@ -237,11 +226,7 @@ gameRouter.post("/choose", async (req: Request, res: Response) => {
     }
 
     // Not ended: pick the next event.
-    const { event: nextEvent, served } = buildServedEvent(
-      run.character,
-      registry,
-      rng,
-    )
+    const { event: nextEvent, served } = buildServedEvent(run.character, registry, rng)
     run.pendingEvent = nextEvent
     run.rngState = rng.getState()
     await saveRun(run)

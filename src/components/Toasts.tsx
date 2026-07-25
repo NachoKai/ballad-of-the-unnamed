@@ -47,13 +47,7 @@ export function Toasts({
   )
 }
 
-function ToastCard({
-  item,
-  onExpire,
-}: {
-  item: ToastItem
-  onExpire: (id: string) => void
-}) {
+function ToastCard({ item, onExpire }: { item: ToastItem; onExpire: (id: string) => void }) {
   useEffect(() => {
     const timer = setTimeout(() => onExpire(item.id), 5000)
     return () => clearTimeout(timer)
@@ -93,7 +87,11 @@ const Toast = styled.div`
   min-width: 260px;
   max-width: 340px;
   padding: 14px 16px;
-  background: linear-gradient(180deg, ${({ theme }) => theme.colors.panel2}, ${({ theme }) => theme.colors.ink2});
+  background: linear-gradient(
+    180deg,
+    ${({ theme }) => theme.colors.panel2},
+    ${({ theme }) => theme.colors.ink2}
+  );
   border: 1px solid ${({ theme }) => theme.colors.gold};
   border-radius: ${({ theme }) => theme.radii.sm};
   box-shadow: ${({ theme }) => theme.shadow};

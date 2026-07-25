@@ -37,12 +37,12 @@ pnpm db:migrate
 
 ## Scripts
 
-| Command | Description |
-|---|---|
-| `pnpm dev` | Start dev server with HMR |
-| `pnpm build` | Production build |
-| `pnpm start` | Start production server |
-| `pnpm db:migrate` | Run database schema migration |
+| Command           | Description                      |
+| ----------------- | -------------------------------- |
+| `pnpm dev`        | Start dev server with HMR        |
+| `pnpm build`      | Production build                 |
+| `pnpm start`      | Start production server          |
+| `pnpm db:migrate` | Run database schema migration    |
 | `pnpm i18n:check` | Check i18n parity across locales |
 
 ## Project Structure

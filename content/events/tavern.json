@@ -12,7 +12,10 @@
     "choices": [
       {
         "id": "humble",
-        "label": { "en": "Ask what they want, politely", "es": "Preguntar qué quieren, con cortesía" },
+        "label": {
+          "en": "Ask what they want, politely",
+          "es": "Preguntar qué quieren, con cortesía"
+        },
         "tag": "Humble",
         "rarity": "common",
         "statDeltas": { "charisma": 1 },
@@ -148,7 +151,10 @@
       },
       {
         "id": "leader",
-        "label": { "en": "Turn it into a rallying speech", "es": "Convertirlo en un discurso que una a todos" },
+        "label": {
+          "en": "Turn it into a rallying speech",
+          "es": "Convertirlo en un discurso que una a todos"
+        },
         "tag": "Leader",
         "rarity": "rare",
         "statDeltas": { "charisma": 4 },

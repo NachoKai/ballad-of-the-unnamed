@@ -1,9 +1,9 @@
-import type { Locale } from "@shared/types";
+import type { Locale } from "@shared/types"
 
 // UI chrome strings (labels, buttons). Content strings live in /content as
 // LocaleMaps and are resolved server-side. Same EN/ES parity discipline here so
 // switching the whole app to Spanish later is a one-line default change.
-type StringMap = Record<string, string>;
+type StringMap = Record<string, string>
 
 const en: StringMap = {
   title: "Ballad of the Unnamed",
@@ -87,7 +87,7 @@ const en: StringMap = {
   class_wizard: "Wizard",
   class_rogue: "Rogue",
   class_ranger: "Ranger",
-};
+}
 
 const es: StringMap = {
   title: "Balada del Innombrado",
@@ -171,17 +171,17 @@ const es: StringMap = {
   class_wizard: "Mago",
   class_rogue: "Pícaro",
   class_ranger: "Montaraz",
-};
+}
 
-const TABLES: Record<Locale, StringMap> = { en, es };
+const TABLES: Record<Locale, StringMap> = { en, es }
 
 export function makeT(locale: Locale) {
-  const table = TABLES[locale] ?? en;
-  return (key: string): string => table[key] ?? en[key] ?? key;
+  const table = TABLES[locale] ?? en
+  return (key: string): string => table[key] ?? en[key] ?? key
 }
 
 // Direct helper: t(locale, key). Same lookup semantics as makeT.
 export function t(locale: Locale, key: string): string {
-  const table = TABLES[locale] ?? en;
-  return table[key] ?? en[key] ?? key;
+  const table = TABLES[locale] ?? en
+  return table[key] ?? en[key] ?? key
 }

@@ -1,8 +1,4 @@
-import type {
-  CharacterState,
-  EndingType,
-  Locale,
-} from "../../shared/types.js"
+import type { CharacterState, EndingType, Locale } from "../../shared/types.js"
 import type { ContentRegistry } from "../content/registry.js"
 import { localize, peakReputation } from "./helpers.js"
 import { reputationTierId } from "../../shared/config.js"

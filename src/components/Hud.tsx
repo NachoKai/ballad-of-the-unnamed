@@ -1,13 +1,13 @@
-import type { CharacterState, Locale } from "@shared/types";
-import { STAT_KEYS } from "@shared/types";
-import { styled } from "styled-components";
-import { t as translate } from "../i18n/strings";
+import type { CharacterState, Locale } from "@shared/types"
+import { STAT_KEYS } from "@shared/types"
+import { styled } from "styled-components"
+import { t as translate } from "../i18n/strings"
 import { Panel } from "./ui/Panel"
-import { Faint } from "./ui/Text";
+import { Faint } from "./ui/Text"
 
 interface Props {
-  character: CharacterState;
-  locale: Locale;
+  character: CharacterState
+  locale: Locale
 }
 
 const STAT_ABBR: Record<string, string> = {
@@ -16,17 +16,17 @@ const STAT_ABBR: Record<string, string> = {
   constitution: "CON",
   intelligence: "INT",
   charisma: "CHA",
-};
+}
 
 export function Hud({ character: c, locale }: Props) {
-  const t = (k: string) => translate(locale, k);
-  const className = t(`class_${c.class}`);
+  const t = (k: string) => translate(locale, k)
+  const className = t(`class_${c.class}`)
   const momentumKey =
     c.momentum === "rising"
       ? "momentumRising"
       : c.momentum === "falling"
         ? "momentumFalling"
-        : "momentumNormal";
+        : "momentumNormal"
 
   return (
     <HudWrap>
@@ -52,7 +52,7 @@ export function Hud({ character: c, locale }: Props) {
         <MomentumBadge $variant={c.momentum}>{t(momentumKey)}</MomentumBadge>
       </HudInner>
       <StatsStrip>
-        {STAT_KEYS.map(k => (
+        {STAT_KEYS.map((k) => (
           <StatPill key={k}>
             {STAT_ABBR[k]} <b>{c[k]}</b>
           </StatPill>
@@ -62,14 +62,14 @@ export function Hud({ character: c, locale }: Props) {
         </StatPill>
       </StatsStrip>
     </HudWrap>
-  );
+  )
 }
 
 const HudWrap = styled(Panel)`
   position: sticky;
   top: 78px;
   z-index: 10;
-`;
+`
 
 const HudInner = styled.div`
   display: flex;
@@ -77,14 +77,14 @@ const HudInner = styled.div`
   align-items: center;
   gap: 10px 14px;
   padding: 16px 18px;
-`;
+`
 
 const Name = styled.span`
   flex: 1 1 100%;
   font-family: ${({ theme }) => theme.fonts.display};
   font-size: 20px;
   color: ${({ theme }) => theme.colors.goldBright};
-`;
+`
 
 const Meter = styled.span`
   display: inline-flex;
@@ -105,7 +105,7 @@ const Meter = styled.span`
     color: ${({ theme }) => theme.colors.parchment};
     text-transform: none;
   }
-`;
+`
 
 const MomentumBadge = styled.span<{ $variant: string }>`
   margin-left: auto;
@@ -119,7 +119,7 @@ const MomentumBadge = styled.span<{ $variant: string }>`
     $variant === "falling" ? theme.colors.bloodBright : theme.colors.sage};
   border-color: ${({ $variant, theme }) =>
     $variant === "falling" ? theme.colors.bloodBright : theme.colors.sage};
-`;
+`
 
 const StatsStrip = styled.div`
   flex: 1 1 100%;
@@ -130,7 +130,7 @@ const StatsStrip = styled.div`
   margin-top: 4px;
   padding: 12px 18px 16px;
   border-top: 1px solid ${({ theme }) => theme.colors.line};
-`;
+`
 
 const StatPill = styled.span`
   display: inline-flex;
@@ -149,4 +149,4 @@ const StatPill = styled.span`
     color: ${({ theme }) => theme.colors.parchment};
     font-weight: 600;
   }
-`;
+`

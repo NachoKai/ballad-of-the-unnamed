@@ -1,34 +1,34 @@
-import "dotenv/config";
-import express from "express";
-import cookieParser from "cookie-parser";
-import { createServer as createHttpServer } from "node:http";
-import { fileURLToPath } from "node:url";
-import { dirname, join } from "node:path";
-import { gameRouter } from "./routes/game.js";
-import { metaRouter } from "./routes/meta.js";
+import "dotenv/config"
+import express from "express"
+import cookieParser from "cookie-parser"
+import { createServer as createHttpServer } from "node:http"
+import { fileURLToPath } from "node:url"
+import { dirname, join } from "node:path"
+import { gameRouter } from "./routes/game.js"
+import { metaRouter } from "./routes/meta.js"
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const isProd = process.env.NODE_ENV === "production";
-const PORT = Number(process.env.PORT) || 8080;
+const __dirname = dirname(fileURLToPath(import.meta.url))
+const isProd = process.env.NODE_ENV === "production"
+const PORT = Number(process.env.PORT) || 8080
 
 async function main() {
-  const app = express();
-  app.use(express.json());
-  app.use(cookieParser());
+  const app = express()
+  app.use(express.json())
+  app.use(cookieParser())
 
   // API routes (server-authoritative game logic).
-  app.use("/api/game", gameRouter);
-  app.use("/api/meta", metaRouter);
-  app.get("/api/health", (_req, res) => res.json({ ok: true }));
+  app.use("/api/game", gameRouter)
+  app.use("/api/meta", metaRouter)
+  app.get("/api/health", (_req, res) => res.json({ ok: true }))
 
   // Explicit HTTP server so Vite's HMR WebSocket can ride the same port
   // (the preview proxy only routes one port; a separate WS port is unreachable).
-  const httpServer = createHttpServer(app);
+  const httpServer = createHttpServer(app)
 
   if (!isProd) {
     // Dev: run Vite in middleware mode so client + API share one port (HMR).
-    const projectRoot = join(__dirname, "..");
-    const { createServer: createViteServer } = await import("vite");
+    const projectRoot = join(__dirname, "..")
+    const { createServer: createViteServer } = await import("vite")
     const vite = await createViteServer({
       // Load vite.config.ts so the @/@shared aliases apply in dev.
       configFile: join(projectRoot, "vite.config.ts"),
@@ -40,31 +40,29 @@ async function main() {
         hmr: {
           server: httpServer,
           protocol: process.env.HMR_PROTOCOL || "ws",
-          clientPort: process.env.HMR_CLIENT_PORT
-            ? Number(process.env.HMR_CLIENT_PORT)
-            : undefined,
+          clientPort: process.env.HMR_CLIENT_PORT ? Number(process.env.HMR_CLIENT_PORT) : undefined,
         },
         // The shared/ folder lives outside the Vite root; allow it to be served.
         fs: { allow: [projectRoot] },
       },
       appType: "spa",
-    });
-    app.use(vite.middlewares);
+    })
+    app.use(vite.middlewares)
   } else {
     // Prod: serve the built client.
-    const clientDir = join(__dirname, "..", "dist", "client");
-    app.use(express.static(clientDir));
+    const clientDir = join(__dirname, "..", "dist", "client")
+    app.use(express.static(clientDir))
     app.get("*", (_req, res) => {
-      res.sendFile(join(clientDir, "index.html"));
-    });
+      res.sendFile(join(clientDir, "index.html"))
+    })
   }
 
   httpServer.listen(PORT, () => {
-    console.log(`[server] listening on http://localhost:${PORT} (prod=${isProd})`);
-  });
+    console.log(`[server] listening on http://localhost:${PORT} (prod=${isProd})`)
+  })
 }
 
-main().catch(err => {
-  console.error("[server] fatal", err);
-  process.exit(1);
-});
+main().catch((err) => {
+  console.error("[server] fatal", err)
+  process.exit(1)
+})

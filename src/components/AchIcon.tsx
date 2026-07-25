@@ -21,7 +21,7 @@ import {
   Swords,
   Tent,
   Wind,
-} from "lucide-react";
+} from "lucide-react"
 
 // Maps the semantic icon names used in content/achievements.json to real
 // Lucide icons (design guideline: use real icons, never emoji/text names).
@@ -47,9 +47,9 @@ const ICONS: Record<string, LucideIcon> = {
   clover: Clover,
   hand: Hand,
   brain: Brain,
-};
+}
 
 export function AchIcon({ name, size = 18 }: { name: string; size?: number }) {
-  const Icon = ICONS[name] ?? Sparkles;
-  return <Icon size={size} strokeWidth={1.75} aria-hidden="true" />;
+  const Icon = ICONS[name] ?? Sparkles
+  return <Icon size={size} strokeWidth={1.75} aria-hidden="true" />
 }
