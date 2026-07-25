@@ -125,7 +125,7 @@ export function CreationScreen({ locale, onStart }: Props) {
 
       {error && <FormError>{error}</FormError>}
 
-      <BeginBtn type="button" disabled={!classId || busy} onClick={begin}>
+      <BeginBtn type="button" disabled={!classId || busy || !name.trim()} onClick={begin}>
         {busy ? t(locale, "loading") : t(locale, "begin")}
       </BeginBtn>
     </CreationScreenRoot>
@@ -317,4 +317,5 @@ const BeginBtn = styled(BtnPrimary)`
   width: 100%;
   padding: 16px;
   font-size: 18px;
+  text-transform: uppercase;
 `
