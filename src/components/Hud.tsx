@@ -30,10 +30,16 @@ export function Hud({ character: c, locale }: Props) {
 
   return (
     <HudWrap>
-      <HudInner>
+      <TopRow>
         <Name>
           {c.name} <Faint>· {className}</Faint>
         </Name>
+        <TurnPill>
+          {t("turn")} <b>{c.turn}</b>
+        </TurnPill>
+      </TopRow>
+
+      <MetersRow>
         <Meter>
           {t("age")} <b>{c.age}</b>
         </Meter>
@@ -50,16 +56,14 @@ export function Hud({ character: c, locale }: Props) {
           {t("power")} <b>{c.powerLevel}</b>
         </Meter>
         <MomentumBadge $variant={c.momentum}>{t(momentumKey)}</MomentumBadge>
-      </HudInner>
+      </MetersRow>
+
       <StatsStrip>
         {STAT_KEYS.map((k) => (
           <StatPill key={k}>
             {STAT_ABBR[k]} <b>{c[k]}</b>
           </StatPill>
         ))}
-        <StatPill>
-          {t("turn")} <b>{c.turn}</b>
-        </StatPill>
       </StatsStrip>
     </HudWrap>
   )
@@ -71,7 +75,34 @@ const HudWrap = styled(Panel)`
   z-index: 10;
 `
 
-const HudInner = styled.div`
+const TurnPill = styled.span`
+  margin-left: auto;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  background: ${({ theme }) => theme.colors.ink3};
+  border: 1px solid ${({ theme }) => theme.colors.line};
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-size: 13px;
+  color: ${({ theme }) => theme.colors.parchment};
+
+  b {
+    font-size: 15px;
+    font-variant-numeric: tabular-nums;
+    color: ${({ theme }) => theme.colors.parchment};
+    font-weight: 600;
+  }
+`
+
+const TopRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px 14px;
+  padding: 16px 18px;
+`
+
+const MetersRow = styled.div`
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -80,7 +111,8 @@ const HudInner = styled.div`
 `
 
 const Name = styled.span`
-  flex: 1 1 100%;
+  flex: 1;
+  min-width: 0;
   font-family: ${({ theme }) => theme.fonts.display};
   font-size: 20px;
   color: ${({ theme }) => theme.colors.goldBright};
@@ -127,8 +159,7 @@ const StatsStrip = styled.div`
   flex-wrap: wrap;
   gap: 8px;
   align-items: center;
-  margin-top: 4px;
-  padding: 12px 18px 16px;
+  padding: 16px 18px;
   border-top: 1px solid ${({ theme }) => theme.colors.line};
 `
 
