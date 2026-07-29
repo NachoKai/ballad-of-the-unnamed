@@ -54,6 +54,7 @@ export function computeScore(input: {
   reputationPeak: number
   netWorth: number
   endingType: string
+  legacyScore?: number
 }): number {
   const endingBonus =
     input.endingType === "heroic_death" ? 200 : input.endingType === "peaceful_retirement" ? 100 : 0
@@ -64,6 +65,7 @@ export function computeScore(input: {
       Math.min(input.ageAtEnd, 80) * 20 +
       input.finalPowerLevel * 15 +
       input.reputationPeak * 5 +
+      (input.legacyScore ?? 0) * 25 +
       input.netWorth / 100 +
       endingBonus,
   )

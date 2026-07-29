@@ -133,6 +133,7 @@ export type AchievementCondition =
   | { type: "rare_cards_gte"; value: number }
   | { type: "legendary_cards_gte"; value: number }
   | { type: "ending"; value: string }
+  | { type: "status"; value: string }
 
 export interface AchievementContent {
   id: string

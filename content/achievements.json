@@ -215,7 +215,7 @@
       "icon": "tent",
       "rarity": "rare",
       "condition": {
-        "type": "ending",
+        "type": "status",
         "value": "retired"
       },
       "name": {

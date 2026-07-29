@@ -124,6 +124,7 @@ export async function insertLeaderboardEntry(input: {
   reputationPeak: number
   endingType: EndingType
   score: number
+  legacyScore?: number
   epilogue: string
   runType: RunType
   seed: string
@@ -132,8 +133,8 @@ export async function insertLeaderboardEntry(input: {
     `INSERT INTO leaderboard
       (id, run_id, name, character_class, final_power_level, net_worth,
        achievements_count, battles_won, quests_completed, age_at_end,
-       reputation_peak, ending_type, score, epilogue, run_type, seed)
-     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16)`,
+       reputation_peak, ending_type, score, legacy_score, epilogue, run_type, seed)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17)`,
     [
       randomUUID(),
       input.runId,
@@ -148,6 +149,7 @@ export async function insertLeaderboardEntry(input: {
       input.reputationPeak,
       input.endingType,
       input.score,
+      input.legacyScore ?? 0,
       input.epilogue,
       input.runType,
       input.seed,

@@ -129,6 +129,14 @@
     "whispering_reed": {
       "en": "Whispering Reed",
       "es": "Caña Susurrante"
+    },
+    "luminari": {
+      "en": "Luminari Order",
+      "es": "Orden Luminari"
+    },
+    "gildedtongue": {
+      "en": "Gilded Tongue",
+      "es": "Lengua Dorada"
     }
   }
 }

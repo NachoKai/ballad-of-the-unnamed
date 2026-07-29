@@ -181,6 +181,7 @@ gameRouter.post("/choose", async (req: Request, res: Response) => {
         reputationPeak: peakReputation(c),
         netWorth: c.gold,
         endingType: outcome.endingType,
+        legacyScore: 0,
       })
       const epilogue = generateEpilogue(c, outcome.endingType, registry, locale)
 

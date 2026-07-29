@@ -33,6 +33,8 @@ function conditionMet(a: AchievementContent, c: CharacterState, ctx: EvalContext
       return (c.counters["legendary_cards"] ?? 0) >= cond.value
     case "ending":
       return ctx.endingType === cond.value
+    case "status":
+      return c.status === cond.value
     default:
       return false
   }
