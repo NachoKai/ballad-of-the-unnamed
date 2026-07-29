@@ -87,6 +87,22 @@ export default function App() {
     setScreen("game")
   }
 
+  async function startRunWithArchetype(
+    name: string,
+    classId: string,
+    archetypeId: string,
+    runType: RunType,
+  ) {
+    const res = await api.newRun({ name, classId, archetypeId, runType, locale })
+    runIdRef.current = res.runId
+    localStorage.setItem(RUN_KEY, res.runId)
+    setCharacter(res.character)
+    setEvent(res.event)
+    setTurnNarrative(null)
+    setEnding(null)
+    setScreen("game")
+  }
+
   async function choose(choiceId: string) {
     const runId = runIdRef.current
     if (!runId) return
@@ -165,7 +181,13 @@ export default function App() {
         </TopActions>
       </TopBar>
 
-      {screen === "creation" && <CreationScreen locale={locale} onStart={startRun} />}
+      {screen === "creation" && (
+        <CreationScreen
+          locale={locale}
+          onStart={startRun}
+          onStartWithArchetype={startRunWithArchetype}
+        />
+      )}
 
       {screen === "game" && character && event && (
         <GameScreen

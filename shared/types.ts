@@ -63,6 +63,9 @@ export interface ChoiceContent {
   narrative: LocaleMap
   // If present, choosing this card offers retirement (age-gated event only).
   retire?: boolean
+  // Personality tag synergy: matching tags boost stat gains, conflicting tags penalize.
+  wantedTags?: Partial<Record<PersonalityTag, number>>
+  punishedTags?: Partial<Record<PersonalityTag, number>>
 }
 
 export type OutcomeTier = "critical" | "success" | "partial" | "fail"
@@ -145,6 +148,16 @@ export interface AchievementContent {
   hidden?: boolean
 }
 
+export interface ArchetypeContent {
+  id: string
+  icon: string
+  name: LocaleMap
+  flavor: LocaleMap
+  statDeltas: StatDeltas
+}
+
+export type ArchetypePool = Record<string, ArchetypeContent[]>
+
 export interface SlotPools {
   [poolName: string]: LocaleMap[]
 }
@@ -155,6 +168,7 @@ export interface CharacterState {
   id: string
   name: string
   class: string
+  archetype: string | null
   age: number
   strength: number
   dexterity: number
@@ -165,6 +179,8 @@ export interface CharacterState {
   health: number
   fame: number
   gold: number
+  marketValue: number
+  marketValuePeak: number
   momentum: Momentum
   status: CharacterStatus
   locale: Locale

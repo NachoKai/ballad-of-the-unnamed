@@ -16,6 +16,14 @@ export interface ClassInfo {
   startingFaction: string | null
 }
 
+export interface ArchetypeView {
+  id: string
+  icon: string
+  name: string
+  flavor: string
+  statDeltas: Record<string, number>
+}
+
 export interface NewRunResponse {
   runId: string
   runType: RunType
@@ -68,7 +76,19 @@ export const api = {
   classes: (locale: Locale) =>
     jfetch<{ classes: ClassInfo[]; dailySeed: string }>(`/api/meta/classes?locale=${locale}`),
 
-  newRun: (input: { name: string; classId: string; runType: RunType; locale: Locale }) =>
+  drawArchetypes: (input: { classId: string; locale: Locale }) =>
+    jfetch<{ archetypes: ArchetypeView[] }>("/api/game/archetype-draw", {
+      method: "POST",
+      body: JSON.stringify(input),
+    }),
+
+  newRun: (input: {
+    name: string
+    classId: string
+    archetypeId?: string
+    runType: RunType
+    locale: Locale
+  }) =>
     jfetch<NewRunResponse>("/api/game/new", {
       method: "POST",
       body: JSON.stringify(input),

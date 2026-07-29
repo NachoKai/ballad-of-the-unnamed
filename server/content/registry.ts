@@ -3,6 +3,8 @@ import { fileURLToPath } from "node:url"
 import { dirname, join } from "node:path"
 import type {
   AchievementContent,
+  ArchetypeContent,
+  ArchetypePool,
   ClassContent,
   EventContent,
   LocaleMap,
@@ -35,6 +37,7 @@ function validateLocaleMap(map: LocaleMap | undefined, where: string) {
 export interface ContentRegistry {
   classes: ClassContent[]
   classesById: Map<string, ClassContent>
+  archetypes: ArchetypePool
   events: EventContent[]
   eventsById: Map<string, EventContent>
   minigames: EventContent[]
@@ -53,6 +56,14 @@ export function loadContent(): ContentRegistry {
   for (const c of classes) {
     validateLocaleMap(c.name, `class ${c.id} name`)
     validateLocaleMap(c.description, `class ${c.id} description`)
+  }
+
+  const archetypes = readJson<ArchetypePool>("archetypes.json")
+  for (const [cls, arr] of Object.entries(archetypes)) {
+    for (const a of arr) {
+      validateLocaleMap(a.name, `archetype ${a.id} name`)
+      validateLocaleMap(a.flavor, `archetype ${a.id} flavor`)
+    }
   }
 
   const slots = readJson<SlotPools>("slots.json")
@@ -124,6 +135,7 @@ export function loadContent(): ContentRegistry {
   cached = {
     classes,
     classesById,
+    archetypes,
     events,
     eventsById,
     minigames,

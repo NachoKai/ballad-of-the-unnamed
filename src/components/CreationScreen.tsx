@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react"
 import { styled } from "styled-components"
 import type { Locale, RunType } from "@shared/types"
-import { api, type ClassInfo } from "../api"
+import { api, type ArchetypeView, type ClassInfo } from "../api"
 import { t } from "../i18n/strings"
 import { STAT_ABBR } from "../constants"
+import { ArchetypeStep } from "./ArchetypeStep"
 import { BtnPrimary } from "./ui/Button"
 import { TextPretty } from "./ui/Text"
 import { rise } from "./ui/Animation"
@@ -11,9 +12,18 @@ import { rise } from "./ui/Animation"
 interface Props {
   locale: Locale
   onStart: (name: string, classId: string, runType: RunType) => Promise<void>
+  onStartWithArchetype: (
+    name: string,
+    classId: string,
+    archetypeId: string,
+    runType: RunType,
+  ) => Promise<void>
 }
 
-export function CreationScreen({ locale, onStart }: Props) {
+type Step = "form" | "archetype"
+
+export function CreationScreen({ locale, onStart, onStartWithArchetype }: Props) {
+  const [step, setStep] = useState<Step>("form")
   const [classes, setClasses] = useState<ClassInfo[]>([])
   const [dailySeed, setDailySeed] = useState("")
   const [name, setName] = useState("")
@@ -21,6 +31,7 @@ export function CreationScreen({ locale, onStart }: Props) {
   const [runType, setRunType] = useState<RunType>("standard")
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [archetypes, setArchetypes] = useState<ArchetypeView[]>([])
 
   useEffect(() => {
     let active = true
@@ -42,11 +53,48 @@ export function CreationScreen({ locale, onStart }: Props) {
     setBusy(true)
     setError(null)
     try {
+      const res = await api.drawArchetypes({ classId, locale })
+      setArchetypes(res.archetypes)
+      setStep("archetype")
+    } catch (err) {
+      console.error("Failed to draw archetypes:", err)
+      // Fallback: if archetype-draw fails, skip straight to game with no archetype.
       await onStart(name.trim() || "Wanderer", classId, runType)
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  async function pickArchetype(archetypeId: string) {
+    if (!classId || busy) return
+    setBusy(true)
+    setError(null)
+    try {
+      await onStartWithArchetype(name.trim() || "Wanderer", classId, archetypeId, runType)
     } catch (e) {
       setError(String((e as Error).message))
       setBusy(false)
     }
+  }
+
+  function goBack() {
+    setStep("form")
+    setError(null)
+  }
+
+  if (step === "archetype") {
+    return (
+      <CreationScreenRoot>
+        <ArchetypeStep
+          locale={locale}
+          archetypes={archetypes}
+          onPick={pickArchetype}
+          onBack={goBack}
+          busy={busy}
+        />
+        {error && <FormError>{error}</FormError>}
+      </CreationScreenRoot>
+    )
   }
 
   return (

@@ -26,6 +26,7 @@ export function Hud({ character: c, locale }: Props) {
       <TopRow>
         <Name>
           {c.name} <Faint>· {className}</Faint>
+          {c.archetype && <ArchetypeTag>{c.archetype}</ArchetypeTag>}
         </Name>
         <TurnPill>
           {t("turn")} <b>{c.turn}</b>
@@ -47,6 +48,9 @@ export function Hud({ character: c, locale }: Props) {
         </Meter>
         <Meter>
           {t("power")} <b>{c.powerLevel}</b>
+        </Meter>
+        <Meter>
+          MV <b>{c.marketValue}</b>
         </Meter>
         <MomentumBadge $variant={c.momentum}>{t(momentumKey)}</MomentumBadge>
       </MetersRow>
@@ -86,6 +90,19 @@ const TurnPill = styled.span`
     color: ${({ theme }) => theme.colors.parchment};
     font-weight: 600;
   }
+`
+
+const ArchetypeTag = styled.span`
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 8px;
+  border: 1px solid ${({ theme }) => theme.colors.line2};
+  border-radius: 999px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.colors.muted};
+  vertical-align: middle;
 `
 
 const TopRow = styled.div`

@@ -149,3 +149,31 @@ export function serveEvent(
 export function statLabelKeys(): readonly StatKey[] {
   return STAT_KEYS
 }
+
+// Market value: fluctuates independently of gold. Represents the character's
+// worth on the open market (prize money, bounty, sponsorship, etc.).
+export function computeMarketValue(c: CharacterState): number {
+  const agePenalty = c.age > 35 ? (c.age - 35) * 100 : 0
+  return Math.max(0, c.powerLevel * 50 + c.fame * 10 + c.achievements.length * 200 - agePenalty)
+}
+
+export function updateMarketValue(c: CharacterState): void {
+  c.marketValue = computeMarketValue(c)
+  if (c.marketValue > c.marketValuePeak) {
+    c.marketValuePeak = c.marketValue
+  }
+}
+
+// Stamina: each turn costs 1 base stamina. If stamina < 20, apply a fatigue
+// penalty to all stat gains. Recovery happens through shop items or rest events.
+export const STAMINA_BASE_COST = 1
+export const STAMINA_FATIGUE_THRESHOLD = 20
+export const FATIGUE_MULTIPLIER = 0.5
+
+export function deductStamina(c: CharacterState, extraCost = 0): void {
+  c.stamina = Math.max(0, c.stamina - STAMINA_BASE_COST - extraCost)
+}
+
+export function isFatigued(c: CharacterState): boolean {
+  return c.stamina < STAMINA_FATIGUE_THRESHOLD
+}

@@ -1,0 +1,473 @@
+{
+  "warrior": [
+    {
+      "id": "berserker",
+      "icon": "flame",
+      "name": {
+        "en": "Berserker",
+        "es": "Berserker"
+      },
+      "flavor": {
+        "en": "You live for the kill. Battle-fury guides your blade.",
+        "es": "Vivís para el golpe final. La furia de batalla guía tu espada."
+      },
+      "statDeltas": {
+        "strength": 8
+      }
+    },
+    {
+      "id": "guardian",
+      "icon": "shield",
+      "name": {
+        "en": "Guardian",
+        "es": "Guardiana"
+      },
+      "flavor": {
+        "en": "You stand between others and harm. Unmoving, unbroken.",
+        "es": "Te parás entre les demás y el daño. Inmóvil, inquebrantable."
+      },
+      "statDeltas": {
+        "constitution": 8
+      }
+    },
+    {
+      "id": "duelist",
+      "icon": "wind",
+      "name": {
+        "en": "Duelist",
+        "es": "Duelista"
+      },
+      "flavor": {
+        "en": "Speed is your armor. Strike first, strike last.",
+        "es": "La velocidad es tu armadura. Golpeá primero, golpeá último."
+      },
+      "statDeltas": {
+        "dexterity": 8
+      }
+    },
+    {
+      "id": "knight",
+      "icon": "crown",
+      "name": {
+        "en": "Knight",
+        "es": "Caballera"
+      },
+      "flavor": {
+        "en": "Honor is a weapon as sharp as any steel.",
+        "es": "El honor es un arma tan afilada como cualquier acero."
+      },
+      "statDeltas": {
+        "charisma": 8
+      }
+    },
+    {
+      "id": "tactician",
+      "icon": "brain",
+      "name": {
+        "en": "Tactician",
+        "es": "Táctica"
+      },
+      "flavor": {
+        "en": "The battlefield is a game of moves and countermoves.",
+        "es": "El campo de batalla es un juego de movimientos y contramovimientos."
+      },
+      "statDeltas": {
+        "intelligence": 8
+      }
+    }
+  ],
+  "wizard": [
+    {
+      "id": "pyromancer",
+      "icon": "flame",
+      "name": {
+        "en": "Pyromancer",
+        "es": "Piromante"
+      },
+      "flavor": {
+        "en": "Fire answers when you call. Everything burns.",
+        "es": "El fuego responde cuando llamás. Todo arde."
+      },
+      "statDeltas": {
+        "intelligence": 8
+      }
+    },
+    {
+      "id": "enchanter",
+      "icon": "sparkles",
+      "name": {
+        "en": "Enchanter",
+        "es": "Encantadora"
+      },
+      "flavor": {
+        "en": "A whisper in the right ear moves kingdoms.",
+        "es": "Un susurro en el oído correcto mueve reinos."
+      },
+      "statDeltas": {
+        "charisma": 8
+      }
+    },
+    {
+      "id": "necromancer",
+      "icon": "skull",
+      "name": {
+        "en": "Necromancer",
+        "es": "Nigromante"
+      },
+      "flavor": {
+        "en": "Death is not the end. It is a doorway.",
+        "es": "La muerte no es el final. Es un portal."
+      },
+      "statDeltas": {
+        "intelligence": 4,
+        "constitution": 4
+      }
+    },
+    {
+      "id": "diviner",
+      "icon": "eye",
+      "name": {
+        "en": "Diviner",
+        "es": "Vidente"
+      },
+      "flavor": {
+        "en": "You see what others cannot — the threads of fate.",
+        "es": "Ves lo que otres no pueden — los hilos del destino."
+      },
+      "statDeltas": {
+        "intelligence": 6,
+        "charisma": 2
+      }
+    },
+    {
+      "id": "elementalist",
+      "icon": "wind",
+      "name": {
+        "en": "Elementalist",
+        "es": "Elementalista"
+      },
+      "flavor": {
+        "en": "The elements are not your masters. You are theirs.",
+        "es": "Los elementos no son tus amos. Vos sos el suyo."
+      },
+      "statDeltas": {
+        "intelligence": 4,
+        "dexterity": 4
+      }
+    }
+  ],
+  "rogue": [
+    {
+      "id": "assassin",
+      "icon": "swords",
+      "name": {
+        "en": "Assassin",
+        "es": "Asesina"
+      },
+      "flavor": {
+        "en": "One strike. One life. No witnesses.",
+        "es": "Un golpe. Una vida. Sin testigos."
+      },
+      "statDeltas": {
+        "dexterity": 8
+      }
+    },
+    {
+      "id": "thief",
+      "icon": "hand",
+      "name": {
+        "en": "Thief",
+        "es": "Ladrón"
+      },
+      "flavor": {
+        "en": "Their purse is lighter, and you are already gone.",
+        "es": "Su bolsa es más liviana, y vos ya no estás."
+      },
+      "statDeltas": {
+        "dexterity": 6,
+        "intelligence": 2
+      }
+    },
+    {
+      "id": "shadowblade",
+      "icon": "sword",
+      "name": {
+        "en": "Shadowblade",
+        "es": "Hoja de Sombras"
+      },
+      "flavor": {
+        "en": "The dark does not hide you. You are the dark.",
+        "es": "La oscuridad no te esconde. Vos sos la oscuridad."
+      },
+      "statDeltas": {
+        "dexterity": 4,
+        "strength": 4
+      }
+    },
+    {
+      "id": "infiltrator",
+      "icon": "eye-off",
+      "name": {
+        "en": "Infiltrator",
+        "es": "Infiltradora"
+      },
+      "flavor": {
+        "en": "Every locked door is just an invitation.",
+        "es": "Cada puerta cerrada es solo una invitación."
+      },
+      "statDeltas": {
+        "intelligence": 8
+      }
+    },
+    {
+      "id": "face",
+      "icon": "message-circle",
+      "name": {
+        "en": "Face",
+        "es": "Rostro"
+      },
+      "flavor": {
+        "en": "A smile, a lie, a well-placed truth. All tools of your trade.",
+        "es": "Una sonrisa, una mentira, una verdad bien ubicada. Todas herramientas de tu oficio."
+      },
+      "statDeltas": {
+        "charisma": 8
+      }
+    }
+  ],
+  "ranger": [
+    {
+      "id": "hunter",
+      "icon": "target",
+      "name": {
+        "en": "Hunter",
+        "es": "Cazadora"
+      },
+      "flavor": {
+        "en": "Patient. Silent. The hunt is all that matters.",
+        "es": "Paciente. Silenciosa. La caza es lo único que importa."
+      },
+      "statDeltas": {
+        "dexterity": 8
+      }
+    },
+    {
+      "id": "beastmaster",
+      "icon": "heart-handshake",
+      "name": {
+        "en": "Beastmaster",
+        "es": "Maestra de Bestias"
+      },
+      "flavor": {
+        "en": "Beasts do not fear you. They follow.",
+        "es": "Las bestias no te temen. Te siguen."
+      },
+      "statDeltas": {
+        "charisma": 8
+      }
+    },
+    {
+      "id": "scout",
+      "icon": "footprints",
+      "name": {
+        "en": "Scout",
+        "es": "Exploradora"
+      },
+      "flavor": {
+        "en": "The road remembers every step you take.",
+        "es": "El camino recuerda cada paso que das."
+      },
+      "statDeltas": {
+        "dexterity": 6,
+        "constitution": 2
+      }
+    },
+    {
+      "id": "sniper",
+      "icon": "crosshair",
+      "name": {
+        "en": "Sniper",
+        "es": "Francotiradora"
+      },
+      "flavor": {
+        "en": "Distance is not safety. It is precision.",
+        "es": "La distancia no es seguridad. Es precisión."
+      },
+      "statDeltas": {
+        "dexterity": 4,
+        "intelligence": 4
+      }
+    },
+    {
+      "id": "trapper",
+      "icon": "layers",
+      "name": {
+        "en": "Trapper",
+        "es": "Trampera"
+      },
+      "flavor": {
+        "en": "Let your enemy come to you. The ground is your ally.",
+        "es": "Dejá que tu enemigue venga a vos. El suelo es tu aliado."
+      },
+      "statDeltas": {
+        "intelligence": 8
+      }
+    }
+  ],
+  "cleric": [
+    {
+      "id": "battlepriest",
+      "icon": "flame",
+      "name": {
+        "en": "Battlepriest",
+        "es": "Sacerdote de Batalla"
+      },
+      "flavor": {
+        "en": "Faith is a fortress. Your god does not kneel.",
+        "es": "La fe es una fortaleza. Tu dios no se arrodilla."
+      },
+      "statDeltas": {
+        "strength": 8
+      }
+    },
+    {
+      "id": "healer",
+      "icon": "heart-pulse",
+      "name": {
+        "en": "Healer",
+        "es": "Sanadora"
+      },
+      "flavor": {
+        "en": "Where there is life, there is hope. You carry both.",
+        "es": "Donde hay vida, hay esperanza. Llevás ambas."
+      },
+      "statDeltas": {
+        "charisma": 8
+      }
+    },
+    {
+      "id": "paladin",
+      "icon": "shield",
+      "name": {
+        "en": "Paladin",
+        "es": "Paladina"
+      },
+      "flavor": {
+        "en": "Your oath is your code. Unbroken, unbending.",
+        "es": "Tu juramento es tu código. Inquebrantable, inflexible."
+      },
+      "statDeltas": {
+        "constitution": 8
+      }
+    },
+    {
+      "id": "inquisitor",
+      "icon": "brain",
+      "name": {
+        "en": "Inquisitor",
+        "es": "Inquisidora"
+      },
+      "flavor": {
+        "en": "Truth is a weapon. You wield it without mercy.",
+        "es": "La verdad es un arma. La blandís sin piedad."
+      },
+      "statDeltas": {
+        "intelligence": 8
+      }
+    },
+    {
+      "id": "oracle",
+      "icon": "sparkles",
+      "name": {
+        "en": "Oracle",
+        "es": "Oráculo"
+      },
+      "flavor": {
+        "en": "You have seen what comes. The future bends to your will.",
+        "es": "Has visto lo que viene. El futuro se dobla a tu voluntad."
+      },
+      "statDeltas": {
+        "intelligence": 6,
+        "charisma": 2
+      }
+    }
+  ],
+  "bard": [
+    {
+      "id": "skald",
+      "icon": "sparkles",
+      "name": {
+        "en": "Skald",
+        "es": "Escaldo"
+      },
+      "flavor": {
+        "en": "Your songs outlive kings. Your words cut deeper than swords.",
+        "es": "Tus canciones sobreviven a reyes. Tus palabras cortan más hondo que las espadas."
+      },
+      "statDeltas": {
+        "charisma": 8
+      }
+    },
+    {
+      "id": "comedian",
+      "icon": "message-circle",
+      "name": {
+        "en": "Comedian",
+        "es": "Cómica"
+      },
+      "flavor": {
+        "en": "Laughter disarms what steel cannot touch.",
+        "es": "La risa desarma lo que el acero no puede tocar."
+      },
+      "statDeltas": {
+        "charisma": 6,
+        "dexterity": 2
+      }
+    },
+    {
+      "id": "warleader",
+      "icon": "crown",
+      "name": {
+        "en": "Warleader",
+        "es": "Líder de Guerra"
+      },
+      "flavor": {
+        "en": "Follow me. I know the way through.",
+        "es": "Síganme. Conozco el camino."
+      },
+      "statDeltas": {
+        "strength": 8
+      }
+    },
+    {
+      "id": "spy",
+      "icon": "eye-off",
+      "name": {
+        "en": "Spy",
+        "es": "Espía"
+      },
+      "flavor": {
+        "en": "No one remembers your face. That is your greatest gift.",
+        "es": "Nadie recuerda tu cara. Ese es tu mayor don."
+      },
+      "statDeltas": {
+        "dexterity": 8
+      }
+    },
+    {
+      "id": "loremaster",
+      "icon": "brain",
+      "name": {
+        "en": "Loremaster",
+        "es": "Maestre de Letras"
+      },
+      "flavor": {
+        "en": "Knowledge is the oldest magic. You collect it all.",
+        "es": "El saber es la magia más antigua. Lo coleccionás todo."
+      },
+      "statDeltas": {
+        "intelligence": 8
+      }
+    }
+  ]
+}

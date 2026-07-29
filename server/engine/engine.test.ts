@@ -16,6 +16,7 @@ function makeChar(overrides: Partial<CharacterState> = {}): CharacterState {
     id: "test",
     name: "Test",
     class: "warrior",
+    archetype: null,
     age: 16,
     strength: 5,
     dexterity: 5,
@@ -26,6 +27,8 @@ function makeChar(overrides: Partial<CharacterState> = {}): CharacterState {
     health: 100,
     fame: 0,
     gold: 100,
+    marketValue: 200,
+    marketValuePeak: 200,
     momentum: "normal",
     status: "alive",
     locale: "en",
@@ -78,10 +81,38 @@ describe("createCharacter", () => {
     }
   })
 
+  it("applies archetype stat deltas", () => {
+    const c = createCharacter({
+      id: "a1",
+      name: "Berserker",
+      classId: "warrior",
+      archetypeId: "berserker",
+      locale: "en",
+      registry: reg,
+    })
+    // warrior base strength is 8, berserker adds +8 = 16
+    expect(c.strength).toBe(16)
+    expect(c.archetype).toBe("berserker")
+    expect(c.dexterity).toBe(5) // unchanged
+  })
+
   it("rejects an unknown class", () => {
     expect(() =>
       createCharacter({ id: "x", name: "X", classId: "ninja", locale: "en", registry: reg }),
     ).toThrow("unknown class")
+  })
+
+  it("rejects an unknown archetype for class", () => {
+    expect(() =>
+      createCharacter({
+        id: "x",
+        name: "X",
+        classId: "warrior",
+        archetypeId: "nonexistent",
+        locale: "en",
+        registry: reg,
+      }),
+    ).toThrow("unknown archetype")
   })
 })
 
@@ -184,6 +215,54 @@ describe("resolveChoice", () => {
     expect(c.status).toBe("retired")
     expect(out.ended).toBe(true)
     expect(out.endingType).toMatch(/peaceful_retirement|other_retirement/)
+  })
+
+  it("applies wantedTags synergy multiplier", () => {
+    const c = makeChar({ strength: 5, personality: { Aggressive: 2 } })
+    const event: EventContent = {
+      id: "synergy",
+      minAge: 0,
+      maxAge: 99,
+      weight: 1,
+      narrative: { en: "", es: "" },
+      choices: [
+        {
+          id: "attack",
+          rarity: "common",
+          label: { en: "", es: "" },
+          narrative: { en: "", es: "" },
+          statDeltas: { strength: 10 },
+          wantedTags: { Aggressive: 0.2 },
+        },
+      ],
+    }
+    resolveChoice(c, event, "attack", reg, new Rng(1))
+    // 10 * (1 + 0.2) = 12
+    expect(c.strength).toBe(17)
+  })
+
+  it("applies punishedTags malus", () => {
+    const c = makeChar({ strength: 5, personality: { Cocky: 1 } })
+    const event: EventContent = {
+      id: "punish",
+      minAge: 0,
+      maxAge: 99,
+      weight: 1,
+      narrative: { en: "", es: "" },
+      choices: [
+        {
+          id: "negotiate",
+          rarity: "common",
+          label: { en: "", es: "" },
+          narrative: { en: "", es: "" },
+          statDeltas: { strength: 10 },
+          punishedTags: { Cocky: -0.15 },
+        },
+      ],
+    }
+    resolveChoice(c, event, "negotiate", reg, new Rng(1))
+    // 10 * (1 - 0.15) = 8.5 → rounded to 9, plus base 5 = 14
+    expect(c.strength).toBe(14)
   })
 })
 
@@ -459,6 +538,84 @@ describe("updateMomentum", () => {
     const c = makeChar()
     updateMomentum(c, 1)
     expect(c.momentum).toBe("normal")
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Stamina & fatigue
+// ---------------------------------------------------------------------------
+describe("stamina & fatigue", () => {
+  it("deducts base stamina each turn", () => {
+    const c = makeChar({ stamina: 50 })
+    const event: EventContent = {
+      id: "test",
+      minAge: 0,
+      maxAge: 99,
+      weight: 1,
+      narrative: { en: "", es: "" },
+      choices: [
+        { id: "ok", rarity: "common", label: { en: "", es: "" }, narrative: { en: "", es: "" } },
+      ],
+    }
+    resolveChoice(c, event, "ok", reg, new Rng(1))
+    expect(c.stamina).toBe(49)
+  })
+
+  it("applies fatigue penalty when stamina < 20", () => {
+    const c = makeChar({ stamina: 10, strength: 5 })
+    const event: EventContent = {
+      id: "test",
+      minAge: 0,
+      maxAge: 99,
+      weight: 1,
+      narrative: { en: "", es: "" },
+      choices: [
+        {
+          id: "train",
+          rarity: "common",
+          label: { en: "", es: "" },
+          narrative: { en: "", es: "" },
+          statDeltas: { strength: 4 },
+        },
+      ],
+    }
+    resolveChoice(c, event, "train", reg, new Rng(1))
+    // Fatigue halves positive gains: 4 * 0.5 = 2
+    expect(c.strength).toBe(7)
+    // Stamina deduction still applies
+    expect(c.stamina).toBe(9)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Market value
+// ---------------------------------------------------------------------------
+describe("market value", () => {
+  it("starts at startingGold * 2", () => {
+    const c = createCharacter({
+      id: "mv1",
+      name: "Merc",
+      classId: "warrior",
+      locale: "en",
+      registry: reg,
+    })
+    expect(c.marketValue).toBe(c.gold * 2)
+  })
+
+  it("updates after each turn", () => {
+    const c = makeChar({ fame: 10, powerLevel: 20, age: 30, marketValue: 0, marketValuePeak: 0 })
+    const event: EventContent = {
+      id: "test",
+      minAge: 0,
+      maxAge: 99,
+      weight: 1,
+      narrative: { en: "", es: "" },
+      choices: [
+        { id: "ok", rarity: "common", label: { en: "", es: "" }, narrative: { en: "", es: "" } },
+      ],
+    }
+    resolveChoice(c, event, "ok", reg, new Rng(1))
+    expect(c.marketValue).toBeGreaterThan(0)
   })
 })
 

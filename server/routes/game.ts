@@ -19,7 +19,13 @@ import {
   saveRun,
   type RunRecord,
 } from "../store/runStore.js"
-import type { AchievementContent, Locale, RunType, TurnResult } from "../../shared/types.js"
+import type {
+  AchievementContent,
+  ArchetypeContent,
+  Locale,
+  RunType,
+  TurnResult,
+} from "../../shared/types.js"
 
 export const gameRouter = Router()
 const registry = loadContent()
@@ -51,7 +57,34 @@ function serveAchievements(list: AchievementContent[], locale: Locale): Achievem
   }))
 }
 
-// POST /api/game/new  { name, classId, runType, locale }
+// POST /api/game/archetype-draw  { classId, locale }
+gameRouter.post("/archetype-draw", (req: Request, res: Response) => {
+  const classId = String(req.body?.classId ?? "")
+  const locale = localeOf(req)
+  const pool = registry.archetypes[classId]
+  if (!pool || pool.length === 0) {
+    return res.status(400).json({ error: "no_archetypes_for_class" })
+  }
+  // Deterministic per-session draw: pick 3 from the pool using a fresh RNG.
+  const rng = new Rng(hashSeed(classId + "_" + String(Date.now()) + Math.random()))
+  const poolCopy = [...pool]
+  const drawn: ArchetypeContent[] = []
+  for (let i = 0; i < 3 && poolCopy.length > 0; i++) {
+    const idx = rng.int(0, poolCopy.length - 1)
+    drawn.push(poolCopy.splice(idx, 1)[0])
+  }
+  // Localize flavor text.
+  const served = drawn.map((a) => ({
+    id: a.id,
+    icon: a.icon,
+    name: localize(a.name, locale),
+    flavor: localize(a.flavor, locale),
+    statDeltas: a.statDeltas,
+  }))
+  res.json({ archetypes: served })
+})
+
+// POST /api/game/new  { name, classId, archetypeId, runType, locale }
 gameRouter.post("/new", async (req: Request, res: Response) => {
   try {
     const name =
@@ -59,6 +92,7 @@ gameRouter.post("/new", async (req: Request, res: Response) => {
         .trim()
         .slice(0, 24) || "Wanderer"
     const classId = String(req.body?.classId ?? "")
+    const archetypeId = String(req.body?.archetypeId ?? "").trim() || null
     const runType: RunType = req.body?.runType === "daily" ? "daily" : "standard"
     const locale = localeOf(req)
 
@@ -73,6 +107,7 @@ gameRouter.post("/new", async (req: Request, res: Response) => {
       id: crypto.randomUUID(),
       name,
       classId,
+      archetypeId,
       locale,
       registry,
     })

@@ -1,4 +1,5 @@
 import type {
+  ArchetypeContent,
   CharacterState,
   EndingType,
   EventContent,
@@ -15,13 +16,16 @@ import { GAME_CONFIG } from "../../shared/config.js"
 import type { ContentRegistry } from "../content/registry.js"
 import {
   adjustReputation,
+  deductStamina,
   effectiveWeight,
   fillSlots,
+  isFatigued,
   isEligible,
   localize,
   primaryReputation,
   recomputeDerived,
   serveEvent,
+  updateMarketValue,
   updateMomentum,
 } from "./helpers.js"
 
@@ -33,6 +37,7 @@ export function createCharacter(input: {
   id: string
   name: string
   classId: string
+  archetypeId?: string | null
   locale: Locale
   registry: ContentRegistry
 }): CharacterState {
@@ -40,20 +45,31 @@ export function createCharacter(input: {
   const cls = registry.classesById.get(input.classId)
   if (!cls) throw new Error(`unknown class ${input.classId}`)
 
+  let archetype: ArchetypeContent | undefined
+  if (input.archetypeId) {
+    const pool = registry.archetypes[input.classId] ?? []
+    archetype = pool.find((a) => a.id === input.archetypeId)
+    if (!archetype)
+      throw new Error(`unknown archetype ${input.archetypeId} for class ${input.classId}`)
+  }
+
   const base: CharacterState = {
     id: input.id,
     name: input.name,
     class: cls.id,
+    archetype: archetype?.id ?? null,
     age: GAME_CONFIG.startingAge,
-    strength: cls.base.strength,
-    dexterity: cls.base.dexterity,
-    constitution: cls.base.constitution,
-    intelligence: cls.base.intelligence,
-    charisma: cls.base.charisma,
+    strength: cls.base.strength + (archetype?.statDeltas.strength ?? 0),
+    dexterity: cls.base.dexterity + (archetype?.statDeltas.dexterity ?? 0),
+    constitution: cls.base.constitution + (archetype?.statDeltas.constitution ?? 0),
+    intelligence: cls.base.intelligence + (archetype?.statDeltas.intelligence ?? 0),
+    charisma: cls.base.charisma + (archetype?.statDeltas.charisma ?? 0),
     stamina: GAME_CONFIG.startingStamina,
     health: GAME_CONFIG.startingHealth,
     fame: 0,
     gold: cls.startingGold ?? 20,
+    marketValue: (cls.startingGold ?? 20) * 2,
+    marketValuePeak: (cls.startingGold ?? 20) * 2,
     momentum: "normal",
     status: "alive",
     locale: input.locale,
@@ -159,13 +175,34 @@ export function buildServedEvent(
 // Applying deltas
 // ---------------------------------------------------------------------------
 
-function applyStatDeltas(c: CharacterState, deltas?: StatDeltas): number {
+function computeTagSynergy(
+  c: CharacterState,
+  choice: { wantedTags?: Record<string, number>; punishedTags?: Record<string, number> },
+): number {
+  let synergy = 0
+  if (choice.wantedTags) {
+    for (const [tag, bonus] of Object.entries(choice.wantedTags)) {
+      if ((c.personality[tag] ?? 0) > 0) synergy += bonus
+    }
+  }
+  if (choice.punishedTags) {
+    for (const [tag, malus] of Object.entries(choice.punishedTags)) {
+      if ((c.personality[tag] ?? 0) > 0) synergy += malus
+    }
+  }
+  return synergy
+}
+
+function applyStatDeltas(c: CharacterState, deltas?: StatDeltas, multiplier = 1): number {
   if (!deltas) return 0
   let net = 0
+  const fatigue = isFatigued(c) ? 0.5 : 1
   for (const k of STAT_KEYS) {
     if (deltas[k]) {
-      c[k] += deltas[k] as number
-      net += deltas[k] as number
+      const raw = deltas[k] as number
+      const adjusted = raw > 0 ? Math.round(raw * fatigue * multiplier) : raw
+      c[k] += adjusted
+      net += adjusted
     }
   }
   return net
@@ -241,6 +278,9 @@ export function resolveChoice(
   let ended = false
   let endingType: EndingType | undefined
 
+  // Personality tag synergy: past choices amplify present outcomes.
+  const tagSynergy = 1 + computeTagSynergy(c, choice)
+
   // Retirement handling.
   if (event.id === "__retirement_offer__" && choice.id === "retire") {
     c.status = "retired"
@@ -248,8 +288,8 @@ export function resolveChoice(
     endingType = heroicOrPeaceful(c, "retirement")
   }
 
-  const net = applyStatDeltas(c, choice.statDeltas)
-  applyStatDeltas(c, choice.tradeoffDeltas)
+  const net = applyStatDeltas(c, choice.statDeltas, tagSynergy)
+  applyStatDeltas(c, choice.tradeoffDeltas, tagSynergy)
   if (choice.goldDelta) c.gold += choice.goldDelta
   if (choice.fameDelta) c.fame += choice.fameDelta
   if (choice.staminaDelta) c.stamina += choice.staminaDelta
@@ -270,6 +310,8 @@ export function resolveChoice(
   bumpCounter(c, `event_${event.id}`)
 
   updateMomentum(c, net)
+  deductStamina(c)
+  updateMarketValue(c)
   recomputeDerived(c)
   ageUp(c)
 
@@ -356,6 +398,8 @@ export function resolveMinigame(
   }
 
   updateMomentum(c, net)
+  deductStamina(c)
+  updateMarketValue(c)
   recomputeDerived(c)
   ageUp(c)
 
