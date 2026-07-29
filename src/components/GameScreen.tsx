@@ -9,6 +9,7 @@ import { StatTag } from "./StatTag"
 import { LinkBtn } from "./ui/Button"
 import { TextPretty } from "./ui/Text"
 import { rise } from "./ui/Animation"
+import { capitalize } from "../lib/capitalize"
 
 interface Props {
   locale: Locale
@@ -60,13 +61,13 @@ export function GameScreen({
       <Hud locale={locale} character={character} />
 
       <Scene aria-live="polite">
-        {turnNarrative && <SceneEcho>{turnNarrative}</SceneEcho>}
+        {turnNarrative && <SceneEcho>{capitalize(turnNarrative)}</SceneEcho>}
 
         {event.isRetirementOffer && (
           <RetireBanner role="status">{t(locale, "retirementOffered")}</RetireBanner>
         )}
 
-        <SceneNarrative>{event.narrative}</SceneNarrative>
+        <SceneNarrative>{capitalize(event.narrative)}</SceneNarrative>
 
         <ChoiceGrid role="group" aria-label={t(locale, "chooseAction")}>
           {choices.map((c) => (

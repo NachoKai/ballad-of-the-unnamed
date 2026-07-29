@@ -1,4 +1,4 @@
-import { defineConfig } from "vite"
+import { defineConfig } from "vitest/config"
 import react from "@vitejs/plugin-react"
 import { fileURLToPath, URL } from "node:url"
 
@@ -6,6 +6,9 @@ import { fileURLToPath, URL } from "node:url"
 // and to produce the static client build for production.
 export default defineConfig({
   plugins: [react()],
+  test: {
+    root: "src",
+  },
   root: "src",
   publicDir: "../public",
   resolve: {
