@@ -46,6 +46,9 @@ export function Hud({ character: c, locale, onShopOpen }: Props) {
         <Meter>
           {t("health")} <b>{c.health}</b>
         </Meter>
+        <Meter $low={c.stamina < 20}>
+          {t("stamina")} <b>{c.stamina}</b>
+        </Meter>
         <Meter>
           {t("gold")} <b>{c.gold}</b>
         </Meter>
@@ -141,23 +144,23 @@ const Name = styled.span`
   color: ${({ theme }) => theme.colors.goldBright};
 `
 
-const Meter = styled.span`
+const Meter = styled.span<{ $low?: boolean }>`
   display: inline-flex;
   align-items: baseline;
   gap: 6px;
   padding: 5px 12px;
   background: ${({ theme }) => theme.colors.ink3};
-  border: 1px solid ${({ theme }) => theme.colors.line};
+  border: 1px solid ${({ $low, theme }) => ($low ? theme.colors.bloodBright : theme.colors.line)};
   border-radius: 999px;
   font-size: 13px;
   letter-spacing: 0.04em;
-  color: ${({ theme }) => theme.colors.muted};
+  color: ${({ $low, theme }) => ($low ? theme.colors.bloodBright : theme.colors.muted)};
   text-transform: uppercase;
 
   b {
     font-size: 16px;
     font-variant-numeric: tabular-nums;
-    color: ${({ theme }) => theme.colors.parchment};
+    color: ${({ $low, theme }) => ($low ? theme.colors.bloodBright : theme.colors.parchment)};
     text-transform: none;
   }
 `

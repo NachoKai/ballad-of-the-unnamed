@@ -213,7 +213,13 @@ export function buildServedEvent(
     const grade = Math.round(
       Math.min(
         10,
-        Math.max(1, c.powerLevel / 10 + c.fame / 20 + (c.counters["battles_won"] ?? 0) * 0.2),
+        Math.max(
+          1,
+          c.powerLevel / 10 +
+            c.fame / 20 +
+            (c.counters["battles_won"] ?? 0) * 0.2 +
+            (c.counters["quests_completed"] ?? 0) * 0.1,
+        ),
       ),
     )
     served.seasonGrade = grade

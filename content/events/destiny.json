@@ -1,0 +1,118 @@
+[
+  {
+    "id": "destiny_dragon_blood",
+    "type": "destiny",
+    "minAge": 26,
+    "maxAge": 60,
+    "weight": 3,
+    "narrative": {
+      "en": "A dying dragon, ancient and vast, lies in a canyon before you. Its eye fixes on yours. 'The bloodline ends with me... unless you carry it.' It offers a pact: a share of its primordial essence, forever changing you.",
+      "es": "Un dragón moribundo, antiguo e inmenso, yace en un cañón ante ti. Su ojo se fija en el tuyo. 'Mi linaje termina conmigo... a menos que tú lo continúes.' Ofrece un pacto: una parte de su esencia primordial, cambiándote para siempre."
+    },
+    "choices": [
+      {
+        "id": "accept_dragon_blood",
+        "label": { "en": "Accept the dragon's essence", "es": "Aceptar la esencia del dragón" },
+        "tag": "Confident",
+        "rarity": "rare",
+        "statDeltas": { "strength": 8, "constitution": 6, "charisma": 4 },
+        "tradeoffDeltas": { "dexterity": -2, "intelligence": -2 },
+        "fameDelta": 15,
+        "narrative": {
+          "en": "Fire courses through your veins. The world looks smaller now, and you are no longer entirely human.",
+          "es": "El fuego corre por tus venas. El mundo se ve más pequeño ahora, y ya no eres del todo humano."
+        },
+        "locksEventPool": ["destiny_human_path"]
+      },
+      {
+        "id": "refuse_dragon_blood",
+        "label": { "en": "Respectfully decline", "es": "Rechazar respetuosamente" },
+        "tag": "Humble",
+        "rarity": "common",
+        "statDeltas": { "charisma": 2 },
+        "fameDelta": 3,
+        "narrative": {
+          "en": "The dragon nods, a flicker of respect in its ancient eye. 'A mortal who knows their measure. Rare.' It closes its eyes one last time.",
+          "es": "El dragón asiente, un destello de respeto en su ojo antiguo. 'Un mortal que conoce su medida. Raro.' Cierra los ojos por última vez."
+        }
+      }
+    ]
+  },
+  {
+    "id": "destiny_immortality_ritual",
+    "type": "destiny",
+    "minAge": 30,
+    "maxAge": 70,
+    "weight": 3,
+    "narrative": {
+      "en": "In the catacombs beneath the old capital, you find a chamber sealed for centuries. An altar pulses with a dark, steady light. The inscription reads: 'Drink, and the grave will claim you last of all.' The ritual grants eternal youth — but nothing protects you from a blade.",
+      "es": "En las catacumbas bajo la vieja capital, encuentras una cámara sellada por siglos. Un altar pulsa con una luz oscura y constante. La inscripción dice: 'Bebe, y la tumba te reclamará al último'. El ritual otorga juventud eterna, pero nada te protege de una espada."
+    },
+    "choices": [
+      {
+        "id": "drink_elixir",
+        "label": { "en": "Drink from the chalice", "es": "Beber del cáliz" },
+        "tag": "Confident",
+        "rarity": "rare",
+        "statDeltas": { "constitution": 10 },
+        "fameDelta": 10,
+        "narrative": {
+          "en": "Cold fire spreads from your throat. You feel the years loosen their grip — but you also feel more alone than ever. Death will still find you if you seek it, but it will not come looking.",
+          "es": "Un fuego frío se extiende desde tu garganta. Sientes cómo los años aflojan su agarre, pero también te sientes más solo que nunca. La muerte aún te encontrará si la buscas, pero no vendrá a buscarte."
+        },
+        "unlocksEventPool": ["destiny_immortal_path"]
+      },
+      {
+        "id": "shatter_chalice",
+        "label": { "en": "Shatter the chalice", "es": "Destrozar el cáliz" },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": { "intelligence": 1 },
+        "fameDelta": 2,
+        "narrative": {
+          "en": "The dark liquid hisses as it meets the stone floor. 'Some doors are best left locked,' you mutter, and climb back toward the sun.",
+          "es": "El líquido oscuro silba al encontrarse con el suelo de piedra. 'Hay puertas que es mejor dejar cerradas', murmuras, y trepas de regreso hacia el sol."
+        }
+      }
+    ]
+  },
+  {
+    "id": "destiny_chosen_one",
+    "type": "destiny",
+    "minAge": 20,
+    "maxAge": 50,
+    "weight": 3,
+    "requiresArc": ["adventurer", "mercenary", "kingdom_hero"],
+    "narrative": {
+      "en": "A vision seizes you in the middle of the night. A being of light — a god, a force, something older than names — speaks: 'You have been watched. The threads of fate converge on you. Take my mark, and the world will know your name. Refuse, and walk in shadow, free.'",
+      "es": "Una visión te posee en medio de la noche. Un ser de luz — un dios, una fuerza, algo más antiguo que los nombres — habla: 'Has sido observado. Los hilos del destino convergen en ti. Toma mi marca, y el mundo conocerá tu nombre. Recházalo, y camina en la sombra, libre.'"
+    },
+    "choices": [
+      {
+        "id": "accept_mark",
+        "label": { "en": "Accept the mark of destiny", "es": "Aceptar la marca del destino" },
+        "tag": "Leader",
+        "rarity": "rare",
+        "statDeltas": { "charisma": 6 },
+        "fameDelta": 20,
+        "narrative": {
+          "en": "A warm brand sears itself onto your soul. From this day, doors open where none existed. But eyes follow you now — friend and foe alike.",
+          "es": "Una marca cálida se graba en tu alma. Desde este día, puertas se abren donde no existían. Pero ojos te siguen ahora — tanto amigos como enemigos."
+        },
+        "unlocksEventPool": ["destiny_chosen_path"]
+      },
+      {
+        "id": "refuse_mark",
+        "label": { "en": "Walk away, free", "es": "Irte, libre" },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": { "intelligence": 2 },
+        "fameDelta": -3,
+        "narrative": {
+          "en": "The vision fades. You wake in your bed, ordinary and untethered. But a small voice, maybe your own, whispers: 'What could have been.'",
+          "es": "La visión se desvanece. Despiertas en tu cama, ordinario y sin ataduras. Pero una voz pequeña, quizás la tuya, susurra: 'Lo que pudo haber sido'."
+        }
+      }
+    ]
+  }
+]
