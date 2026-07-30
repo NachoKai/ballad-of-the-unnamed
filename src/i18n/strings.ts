@@ -109,6 +109,20 @@ const en: StringMap = {
   arc_kingdom_hero: "Kingdom Hero",
   arc_legend: "Legend",
   arc_old_hero: "Old Hero",
+
+  rival: "Rival",
+  rivalScore: "Score",
+  rivalActive: "Active in",
+  vs: "vs",
+  ahead: "ahead",
+  behind: "behind",
+  worldEvents: "The World This Season",
+  clan: "Clan",
+  noClan: "Wanderer (no clan)",
+  hunted: "Hunted by",
+  relationship: "Bond",
+  relationships: "Relationships",
+  affinity: "Affinity",
 }
 
 const es: StringMap = {
@@ -215,6 +229,20 @@ const es: StringMap = {
   arc_kingdom_hero: "Héroe del Reino",
   arc_legend: "Leyenda",
   arc_old_hero: "Viejo Héroe",
+
+  rival: "Rival",
+  rivalScore: "Puntos",
+  rivalActive: "Activo en",
+  vs: "vs",
+  ahead: "adelante",
+  behind: "detrás",
+  worldEvents: "El Mundo Esta Temporada",
+  clan: "Clan",
+  noClan: "Errante (sin clan)",
+  hunted: "Cazado por",
+  relationship: "Vínculo",
+  relationships: "Relaciones",
+  affinity: "Afiliación",
 }
 
 const TABLES: Record<Locale, StringMap> = { en, es }

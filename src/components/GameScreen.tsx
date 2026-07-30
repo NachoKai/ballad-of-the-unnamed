@@ -122,28 +122,44 @@ export function GameScreen({
         </ChoiceGrid>
 
         {isSeasonSummary && (
-          <SeasonStatRow>
-            <SeasonStat>
-              <span>{t(locale, "age")}</span>
-              <b>{character.age}</b>
-            </SeasonStat>
-            <SeasonStat>
-              <span>{t(locale, "gold")}</span>
-              <b>{character.gold}</b>
-            </SeasonStat>
-            <SeasonStat>
-              <span>{t(locale, "power")}</span>
-              <b>{character.powerLevel}</b>
-            </SeasonStat>
-            <SeasonStat>
-              <span>{t(locale, "fame")}</span>
-              <b>{character.fame}</b>
-            </SeasonStat>
-            <SeasonStat>
-              <span>{t(locale, "battles")}</span>
-              <b>{character.counters["battles_won"] ?? 0}</b>
-            </SeasonStat>
-          </SeasonStatRow>
+          <>
+            {event.worldEvents && event.worldEvents.length > 0 && (
+              <WorldEventsBlock>
+                <WorldEventsTitle>{t(locale, "worldEvents")}</WorldEventsTitle>
+                {event.worldEvents.map((we, i) => (
+                  <WorldEventCard key={i}>
+                    <WorldEventHeadline>{we.headline}</WorldEventHeadline>
+                    <WorldEventNarrative>{we.narrative}</WorldEventNarrative>
+                  </WorldEventCard>
+                ))}
+              </WorldEventsBlock>
+            )}
+
+            {event.rivalUpdate && <RivalUpdateBlock>⚔️ {event.rivalUpdate}</RivalUpdateBlock>}
+
+            <SeasonStatRow>
+              <SeasonStat>
+                <span>{t(locale, "age")}</span>
+                <b>{character.age}</b>
+              </SeasonStat>
+              <SeasonStat>
+                <span>{t(locale, "gold")}</span>
+                <b>{character.gold}</b>
+              </SeasonStat>
+              <SeasonStat>
+                <span>{t(locale, "power")}</span>
+                <b>{character.powerLevel}</b>
+              </SeasonStat>
+              <SeasonStat>
+                <span>{t(locale, "fame")}</span>
+                <b>{character.fame}</b>
+              </SeasonStat>
+              <SeasonStat>
+                <span>{t(locale, "battles")}</span>
+                <b>{character.counters["battles_won"] ?? 0}</b>
+              </SeasonStat>
+            </SeasonStatRow>
+          </>
         )}
 
         <AbandonBtn type="button" onClick={onAbandon} disabled={busy}>
@@ -363,4 +379,52 @@ const AbandonBtn = styled(LinkBtn)`
   &:hover {
     color: ${({ theme }) => theme.colors.bloodBright};
   }
+`
+
+const WorldEventsBlock = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding: 14px;
+  border: 1px solid ${({ theme }) => theme.colors.line};
+  border-radius: ${({ theme }) => theme.radii.sm};
+  background: rgba(111, 143, 106, 0.04);
+`
+
+const WorldEventsTitle = styled.span`
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: ${({ theme }) => theme.colors.sage};
+  margin-bottom: 4px;
+`
+
+const WorldEventCard = styled.div`
+  padding: 10px 12px;
+  border-left: 2px solid ${({ theme }) => theme.colors.line2};
+`
+
+const WorldEventHeadline = styled.div`
+  font-size: 14px;
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.parchment};
+  margin-bottom: 4px;
+`
+
+const WorldEventNarrative = styled.div`
+  font-size: 13px;
+  color: ${({ theme }) => theme.colors.muted};
+  line-height: 1.5;
+`
+
+const RivalUpdateBlock = styled.div`
+  padding: 10px 14px;
+  margin-bottom: 16px;
+  border: 1px solid ${({ theme }) => theme.colors.bloodBright};
+  border-radius: ${({ theme }) => theme.radii.sm};
+  background: rgba(191, 30, 30, 0.06);
+  color: ${({ theme }) => theme.colors.bloodBright};
+  font-size: 13px;
+  letter-spacing: 0.04em;
 `

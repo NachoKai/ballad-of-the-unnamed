@@ -4,6 +4,7 @@ import type {
   Locale,
   LocaleMap,
   Rarity,
+  RelationshipEntry,
   ServedChoice,
   ServedEvent,
   StatKey,
@@ -11,7 +12,7 @@ import type {
 import { STAT_KEYS } from "../../shared/types.js"
 import type { Rng } from "../../shared/rng.js"
 import type { ContentRegistry } from "../content/registry.js"
-import { reputationTierId } from "../../shared/config.js"
+import { reputationTierId, affinityTierId, GAME_CONFIG } from "../../shared/config.js"
 
 // Fill {slot:pool} placeholders in a narrative string deterministically.
 // The same rng sequence + same seed => identical filled text for daily mode.
@@ -83,6 +84,109 @@ export function updateMomentum(c: CharacterState, netStatGain: number): void {
   else c.momentum = "normal"
 }
 
+export function adjustAffinity(
+  c: CharacterState,
+  npcId: string,
+  delta: number,
+  turn: number,
+): void {
+  const rel = c.relationships.find((r) => r.npcId === npcId)
+  if (!rel) return
+  rel.affinity = Math.max(-100, Math.min(100, rel.affinity + delta))
+  rel.peakAffinity = Math.max(rel.peakAffinity, rel.affinity)
+  rel.lastSeenTurn = turn
+}
+
+export function relationshipAffinityTier(c: CharacterState, npcId: string): string {
+  const rel = c.relationships.find((r) => r.npcId === npcId)
+  if (!rel) return "stranger"
+  return affinityTierId(rel.affinity)
+}
+
+export function ensureRelationship(
+  c: CharacterState,
+  npcId: string,
+  npcRole: string,
+  turn: number,
+): RelationshipEntry {
+  let rel = c.relationships.find((r) => r.npcId === npcId)
+  if (!rel) {
+    rel = { npcId, npcRole, affinity: 0, peakAffinity: 0, lastSeenTurn: turn }
+    c.relationships.push(rel)
+  }
+  return rel
+}
+
+export function checkFlag(c: CharacterState, flag: Record<string, unknown>): boolean {
+  for (const [key, value] of Object.entries(flag)) {
+    const existing = c.flags[key]
+    if (existing === undefined) return false
+    if (value !== undefined && value !== null && existing !== value) return false
+  }
+  return true
+}
+
+export function setFlag(c: CharacterState, key: string, value: unknown): void {
+  c.flags[key] = value
+}
+
+export function applyClanBetrayal(c: CharacterState, newClanId: string, turn: number): void {
+  const oldClanId = c.currentClanId
+  if (!oldClanId) return
+
+  const membership = c.clanMemberships.find((m) => m.clanId === oldClanId && m.leftAtTurn == null)
+  if (membership) {
+    membership.leftAtTurn = turn
+    membership.leftReason = "betrayed"
+  }
+
+  // Reputation crash at old clan.
+  adjustReputation(c, oldClanId, -30)
+
+  // Set hunted status.
+  c.huntedBy = oldClanId
+  c.huntedUntilTurn = turn + GAME_CONFIG.huntedDurationTurns
+
+  c.currentClanId = null
+}
+
+export function joinClan(
+  c: CharacterState,
+  clanId: string,
+  turn: number,
+  signingGold: number,
+): void {
+  c.currentClanId = clanId
+  c.gold += signingGold
+  c.clanMemberships.push({
+    clanId,
+    rank: "recruit",
+    joinedAtTurn: turn,
+    leftAtTurn: null,
+    leftReason: null,
+  })
+  // Start reputation at 0 in the new faction.
+  adjustReputation(c, clanId, 0)
+}
+
+export function leaveClanAmicably(c: CharacterState, turn: number): void {
+  const oldClanId = c.currentClanId
+  if (!oldClanId) return
+  const membership = c.clanMemberships.find((m) => m.clanId === oldClanId && m.leftAtTurn == null)
+  if (membership) {
+    membership.leftAtTurn = turn
+    membership.leftReason = "retired"
+  }
+  c.currentClanId = null
+}
+
+export function clearExpiredHunted(c: CharacterState): void {
+  if (c.huntedBy && c.huntedUntilTurn != null && c.turn >= c.huntedUntilTurn) {
+    c.huntedBy = null
+    c.huntedUntilTurn = null
+  }
+}
+
 // ---- Event eligibility + weighting ----
 
 export function isEligible(ev: EventContent, c: CharacterState): boolean {
@@ -107,6 +211,24 @@ export function isEligible(ev: EventContent, c: CharacterState): boolean {
   if (c.lockedEventPools.length > 0 && ev.type === "destiny") {
     // Check if this destiny event's pool is locked.
     if (ev.id && c.lockedEventPools.includes(ev.id)) return false
+  }
+  if (ev.requiresRelationshipId) {
+    if (!c.relationships.some((r) => r.npcId === ev.requiresRelationshipId)) return false
+  }
+  if (ev.requiresFlag) {
+    if (!checkFlag(c, ev.requiresFlag)) return false
+  }
+  if (ev.requiresClanId) {
+    if (c.currentClanId !== ev.requiresClanId) return false
+  }
+  if (ev.requiresNoClan) {
+    if (c.currentClanId != null) return false
+  }
+  if (ev.excludesIfClanId) {
+    if (c.currentClanId === ev.excludesIfClanId) return false
+  }
+  if (ev.requiresHuntedBy) {
+    if (!c.huntedBy) return false
   }
   return true
 }

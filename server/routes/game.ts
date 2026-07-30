@@ -6,6 +6,7 @@ import { loadContent } from "../content/registry.js"
 import {
   buildServedEvent,
   createCharacter,
+  generateRival,
   resolveChoice,
   resolveMinigame,
 } from "../engine/engine.js"
@@ -112,6 +113,8 @@ gameRouter.post("/new", async (req: Request, res: Response) => {
       registry,
     })
 
+    character.rival = generateRival(character, registry, rng)
+
     const run = await createRun({
       runType,
       seed,
@@ -193,6 +196,14 @@ gameRouter.get("/state", async (req: Request, res: Response) => {
             : locale === "en"
               ? "A Season of Hardship"
               : "Una Temporada de Dificultades"
+
+      if (run.character.rival) {
+        const rv = run.character.rival
+        served.rivalUpdate =
+          locale === "en"
+            ? `${rv.name} (${rv.class}) is active in ${rv.location}. Power: ${rv.powerLevel}, score: ${rv.score}`
+            : `${rv.name} (${rv.class}) está activo en ${rv.location}. Poder: ${rv.powerLevel}, puntos: ${rv.score}`
+      }
     }
   }
   return res.json({

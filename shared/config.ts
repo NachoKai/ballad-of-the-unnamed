@@ -26,6 +26,12 @@ export const GAME_CONFIG = {
 
   // Destiny card frequency: roughly once every N years.
   destinyCardYears: 10,
+
+  // Clan hunting: turns a betrayed clan hunts the character.
+  huntedDurationTurns: 8,
+
+  // World events: how many to roll per season.
+  worldEventsPerSeason: 2,
 } as const
 
 import type { Arc } from "./types.js"
@@ -69,6 +75,53 @@ export function reputationTierId(value: number): string {
   }
   return id
 }
+
+// Affinity tiers for NPC relationships (-100 to 100).
+export const AFFINITY_TIERS: { min: number; id: string }[] = [
+  { min: -100, id: "nemesis" },
+  { min: -50, id: "rival" },
+  { min: -20, id: "wary" },
+  { min: 0, id: "stranger" },
+  { min: 20, id: "acquaintance" },
+  { min: 50, id: "friend" },
+  { min: 80, id: "devoted" },
+]
+
+export function affinityTierId(value: number): string {
+  let id = AFFINITY_TIERS[0].id
+  for (const tier of AFFINITY_TIERS) {
+    if (value >= tier.min) id = tier.id
+  }
+  return id
+}
+
+// Rival name pool for archrival generation.
+export const RIVAL_NAMES: string[] = [
+  "Roderick",
+  "Seraphina",
+  "Theron",
+  "Vaela",
+  "Corvus",
+  "Isolde",
+  "Gideon",
+  "Morwen",
+  "Aldric",
+  "Briar",
+  "Cassian",
+  "Dorian",
+  "Elara",
+  "Finnian",
+  "Rowan",
+]
+
+// Clan specialties for offer generation.
+export const CLAN_SPECIALTIES: { id: string; label: { en: string; es: string } }[] = [
+  { id: "gold", label: { en: "Wealth & Trade", es: "Riqueza y Comercio" } },
+  { id: "protection", label: { en: "Protection & Defense", es: "Protección y Defensa" } },
+  { id: "fame", label: { en: "Fame & Influence", es: "Fama e Influencia" } },
+  { id: "combat_training", label: { en: "Combat Training", es: "Entrenamiento de Combate" } },
+  { id: "arcana", label: { en: "Arcane Knowledge", es: "Conocimiento Arcano" } },
+]
 
 // Composite score formula (see Ranking criteria & score formula in the spec).
 export function computeScore(input: {

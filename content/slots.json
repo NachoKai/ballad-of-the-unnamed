@@ -558,5 +558,35 @@
       "en": "a will-o'-the-wisp",
       "es": "un fuego fatuo"
     }
+  ],
+  "guildName": [
+    {
+      "en": "Iron Guild",
+      "es": "Gremio de Hierro"
+    },
+    {
+      "en": "Shadow Market",
+      "es": "Mercado de las Sombras"
+    },
+    {
+      "en": "Crimson Cartel",
+      "es": "Cartel Carmesí"
+    },
+    {
+      "en": "Oaken Circle",
+      "es": "Círculo Roble"
+    },
+    {
+      "en": "Silver Exchange",
+      "es": "Bolsa de Plata"
+    },
+    {
+      "en": "The Free Company",
+      "es": "La Compañía Libre"
+    },
+    {
+      "en": "The Sapphire Consortium",
+      "es": "El Consorcio Zafiro"
+    }
   ]
 }

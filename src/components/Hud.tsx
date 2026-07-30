@@ -23,6 +23,7 @@ export function Hud({ character: c, locale, onShopOpen }: Props) {
         : "momentumNormal"
   const arcKey = `arc_${c.currentArc}`
   const inventoryCount = c.inventory?.reduce((s, i) => s + i.qty, 0) ?? 0
+  const playerScore = (c.counters["battles_won"] ?? 0) + (c.counters["quests_completed"] ?? 0)
 
   return (
     <HudWrap>
@@ -30,6 +31,7 @@ export function Hud({ character: c, locale, onShopOpen }: Props) {
         <Name>
           {c.name} <Faint>· {className}</Faint>
           {c.archetype && <ArchetypeTag>{c.archetype}</ArchetypeTag>}
+          {c.currentClanId && <ClanTag>{c.currentClanId}</ClanTag>}
         </Name>
         <TurnPill>
           {t("turn")} <b>{c.turn}</b>
@@ -71,6 +73,16 @@ export function Hud({ character: c, locale, onShopOpen }: Props) {
             {t(STAT_ABBR[k])} <b>{c[k]}</b>
           </StatPill>
         ))}
+        {c.rival && (
+          <RivalBadge>
+            ⚔️ {c.rival.name} {t("vs")} <b>{playerScore}</b>–<b>{c.rival.score}</b>
+          </RivalBadge>
+        )}
+        {c.huntedBy && (
+          <HuntedBadge>
+            ⚠️ {t("hunted")} {c.huntedBy}
+          </HuntedBadge>
+        )}
         {onShopOpen && (
           <ShopBtn type="button" onClick={onShopOpen}>
             {t("shop")}
@@ -248,4 +260,50 @@ const InvBadge = styled.span`
   color: ${({ theme }) => theme.colors.ink};
   font-size: 11px;
   font-weight: 700;
+`
+
+const ClanTag = styled.span`
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 8px;
+  border: 1px solid ${({ theme }) => theme.colors.sage};
+  border-radius: 999px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.colors.sage};
+  vertical-align: middle;
+`
+
+const RivalBadge = styled.span`
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  padding: 3px 10px;
+  border: 1px solid ${({ theme }) => theme.colors.bloodBright};
+  border-radius: 999px;
+  font-size: 12px;
+  color: ${({ theme }) => theme.colors.bloodBright};
+  letter-spacing: 0.04em;
+
+  b {
+    font-size: 14px;
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    color: ${({ theme }) => theme.colors.parchment};
+  }
+`
+
+const HuntedBadge = styled.span`
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  background: rgba(191, 30, 30, 0.12);
+  border: 1px solid ${({ theme }) => theme.colors.bloodBright};
+  border-radius: 999px;
+  font-size: 11px;
+  color: ${({ theme }) => theme.colors.bloodBright};
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 `

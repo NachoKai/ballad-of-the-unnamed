@@ -2,17 +2,29 @@ import { describe, expect, it } from "vitest"
 import { Rng, hashSeed } from "../../shared/rng.js"
 import { computeScore, GAME_CONFIG, arcForAge } from "../../shared/config.js"
 import {
+  advanceRival,
   buildServedEvent,
   createCharacter,
+  generateRival,
   resolveChoice,
   resolveMinigame,
   resolveSeasonSummary,
   retirementOfferEvent,
+  rollWorldEvents,
 } from "./engine.js"
 import { generateEpilogue } from "./epilogue.js"
 import { evaluateAchievements } from "./achievements.js"
 import { loadContent } from "../content/registry.js"
-import { fillSlots, computePowerLevel, isEligible, updateMomentum } from "./helpers.js"
+import {
+  adjustAffinity,
+  applyClanBetrayal,
+  computePowerLevel,
+  ensureRelationship,
+  fillSlots,
+  isEligible,
+  joinClan,
+  updateMomentum,
+} from "./helpers.js"
 import type { AchievementContent, CharacterState, EventContent } from "../../shared/types.js"
 import type { ContentRegistry } from "../content/registry.js"
 
@@ -49,6 +61,13 @@ function makeChar(overrides: Partial<CharacterState> = {}): CharacterState {
     reputations: [{ faction: "ironhold", value: 10, peakValue: 10 }],
     personality: {},
     achievements: [],
+    relationships: [],
+    rival: null,
+    currentClanId: null,
+    huntedBy: null,
+    huntedUntilTurn: null,
+    clanMemberships: [],
+    flags: {},
     ...overrides,
   }
 }
@@ -801,5 +820,315 @@ describe("Rng determinism", () => {
     const seqA = Array.from({ length: 10 }, () => a.next())
     const seqB = Array.from({ length: 10 }, () => b.next())
     expect(seqA).not.toEqual(seqB)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Phase 3: Relationship helpers
+// ---------------------------------------------------------------------------
+describe("Phase 3: relationships", () => {
+  it("ensureRelationship creates a new relationship entry", () => {
+    const c = makeChar()
+    const rel = ensureRelationship(c, "mentor_01", "mentor", 1)
+    expect(rel.npcId).toBe("mentor_01")
+    expect(rel.npcRole).toBe("mentor")
+    expect(rel.affinity).toBe(0)
+    expect(c.relationships).toHaveLength(1)
+  })
+
+  it("adjustAffinity modifies existing relationship", () => {
+    const c = makeChar({
+      relationships: [
+        { npcId: "friend_01", npcRole: "friend", affinity: 0, peakAffinity: 0, lastSeenTurn: 0 },
+      ],
+    })
+    adjustAffinity(c, "friend_01", 15, 2)
+    expect(c.relationships[0].affinity).toBe(15)
+    expect(c.relationships[0].peakAffinity).toBe(15)
+  })
+
+  it("affinityDelta on choice modifies relationship", () => {
+    const c = makeChar({
+      relationships: [
+        {
+          npcId: "npc_alchemist",
+          npcRole: "acquaintance",
+          affinity: 0,
+          peakAffinity: 0,
+          lastSeenTurn: 0,
+        },
+      ],
+    })
+    const event: EventContent = {
+      id: "rel_test",
+      minAge: 0,
+      maxAge: 99,
+      weight: 1,
+      requiresRelationshipId: "npc_alchemist",
+      narrative: { en: "", es: "" },
+      choices: [
+        {
+          id: "help",
+          rarity: "common",
+          label: { en: "", es: "" },
+          narrative: { en: "", es: "" },
+          affinityDelta: 10,
+        },
+      ],
+    }
+    resolveChoice(c, event, "help", reg, new Rng(1))
+    expect(c.relationships[0].affinity).toBe(10)
+  })
+
+  it("introducesRelationshipId creates relationship", () => {
+    const c = makeChar()
+    const event: EventContent = {
+      id: "intro_test",
+      minAge: 0,
+      maxAge: 99,
+      weight: 1,
+      narrative: { en: "", es: "" },
+      choices: [
+        {
+          id: "meet",
+          rarity: "common",
+          label: { en: "", es: "" },
+          narrative: { en: "", es: "" },
+          introducesRelationshipId: "npc_merchant",
+          introducesNpcRole: "friend",
+          affinityDelta: 5,
+        },
+      ],
+    }
+    resolveChoice(c, event, "meet", reg, new Rng(1))
+    expect(c.relationships).toHaveLength(1)
+    expect(c.relationships[0].npcId).toBe("npc_merchant")
+    expect(c.relationships[0].affinity).toBe(5)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Phase 3: Flags
+// ---------------------------------------------------------------------------
+describe("Phase 3: flags", () => {
+  it("setsFlag on choice creates a flag entry", () => {
+    const c = makeChar()
+    const event: EventContent = {
+      id: "flag_test",
+      minAge: 0,
+      maxAge: 99,
+      weight: 1,
+      narrative: { en: "", es: "" },
+      choices: [
+        {
+          id: "insult_noble",
+          rarity: "common",
+          label: { en: "", es: "" },
+          narrative: { en: "", es: "" },
+          setsFlag: { insulted_duke: { severity: "grave" } },
+        },
+      ],
+    }
+    resolveChoice(c, event, "insult_noble", reg, new Rng(1))
+    expect(c.flags["insulted_duke"]).toBeDefined()
+    expect((c.flags["insulted_duke"] as { severity: string }).severity).toBe("grave")
+  })
+
+  it("isEligible respects requiresFlag", () => {
+    const c = makeChar({ flags: { saved_village: true } })
+    const ev: EventContent = {
+      id: "callback_test",
+      minAge: 0,
+      maxAge: 99,
+      weight: 1,
+      requiresFlag: { saved_village: true },
+      narrative: { en: "", es: "" },
+      choices: [
+        { id: "ok", rarity: "common", label: { en: "", es: "" }, narrative: { en: "", es: "" } },
+      ],
+    }
+    expect(isEligible(ev, c)).toBe(true)
+    // Without the flag, should be ineligible.
+    const c2 = makeChar({ flags: {} })
+    expect(isEligible(ev, c2)).toBe(false)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Phase 3: Rival system
+// ---------------------------------------------------------------------------
+describe("Phase 3: rival", () => {
+  it("generateRival creates a rival with different class", () => {
+    const c = makeChar({ class: "warrior" })
+    const rival = generateRival(c, reg, new Rng(42))
+    expect(rival.name).toBeTruthy()
+    expect(rival.class).not.toBe(c.class)
+    expect(rival.age).toBe(c.age)
+  })
+
+  it("advanceRival increases rival stats at season boundary", () => {
+    const c = makeChar({
+      rival: {
+        name: "Roderick",
+        class: "wizard",
+        factionId: null,
+        powerLevel: 20,
+        age: 16,
+        location: "capital",
+        achievementsCount: 0,
+        score: 0,
+        lastAdvancedTurn: 0,
+      },
+    })
+    advanceRival(c, new Rng(42))
+    expect(c.rival!.powerLevel).toBeGreaterThanOrEqual(19)
+    expect(c.rival!.lastAdvancedTurn).toBe(0)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Phase 3: Clan system
+// ---------------------------------------------------------------------------
+describe("Phase 3: clans", () => {
+  it("joinClan sets currentClanId and adds membership", () => {
+    const c = makeChar({ gold: 100 })
+    joinClan(c, "ironhold", 1, 200)
+    expect(c.currentClanId).toBe("ironhold")
+    expect(c.gold).toBe(300)
+    expect(c.clanMemberships).toHaveLength(1)
+    expect(c.clanMemberships[0].clanId).toBe("ironhold")
+  })
+
+  it("applyClanBetrayal sets hunted and crashes reputation", () => {
+    const c = makeChar({
+      currentClanId: "ironhold",
+      gold: 100,
+      reputations: [{ faction: "ironhold", value: 50, peakValue: 50 }],
+      clanMemberships: [
+        {
+          clanId: "ironhold",
+          rank: "recruit",
+          joinedAtTurn: 1,
+          leftAtTurn: null,
+          leftReason: null,
+        },
+      ],
+    })
+    applyClanBetrayal(c, "greywater", 10)
+    expect(c.huntedBy).toBe("ironhold")
+    expect(c.huntedUntilTurn).toBe(10 + GAME_CONFIG.huntedDurationTurns)
+    expect(c.reputations.find((r) => r.faction === "ironhold")?.value).toBe(20)
+    expect(c.currentClanId).toBeNull()
+  })
+
+  it("advanceRival increases rival stats at season boundary", () => {
+    const c = makeChar({
+      rival: {
+        name: "Roderick",
+        class: "wizard",
+        factionId: null,
+        powerLevel: 20,
+        age: 16,
+        location: "capital",
+        achievementsCount: 0,
+        score: 0,
+        lastAdvancedTurn: 0,
+      },
+    })
+    advanceRival(c, new Rng(42))
+    expect(c.rival!.powerLevel).toBeGreaterThanOrEqual(19)
+    expect(c.rival!.lastAdvancedTurn).toBe(0)
+  })
+
+  it("isEligible respects requiresClanId", () => {
+    const c = makeChar({ currentClanId: "ironhold" })
+    const ev: EventContent = {
+      id: "clan_only",
+      minAge: 0,
+      maxAge: 99,
+      weight: 1,
+      requiresClanId: "ironhold",
+      narrative: { en: "", es: "" },
+      choices: [
+        { id: "ok", rarity: "common", label: { en: "", es: "" }, narrative: { en: "", es: "" } },
+      ],
+    }
+    expect(isEligible(ev, c)).toBe(true)
+    const c2 = makeChar({ currentClanId: null })
+    expect(isEligible(ev, c2)).toBe(false)
+  })
+
+  it("isEligible respects requiresNoClan", () => {
+    const c = makeChar({ currentClanId: null })
+    const ev: EventContent = {
+      id: "solo_path",
+      minAge: 0,
+      maxAge: 99,
+      weight: 1,
+      requiresNoClan: true,
+      narrative: { en: "", es: "" },
+      choices: [
+        { id: "ok", rarity: "common", label: { en: "", es: "" }, narrative: { en: "", es: "" } },
+      ],
+    }
+    expect(isEligible(ev, c)).toBe(true)
+    const c2 = makeChar({ currentClanId: "ironhold" })
+    expect(isEligible(ev, c2)).toBe(false)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Phase 3: Epilogue includes rival and relationship content
+// ---------------------------------------------------------------------------
+describe("Phase 3: epilogue content", () => {
+  it("includes rival comparison when rival exists", () => {
+    const c = makeChar({
+      age: 60,
+      gold: 5000,
+      rival: {
+        name: "Roderick",
+        class: "wizard",
+        factionId: null,
+        powerLevel: 25,
+        age: 60,
+        location: "capital",
+        achievementsCount: 2,
+        score: 15,
+        lastAdvancedTurn: 50,
+      },
+    })
+    const text = generateEpilogue(c, "heroic_death", reg, "en")
+    expect(text).toContain("Roderick")
+    expect(text).toContain("rival")
+  })
+
+  it("includes relationship block when meaningful bonds exist", () => {
+    const c = makeChar({
+      age: 60,
+      gold: 5000,
+      relationships: [
+        { npcId: "friend_01", npcRole: "friend", affinity: 80, peakAffinity: 90, lastSeenTurn: 40 },
+      ],
+    })
+    const text = generateEpilogue(c, "peaceful_retirement", reg, "en")
+    expect(text).toContain("stood by you")
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Phase 3: World events
+// ---------------------------------------------------------------------------
+describe("Phase 3: world events", () => {
+  it("loads world events from content", () => {
+    const worldEvents = reg.events.filter((e) => e.type === "world")
+    expect(worldEvents.length).toBeGreaterThan(0)
+  })
+
+  it("rollWorldEvents returns events", () => {
+    const c = makeChar()
+    const events = rollWorldEvents(c, reg, new Rng(42))
+    expect(events.length).toBeGreaterThan(0)
+    expect(events[0].headline).toBeTruthy()
+    expect(events[0].narrative).toBeTruthy()
   })
 })

@@ -1,0 +1,262 @@
+[
+  {
+    "id": "world_dragon_slain",
+    "type": "world",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "narrative": {
+      "en": "Word arrives that the great dragon of the {slot:locationName} has been slain by a wandering knight. The skies are quieter now.",
+      "es": "Llega la noticia de que el gran dragón de {slot:locationName} ha sido muerto por un caballero errante. Los cielos están más tranquilos ahora."
+    },
+    "worldEventHeadline": {
+      "en": "Dragon Slain in {slot:locationName}",
+      "es": "Dragón Muerto en {slot:locationName}"
+    },
+    "choices": [
+      {
+        "id": "acknowledge",
+        "rarity": "common",
+        "label": { "en": "The world moves on", "es": "El mundo sigue" },
+        "narrative": {
+          "en": "Another hero's tale, told in distant taverns.",
+          "es": "El cuento de otro héroe, contado en tabernas lejanas."
+        }
+      }
+    ]
+  },
+  {
+    "id": "world_plague",
+    "type": "world",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 3,
+    "narrative": {
+      "en": "A plague sweeps through the outer villages. Trade slows, and fear spreads faster than the sickness.",
+      "es": "Una plaga azota las aldeas lejanas. El comercio se ralentiza y el miedo se extiende más rápido que la enfermedad."
+    },
+    "worldEventHeadline": {
+      "en": "Plague Sweeps the Countryside",
+      "es": "Plaga Azota el Campo"
+    },
+    "choices": [
+      {
+        "id": "acknowledge",
+        "rarity": "common",
+        "label": { "en": "The world moves on", "es": "El mundo sigue" },
+        "narrative": {
+          "en": "The healers do what they can. The rest pray.",
+          "es": "Los curanderos hacen lo que pueden. El resto reza."
+        }
+      }
+    ]
+  },
+  {
+    "id": "world_volcano",
+    "type": "world",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 3,
+    "narrative": {
+      "en": "Mount {slot:locationName} erupts, blanketing three kingdoms in ash. The sun sets blood-red for a week.",
+      "es": "El Monte {slot:locationName} entra en erupción, cubriendo tres reinos de ceniza. El sol se pone rojo sangre durante una semana."
+    },
+    "worldEventHeadline": {
+      "en": "Volcanic Eruption in the East",
+      "es": "Erupción Volcánica en el Este"
+    },
+    "choices": [
+      {
+        "id": "acknowledge",
+        "rarity": "common",
+        "label": { "en": "The world moves on", "es": "El mundo sigue" },
+        "narrative": {
+          "en": "The ground trembles even here. Ash falls like gray snow.",
+          "es": "El suelo tiembla incluso aquí. La ceniza cae como nieve gris."
+        }
+      }
+    ]
+  },
+  {
+    "id": "world_guild_collapse",
+    "type": "world",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 4,
+    "narrative": {
+      "en": "The {slot:guildName} has disbanded after a scandal. Its members scatter to the four winds, selling secrets and swords.",
+      "es": "Los {slot:guildName} se han disuelto tras un escándalo. Sus miembros se dispersan a los cuatro vientos, vendiendo secretos y espadas."
+    },
+    "worldEventHeadline": {
+      "en": "{slot:guildName} Disbands",
+      "es": "{slot:guildName} se Disuelve"
+    },
+    "choices": [
+      {
+        "id": "acknowledge",
+        "rarity": "common",
+        "label": { "en": "The world moves on", "es": "El mundo sigue" },
+        "narrative": {
+          "en": "Opportunity for some. Loss for others.",
+          "es": "Oportunidad para algunos. Pérdida para otros."
+        }
+      }
+    ]
+  },
+  {
+    "id": "world_war",
+    "type": "world",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 3,
+    "narrative": {
+      "en": "War breaks out between the northern kingdoms. Mercenaries grow rich; farmers flee. The balance of power shifts.",
+      "es": "La guerra estalla entre los reinos del norte. Los mercenarios se enriquecen; los campesinos huyen. El equilibrio de poder se desplaza."
+    },
+    "worldEventHeadline": {
+      "en": "War Declared in the North",
+      "es": "Guerra Declarada en el Norte"
+    },
+    "choices": [
+      {
+        "id": "acknowledge",
+        "rarity": "common",
+        "label": { "en": "The world moves on", "es": "El mundo sigue" },
+        "narrative": {
+          "en": "The drums of war beat distant but insistent.",
+          "es": "Los tambores de guerra suenan lejanos pero insistentes."
+        }
+      }
+    ]
+  },
+  {
+    "id": "world_hero_rises",
+    "type": "world",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "narrative": {
+      "en": "A new champion emerges from the {slot:locationName} — a young prodigy who defeats three veteran warriors in a single tournament. The crowds go wild.",
+      "es": "Un nuevo campeón emerge de {slot:locationName}: un joven prodigio que derrota a tres guerreros veteranos en un solo torneo. Las multitudes enloquecen."
+    },
+    "worldEventHeadline": {
+      "en": "Prodigy Rises in {slot:locationName}",
+      "es": "Prodigio Surge en {slot:locationName}"
+    },
+    "choices": [
+      {
+        "id": "acknowledge",
+        "rarity": "common",
+        "label": { "en": "The world moves on", "es": "El mundo sigue" },
+        "narrative": {
+          "en": "A new name on everyone's lips. For now.",
+          "es": "Un nuevo nombre en boca de todos. Por ahora."
+        }
+      }
+    ]
+  },
+  {
+    "id": "world_assassination",
+    "type": "world",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 2,
+    "narrative": {
+      "en": "The ruler of {slot:locationName} is found dead under mysterious circumstances. The court descends into chaos and finger-pointing.",
+      "es": "El gobernante de {slot:locationName} aparece muerto en circunstancias misteriosas. La corte se sumerge en el caos y las acusaciones."
+    },
+    "worldEventHeadline": {
+      "en": "Ruler Assassinated in {slot:locationName}",
+      "es": "Gobernante Asesinado en {slot:locationName}"
+    },
+    "choices": [
+      {
+        "id": "acknowledge",
+        "rarity": "common",
+        "label": { "en": "The world moves on", "es": "El mundo sigue" },
+        "narrative": {
+          "en": "Power vacuums never stay empty for long.",
+          "es": "Los vacíos de poder nunca quedan vacíos por mucho tiempo."
+        }
+      }
+    ]
+  },
+  {
+    "id": "world_magic_storm",
+    "type": "world",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 3,
+    "narrative": {
+      "en": "A wild magic storm sweeps across the {slot:locationName}. The sky tears in colors no one has seen before, and strange creatures are spotted in the aftermath.",
+      "es": "Una tormenta mágica salvaje barre {slot:locationName}. El cielo se rasga en colores que nadie ha visto antes, y extrañas criaturas son avistadas después."
+    },
+    "worldEventHeadline": {
+      "en": "Magic Storm Hits {slot:locationName}",
+      "es": "Tormenta Mágica Azota {slot:locationName}"
+    },
+    "choices": [
+      {
+        "id": "acknowledge",
+        "rarity": "common",
+        "label": { "en": "The world moves on", "es": "El mundo sigue" },
+        "narrative": {
+          "en": "The arcane winds howl and then fade, leaving questions.",
+          "es": "Los vientos arcanos aúllan y luego se desvanecen, dejando preguntas."
+        }
+      }
+    ]
+  },
+  {
+    "id": "world_bandit_king",
+    "type": "world",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 4,
+    "narrative": {
+      "en": "The Bandit King unites the scattered outlaw clans under a single banner. Caravans now travel with heavy escort, and road tolls double.",
+      "es": "El Rey Bandido une a los clanes de forajidos dispersos bajo un solo estandarte. Las caravanas ahora viajan con fuerte escolta, y los peajes se duplican."
+    },
+    "worldEventHeadline": {
+      "en": "Bandit King Unites Outlaw Clans",
+      "es": "Rey Bandido Une a los Clanes Forajidos"
+    },
+    "choices": [
+      {
+        "id": "acknowledge",
+        "rarity": "common",
+        "label": { "en": "The world moves on", "es": "El mundo sigue" },
+        "narrative": {
+          "en": "The roads grow more dangerous by the day.",
+          "es": "Los caminos se vuelven más peligrosos cada día."
+        }
+      }
+    ]
+  },
+  {
+    "id": "world_peace_treaty",
+    "type": "world",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 4,
+    "narrative": {
+      "en": "After years of conflict, the kingdoms of {slot:locationName} sign a peace treaty. Soldiers return home; borders open. An age of trade begins.",
+      "es": "Tras años de conflicto, los reinos de {slot:locationName} firman un tratado de paz. Los soldados vuelven a casa; las fronteras se abren. Comienza una era de comercio."
+    },
+    "worldEventHeadline": {
+      "en": "Peace Treaty Signed in {slot:locationName}",
+      "es": "Tratado de Paz Firmado en {slot:locationName}"
+    },
+    "choices": [
+      {
+        "id": "acknowledge",
+        "rarity": "common",
+        "label": { "en": "The world moves on", "es": "El mundo sigue" },
+        "narrative": {
+          "en": "Hope, fragile but present, takes root.",
+          "es": "La esperanza, frágil pero presente, echa raíces."
+        }
+      }
+    ]
+  }
+]

@@ -7,24 +7,35 @@ import type {
   MinigameOutcome,
   OutcomeTier,
   Rarity,
+  RivalState,
+  ServedClanOffer,
   ServedEvent,
+  ServedWorldEvent,
   StatDeltas,
 } from "../../shared/types.js"
 import { STAT_KEYS } from "../../shared/types.js"
 import { Rng } from "../../shared/rng.js"
-import { GAME_CONFIG, arcForAge } from "../../shared/config.js"
+import { GAME_CONFIG, arcForAge, RIVAL_NAMES } from "../../shared/config.js"
 import type { ContentRegistry } from "../content/registry.js"
 import {
+  adjustAffinity,
   adjustReputation,
+  applyClanBetrayal,
+  checkFlag,
+  clearExpiredHunted,
   deductStamina,
   effectiveWeight,
+  ensureRelationship,
   fillSlots,
   isFatigued,
   isEligible,
+  joinClan,
+  leaveClanAmicably,
   localize,
   primaryReputation,
   recomputeDerived,
   serveEvent,
+  setFlag,
   updateMarketValue,
   updateMomentum,
 } from "./helpers.js"
@@ -85,6 +96,14 @@ export function createCharacter(input: {
       : [],
     personality: {},
     achievements: [],
+    // Social & World Systems
+    relationships: [],
+    rival: null,
+    currentClanId: null,
+    huntedBy: null,
+    huntedUntilTurn: null,
+    clanMemberships: [],
+    flags: {},
   }
   recomputeDerived(base)
   return base
@@ -103,6 +122,114 @@ export function wouldBeDestinyTurn(c: CharacterState): boolean {
   if (c.turn === 0) return false
   const yearsPlayed = Math.floor(c.turn / GAME_CONFIG.turnsPerYear)
   return yearsPlayed > 0 && yearsPlayed % GAME_CONFIG.destinyCardYears === 0 && c.age >= 16
+}
+
+// ---------------------------------------------------------------------------
+// Rival generation
+// ---------------------------------------------------------------------------
+
+export function generateRival(c: CharacterState, registry: ContentRegistry, rng: Rng): RivalState {
+  const classes = registry.classes
+  const otherClasses = classes.filter((cls) => cls.id !== c.class)
+  const rivalClass = otherClasses.length > 0 ? rng.pick(otherClasses).id : c.class
+  const name = rng.pick(RIVAL_NAMES)
+  const rivalFactions = registry.factions.filter((f) => f.id !== c.reputations[0]?.faction)
+  const faction = rivalFactions.length > 0 ? rng.pick(rivalFactions).id : null
+  return {
+    name,
+    class: rivalClass,
+    factionId: faction,
+    powerLevel: c.powerLevel - rng.int(0, 5),
+    age: c.age,
+    location: "distant lands",
+    achievementsCount: 0,
+    score: 0,
+    lastAdvancedTurn: 0,
+  }
+}
+
+// ---------------------------------------------------------------------------
+// World event rolling
+// ---------------------------------------------------------------------------
+
+export function rollWorldEvents(
+  c: CharacterState,
+  registry: ContentRegistry,
+  rng: Rng,
+): { headline: string; narrative: string }[] {
+  const results: { headline: string; narrative: string }[] = []
+  const worldPool = registry.events.filter((e) => e.type === "world" && isEligible(e, c))
+  const count = Math.min(GAME_CONFIG.worldEventsPerSeason, worldPool.length)
+  for (let i = 0; i < count; i++) {
+    const ev = rng.pick(worldPool)
+    if (!ev) continue
+    const headline = ev.worldEventHeadline
+      ? localize(ev.worldEventHeadline, c.locale)
+      : "The World Turns"
+    const narrative = fillSlots(localize(ev.narrative, c.locale), c.locale, registry, rng)
+    results.push({ headline, narrative })
+  }
+  return results
+}
+
+// ---------------------------------------------------------------------------
+// Clan offer generation
+// ---------------------------------------------------------------------------
+
+export function generateClanOffer(
+  c: CharacterState,
+  registry: ContentRegistry,
+  rng: Rng,
+  rngState: number,
+): { offers: ServedClanOffer[] } {
+  const factions = registry.factions.filter((f) => f.id !== c.currentClanId)
+  const shuffled = [...factions].sort(() => rng.next() - 0.5)
+  const count = Math.min(3, shuffled.length)
+  const offers: ServedClanOffer[] = []
+  for (let i = 0; i < count; i++) {
+    const f = shuffled[i]
+    const specialty = rng.pick([
+      { id: "gold", label: "Wealth" },
+      { id: "protection", label: "Protection" },
+      { id: "fame", label: "Fame" },
+      { id: "combat_training", label: "Combat" },
+    ])
+    const signingGold = Math.round(
+      (500 + c.fame * 10 + c.powerLevel * 5) * (0.5 + rng.next() * 1.0),
+    )
+    offers.push({
+      clanId: f.id,
+      name: localize(f.name, c.locale),
+      specialty: specialty.label,
+      signingGold,
+      perkLabel: `+${Math.floor(signingGold / 500)} renown`,
+      icon: "🏛️",
+    })
+  }
+  return { offers }
+}
+
+// ---------------------------------------------------------------------------
+// Rival advancement at season boundary
+// ---------------------------------------------------------------------------
+
+export function advanceRival(c: CharacterState, rng: Rng): void {
+  if (!c.rival) return
+  c.rival.age = c.age
+  c.rival.powerLevel += rng.int(-1, 3)
+  c.rival.powerLevel = Math.max(0, c.rival.powerLevel)
+  c.rival.achievementsCount += rng.bool(0.15) ? 1 : 0
+  c.rival.score += rng.int(0, 5)
+  c.rival.lastAdvancedTurn = c.turn
+  // Random flavor updates.
+  const locations = [
+    "the northern reaches",
+    "the capital",
+    "the wildlands",
+    "distant shores",
+    "the court",
+  ]
+  c.rival.location = rng.pick(locations)
 }
 
 // Pick the event/minigame for the upcoming turn. Deterministic via the run rng.
@@ -132,12 +259,21 @@ export function selectEvent(c: CharacterState, registry: ContentRegistry, rng: R
 }
 
 // A synthetic season-summary event (generated server-side at season boundaries).
-export function generateSeasonSummary(c: CharacterState): EventContent {
+export function generateSeasonSummary(
+  c: CharacterState,
+  registry: ContentRegistry,
+  rng: Rng,
+): EventContent {
   const battles = c.counters["battles_won"] ?? 0
   const quests = c.counters["quests_completed"] ?? 0
   const grade = Math.round(
     Math.min(10, Math.max(1, c.powerLevel / 10 + c.fame / 20 + battles * 0.2 + quests * 0.1)),
   )
+  // Clear expired hunted status and advance rival at season boundary.
+  clearExpiredHunted(c)
+  if (c.rival) {
+    advanceRival(c, rng)
+  }
   return {
     id: "__season_summary__",
     minAge: 0,
@@ -207,7 +343,7 @@ export function buildServedEvent(
 ): { event: EventContent; served: ServedEvent } {
   // Season boundary: after every seasonLength turns, serve the season summary.
   if (c.turn > 0 && c.turn % GAME_CONFIG.seasonLength === 0) {
-    const ev = generateSeasonSummary(c)
+    const ev = generateSeasonSummary(c, registry, rng)
     const served = serveEvent(ev, c, c.locale, registry, rng, false)
     served.isSeasonSummary = true
     const grade = Math.round(
@@ -235,6 +371,19 @@ export function buildServedEvent(
           : c.locale === "en"
             ? "A Season of Hardship"
             : "Una Temporada de Dificultades"
+
+    // Roll world events and embed in season summary.
+    served.worldEvents = rollWorldEvents(c, registry, rng)
+
+    // Rival update.
+    if (c.rival) {
+      const rv = c.rival
+      served.rivalUpdate =
+        c.locale === "en"
+          ? `${rv.name} (${rv.class}) is active in ${rv.location}. Power: ${rv.powerLevel}, score: ${rv.score}`
+          : `${rv.name} (${rv.class}) está activo en ${rv.location}. Poder: ${rv.powerLevel}, puntos: ${rv.score}`
+    }
+
     return { event: ev, served }
   }
   if (isRetirementTurn(c)) {
@@ -408,6 +557,43 @@ export function resolveChoice(
     }
   }
 
+  // NPC relationship effects.
+  if (choice.introducesRelationshipId) {
+    ensureRelationship(
+      c,
+      choice.introducesRelationshipId,
+      choice.introducesNpcRole ?? "acquaintance",
+      c.turn,
+    )
+  }
+  if (choice.affinityDelta && event.requiresRelationshipId) {
+    adjustAffinity(c, event.requiresRelationshipId, choice.affinityDelta, c.turn)
+  } else if (choice.affinityDelta && choice.introducesRelationshipId) {
+    adjustAffinity(c, choice.introducesRelationshipId, choice.affinityDelta, c.turn)
+  }
+
+  // Long-term flag setting.
+  if (choice.setsFlag) {
+    for (const [key, value] of Object.entries(choice.setsFlag)) {
+      setFlag(c, key, value)
+    }
+  }
+
+  // Clan joining through a choice.
+  if (choice.joinClanId) {
+    // If currently in a clan, this is a betrayal.
+    if (c.currentClanId) {
+      applyClanBetrayal(c, choice.joinClanId, c.turn)
+    }
+    const signingGold = Math.round(500 + c.fame * 10)
+    joinClan(c, choice.joinClanId, c.turn, signingGold)
+  }
+
+  // Leaving a clan amicably.
+  if (choice.leaveReason) {
+    leaveClanAmicably(c, c.turn)
+  }
+
   const net = applyStatDeltas(c, choice.statDeltas, tagSynergy)
   applyStatDeltas(c, choice.tradeoffDeltas, tagSynergy)
   if (choice.goldDelta) c.gold += choice.goldDelta
@@ -434,6 +620,7 @@ export function resolveChoice(
   updateMarketValue(c)
   recomputeDerived(c)
   ageUp(c)
+  clearExpiredHunted(c)
 
   // Death roll (skip if already retired).
   if (!ended) {
@@ -522,6 +709,7 @@ export function resolveMinigame(
   updateMarketValue(c)
   recomputeDerived(c)
   ageUp(c)
+  clearExpiredHunted(c)
 
   let ended = false
   let endingType: EndingType | undefined

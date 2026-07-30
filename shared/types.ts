@@ -73,6 +73,34 @@ export interface InventoryEntry {
 
 // ---- Content bank shapes (authored as data, loaded into server memory) ----
 
+export interface RelationshipEntry {
+  npcId: string
+  npcRole: string // 'mentor' | 'friend' | 'love_interest' | 'nemesis' | 'child' | 'apprentice'
+  affinity: number // -100 to 100
+  peakAffinity: number
+  lastSeenTurn: number
+}
+
+export interface RivalState {
+  name: string
+  class: string
+  factionId: string | null
+  powerLevel: number
+  age: number
+  location: string
+  achievementsCount: number
+  score: number
+  lastAdvancedTurn: number
+}
+
+export interface ClanMembershipEntry {
+  clanId: string
+  rank: "recruit" | "trusted" | "elder" | "leader"
+  joinedAtTurn: number
+  leftAtTurn?: number | null
+  leftReason?: string | null
+}
+
 export interface ChoiceContent {
   id: string
   label: LocaleMap
@@ -99,6 +127,16 @@ export interface ChoiceContent {
   // Destiny card effects: lock/unlock entire event pools when chosen.
   unlocksEventPool?: string[]
   locksEventPool?: string[]
+  // NPC Relationship: introduce an NPC or modify affinity.
+  introducesRelationshipId?: string
+  introducesNpcRole?: string
+  introducesNpcName?: LocaleMap
+  affinityDelta?: number
+  // Long-term flags: set a keyed marker for narrative callbacks.
+  setsFlag?: Record<string, unknown>
+  // Clan system: join a clan through a choice.
+  joinClanId?: string
+  leaveReason?: string
 }
 
 export type OutcomeTier = "critical" | "success" | "partial" | "fail"
@@ -130,7 +168,7 @@ export interface MinigameResolution {
 
 export interface EventContent {
   id: string
-  type?: "event" | "minigame" | "destiny"
+  type?: "event" | "minigame" | "destiny" | "world"
   subtype?: string
   minAge: number
   maxAge: number
@@ -139,9 +177,18 @@ export interface EventContent {
   requiresArc?: Arc[]
   excludeIfArc?: Arc[]
   excludeIfCompletedIds?: string[]
+  requiresRelationshipId?: string
+  requiresFlag?: Record<string, unknown>
+  requiresClanId?: string
+  requiresNoClan?: boolean
+  requiresHuntedBy?: boolean
+  excludesIfClanId?: string
+  involvesRival?: boolean
   weight: number
   location?: string
   narrative: LocaleMap
+  flagLabel?: LocaleMap
+  worldEventHeadline?: LocaleMap
   // Regular events use choices; minigames use cards + resolution + outcomes.
   choices?: ChoiceContent[]
   cards?: MinigameCard[]
@@ -229,6 +276,13 @@ export interface CharacterState {
   achievements: string[]
   inventory: InventoryEntry[]
   lockedEventPools: string[]
+  relationships: RelationshipEntry[]
+  rival: RivalState | null
+  currentClanId: string | null
+  huntedBy: string | null
+  huntedUntilTurn: number | null
+  clanMemberships: ClanMembershipEntry[]
+  flags: Record<string, unknown>
 }
 
 export interface ReputationState {
@@ -256,6 +310,35 @@ export interface ServedEvent {
   isSeasonSummary?: boolean
   seasonHeadline?: string
   seasonGrade?: number
+  worldEvents?: ServedWorldEvent[]
+  rivalUpdate?: string
+  isClanOffer?: boolean
+  clanOfferChoices?: ServedClanOffer[]
+}
+
+export interface ServedClanOffer {
+  clanId: string
+  name: string
+  specialty: string
+  signingGold: number
+  perkLabel: string
+  icon: string
+}
+
+export interface ServedWorldEvent {
+  headline: string
+  narrative: string
+}
+
+export interface RivalComparison {
+  name: string
+  class: string
+  playerScore: number
+  rivalScore: number
+  playerPowerLevel: number
+  rivalPowerLevel: number
+  playerAchievements: number
+  rivalAchievements: number
 }
 
 export interface TurnResult {
