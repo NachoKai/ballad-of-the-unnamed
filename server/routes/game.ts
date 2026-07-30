@@ -381,6 +381,7 @@ gameRouter.post("/choose", async (req: Request, res: Response) => {
         reputationPeak: peakReputation(c),
         endingType: outcome.endingType,
         score,
+        legacyScore: computeLegacyScore(c),
         epithet: epithetData.title,
         epilogue,
         runType: run.runType,

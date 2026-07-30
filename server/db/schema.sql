@@ -151,3 +151,7 @@ CREATE INDEX IF NOT EXISTS idx_leaderboard_age ON leaderboard_entries (age_at_en
 CREATE INDEX IF NOT EXISTS idx_leaderboard_battles ON leaderboard_entries (battles_won DESC);
 CREATE INDEX IF NOT EXISTS idx_leaderboard_achievements ON leaderboard_entries (achievements_count DESC);
 CREATE INDEX IF NOT EXISTS idx_leaderboard_runtype ON leaderboard_entries (run_type, daily_seed);
+
+-- Migrations for columns added after initial table creation --------------------
+ALTER TABLE leaderboard ADD COLUMN IF NOT EXISTS legacy_score INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE leaderboard ADD COLUMN IF NOT EXISTS epithet TEXT;
