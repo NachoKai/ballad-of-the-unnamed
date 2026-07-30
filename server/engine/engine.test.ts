@@ -5,6 +5,7 @@ import {
   advanceRival,
   buildServedEvent,
   createCharacter,
+  generateClanOffer,
   generateRival,
   resolveChoice,
   resolveMinigame,
@@ -23,6 +24,7 @@ import {
   fillSlots,
   isEligible,
   joinClan,
+  serveEvent,
   updateMomentum,
 } from "./helpers.js"
 import type { AchievementContent, CharacterState, EventContent } from "../../shared/types.js"
@@ -712,7 +714,6 @@ describe("arc computation", () => {
       [80, "old_hero"],
     ]
     for (const [age, expected] of tests) {
-      const c = makeChar({ age })
       // Simulate ageUp: calling createCharacter then manually check arc
       const created = createCharacter({
         id: `arc_${age}`,
@@ -824,9 +825,9 @@ describe("Rng determinism", () => {
 })
 
 // ---------------------------------------------------------------------------
-// Phase 3: Relationship helpers
+// Relationship helpers
 // ---------------------------------------------------------------------------
-describe("Phase 3: relationships", () => {
+describe("Relationships", () => {
   it("ensureRelationship creates a new relationship entry", () => {
     const c = makeChar()
     const rel = ensureRelationship(c, "mentor_01", "mentor", 1)
@@ -905,12 +906,37 @@ describe("Phase 3: relationships", () => {
     expect(c.relationships[0].npcId).toBe("npc_merchant")
     expect(c.relationships[0].affinity).toBe(5)
   })
+
+  it("introducesNpcName is stored on the relationship entry", () => {
+    const c = makeChar()
+    const event: EventContent = {
+      id: "npc_name_test",
+      minAge: 0,
+      maxAge: 99,
+      weight: 1,
+      narrative: { en: "", es: "" },
+      choices: [
+        {
+          id: "meet",
+          rarity: "common",
+          label: { en: "", es: "" },
+          narrative: { en: "", es: "" },
+          introducesRelationshipId: "npc_merchant",
+          introducesNpcName: { en: "Old Marcus", es: "Marcos el Viejo" },
+        },
+      ],
+    }
+    resolveChoice(c, event, "meet", reg, new Rng(1))
+    expect(c.relationships[0].npcName).toBe("Old Marcus")
+  })
 })
 
 // ---------------------------------------------------------------------------
-// Phase 3: Flags
+//  Flags
 // ---------------------------------------------------------------------------
-describe("Phase 3: flags", () => {
+// Flags
+// ---------------------------------------------------------------------------
+describe("Flags", () => {
   it("setsFlag on choice creates a flag entry", () => {
     const c = makeChar()
     const event: EventContent = {
@@ -955,9 +981,9 @@ describe("Phase 3: flags", () => {
 })
 
 // ---------------------------------------------------------------------------
-// Phase 3: Rival system
+//  Rival system
 // ---------------------------------------------------------------------------
-describe("Phase 3: rival", () => {
+describe("Rival", () => {
   it("generateRival creates a rival with different class", () => {
     const c = makeChar({ class: "warrior" })
     const rival = generateRival(c, reg, new Rng(42))
@@ -987,9 +1013,9 @@ describe("Phase 3: rival", () => {
 })
 
 // ---------------------------------------------------------------------------
-// Phase 3: Clan system
+//  Clan system
 // ---------------------------------------------------------------------------
-describe("Phase 3: clans", () => {
+describe("Clans", () => {
   it("joinClan sets currentClanId and adds membership", () => {
     const c = makeChar({ gold: 100 })
     joinClan(c, "ironhold", 1, 200)
@@ -1078,9 +1104,9 @@ describe("Phase 3: clans", () => {
 })
 
 // ---------------------------------------------------------------------------
-// Phase 3: Epilogue includes rival and relationship content
+// Epilogue includes rival and relationship content
 // ---------------------------------------------------------------------------
-describe("Phase 3: epilogue content", () => {
+describe("Epilogue content", () => {
   it("includes rival comparison when rival exists", () => {
     const c = makeChar({
       age: 60,
@@ -1116,9 +1142,9 @@ describe("Phase 3: epilogue content", () => {
 })
 
 // ---------------------------------------------------------------------------
-// Phase 3: World events
+// World events
 // ---------------------------------------------------------------------------
-describe("Phase 3: world events", () => {
+describe("World events", () => {
   it("loads world events from content", () => {
     const worldEvents = reg.events.filter((e) => e.type === "world")
     expect(worldEvents.length).toBeGreaterThan(0)
@@ -1130,5 +1156,166 @@ describe("Phase 3: world events", () => {
     expect(events.length).toBeGreaterThan(0)
     expect(events[0].headline).toBeTruthy()
     expect(events[0].narrative).toBeTruthy()
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Gap fixes: isEligible involvesRival
+// ---------------------------------------------------------------------------
+describe("isEligible involvesRival", () => {
+  it("respects involvesRival — character with rival can see event", () => {
+    const c = makeChar({
+      rival: {
+        name: "Roderick",
+        class: "wizard",
+        factionId: null,
+        powerLevel: 20,
+        age: 16,
+        location: "capital",
+        achievementsCount: 0,
+        score: 0,
+        lastAdvancedTurn: 0,
+      },
+    })
+    const ev: EventContent = {
+      id: "rival_encounter",
+      minAge: 0,
+      maxAge: 99,
+      weight: 1,
+      involvesRival: true,
+      narrative: { en: "", es: "" },
+      choices: [
+        { id: "ok", rarity: "common", label: { en: "", es: "" }, narrative: { en: "", es: "" } },
+      ],
+    }
+    expect(isEligible(ev, c)).toBe(true)
+  })
+
+  it("respects involvesRival — character without rival cannot see event", () => {
+    const c = makeChar({ rival: null })
+    const ev: EventContent = {
+      id: "rival_encounter",
+      minAge: 0,
+      maxAge: 99,
+      weight: 1,
+      involvesRival: true,
+      narrative: { en: "", es: "" },
+      choices: [
+        { id: "ok", rarity: "common", label: { en: "", es: "" }, narrative: { en: "", es: "" } },
+      ],
+    }
+    expect(isEligible(ev, c)).toBe(false)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Gap fixes: flagLabel on ServedEvent
+// ---------------------------------------------------------------------------
+describe("flagLabel", () => {
+  it("serveEvent includes flagLabel when event has one", () => {
+    const c = makeChar()
+    const ev: EventContent = {
+      id: "flag_label_test",
+      minAge: 0,
+      maxAge: 99,
+      weight: 1,
+      narrative: { en: "Test", es: "Test" },
+      flagLabel: { en: "A Special Flag", es: "Una Bandera Especial" },
+      choices: [
+        { id: "ok", rarity: "common", label: { en: "", es: "" }, narrative: { en: "", es: "" } },
+      ],
+    }
+    const served = serveEvent(ev, c, "en", reg, new Rng(1), false)
+    expect(served.flagLabel).toBe("A Special Flag")
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Gap fixes: generateClanOffer uses CLAN_SPECIALTIES
+// ---------------------------------------------------------------------------
+describe("generateClanOffer", () => {
+  it("returns offers with specialties from CLAN_SPECIALTIES", () => {
+    const c = makeChar()
+    const result = generateClanOffer(c, reg, new Rng(42))
+    expect(result.offers.length).toBeGreaterThan(0)
+    for (const offer of result.offers) {
+      expect(offer.specialty).toBeTruthy()
+      expect(offer.clanId).toBeTruthy()
+      expect(offer.signingGold).toBeGreaterThan(0)
+    }
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Gap fixes: clan offer can be produced by buildServedEvent
+// ---------------------------------------------------------------------------
+describe("buildServedEvent clan offer", () => {
+  it("can produce a clan offer for clanless characters with right rng", () => {
+    const c = makeChar({ currentClanId: null, turn: 1 })
+    // Try many times to hit the 8% chance.
+    let found = false
+    for (let i = 0; i < 200; i++) {
+      const result = buildServedEvent(c, reg, new Rng(1000 + i))
+      if (result.served.isClanOffer) {
+        found = true
+        expect(result.served.clanOfferChoices).toBeDefined()
+        expect(result.served.clanOfferChoices!.length).toBeGreaterThan(0)
+        break
+      }
+    }
+    expect(found).toBe(true)
+  })
+
+  it("does not produce clan offer for characters with a clan", () => {
+    const c = makeChar({ currentClanId: "ironhold", turn: 1 })
+    for (let i = 0; i < 100; i++) {
+      const result = buildServedEvent(c, reg, new Rng(2000 + i))
+      expect(result.served.isClanOffer).toBeFalsy()
+    }
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Gap fixes: relationship achievement conditions
+// ---------------------------------------------------------------------------
+describe("relationship achievements", () => {
+  it("unlocks when peakAffinity >= threshold", () => {
+    const c = makeChar({
+      relationships: [
+        { npcId: "f1", npcRole: "friend", affinity: 60, peakAffinity: 85, lastSeenTurn: 10 },
+      ],
+    })
+    const ach: AchievementContent = {
+      id: "bonded_for_life",
+      icon: "heart",
+      rarity: "rare",
+      name: { en: "", es: "" },
+      description: { en: "", es: "" },
+      condition: { type: "relationship_affinity_gte", value: 80 },
+    }
+    const miniReg = { ...reg, achievements: [ach] } as ContentRegistry
+    const result = evaluateAchievements(c, miniReg)
+    expect(result).toHaveLength(1)
+    expect(result[0].id).toBe("bonded_for_life")
+  })
+
+  it("unlocks when affinity <= threshold (burned bridge)", () => {
+    const c = makeChar({
+      relationships: [
+        { npcId: "e1", npcRole: "enemy", affinity: -90, peakAffinity: 0, lastSeenTurn: 10 },
+      ],
+    })
+    const ach: AchievementContent = {
+      id: "burned_bridge",
+      icon: "fire",
+      rarity: "rare",
+      name: { en: "", es: "" },
+      description: { en: "", es: "" },
+      condition: { type: "relationship_affinity_lte", value: -80 },
+    }
+    const miniReg = { ...reg, achievements: [ach] } as ContentRegistry
+    const result = evaluateAchievements(c, miniReg)
+    expect(result).toHaveLength(1)
+    expect(result[0].id).toBe("burned_bridge")
   })
 })

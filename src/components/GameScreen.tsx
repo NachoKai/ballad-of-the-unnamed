@@ -101,14 +101,18 @@ export function GameScreen({
               onClick={() => pick(c.id)}
               disabled={busy}
             >
-              <RarityPip $rarity={c.rarity} aria-hidden="true" />
+              {isSeasonSummary && c.id === "continue" ? null : (
+                <RarityPip $rarity={c.rarity} aria-hidden="true" />
+              )}
               <ChoiceLabel>
                 {c.icon && <AchIcon name={c.icon} size={20} />}
                 {c.label}
               </ChoiceLabel>
-              <ChoiceRarity $rarity={c.rarity}>
-                {t(locale, `rarity_${c.rarity}` as never)}
-              </ChoiceRarity>
+              {isSeasonSummary && c.id === "continue" ? null : (
+                <ChoiceRarity $rarity={c.rarity}>
+                  {t(locale, `rarity_${c.rarity}` as never)}
+                </ChoiceRarity>
+              )}
               {(c.statDeltas || c.tradeoffDeltas) && (
                 <ChoiceDeltas>
                   {c.statDeltas && <StatTag locale={locale} deltas={c.statDeltas} />}
@@ -231,6 +235,7 @@ const ChoiceGrid = styled.div`
   display: grid;
   gap: 12px;
   margin-top: 22px;
+  margin-bottom: 18px;
 `
 
 const ChoiceCard = styled.button<{ $rarity: Rarity; $selected: boolean }>`

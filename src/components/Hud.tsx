@@ -75,7 +75,7 @@ export function Hud({ character: c, locale, onShopOpen }: Props) {
         ))}
         {c.rival && (
           <RivalBadge>
-            ⚔️ {c.rival.name} {t("vs")} <b>{playerScore}</b>–<b>{c.rival.score}</b>
+            ⚔️ {c.rival.name} {t("vs")} <b>{playerScore}</b>—<b>{c.rival.score}</b>
           </RivalBadge>
         )}
         {c.huntedBy && (

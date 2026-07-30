@@ -76,6 +76,7 @@ export interface InventoryEntry {
 export interface RelationshipEntry {
   npcId: string
   npcRole: string // 'mentor' | 'friend' | 'love_interest' | 'nemesis' | 'child' | 'apprentice'
+  npcName?: string
   affinity: number // -100 to 100
   peakAffinity: number
   lastSeenTurn: number
@@ -217,6 +218,8 @@ export type AchievementCondition =
   | { type: "reputation_lte"; value: number }
   | { type: "rare_cards_gte"; value: number }
   | { type: "legendary_cards_gte"; value: number }
+  | { type: "relationship_affinity_gte"; value: number }
+  | { type: "relationship_affinity_lte"; value: number }
   | { type: "ending"; value: string }
   | { type: "status"; value: string }
 
@@ -314,6 +317,7 @@ export interface ServedEvent {
   rivalUpdate?: string
   isClanOffer?: boolean
   clanOfferChoices?: ServedClanOffer[]
+  flagLabel?: string
 }
 
 export interface ServedClanOffer {

@@ -31,6 +31,10 @@ function conditionMet(a: AchievementContent, c: CharacterState, ctx: EvalContext
       return (c.counters["rare_cards"] ?? 0) >= cond.value
     case "legendary_cards_gte":
       return (c.counters["legendary_cards"] ?? 0) >= cond.value
+    case "relationship_affinity_gte":
+      return c.relationships.some((r) => r.peakAffinity >= cond.value)
+    case "relationship_affinity_lte":
+      return c.relationships.some((r) => r.affinity <= cond.value)
     case "ending":
       return ctx.endingType === cond.value
     case "status":

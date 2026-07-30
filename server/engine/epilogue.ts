@@ -1,4 +1,4 @@
-import type { CharacterState, EndingType, Locale } from "../../shared/types.js"
+import type { CharacterState, EndingType, Locale, RivalComparison } from "../../shared/types.js"
 import type { ContentRegistry } from "../content/registry.js"
 import { localize, peakReputation } from "./helpers.js"
 import { reputationTierId } from "../../shared/config.js"
@@ -39,9 +39,21 @@ export function generateEpilogue(
   if (c.rival) {
     const rv = c.rival
     const playerScore = (c.counters["battles_won"] ?? 0) + (c.counters["quests_completed"] ?? 0)
+    const comparison: RivalComparison = {
+      name: rv.name,
+      class: rv.class,
+      playerScore,
+      rivalScore: rv.score,
+      playerPowerLevel: c.powerLevel,
+      rivalPowerLevel: rv.powerLevel,
+      playerAchievements: c.achievements.length,
+      rivalAchievements: rv.achievementsCount,
+    }
     const outcome = playerScore >= rv.score ? "ahead" : "behind"
-    rivalBlock.en = `\n\nYour rival ${rv.name} (${rv.class}) ended with ${rv.powerLevel} power and ${rv.score} points. You finished ${outcome} — ${playerScore} to ${rv.score}.`
-    rivalBlock.es = `\n\nTu rival ${rv.name} (${rv.class}) terminó con ${rv.powerLevel} de poder y ${rv.score} puntos. Terminaste ${outcome === "ahead" ? "por delante" : "por detrás"} — ${playerScore} a ${rv.score}.`
+    const rvClassName = registry.classesById.get(comparison.class)?.name
+    const rvClass = rvClassName ? localize(rvClassName, locale) : comparison.class
+    rivalBlock.en = `\n\nYour rival ${comparison.name} (${rvClass}) ended with ${comparison.rivalPowerLevel} power and ${comparison.rivalScore} points. You finished ${outcome} — ${comparison.playerScore} to ${comparison.rivalScore}.`
+    rivalBlock.es = `\n\nTu rival ${comparison.name} (${rvClass}) terminó con ${comparison.rivalPowerLevel} de poder y ${comparison.rivalScore} puntos. Terminaste ${outcome === "ahead" ? "por delante" : "por detrás"} — ${comparison.playerScore} a ${comparison.rivalScore}.`
   }
 
   // Relationship epilogue block.

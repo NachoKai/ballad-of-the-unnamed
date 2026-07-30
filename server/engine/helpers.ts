@@ -108,11 +108,14 @@ export function ensureRelationship(
   npcId: string,
   npcRole: string,
   turn: number,
+  npcName?: string,
 ): RelationshipEntry {
   let rel = c.relationships.find((r) => r.npcId === npcId)
   if (!rel) {
-    rel = { npcId, npcRole, affinity: 0, peakAffinity: 0, lastSeenTurn: turn }
+    rel = { npcId, npcRole, npcName, affinity: 0, peakAffinity: 0, lastSeenTurn: turn }
     c.relationships.push(rel)
+  } else if (npcName && !rel.npcName) {
+    rel.npcName = npcName
   }
   return rel
 }
@@ -230,6 +233,7 @@ export function isEligible(ev: EventContent, c: CharacterState): boolean {
   if (ev.requiresHuntedBy) {
     if (!c.huntedBy) return false
   }
+  if (ev.involvesRival && !c.rival) return false
   return true
 }
 
@@ -278,7 +282,8 @@ export function serveEvent(
     // Sort so rarer, more interesting choices read last (feels like a reveal).
     choices.sort((a, b) => RARITY_ORDER.indexOf(a.rarity) - RARITY_ORDER.indexOf(b.rarity))
   }
-  return { eventId: ev.id, narrative, choices, isRetirementOffer }
+  const flagLabel = ev.flagLabel ? localize(ev.flagLabel, locale) : undefined
+  return { eventId: ev.id, narrative, choices, isRetirementOffer, flagLabel }
 }
 
 export function statLabelKeys(): readonly StatKey[] {
@@ -311,4 +316,17 @@ export function deductStamina(c: CharacterState, extraCost = 0): void {
 
 export function isFatigued(c: CharacterState): boolean {
   return c.stamina < STAMINA_FATIGUE_THRESHOLD
+}
+
+const LOCALE_LOCATION: Record<string, string> = {
+  "the northern reaches": "las fronteras del norte",
+  "the capital": "la capital",
+  "the wildlands": "las tierras salvajes",
+  "distant shores": "costas lejanas",
+  "the court": "la corte",
+}
+
+export function localizeLocation(location: string, locale: Locale): string {
+  if (locale === "en") return location
+  return LOCALE_LOCATION[location] ?? location
 }

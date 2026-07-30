@@ -3,7 +3,6 @@ import { fileURLToPath } from "node:url"
 import { dirname, join } from "node:path"
 import type {
   AchievementContent,
-  ArchetypeContent,
   ArchetypePool,
   ClassContent,
   EventContent,
@@ -61,7 +60,7 @@ export function loadContent(): ContentRegistry {
   }
 
   const archetypes = readJson<ArchetypePool>("archetypes.json")
-  for (const [cls, arr] of Object.entries(archetypes)) {
+  for (const arr of Object.values(archetypes)) {
     for (const a of arr) {
       validateLocaleMap(a.name, `archetype ${a.id} name`)
       validateLocaleMap(a.flavor, `archetype ${a.id} flavor`)

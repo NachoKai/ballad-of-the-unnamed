@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { styled, keyframes } from "styled-components"
 import type {
   AchievementContent,
@@ -41,7 +41,7 @@ export default function App() {
   const [ending, setEnding] = useState<EndingData | null>(null)
   const [shopOpen, setShopOpen] = useState(false)
   const [resuming, setResuming] = useState(() => localStorage.getItem(RUN_KEY) !== null)
-  const runIdRef = useRef<string | null>(null)
+  const [runId, setRunId] = useState<string | null>(() => localStorage.getItem(RUN_KEY))
   const {
     toasts,
     push: pushToasts,
@@ -52,14 +52,13 @@ export default function App() {
   useEffect(() => {
     const stored = localStorage.getItem(RUN_KEY)
     if (!stored) return
-    runIdRef.current = stored
     api
       .state(stored)
       .then((s) => {
         setCharacter(s.character)
         if (s.finished || !s.event) {
           localStorage.removeItem(RUN_KEY)
-          runIdRef.current = null
+          setRunId(null)
           setScreen("creation")
         } else {
           setEvent(s.event)
@@ -68,7 +67,7 @@ export default function App() {
       })
       .catch(() => {
         localStorage.removeItem(RUN_KEY)
-        runIdRef.current = null
+        setRunId(null)
       })
       .finally(() => setResuming(false))
   }, [])
@@ -80,7 +79,7 @@ export default function App() {
 
   async function startRun(name: string, classId: string, runType: RunType) {
     const res = await api.newRun({ name, classId, runType, locale })
-    runIdRef.current = res.runId
+    setRunId(res.runId)
     localStorage.setItem(RUN_KEY, res.runId)
     setCharacter(res.character)
     setEvent(res.event)
@@ -96,7 +95,7 @@ export default function App() {
     runType: RunType,
   ) {
     const res = await api.newRun({ name, classId, archetypeId, runType, locale })
-    runIdRef.current = res.runId
+    setRunId(res.runId)
     localStorage.setItem(RUN_KEY, res.runId)
     setCharacter(res.character)
     setEvent(res.event)
@@ -106,16 +105,16 @@ export default function App() {
   }
 
   async function choose(choiceId: string) {
-    const runId = runIdRef.current
-    if (!runId) return
+    const currentRunId = runId
+    if (!currentRunId) return
     let res: Awaited<ReturnType<typeof api.choose>>
     try {
-      res = await api.choose({ runId, choiceId, cardId: choiceId })
+      res = await api.choose({ runId: currentRunId, choiceId, cardId: choiceId })
     } catch {
       // The run no longer exists (e.g. server data was reset). Recover by
       // clearing the stale run and returning to creation instead of throwing.
       localStorage.removeItem(RUN_KEY)
-      runIdRef.current = null
+      setRunId(null)
       setCharacter(null)
       setEvent(null)
       setScreen("creation")
@@ -141,7 +140,7 @@ export default function App() {
 
   function abandonRun() {
     localStorage.removeItem(RUN_KEY)
-    runIdRef.current = null
+    setRunId(null)
     setCharacter(null)
     setEvent(null)
     setScreen("creation")
@@ -204,10 +203,10 @@ export default function App() {
         />
       )}
 
-      {screen === "game" && shopOpen && runIdRef.current && (
+      {screen === "game" && shopOpen && runId && (
         <ShopModal
           locale={locale}
-          runId={runIdRef.current}
+          runId={runId}
           onClose={() => setShopOpen(false)}
           onPurchased={(res) => {
             setCharacter((prev) =>

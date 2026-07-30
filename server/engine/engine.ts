@@ -10,18 +10,16 @@ import type {
   RivalState,
   ServedClanOffer,
   ServedEvent,
-  ServedWorldEvent,
   StatDeltas,
 } from "../../shared/types.js"
 import { STAT_KEYS } from "../../shared/types.js"
 import { Rng } from "../../shared/rng.js"
-import { GAME_CONFIG, arcForAge, RIVAL_NAMES } from "../../shared/config.js"
+import { CLAN_SPECIALTIES, GAME_CONFIG, arcForAge, RIVAL_NAMES } from "../../shared/config.js"
 import type { ContentRegistry } from "../content/registry.js"
 import {
   adjustAffinity,
   adjustReputation,
   applyClanBetrayal,
-  checkFlag,
   clearExpiredHunted,
   deductStamina,
   effectiveWeight,
@@ -29,6 +27,7 @@ import {
   fillSlots,
   isFatigued,
   isEligible,
+  localizeLocation,
   joinClan,
   leaveClanAmicably,
   localize,
@@ -164,7 +163,7 @@ export function rollWorldEvents(
     const ev = rng.pick(worldPool)
     if (!ev) continue
     const headline = ev.worldEventHeadline
-      ? localize(ev.worldEventHeadline, c.locale)
+      ? fillSlots(localize(ev.worldEventHeadline, c.locale), c.locale, registry, rng)
       : "The World Turns"
     const narrative = fillSlots(localize(ev.narrative, c.locale), c.locale, registry, rng)
     results.push({ headline, narrative })
@@ -180,7 +179,6 @@ export function generateClanOffer(
   c: CharacterState,
   registry: ContentRegistry,
   rng: Rng,
-  rngState: number,
 ): { offers: ServedClanOffer[] } {
   const factions = registry.factions.filter((f) => f.id !== c.currentClanId)
   const shuffled = [...factions].sort(() => rng.next() - 0.5)
@@ -188,19 +186,14 @@ export function generateClanOffer(
   const offers: ServedClanOffer[] = []
   for (let i = 0; i < count; i++) {
     const f = shuffled[i]
-    const specialty = rng.pick([
-      { id: "gold", label: "Wealth" },
-      { id: "protection", label: "Protection" },
-      { id: "fame", label: "Fame" },
-      { id: "combat_training", label: "Combat" },
-    ])
+    const specialty = rng.pick(CLAN_SPECIALTIES)
     const signingGold = Math.round(
       (500 + c.fame * 10 + c.powerLevel * 5) * (0.5 + rng.next() * 1.0),
     )
     offers.push({
       clanId: f.id,
       name: localize(f.name, c.locale),
-      specialty: specialty.label,
+      specialty: localize(specialty.label, c.locale),
       signingGold,
       perkLabel: `+${Math.floor(signingGold / 500)} renown`,
       icon: "🏛️",
@@ -264,11 +257,6 @@ export function generateSeasonSummary(
   registry: ContentRegistry,
   rng: Rng,
 ): EventContent {
-  const battles = c.counters["battles_won"] ?? 0
-  const quests = c.counters["quests_completed"] ?? 0
-  const grade = Math.round(
-    Math.min(10, Math.max(1, c.powerLevel / 10 + c.fame / 20 + battles * 0.2 + quests * 0.1)),
-  )
   // Clear expired hunted status and advance rival at season boundary.
   clearExpiredHunted(c)
   if (c.rival) {
@@ -378,12 +366,42 @@ export function buildServedEvent(
     // Rival update.
     if (c.rival) {
       const rv = c.rival
+      const rvClassName = registry.classesById.get(rv.class)?.name
+      const rvClass = rvClassName ? localize(rvClassName, c.locale) : rv.class
       served.rivalUpdate =
         c.locale === "en"
-          ? `${rv.name} (${rv.class}) is active in ${rv.location}. Power: ${rv.powerLevel}, score: ${rv.score}`
-          : `${rv.name} (${rv.class}) está activo en ${rv.location}. Poder: ${rv.powerLevel}, puntos: ${rv.score}`
+          ? `${rv.name} (${rvClass}) is active in ${localizeLocation(rv.location, c.locale)}. Power: ${rv.powerLevel}, score: ${rv.score}`
+          : `${rv.name} (${rvClass}) está activo en ${localizeLocation(rv.location, c.locale)}. Poder: ${rv.powerLevel}, puntos: ${rv.score}`
     }
 
+    return { event: ev, served }
+  }
+  // Clan offer: ~8% chance for clanless characters (not on season/retirement turns).
+  if (!c.currentClanId && rng.bool(0.08)) {
+    const { offers } = generateClanOffer(c, registry, rng)
+    const ev: EventContent = {
+      id: "__clan_offer__",
+      minAge: 0,
+      maxAge: 999,
+      weight: 1,
+      narrative: {
+        en: "A messenger arrives with offers from several factions seeking your allegiance...",
+        es: "Un mensajero llega con ofertas de varias facciones buscando tu lealtad...",
+      },
+      choices: offers.map((o) => {
+        const faction = registry.factions.find((f) => f.id === o.clanId)
+        return {
+          id: `join_${o.clanId}`,
+          rarity: "uncommon" as Rarity,
+          label: faction?.name ?? { en: o.name, es: o.name },
+          narrative: { en: o.perkLabel, es: o.perkLabel },
+          joinClanId: o.clanId,
+        }
+      }),
+    }
+    const served = serveEvent(ev, c, c.locale, registry, rng, false)
+    served.isClanOffer = true
+    served.clanOfferChoices = offers
     return { event: ev, served }
   }
   if (isRetirementTurn(c)) {
@@ -564,6 +582,7 @@ export function resolveChoice(
       choice.introducesRelationshipId,
       choice.introducesNpcRole ?? "acquaintance",
       c.turn,
+      choice.introducesNpcName?.[c.locale] ?? undefined,
     )
   }
   if (choice.affinityDelta && event.requiresRelationshipId) {
