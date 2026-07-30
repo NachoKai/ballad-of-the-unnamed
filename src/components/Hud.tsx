@@ -9,9 +9,10 @@ import { Faint } from "./ui/Text"
 interface Props {
   character: CharacterState
   locale: Locale
+  onShopOpen?: () => void
 }
 
-export function Hud({ character: c, locale }: Props) {
+export function Hud({ character: c, locale, onShopOpen }: Props) {
   const t = (k: string) => translate(locale, k)
   const className = t(`class_${c.class}`)
   const momentumKey =
@@ -20,6 +21,8 @@ export function Hud({ character: c, locale }: Props) {
       : c.momentum === "falling"
         ? "momentumFalling"
         : "momentumNormal"
+  const arcKey = `arc_${c.currentArc}`
+  const inventoryCount = c.inventory?.reduce((s, i) => s + i.qty, 0) ?? 0
 
   return (
     <HudWrap>
@@ -36,6 +39,9 @@ export function Hud({ character: c, locale }: Props) {
       <MetersRow>
         <Meter>
           {t("age")} <b>{c.age}</b>
+        </Meter>
+        <Meter>
+          {t("season")} <b>{c.seasonCount}</b>
         </Meter>
         <Meter>
           {t("health")} <b>{c.health}</b>
@@ -56,11 +62,18 @@ export function Hud({ character: c, locale }: Props) {
       </MetersRow>
 
       <StatsStrip>
+        <ArcPill>{t(arcKey)}</ArcPill>
         {STAT_KEYS.map((k) => (
           <StatPill key={k}>
             {t(STAT_ABBR[k])} <b>{c[k]}</b>
           </StatPill>
         ))}
+        {onShopOpen && (
+          <ShopBtn type="button" onClick={onShopOpen}>
+            {t("shop")}
+            {inventoryCount > 0 && <InvBadge>{inventoryCount}</InvBadge>}
+          </ShopBtn>
+        )}
       </StatsStrip>
     </HudWrap>
   )
@@ -190,4 +203,46 @@ const StatPill = styled.span`
     color: ${({ theme }) => theme.colors.parchment};
     font-weight: 600;
   }
+`
+
+const ArcPill = styled(StatPill)`
+  border-color: ${({ theme }) => theme.colors.gold};
+  color: ${({ theme }) => theme.colors.goldBright};
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+`
+
+const ShopBtn = styled.button`
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: ${({ theme }) => theme.colors.ink3};
+  border: 1px solid ${({ theme }) => theme.colors.line};
+  border-radius: 999px;
+  padding: 5px 14px;
+  font-size: 13px;
+  color: ${({ theme }) => theme.colors.gold};
+  cursor: pointer;
+  transition: all 0.12s;
+
+  &:hover {
+    background: ${({ theme }) => theme.colors.ink2};
+    border-color: ${({ theme }) => theme.colors.gold};
+  }
+`
+
+const InvBadge = styled.span`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: ${({ theme }) => theme.colors.gold};
+  color: ${({ theme }) => theme.colors.ink};
+  font-size: 11px;
+  font-weight: 700;
 `

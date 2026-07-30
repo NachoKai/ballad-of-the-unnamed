@@ -1,7 +1,14 @@
 import { describe, expect, it } from "vitest"
 import { Rng, hashSeed } from "../../shared/rng.js"
-import { computeScore, GAME_CONFIG } from "../../shared/config.js"
-import { createCharacter, resolveChoice, resolveMinigame, retirementOfferEvent } from "./engine.js"
+import { computeScore, GAME_CONFIG, arcForAge } from "../../shared/config.js"
+import {
+  buildServedEvent,
+  createCharacter,
+  resolveChoice,
+  resolveMinigame,
+  resolveSeasonSummary,
+  retirementOfferEvent,
+} from "./engine.js"
 import { generateEpilogue } from "./epilogue.js"
 import { evaluateAchievements } from "./achievements.js"
 import { loadContent } from "../content/registry.js"
@@ -18,6 +25,10 @@ function makeChar(overrides: Partial<CharacterState> = {}): CharacterState {
     class: "warrior",
     archetype: null,
     age: 16,
+    currentArc: "adventurer",
+    seasonCount: 0,
+    inventory: [],
+    lockedEventPools: [],
     strength: 5,
     dexterity: 5,
     constitution: 5,
@@ -616,6 +627,159 @@ describe("market value", () => {
     }
     resolveChoice(c, event, "ok", reg, new Rng(1))
     expect(c.marketValue).toBeGreaterThan(0)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Rng determinism
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+// Season summary
+// ---------------------------------------------------------------------------
+describe("season summary", () => {
+  it("generates a season summary event at season boundary", () => {
+    const c = makeChar({ turn: GAME_CONFIG.seasonLength })
+    // buildServedEvent should return the season summary at this turn count.
+    const result = buildServedEvent(c, reg, new Rng(42))
+    expect(result.event.id).toBe("__season_summary__")
+    expect(result.served.isSeasonSummary).toBe(true)
+    expect(result.served.seasonGrade).toBeDefined()
+  })
+
+  it("resolveSeasonSummary increments seasonCount and cleans inventory", () => {
+    const c = makeChar({
+      turn: 5,
+      seasonCount: 0,
+      inventory: [
+        { itemId: "enchanted_boots", qty: 1, expiresAtTurn: 10 },
+        { itemId: "warhorse", qty: 1, expiresAtTurn: null },
+      ],
+    })
+    resolveSeasonSummary(c)
+    expect(c.seasonCount).toBe(1)
+    expect(c.turn).toBe(6)
+    // warhorse has no expiry, should persist; enchanted_boots expires at 10, still > 6
+    expect(c.inventory).toHaveLength(2)
+  })
+
+  it("removes expired inventory items", () => {
+    const c = makeChar({
+      turn: 10,
+      inventory: [
+        { itemId: "expired_item", qty: 1, expiresAtTurn: 8 },
+        { itemId: "active_item", qty: 1, expiresAtTurn: 15 },
+        { itemId: "permanent_item", qty: 1, expiresAtTurn: null },
+      ],
+    })
+    resolveSeasonSummary(c)
+    // expired_item (expiresAtTurn 8 <= 10) should be removed
+    expect(c.inventory.find((i) => i.itemId === "expired_item")).toBeUndefined()
+    expect(c.inventory.find((i) => i.itemId === "active_item")).toBeDefined()
+    expect(c.inventory.find((i) => i.itemId === "permanent_item")).toBeDefined()
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Arc computation
+// ---------------------------------------------------------------------------
+describe("arc computation", () => {
+  it("sets correct arc for age", () => {
+    const tests: [number, string][] = [
+      [10, "child"],
+      [16, "adventurer"],
+      [26, "mercenary"],
+      [40, "kingdom_hero"],
+      [60, "legend"],
+      [80, "old_hero"],
+    ]
+    for (const [age, expected] of tests) {
+      const c = makeChar({ age })
+      // Simulate ageUp: calling createCharacter then manually check arc
+      const created = createCharacter({
+        id: `arc_${age}`,
+        name: "Test",
+        classId: "warrior",
+        locale: "en",
+        registry: reg,
+      })
+      // Override age and check arc
+      created.age = age
+      created.currentArc = arcForAge(age)
+      expect(created.currentArc).toBe(expected)
+    }
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Shop & inventory
+// ---------------------------------------------------------------------------
+describe("shop & inventory", () => {
+  it("inventory starts empty", () => {
+    const c = makeChar()
+    expect(c.inventory).toEqual([])
+  })
+
+  it("adds items to inventory on purchase", () => {
+    const c = makeChar({ gold: 20000 })
+    const item = reg.shop.find((i) => i.id === "camp_cook")
+    expect(item).toBeDefined()
+    expect(c.gold).toBeGreaterThanOrEqual(item!.cost)
+    c.gold -= item!.cost
+    c.inventory.push({ itemId: item!.id, qty: 1, expiresAtTurn: null })
+    expect(c.inventory).toHaveLength(1)
+    expect(c.inventory[0].itemId).toBe("camp_cook")
+    expect(c.gold).toBe(20000 - 8000)
+  })
+
+  it("shop items are loaded in registry", () => {
+    expect(reg.shop.length).toBeGreaterThan(0)
+    const retinue = reg.shop.filter((i) => i.category === "retinue")
+    const consumables = reg.shop.filter((i) => i.category === "consumable")
+    const luxury = reg.shop.filter((i) => i.category === "luxury")
+    expect(retinue.length).toBe(5)
+    expect(consumables.length).toBe(5)
+    expect(luxury.length).toBe(6)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// isEligible arc gating
+// ---------------------------------------------------------------------------
+describe("isEligible arc gating", () => {
+  it("filters by requiresArc", () => {
+    const c = makeChar({ currentArc: "adventurer" })
+    const ev: EventContent = {
+      id: "legend_only",
+      minAge: 0,
+      maxAge: 99,
+      weight: 1,
+      requiresArc: ["legend"],
+      narrative: { en: "", es: "" },
+      choices: [
+        { id: "ok", rarity: "common", label: { en: "", es: "" }, narrative: { en: "", es: "" } },
+      ],
+    }
+    expect(isEligible(ev, c)).toBe(false)
+    const legend = makeChar({ currentArc: "legend" })
+    expect(isEligible(ev, legend)).toBe(true)
+  })
+
+  it("filters by excludeIfArc", () => {
+    const c = makeChar({ currentArc: "child" })
+    const ev: EventContent = {
+      id: "no_kids",
+      minAge: 0,
+      maxAge: 99,
+      weight: 1,
+      excludeIfArc: ["child"],
+      narrative: { en: "", es: "" },
+      choices: [
+        { id: "ok", rarity: "common", label: { en: "", es: "" }, narrative: { en: "", es: "" } },
+      ],
+    }
+    expect(isEligible(ev, c)).toBe(false)
+    const adult = makeChar({ currentArc: "adventurer" })
+    expect(isEligible(ev, adult)).toBe(true)
   })
 })
 

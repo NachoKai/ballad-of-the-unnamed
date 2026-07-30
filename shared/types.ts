@@ -41,6 +41,36 @@ export type EndingType = "heroic_death" | "peaceful_retirement" | "other_death" 
 
 export type RunType = "standard" | "daily"
 
+export type Arc = "child" | "adventurer" | "mercenary" | "kingdom_hero" | "legend" | "old_hero"
+
+export type ShopCategory = "retinue" | "consumable" | "luxury"
+
+export type ShopEffectType =
+  | "injuryRiskModifier"
+  | "fatigueModifier"
+  | "momentumRecoveryModifier"
+  | "ageDeclineDelay"
+  | "offerQualityModifier"
+
+export interface ShopItem {
+  id: string
+  category: ShopCategory
+  name: LocaleMap
+  cost: number
+  effect: { type: ShopEffectType; value: number } | null
+  icon: string
+  flavor: LocaleMap
+  requiresArc?: Arc[]
+  achievementTrigger?: string
+  duration?: number
+}
+
+export interface InventoryEntry {
+  itemId: string
+  qty: number
+  expiresAtTurn?: number | null
+}
+
 // ---- Content bank shapes (authored as data, loaded into server memory) ----
 
 export interface ChoiceContent {
@@ -66,6 +96,9 @@ export interface ChoiceContent {
   // Personality tag synergy: matching tags boost stat gains, conflicting tags penalize.
   wantedTags?: Partial<Record<PersonalityTag, number>>
   punishedTags?: Partial<Record<PersonalityTag, number>>
+  // Destiny card effects: lock/unlock entire event pools when chosen.
+  unlocksEventPool?: string[]
+  locksEventPool?: string[]
 }
 
 export type OutcomeTier = "critical" | "success" | "partial" | "fail"
@@ -97,12 +130,14 @@ export interface MinigameResolution {
 
 export interface EventContent {
   id: string
-  type?: "event" | "minigame"
+  type?: "event" | "minigame" | "destiny"
   subtype?: string
   minAge: number
   maxAge: number
   requiresClass?: string | null
   requiresTags?: PersonalityTag[]
+  requiresArc?: Arc[]
+  excludeIfArc?: Arc[]
   excludeIfCompletedIds?: string[]
   weight: number
   location?: string
@@ -170,6 +205,7 @@ export interface CharacterState {
   class: string
   archetype: string | null
   age: number
+  currentArc: Arc
   strength: number
   dexterity: number
   constitution: number
@@ -185,11 +221,14 @@ export interface CharacterState {
   status: CharacterStatus
   locale: Locale
   turn: number
+  seasonCount: number
   powerLevel: number
   counters: Record<string, number>
   reputations: ReputationState[]
   personality: Record<string, number>
   achievements: string[]
+  inventory: InventoryEntry[]
+  lockedEventPools: string[]
 }
 
 export interface ReputationState {
@@ -214,6 +253,9 @@ export interface ServedEvent {
   narrative: string
   choices: ServedChoice[]
   isRetirementOffer: boolean
+  isSeasonSummary?: boolean
+  seasonHeadline?: string
+  seasonGrade?: number
 }
 
 export interface TurnResult {

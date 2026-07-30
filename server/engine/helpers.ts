@@ -95,6 +95,19 @@ export function isEligible(ev: EventContent, c: CharacterState): boolean {
     const hasTag = ev.requiresTags.some((t) => (c.personality[t] ?? 0) > 0)
     if (!hasTag) return false
   }
+  // Arc gating: requiresArc means event only shows during those arcs.
+  if (ev.requiresArc && ev.requiresArc.length > 0) {
+    if (!ev.requiresArc.includes(c.currentArc)) return false
+  }
+  // Arc exclusion: excludeIfArc means event doesn't show during those arcs.
+  if (ev.excludeIfArc && ev.excludeIfArc.length > 0) {
+    if (ev.excludeIfArc.includes(c.currentArc)) return false
+  }
+  // Locked event pools: if event belongs to a locked pool, it's ineligible.
+  if (c.lockedEventPools.length > 0 && ev.type === "destiny") {
+    // Check if this destiny event's pool is locked.
+    if (ev.id && c.lockedEventPools.includes(ev.id)) return false
+  }
   return true
 }
 

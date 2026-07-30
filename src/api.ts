@@ -42,6 +42,31 @@ export interface ChooseResponse {
   event?: ServedEvent
 }
 
+export interface ShopItemView {
+  id: string
+  category: string
+  name: string
+  cost: number
+  effect: { type: string; value: number } | null
+  icon: string
+  flavor: string
+  duration?: number
+  owned: number
+}
+
+export interface ShopResponse {
+  items: ShopItemView[]
+  gold: number
+  inventory: { itemId: string; qty: number; expiresAtTurn: number | null }[]
+}
+
+export interface BuyResponse {
+  character: CharacterState
+  purchased: string
+  gold: number
+  inventory: { itemId: string; qty: number; expiresAtTurn: number | null }[]
+}
+
 export interface LeaderboardEntryView {
   rank: number
   id: string
@@ -105,6 +130,14 @@ export const api = {
 
   choose: (input: { runId: string; choiceId?: string; cardId?: string }) =>
     jfetch<ChooseResponse>("/api/game/choose", {
+      method: "POST",
+      body: JSON.stringify(input),
+    }),
+
+  shop: (runId: string) => jfetch<ShopResponse>(`/api/game/shop?runId=${runId}`),
+
+  buy: (input: { runId: string; itemId: string }) =>
+    jfetch<BuyResponse>("/api/game/buy", {
       method: "POST",
       body: JSON.stringify(input),
     }),

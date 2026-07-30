@@ -1,7 +1,7 @@
 import { Router } from "express"
 import type { Request, Response } from "express"
 import { Rng, hashSeed, todayDailySeed } from "../../shared/rng.js"
-import { computeScore } from "../../shared/config.js"
+import { computeScore, GAME_CONFIG } from "../../shared/config.js"
 import { loadContent } from "../content/registry.js"
 import {
   buildServedEvent,
@@ -165,6 +165,29 @@ gameRouter.get("/state", async (req: Request, res: Response) => {
       rng,
       run.pendingEvent.id === "__retirement_offer__",
     )
+    // Restore season summary flags.
+    if (run.pendingEvent.id === "__season_summary__") {
+      served.isSeasonSummary = true
+      const c = run.character
+      served.seasonGrade = Math.round(
+        Math.min(
+          10,
+          Math.max(1, c.powerLevel / 10 + c.fame / 20 + (c.counters["battles_won"] ?? 0) * 0.2),
+        ),
+      )
+      served.seasonHeadline =
+        (served.seasonGrade ?? 5) >= 8
+          ? locale === "en"
+            ? "A Season of Glory"
+            : "Una Temporada de Gloria"
+          : (served.seasonGrade ?? 5) >= 5
+            ? locale === "en"
+              ? "A Steady Season"
+              : "Una Temporada Estable"
+            : locale === "en"
+              ? "A Season of Hardship"
+              : "Una Temporada de Dificultades"
+    }
   }
   return res.json({
     runId: run.id,
@@ -173,6 +196,85 @@ gameRouter.get("/state", async (req: Request, res: Response) => {
     event: served,
     finished: run.finished,
   })
+})
+
+// GET /api/game/shop?runId=...  — available shop items for current run.
+gameRouter.get("/shop", async (req: Request, res: Response) => {
+  const run = await loadOwnedRun(req)
+  if (!run) return res.status(404).json({ error: "not_found" })
+  const locale = run.locale
+  const c = run.character
+  const items = registry.shop
+    .filter((item) => {
+      // Arc-gated shop items.
+      if (item.requiresArc && item.requiresArc.length > 0) {
+        return item.requiresArc.includes(c.currentArc)
+      }
+      return true
+    })
+    .map((item) => ({
+      id: item.id,
+      category: item.category,
+      name: localize(item.name, locale),
+      cost: item.cost,
+      effect: item.effect,
+      icon: item.icon,
+      flavor: localize(item.flavor, locale),
+      duration: item.duration,
+      owned: c.inventory.find((inv) => inv.itemId === item.id)?.qty ?? 0,
+    }))
+  res.json({ items, gold: c.gold, inventory: c.inventory })
+})
+
+// POST /api/game/buy  { runId, itemId }
+gameRouter.post("/buy", async (req: Request, res: Response) => {
+  try {
+    const run = await loadOwnedRun(req)
+    if (!run) return res.status(404).json({ error: "not_found" })
+    if (run.finished) return res.status(409).json({ error: "run_finished" })
+
+    const itemId = String(req.body?.itemId ?? "")
+    const item = registry.shop.find((i) => i.id === itemId)
+    if (!item) return res.status(400).json({ error: "unknown_item" })
+
+    // Arc gate check.
+    if (item.requiresArc && item.requiresArc.length > 0) {
+      if (!item.requiresArc.includes(run.character.currentArc)) {
+        return res.status(400).json({ error: "item_not_available" })
+      }
+    }
+
+    const c = run.character
+    if (c.gold < item.cost) return res.status(400).json({ error: "not_enough_gold" })
+
+    // Deduct gold.
+    c.gold -= item.cost
+
+    // Add to inventory.
+    const existing = c.inventory.find((inv) => inv.itemId === itemId)
+    if (existing) {
+      existing.qty += 1
+    } else {
+      const expiresAtTurn =
+        item.duration && item.duration > 0
+          ? c.turn + item.duration * GAME_CONFIG.seasonLength
+          : null
+      c.inventory.push({ itemId, qty: 1, expiresAtTurn })
+    }
+
+    run.character = c
+    await saveRun(run)
+
+    return res.json({
+      character: c,
+      purchased: itemId,
+      gold: c.gold,
+      inventory: c.inventory,
+    })
+  } catch (err) {
+    console.log("[v0] /buy error", (err as Error).message)
+    return res.status(500).json({ error: "server_error" })
+  }
 })
 
 // POST /api/game/choose  { runId, choiceId, cardId }

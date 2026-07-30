@@ -20,7 +20,33 @@ export const GAME_CONFIG = {
   // injuryRiskDelta from the chosen outcome, reduced by retinue modifiers.
   // Base per-turn illness/accident risk grows with age past this point.
   ageRiskStart: 55,
+
+  // Season system: every N turns, a season summary event is served.
+  seasonLength: 5,
+
+  // Destiny card frequency: roughly once every N years.
+  destinyCardYears: 10,
 } as const
+
+import type { Arc } from "./types.js"
+
+// Arc thresholds: age at which each chapter begins.
+export const ARC_THRESHOLDS: { minAge: number; arc: Arc }[] = [
+  { minAge: 0, arc: "child" },
+  { minAge: 16, arc: "adventurer" },
+  { minAge: 26, arc: "mercenary" },
+  { minAge: 40, arc: "kingdom_hero" },
+  { minAge: 60, arc: "legend" },
+  { minAge: 80, arc: "old_hero" },
+]
+
+export function arcForAge(age: number): Arc {
+  let arc: Arc = "child"
+  for (const t of ARC_THRESHOLDS) {
+    if (age >= t.minAge) arc = t.arc
+  }
+  return arc
+}
 
 // Reputation tiers (localized names live in content/reputationTiers.json later;
 // thresholds are language-neutral numbers).

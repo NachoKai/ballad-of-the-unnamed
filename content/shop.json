@@ -1,0 +1,203 @@
+[
+  {
+    "id": "camp_cook",
+    "category": "retinue",
+    "name": { "en": "Camp Cook", "es": "Cocinero de campaña" },
+    "cost": 8000,
+    "effect": { "type": "fatigueModifier", "value": -0.15 },
+    "icon": "🍲",
+    "flavor": {
+      "en": "Less fatigue, steadier stats all season.",
+      "es": "Menos fatiga, estadísticas más estables toda la temporada."
+    }
+  },
+  {
+    "id": "battle_healer",
+    "category": "retinue",
+    "name": { "en": "Battle Healer", "es": "Curandero de batalla" },
+    "cost": 11000,
+    "effect": { "type": "injuryRiskModifier", "value": -0.15 },
+    "icon": "🩹",
+    "flavor": {
+      "en": "Lower injury risk in every fight.",
+      "es": "Menor riesgo de lesión en cada combate."
+    }
+  },
+  {
+    "id": "camp_seer",
+    "category": "retinue",
+    "name": { "en": "Camp Seer", "es": "Vidente de campaña" },
+    "cost": 9000,
+    "effect": { "type": "momentumRecoveryModifier", "value": -0.2 },
+    "icon": "🔮",
+    "flavor": { "en": "Bad momentum streaks end sooner.", "es": "Las rachas malas duran menos." }
+  },
+  {
+    "id": "weapon_master",
+    "category": "retinue",
+    "name": { "en": "Weapon Master", "es": "Maestro de armas" },
+    "cost": 14000,
+    "effect": { "type": "ageDeclineDelay", "value": 3 },
+    "icon": "🗡️",
+    "flavor": {
+      "en": "Stat decline from age hits later.",
+      "es": "El declive por edad llega más tarde."
+    }
+  },
+  {
+    "id": "guild_herald",
+    "category": "retinue",
+    "name": { "en": "Guild Herald", "es": "Heraldo del gremio" },
+    "cost": 12000,
+    "effect": { "type": "offerQualityModifier", "value": 0.15 },
+    "icon": "📜",
+    "flavor": {
+      "en": "Better contract offers and quest rewards.",
+      "es": "Mejores ofertas y recompensas."
+    }
+  },
+  {
+    "id": "enchanted_boots",
+    "category": "consumable",
+    "name": { "en": "Enchanted Boots", "es": "Botas encantadas" },
+    "cost": 1800,
+    "effect": null,
+    "icon": "🥾",
+    "flavor": {
+      "en": "More battle wins this season.",
+      "es": "Más victorias en batalla esta temporada."
+    },
+    "duration": 1
+  },
+  {
+    "id": "season_healer",
+    "category": "consumable",
+    "name": { "en": "Season Healer's Contract", "es": "Contrato de curandero" },
+    "cost": 2500,
+    "effect": { "type": "injuryRiskModifier", "value": -0.1 },
+    "icon": "🩹",
+    "flavor": {
+      "en": "Stamina boost and lower injury risk for 2 seasons.",
+      "es": "Más resistencia y menor riesgo de lesión por 2 temporadas."
+    },
+    "duration": 2
+  },
+  {
+    "id": "alchemical_draught",
+    "category": "consumable",
+    "name": { "en": "Alchemical Draught", "es": "Poción alquímica" },
+    "cost": 1400,
+    "effect": null,
+    "icon": "⚡",
+    "flavor": {
+      "en": "More stamina and energy this season.",
+      "es": "Más resistencia y energía esta temporada."
+    },
+    "duration": 1
+  },
+  {
+    "id": "scout_dossier",
+    "category": "consumable",
+    "name": { "en": "Scout's Dossier", "es": "Informe de explorador" },
+    "cost": 1400,
+    "effect": null,
+    "icon": "🎯",
+    "flavor": {
+      "en": "More quests completed this season.",
+      "es": "Más misiones completadas esta temporada."
+    },
+    "duration": 1
+  },
+  {
+    "id": "lucky_charm",
+    "category": "consumable",
+    "name": { "en": "Lucky Charm", "es": "Amuleto de suerte" },
+    "cost": 2100,
+    "effect": null,
+    "icon": "🍀",
+    "flavor": {
+      "en": "Luck boost in title and rank pushes.",
+      "es": "Impulso de suerte en la lucha por títulos."
+    },
+    "duration": 1
+  },
+  {
+    "id": "warhorse",
+    "category": "luxury",
+    "name": { "en": "Warhorse", "es": "Corcel de guerra" },
+    "cost": 500,
+    "effect": null,
+    "icon": "🐎",
+    "flavor": {
+      "en": "A trusty steed for the road ahead.",
+      "es": "Un corcel fiel para el camino."
+    },
+    "requiresArc": ["adventurer", "mercenary"]
+  },
+  {
+    "id": "cottage",
+    "category": "luxury",
+    "name": { "en": "Cottage", "es": "Cabaña" },
+    "cost": 1500,
+    "effect": null,
+    "icon": "🏡",
+    "flavor": {
+      "en": "A quiet place to call your own.",
+      "es": "Un lugar tranquilo para llamar hogar."
+    },
+    "requiresArc": ["adventurer", "mercenary"]
+  },
+  {
+    "id": "manor",
+    "category": "luxury",
+    "name": { "en": "Manor with Training Grounds", "es": "Mansión con campo de entrenamiento" },
+    "cost": 6000,
+    "effect": null,
+    "icon": "🏰",
+    "flavor": {
+      "en": "Train in comfort between adventures.",
+      "es": "Entrena cómodamente entre aventuras."
+    },
+    "requiresArc": ["kingdom_hero", "legend"]
+  },
+  {
+    "id": "fortified_tower",
+    "category": "luxury",
+    "name": { "en": "Fortified Tower", "es": "Torre fortificada" },
+    "cost": 12000,
+    "effect": null,
+    "icon": "🗼",
+    "flavor": {
+      "en": "A stronghold that speaks of your station.",
+      "es": "Una fortaleza que habla de tu estatus."
+    },
+    "requiresArc": ["kingdom_hero", "legend"]
+  },
+  {
+    "id": "personal_griffon",
+    "category": "luxury",
+    "name": { "en": "Personal Griffon", "es": "Grifo personal" },
+    "cost": 28000,
+    "effect": null,
+    "icon": "🦅",
+    "flavor": {
+      "en": "Soar above the petty concerns of the ground.",
+      "es": "Vuela por encima de las preocupaciones terrenales."
+    },
+    "requiresArc": ["legend", "old_hero"]
+  },
+  {
+    "id": "floating_realm",
+    "category": "luxury",
+    "name": { "en": "Floating Pocket Realm", "es": "Reino de bolsillo flotante" },
+    "cost": 48000,
+    "effect": null,
+    "icon": "🏝️",
+    "flavor": {
+      "en": "A shard of sky you call your own.",
+      "es": "Un fragmento de cielo que es solo tuyo."
+    },
+    "requiresArc": ["legend", "old_hero"],
+    "achievementTrigger": "jetset_life"
+  }
+]

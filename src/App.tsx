@@ -14,6 +14,7 @@ import { CreationScreen } from "./components/CreationScreen"
 import { GameScreen } from "./components/GameScreen"
 import { EndingScreen } from "./components/EndingScreen"
 import { LeaderboardScreen } from "./components/LeaderboardScreen"
+import { ShopModal } from "./components/ShopModal"
 import { Toasts, useAchievementToasts } from "./components/Toasts"
 import { LinkBtn } from "./components/ui/Button"
 
@@ -38,6 +39,7 @@ export default function App() {
   const [event, setEvent] = useState<ServedEvent | null>(null)
   const [turnNarrative, setTurnNarrative] = useState<string | null>(null)
   const [ending, setEnding] = useState<EndingData | null>(null)
+  const [shopOpen, setShopOpen] = useState(false)
   const [resuming, setResuming] = useState(() => localStorage.getItem(RUN_KEY) !== null)
   const runIdRef = useRef<string | null>(null)
   const {
@@ -198,6 +200,20 @@ export default function App() {
           turnNarrative={turnNarrative}
           onChoose={choose}
           onAbandon={abandonRun}
+          onShopOpen={() => setShopOpen(true)}
+        />
+      )}
+
+      {screen === "game" && shopOpen && runIdRef.current && (
+        <ShopModal
+          locale={locale}
+          runId={runIdRef.current}
+          onClose={() => setShopOpen(false)}
+          onPurchased={(res) => {
+            setCharacter((prev) =>
+              prev ? { ...prev, gold: res.gold, inventory: res.inventory ?? prev.inventory } : prev,
+            )
+          }}
         />
       )}
 

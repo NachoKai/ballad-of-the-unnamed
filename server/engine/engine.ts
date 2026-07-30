@@ -12,7 +12,7 @@ import type {
 } from "../../shared/types.js"
 import { STAT_KEYS } from "../../shared/types.js"
 import { Rng } from "../../shared/rng.js"
-import { GAME_CONFIG } from "../../shared/config.js"
+import { GAME_CONFIG, arcForAge } from "../../shared/config.js"
 import type { ContentRegistry } from "../content/registry.js"
 import {
   adjustReputation,
@@ -59,11 +59,15 @@ export function createCharacter(input: {
     class: cls.id,
     archetype: archetype?.id ?? null,
     age: GAME_CONFIG.startingAge,
+    currentArc: arcForAge(GAME_CONFIG.startingAge),
     strength: cls.base.strength + (archetype?.statDeltas.strength ?? 0),
     dexterity: cls.base.dexterity + (archetype?.statDeltas.dexterity ?? 0),
     constitution: cls.base.constitution + (archetype?.statDeltas.constitution ?? 0),
     intelligence: cls.base.intelligence + (archetype?.statDeltas.intelligence ?? 0),
     charisma: cls.base.charisma + (archetype?.statDeltas.charisma ?? 0),
+    seasonCount: 0,
+    inventory: [],
+    lockedEventPools: [],
     stamina: GAME_CONFIG.startingStamina,
     health: GAME_CONFIG.startingHealth,
     fame: 0,
@@ -95,13 +99,27 @@ function isRetirementTurn(c: CharacterState): boolean {
   return c.turn % GAME_CONFIG.retirementOfferEvery === 0
 }
 
+export function wouldBeDestinyTurn(c: CharacterState): boolean {
+  if (c.turn === 0) return false
+  const yearsPlayed = Math.floor(c.turn / GAME_CONFIG.turnsPerYear)
+  return yearsPlayed > 0 && yearsPlayed % GAME_CONFIG.destinyCardYears === 0 && c.age >= 16
+}
+
 // Pick the event/minigame for the upcoming turn. Deterministic via the run rng.
 export function selectEvent(c: CharacterState, registry: ContentRegistry, rng: Rng): EventContent {
+  // Destiny events: roughly once every destinyCardYears in-game years.
+  if (wouldBeDestinyTurn(c)) {
+    const destinyPool = registry.events.filter((e) => e.type === "destiny" && isEligible(e, c))
+    if (destinyPool.length > 0) {
+      return rng.weighted(destinyPool, (ev) => effectiveWeight(ev, c))
+    }
+  }
   // Occasionally offer a minigame instead of a normal event.
   const pool: EventContent[] = []
   const wantMinigame = rng.bool(0.28)
   const candidates = wantMinigame ? registry.minigames : registry.events
   for (const ev of candidates) {
+    if (ev.type === "destiny") continue
     if (isEligible(ev, c)) pool.push(ev)
   }
   // Fallback: if the chosen pool is empty, try the other pool, then any event.
@@ -111,6 +129,36 @@ export function selectEvent(c: CharacterState, registry: ContentRegistry, rng: R
     return registry.events[0]
   }
   return rng.weighted(finalPool, (ev) => effectiveWeight(ev, c))
+}
+
+// A synthetic season-summary event (generated server-side at season boundaries).
+export function generateSeasonSummary(c: CharacterState): EventContent {
+  const battles = c.counters["battles_won"] ?? 0
+  const quests = c.counters["quests_completed"] ?? 0
+  const grade = Math.round(
+    Math.min(10, Math.max(1, c.powerLevel / 10 + c.fame / 20 + battles * 0.2 + quests * 0.1)),
+  )
+  return {
+    id: "__season_summary__",
+    minAge: 0,
+    maxAge: 999,
+    weight: 1,
+    narrative: {
+      en: `Season ${c.seasonCount + 1} draws to a close. The road ahead stretches, and your legend grows.`,
+      es: `La temporada ${c.seasonCount + 1} llega a su fin. El camino se extiende y tu leyenda crece.`,
+    },
+    choices: [
+      {
+        id: "continue",
+        rarity: "common" as Rarity,
+        label: { en: "Continue", es: "Continuar" },
+        narrative: {
+          en: "Onward. There is more to come.",
+          es: "Adelante. Queda mucho por venir.",
+        },
+      },
+    ],
+  }
 }
 
 // A synthetic retirement-offer event (not authored in content).
@@ -157,6 +205,32 @@ export function buildServedEvent(
   registry: ContentRegistry,
   rng: Rng,
 ): { event: EventContent; served: ServedEvent } {
+  // Season boundary: after every seasonLength turns, serve the season summary.
+  if (c.turn > 0 && c.turn % GAME_CONFIG.seasonLength === 0) {
+    const ev = generateSeasonSummary(c)
+    const served = serveEvent(ev, c, c.locale, registry, rng, false)
+    served.isSeasonSummary = true
+    const grade = Math.round(
+      Math.min(
+        10,
+        Math.max(1, c.powerLevel / 10 + c.fame / 20 + (c.counters["battles_won"] ?? 0) * 0.2),
+      ),
+    )
+    served.seasonGrade = grade
+    served.seasonHeadline =
+      grade >= 8
+        ? c.locale === "en"
+          ? "A Season of Glory"
+          : "Una Temporada de Gloria"
+        : grade >= 5
+          ? c.locale === "en"
+            ? "A Steady Season"
+            : "Una Temporada Estable"
+          : c.locale === "en"
+            ? "A Season of Hardship"
+            : "Una Temporada de Dificultades"
+    return { event: ev, served }
+  }
   if (isRetirementTurn(c)) {
     const ev = retirementOfferEvent()
     return {
@@ -169,6 +243,17 @@ export function buildServedEvent(
     event: ev,
     served: serveEvent(ev, c, c.locale, registry, rng, false),
   }
+}
+
+// Resolve a season summary event: advance season, clean up expired inventory.
+export function resolveSeasonSummary(c: CharacterState): void {
+  c.seasonCount += 1
+  c.turn += 1
+  // Clean up expired consumables.
+  c.inventory = c.inventory.filter((entry) => {
+    if (entry.expiresAtTurn && entry.expiresAtTurn <= c.turn) return false
+    return true
+  })
 }
 
 // ---------------------------------------------------------------------------
@@ -241,6 +326,7 @@ function rollDeath(c: CharacterState, pendingInjuryRisk: number, rng: Rng): bool
 function ageUp(c: CharacterState): void {
   if (c.turn % GAME_CONFIG.turnsPerYear === 0) {
     c.age += 1
+    c.currentArc = arcForAge(c.age)
   }
 }
 
@@ -286,6 +372,34 @@ export function resolveChoice(
     c.status = "retired"
     ended = true
     endingType = heroicOrPeaceful(c, "retirement")
+  }
+
+  // Season summary handling.
+  if (event.id === "__season_summary__") {
+    resolveSeasonSummary(c)
+    return {
+      narrative: "",
+      ended: false,
+      endingType: undefined,
+      chosenRarity: "common" as Rarity,
+      wonBattle: false,
+      completedQuest: false,
+    }
+  }
+
+  // Destiny pool effects: lock/unlock event pools.
+  if (choice.unlocksEventPool) {
+    for (const poolId of choice.unlocksEventPool) {
+      const idx = c.lockedEventPools.indexOf(poolId)
+      if (idx !== -1) c.lockedEventPools.splice(idx, 1)
+    }
+  }
+  if (choice.locksEventPool) {
+    for (const poolId of choice.locksEventPool) {
+      if (!c.lockedEventPools.includes(poolId)) {
+        c.lockedEventPools.push(poolId)
+      }
+    }
   }
 
   const net = applyStatDeltas(c, choice.statDeltas, tagSynergy)

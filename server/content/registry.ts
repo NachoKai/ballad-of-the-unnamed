@@ -8,6 +8,7 @@ import type {
   ClassContent,
   EventContent,
   LocaleMap,
+  ShopItem,
   SlotPools,
 } from "../../shared/types.js"
 import { LOCALES } from "../../shared/i18n.js"
@@ -45,6 +46,7 @@ export interface ContentRegistry {
   slots: SlotPools
   factions: { id: string; name: LocaleMap }[]
   reputationTiers: Record<string, LocaleMap>
+  shop: ShopItem[]
 }
 
 let cached: ContentRegistry | null = null
@@ -91,6 +93,13 @@ export function loadContent(): ContentRegistry {
   for (const a of achievements) {
     validateLocaleMap(a.name, `achievement ${a.id} name`)
     validateLocaleMap(a.description, `achievement ${a.id} description`)
+  }
+
+  // Load shop items.
+  const shop = readJson<ShopItem[]>("shop.json")
+  for (const item of shop) {
+    validateLocaleMap(item.name, `shop ${item.id} name`)
+    validateLocaleMap(item.flavor, `shop ${item.id} flavor`)
   }
 
   // Load every event JSON file in content/events (array per file).
@@ -143,6 +152,7 @@ export function loadContent(): ContentRegistry {
     slots,
     factions,
     reputationTiers,
+    shop,
   }
   return cached
 }

@@ -19,6 +19,7 @@ interface Props {
   turnNarrative: string | null
   onChoose: (choiceId: string) => Promise<void>
   onAbandon: () => void
+  onShopOpen?: () => void
 }
 
 const RARITY_ORDER: Record<string, number> = {
@@ -35,6 +36,7 @@ export function GameScreen({
   turnNarrative,
   onChoose,
   onAbandon,
+  onShopOpen,
 }: Props) {
   const [busy, setBusy] = useState(false)
   const [selected, setSelected] = useState<string | null>(null)
@@ -56,15 +58,35 @@ export function GameScreen({
     (a, b) => (RARITY_ORDER[a.rarity] ?? 0) - (RARITY_ORDER[b.rarity] ?? 0),
   )
 
+  const isSeasonSummary = event.isSeasonSummary
+
   return (
     <GameLayout>
-      <Hud locale={locale} character={character} />
+      <Hud locale={locale} character={character} onShopOpen={onShopOpen} />
 
       <Scene aria-live="polite">
         {turnNarrative && <SceneEcho>{capitalize(turnNarrative)}</SceneEcho>}
 
         {event.isRetirementOffer && (
           <RetireBanner role="status">{t(locale, "retirementOffered")}</RetireBanner>
+        )}
+
+        {isSeasonSummary && event.seasonHeadline && (
+          <SummaryBanner>
+            <SummaryGrade
+              $grade={
+                (event.seasonGrade ?? 5) >= 7
+                  ? "good"
+                  : (event.seasonGrade ?? 5) >= 4
+                    ? "ok"
+                    : "bad"
+              }
+            >
+              {(event.seasonGrade ?? 0).toFixed(1)}
+            </SummaryGrade>
+            <SummaryHeadline>{event.seasonHeadline}</SummaryHeadline>
+            <SummarySub>{t(locale, "seasonSummary")}</SummarySub>
+          </SummaryBanner>
         )}
 
         <SceneNarrative>{capitalize(event.narrative)}</SceneNarrative>
@@ -98,6 +120,31 @@ export function GameScreen({
             </ChoiceCard>
           ))}
         </ChoiceGrid>
+
+        {isSeasonSummary && (
+          <SeasonStatRow>
+            <SeasonStat>
+              <span>{t(locale, "age")}</span>
+              <b>{character.age}</b>
+            </SeasonStat>
+            <SeasonStat>
+              <span>{t(locale, "gold")}</span>
+              <b>{character.gold}</b>
+            </SeasonStat>
+            <SeasonStat>
+              <span>{t(locale, "power")}</span>
+              <b>{character.powerLevel}</b>
+            </SeasonStat>
+            <SeasonStat>
+              <span>{t(locale, "fame")}</span>
+              <b>{character.fame}</b>
+            </SeasonStat>
+            <SeasonStat>
+              <span>{t(locale, "battles")}</span>
+              <b>{character.counters["battles_won"] ?? 0}</b>
+            </SeasonStat>
+          </SeasonStatRow>
+        )}
 
         <AbandonBtn type="button" onClick={onAbandon} disabled={busy}>
           {t(locale, "abandonRun")}
@@ -232,6 +279,79 @@ const ChoiceDeltas = styled.span`
   align-items: center;
   gap: 5px;
   margin-top: 8px;
+`
+
+const SummaryBanner = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 20px;
+  margin-bottom: 18px;
+  border: 1px solid ${({ theme }) => theme.colors.gold};
+  border-radius: ${({ theme }) => theme.radii.sm};
+  background: rgba(201, 164, 76, 0.06);
+`
+
+const SummaryGrade = styled.span<{ $grade: string }>`
+  font-size: 42px;
+  font-weight: 700;
+  font-family: ${({ theme }) => theme.fonts.display};
+  color: ${({ $grade, theme }) =>
+    $grade === "good"
+      ? theme.colors.sage
+      : $grade === "ok"
+        ? theme.colors.gold
+        : theme.colors.bloodBright};
+  line-height: 1;
+`
+
+const SummaryHeadline = styled.span`
+  font-size: 22px;
+  font-weight: 700;
+  color: ${({ theme }) => theme.colors.parchment};
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-align: center;
+`
+
+const SummarySub = styled.span`
+  font-size: 13px;
+  color: ${({ theme }) => theme.colors.muted};
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+`
+
+const SeasonStatRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+  padding: 14px;
+  border: 1px solid ${({ theme }) => theme.colors.line};
+  border-radius: ${({ theme }) => theme.radii.sm};
+  background: ${({ theme }) => theme.colors.ink3};
+`
+
+const SeasonStat = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 64px;
+  flex: 1;
+
+  span {
+    font-size: 11px;
+    color: ${({ theme }) => theme.colors.muted};
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  b {
+    font-size: 20px;
+    color: ${({ theme }) => theme.colors.parchment};
+    font-variant-numeric: tabular-nums;
+  }
 `
 
 const AbandonBtn = styled(LinkBtn)`
