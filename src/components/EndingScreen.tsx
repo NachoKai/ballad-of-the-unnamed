@@ -128,7 +128,7 @@ function DistinctionsBlock({
             <DistinctionIcon>
               <Trophy size={14} />
             </DistinctionIcon>
-            <span>{d.label.en}</span>
+            <span>{d.label[locale] ?? d.label.en}</span>
             <DistinctionCount>x{d.count}</DistinctionCount>
           </DistinctionChip>
         ))}
@@ -233,8 +233,8 @@ export function EndingScreen({
                     <AchIcon name={a.icon} size={16} />
                   </AchIconWrap>
                   <span>
-                    <strong>{a.name.en}</strong>
-                    <em>{a.description.en}</em>
+                    <strong>{a.name[locale] ?? a.name.en}</strong>
+                    <em>{a.description[locale] ?? a.description.en}</em>
                   </span>
                 </AchChip>
               ))}

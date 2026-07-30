@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { styled } from "styled-components"
 import type { EndingType, LeaderboardCategory, Locale, RunType } from "@shared/types"
 import { api, type LeaderboardEntryView } from "../api"
@@ -26,25 +26,38 @@ const CATEGORIES: { id: LeaderboardCategory; labelKey: string }[] = [
   { id: "battles_won", labelKey: "battlesWon" },
 ]
 
+function sortValue(e: LeaderboardEntryView, cat: LeaderboardCategory): number {
+  switch (cat) {
+    case "net_worth":
+      return e.netWorth ?? 0
+    case "age_at_end":
+      return e.ageAtEnd
+    case "achievements_count":
+      return e.achievementsCount
+    case "battles_won":
+      return e.battlesWon
+    default:
+      return e.score
+  }
+}
+
 export function LeaderboardScreen({ locale, onBack }: Props) {
   const [runType, setRunType] = useState<RunType>("standard")
   const [category, setCategory] = useState<LeaderboardCategory>("score")
-  const [entries, setEntries] = useState<LeaderboardEntryView[]>([])
+  const [rawEntries, setRawEntries] = useState<LeaderboardEntryView[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     let alive = true
+    setLoading(true)
+    setError(null)
 
-    const fetchData =
-      category === "score"
-        ? api.leaderboard(runType, locale)
-        : api.leaderboardByCategory(category, runType, locale)
-
-    fetchData
+    api
+      .leaderboard(runType, locale)
       .then((r) => {
         if (alive) {
-          setEntries(r.entries)
+          setRawEntries(r.entries)
           setLoading(false)
         }
       })
@@ -58,10 +71,15 @@ export function LeaderboardScreen({ locale, onBack }: Props) {
     return () => {
       alive = false
     }
-  }, [runType, category, locale])
+  }, [runType, locale])
+
+  const sorted = useMemo(() => {
+    const copy = [...rawEntries]
+    copy.sort((a, b) => sortValue(b, category) - sortValue(a, category))
+    return copy.map((e, i) => ({ ...e, rank: i + 1 }))
+  }, [rawEntries, category])
 
   const sortLabel = CATEGORIES.find((c) => c.id === category)?.labelKey
-  const isScore = category === "score"
 
   return (
     <BoardScreen>
@@ -107,21 +125,21 @@ export function LeaderboardScreen({ locale, onBack }: Props) {
       {loading && <BoardMsg>{t(locale, "loading")}</BoardMsg>}
       {error && <BoardError>{error}</BoardError>}
 
-      {!loading && !error && entries.length === 0 && <BoardMsg>{t(locale, "noEntries")}</BoardMsg>}
+      {!loading && !error && rawEntries.length === 0 && (
+        <BoardMsg>{t(locale, "noEntries")}</BoardMsg>
+      )}
 
-      {!loading && entries.length > 0 && (
+      {!loading && sorted.length > 0 && (
         <BoardTable role="table">
           <BoardRowHead role="row">
             <span>#</span>
             <span>{t(locale, "name")}</span>
             <span>{t(locale, "classLabel")}</span>
             <span>{t(locale, "endingLabel")}</span>
-            <NumCell>
-              {isScore ? t(locale, "scoreLabel") : t(locale, sortLabel ?? "scoreLabel")}
-            </NumCell>
+            <NumCell>{t(locale, sortLabel ?? "scoreLabel")}</NumCell>
             <NumCell>{t(locale, "ageShort")}</NumCell>
           </BoardRowHead>
-          {entries.map((e) => (
+          {sorted.map((e) => (
             <BoardRow role="row" key={e.id}>
               <Rank $rank={e.rank <= 3 ? e.rank : undefined}>{e.rank}</Rank>
               <CellName>
@@ -132,19 +150,7 @@ export function LeaderboardScreen({ locale, onBack }: Props) {
               <EndingTag $ending={e.endingType}>
                 {t(locale, `ending_${e.endingType}` as never)}
               </EndingTag>
-              <NumCell>
-                {isScore
-                  ? e.score.toLocaleString()
-                  : category === "net_worth"
-                    ? e.netWorth?.toLocaleString()
-                    : category === "age_at_end"
-                      ? e.ageAtEnd
-                      : category === "achievements_count"
-                        ? e.achievementsCount
-                        : category === "battles_won"
-                          ? e.battlesWon
-                          : e.score.toLocaleString()}
-              </NumCell>
+              <NumCell>{sortValue(e, category).toLocaleString()}</NumCell>
               <NumCell>{e.ageAtEnd}</NumCell>
             </BoardRow>
           ))}

@@ -8,6 +8,15 @@ import type {
   ServedEvent,
 } from "@shared/types"
 
+export interface AchievementView {
+  id: string
+  icon: string
+  rarity: string
+  hidden: boolean
+  name: string
+  description: string
+}
+
 export interface ClassInfo {
   id: string
   name: string
@@ -154,6 +163,9 @@ export const api = {
     jfetch<{ category: string; runType: RunType; entries: LeaderboardEntryView[] }>(
       `/api/meta/leaderboard/${category}?runType=${runType}&locale=${locale}&limit=25`,
     ),
+
+  achievements: (locale: Locale) =>
+    jfetch<{ achievements: AchievementView[] }>(`/api/meta/achievements?locale=${locale}`),
 
   careerTotals: () =>
     jfetch<{ totalRuns: number; totalScore: number; totalAchievements: number }>(

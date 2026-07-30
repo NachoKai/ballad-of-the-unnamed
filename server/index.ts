@@ -1,26 +1,14 @@
-import "dotenv/config"
 import express from "express"
-import cookieParser from "cookie-parser"
 import { createServer as createHttpServer } from "node:http"
 import { fileURLToPath } from "node:url"
 import { dirname, join } from "node:path"
-import { gameRouter } from "./routes/game.js"
-import { metaRouter } from "./routes/meta.js"
+import app from "./app.js"
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const isProd = process.env.NODE_ENV === "production"
 const PORT = Number(process.env.PORT) || 8080
 
 async function main() {
-  const app = express()
-  app.use(express.json())
-  app.use(cookieParser())
-
-  // API routes (server-authoritative game logic).
-  app.use("/api/game", gameRouter)
-  app.use("/api/meta", metaRouter)
-  app.get("/api/health", (_req, res) => res.json({ ok: true }))
-
   // Explicit HTTP server so Vite's HMR WebSocket can ride the same port
   // (the preview proxy only routes one port; a separate WS port is unreachable).
   const httpServer = createHttpServer(app)

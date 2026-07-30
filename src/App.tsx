@@ -9,20 +9,23 @@ import type {
   RunType,
   ServedEvent,
 } from "@shared/types"
-import { api } from "./api"
+import { type AchievementView, api } from "./api"
 import { makeT, t } from "./i18n/strings"
+import { t as resolveLocaleMap } from "@shared/i18n"
 import { CreationScreen } from "./components/CreationScreen"
 import { GameScreen } from "./components/GameScreen"
+import { AchievementsScreen } from "./components/AchievementsScreen"
 import { EndingScreen } from "./components/EndingScreen"
 import { LeaderboardScreen } from "./components/LeaderboardScreen"
 import { ShopModal } from "./components/ShopModal"
 import { Toasts, useAchievementToasts } from "./components/Toasts"
 import { LinkBtn } from "./components/ui/Button"
 
-type Screen = "creation" | "game" | "ending" | "leaderboard"
+type Screen = "creation" | "game" | "ending" | "leaderboard" | "achievements"
 
 const RUN_KEY = "chronicle_run_id"
 const LOCALE_KEY = "chronicle_locale"
+const ACH_KEY = "chronicle_last_achievements"
 
 interface EndingData {
   endingType: EndingType
@@ -44,6 +47,14 @@ export default function App() {
   const [shopOpen, setShopOpen] = useState(false)
   const [resuming, setResuming] = useState(() => localStorage.getItem(RUN_KEY) !== null)
   const [runId, setRunId] = useState<string | null>(() => localStorage.getItem(RUN_KEY))
+  const [lastAchievements, setLastAchievements] = useState<AchievementView[]>(() => {
+    try {
+      const stored = localStorage.getItem(ACH_KEY)
+      return stored ? (JSON.parse(stored) as AchievementView[]) : []
+    } catch {
+      return []
+    }
+  })
   const {
     toasts,
     push: pushToasts,
@@ -137,6 +148,20 @@ export default function App() {
 
     if (res.ended && res.endingType) {
       localStorage.removeItem(RUN_KEY)
+      const fresh = res.newAchievements.map((a) => ({
+        id: a.id,
+        icon: a.icon,
+        rarity: a.rarity,
+        hidden: false,
+        name: resolveLocaleMap(a.name, locale),
+        description: resolveLocaleMap(a.description, locale),
+      }))
+      const merged = new Map<string, AchievementView>()
+      for (const a of lastAchievements) merged.set(a.id, a)
+      for (const a of fresh) merged.set(a.id, a)
+      const all = [...merged.values()]
+      localStorage.setItem(ACH_KEY, JSON.stringify(all))
+      setLastAchievements(all)
       setEnding({
         endingType: res.endingType,
         epilogue: res.epilogue ?? "",
@@ -182,6 +207,11 @@ export default function App() {
           {screen !== "leaderboard" && screen !== "game" && (
             <LinkBtn type="button" onClick={() => setScreen("leaderboard")}>
               {t(locale, "leaderboard")}
+            </LinkBtn>
+          )}
+          {screen !== "achievements" && screen !== "game" && (
+            <LinkBtn type="button" onClick={() => setScreen("achievements")}>
+              {t(locale, "achievementsTitle")}
             </LinkBtn>
           )}
           <LocaleSwitch role="group" aria-label="language">
@@ -245,6 +275,14 @@ export default function App() {
 
       {screen === "leaderboard" && (
         <LeaderboardScreen locale={locale} onBack={() => setScreen("creation")} />
+      )}
+
+      {screen === "achievements" && (
+        <AchievementsScreen
+          locale={locale}
+          achievements={lastAchievements}
+          onBack={() => setScreen("creation")}
+        />
       )}
 
       <Toasts items={toasts} onExpire={dismissToast} />

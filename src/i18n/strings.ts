@@ -79,6 +79,8 @@ const en: StringMap = {
   rarity_uncommon: "Uncommon",
   rarity_rare: "Rare",
   rarity_volatile: "Volatile",
+  rarity_epic: "Epic",
+  rarity_legendary: "Legendary",
   chooseArchetype: "Choose your archetype",
   stat_strength_tag: "STR",
   stat_dexterity_tag: "DEX",
@@ -135,6 +137,8 @@ const en: StringMap = {
   peakMarketValue: "Peak Value",
   legacyScore: "Legacy",
   epithet: "Epithet",
+  achievementsTitle: "Achievements",
+  noAchievements: "No achievements earned in the last run.",
 }
 
 const es: StringMap = {
@@ -211,6 +215,8 @@ const es: StringMap = {
   rarity_uncommon: "Poco común",
   rarity_rare: "Raro",
   rarity_volatile: "Volátil",
+  rarity_epic: "Épico",
+  rarity_legendary: "Legendario",
   chooseArchetype: "Elige tu arquetipo",
   stat_strength_tag: "FUE",
   stat_dexterity_tag: "DES",
@@ -267,6 +273,8 @@ const es: StringMap = {
   peakMarketValue: "Valor Pico",
   legacyScore: "Legado",
   epithet: "Epíteto",
+  achievementsTitle: "Logros",
+  noAchievements: "No se obtuvieron logros en la última vida.",
 }
 
 const TABLES: Record<Locale, StringMap> = { en, es }
