@@ -11,7 +11,12 @@ import {
   resolveMinigame,
 } from "../engine/engine.js"
 import { evaluateAchievements } from "../engine/achievements.js"
-import { generateEpilogue } from "../engine/epilogue.js"
+import {
+  generateEpilogue,
+  generateEpithet,
+  generateRichEpilogueData,
+  computeLegacyScore,
+} from "../engine/epilogue.js"
 import { localize, localizeLocation, peakReputation } from "../engine/helpers.js"
 import {
   createRun,
@@ -337,9 +342,19 @@ gameRouter.post("/choose", async (req: Request, res: Response) => {
         reputationPeak: peakReputation(c),
         netWorth: c.gold,
         endingType: outcome.endingType,
-        legacyScore: 0,
+        legacyScore: computeLegacyScore(c),
       })
       const epilogue = generateEpilogue(c, outcome.endingType, registry, locale)
+      const epithetData = generateEpithet(c, registry, locale)
+      const richEpilogueData = generateRichEpilogueData(
+        c,
+        outcome.endingType,
+        score,
+        registry,
+        locale,
+      )
+
+      c.epithet = epithetData.title
 
       // Final achievement pass now that score is known.
       const finalAch = evaluateAchievements(run.character, registry, {
@@ -366,6 +381,7 @@ gameRouter.post("/choose", async (req: Request, res: Response) => {
         reputationPeak: peakReputation(c),
         endingType: outcome.endingType,
         score,
+        epithet: epithetData.title,
         epilogue,
         runType: run.runType,
         seed: run.seed,
@@ -378,6 +394,7 @@ gameRouter.post("/choose", async (req: Request, res: Response) => {
         ended: true,
         endingType: outcome.endingType,
         epilogue,
+        richEpilogueData,
       }
       return res.json({ ...result, score })
     }

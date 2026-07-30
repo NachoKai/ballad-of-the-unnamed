@@ -123,6 +123,18 @@ const en: StringMap = {
   relationship: "Bond",
   relationships: "Relationships",
   affinity: "Affinity",
+
+  factionHistory: "Faction History",
+  rivalComparison: "Rival Comparison",
+  rivalWon: "You came out ahead of your rival.",
+  rivalLost: "Your rival finished ahead of you.",
+  distinctions: "Distinciones Individuales",
+  lostEncounters: "Finales Perdidas",
+  lostEncounterSingle: "lost decisive encounter",
+  lostEncounterPlural: "lost decisive encounters",
+  peakMarketValue: "Peak Value",
+  legacyScore: "Legacy",
+  epithet: "Epithet",
 }
 
 const es: StringMap = {
@@ -243,6 +255,18 @@ const es: StringMap = {
   relationship: "Vínculo",
   relationships: "Relaciones",
   affinity: "Afiliación",
+
+  factionHistory: "Historial de Facción",
+  rivalComparison: "Comparación con Rival",
+  rivalWon: "Saliste por delante de tu rival.",
+  rivalLost: "Tu rival terminó por delante de ti.",
+  distinctions: "Distinciones Individuales",
+  lostEncounters: "Finales Perdidas",
+  lostEncounterSingle: "encuentro decisivo perdido",
+  lostEncounterPlural: "encuentros decisivos perdidos",
+  peakMarketValue: "Valor Pico",
+  legacyScore: "Legado",
+  epithet: "Epíteto",
 }
 
 const TABLES: Record<Locale, StringMap> = { en, es }

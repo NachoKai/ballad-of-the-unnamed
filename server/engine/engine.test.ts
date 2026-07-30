@@ -38,6 +38,7 @@ function makeChar(overrides: Partial<CharacterState> = {}): CharacterState {
     name: "Test",
     class: "warrior",
     archetype: null,
+    epithet: null,
     age: 16,
     currentArc: "adventurer",
     seasonCount: 0,
@@ -245,8 +246,8 @@ describe("resolveChoice", () => {
     const rng = new Rng(1)
     const out = resolveChoice(c, ev, "retire", reg, rng)
     expect(c.status).toBe("retired")
-    expect(out.ended).toBe(true)
-    expect(out.endingType).toMatch(/peaceful_retirement|other_retirement/)
+    expect(out.ended).toBe(false)
+    expect(c.pendingFinaleType).toMatch(/peaceful_retirement|other_retirement/)
   })
 
   it("applies wantedTags synergy multiplier", () => {

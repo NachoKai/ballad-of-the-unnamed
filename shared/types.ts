@@ -254,6 +254,7 @@ export interface CharacterState {
   name: string
   class: string
   archetype: string | null
+  epithet: string | null
   age: number
   currentArc: Arc
   strength: number
@@ -286,6 +287,7 @@ export interface CharacterState {
   huntedUntilTurn: number | null
   clanMemberships: ClanMembershipEntry[]
   flags: Record<string, unknown>
+  pendingFinaleType?: EndingType
 }
 
 export interface ReputationState {
@@ -352,6 +354,7 @@ export interface TurnResult {
   ended: boolean
   endingType?: EndingType
   epilogue?: string
+  richEpilogueData?: RichEpilogueData
 }
 
 export interface LeaderboardEntry {
@@ -367,6 +370,7 @@ export interface LeaderboardEntry {
   reputationPeak: number
   endingType: EndingType
   score: number
+  epithet?: string
   epilogue: string
   runType: RunType
   createdAt: number
@@ -374,3 +378,52 @@ export interface LeaderboardEntry {
 
 export type LeaderboardCategory =
   "score" | "net_worth" | "achievements_count" | "age_at_end" | "battles_won"
+
+export interface FinaleChoice {
+  id: string
+  label: LocaleMap
+  narrative: LocaleMap
+  statDeltas?: StatDeltas
+  fameDelta?: number
+  goldDelta?: number
+  reputationDelta?: number
+  reputationFaction?: string
+  healthDelta?: number
+}
+
+export interface FinaleStage {
+  stage: "last_chapter" | "outcome"
+  narrative: LocaleMap
+  choices?: FinaleChoice[]
+  outcomeNarrative?: LocaleMap
+}
+
+export interface EpithetData {
+  title: string
+  subtitle: string
+}
+
+export interface FactionHistoryEntry {
+  faction: string
+  peakTier: string
+  peakValue: number
+}
+
+export interface DistinctionEntry {
+  id: string
+  label: LocaleMap
+  count: number
+}
+
+export interface RichEpilogueData {
+  epithet: EpithetData
+  legacyScore: number
+  peakMarketValue: number
+  totalGoldEarned: number
+  factionHistory: FactionHistoryEntry[]
+  rivalComparison: RivalComparison | null
+  distinctions: DistinctionEntry[]
+  lostEncounters: number
+  achievements: AchievementContent[]
+  score: number
+}

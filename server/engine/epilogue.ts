@@ -1,11 +1,199 @@
-import type { CharacterState, EndingType, Locale, RivalComparison } from "../../shared/types.js"
 import type { ContentRegistry } from "../content/registry.js"
+import type {
+  AchievementContent,
+  CharacterState,
+  EndingType,
+  EpithetData,
+  FactionHistoryEntry,
+  DistinctionEntry,
+  Locale,
+  RichEpilogueData,
+  RivalComparison,
+} from "../../shared/types.js"
 import { localize, peakReputation } from "./helpers.js"
 import { reputationTierId } from "../../shared/config.js"
 
-// Deterministic, template-based epilogue. AI narration is intentionally OFF for
-// now; this function is the single seam where an AI call would slot in later
-// (same inputs, returns a string) without touching the rest of the engine.
+const EPITHET_PREFIXES: Record<string, { en: string; es: string }> = {
+  warrior: { en: "Iron", es: "Hierro" },
+  wizard: { en: "Arcane", es: "Arcano" },
+  rogue: { en: "Shadow", es: "Sombra" },
+  ranger: { en: "Verdant", es: "Verde" },
+  cleric: { en: "Hallowed", es: "Sagrado" },
+  bard: { en: "Silver", es: "Plateado" },
+}
+
+const EPITHET_SUFFIXES: Record<string, { en: string; es: string }> = {
+  warrior: { en: "Blade", es: "Espada" },
+  wizard: { en: "Staff", es: "Bastón" },
+  rogue: { en: "Dagger", es: "Daga" },
+  ranger: { en: "Bow", es: "Arco" },
+  cleric: { en: "Light", es: "Luz" },
+  bard: { en: "Tongue", es: "Lengua" },
+}
+
+function dominantPersonalityTag(c: CharacterState): string | null {
+  let maxCount = 0
+  let dominant: string | null = null
+  for (const [tag, count] of Object.entries(c.personality)) {
+    if (count > maxCount) {
+      maxCount = count
+      dominant = tag
+    }
+  }
+  return dominant
+}
+
+const TAG_EPITHET_PARTS: Record<string, { en: string; es: string }> = {
+  Humble: { en: "Humble", es: "Humilde" },
+  Cocky: { en: "Proud", es: "Orgulloso" },
+  Confident: { en: "Bold", es: "Audaz" },
+  Professional: { en: "Stalwart", es: "Firme" },
+  Aggressive: { en: "Fierce", es: "Feroz" },
+  Funny: { en: "Merry", es: "Alegre" },
+  Supportive: { en: "Kind", es: "Amable" },
+  Strategic: { en: "Cunning", es: "Astuto" },
+  Stoic: { en: "Unbroken", es: "Inquebrantable" },
+  Leader: { en: "Bright", es: "Brillante" },
+}
+
+function dominantFaction(c: CharacterState): string | null {
+  if (c.reputations.length === 0) return null
+  let best = c.reputations[0]
+  for (const r of c.reputations) {
+    if (r.peakValue > best.peakValue) best = r
+  }
+  return best.peakValue >= 20 ? best.faction : null
+}
+
+export function generateEpithet(
+  c: CharacterState,
+  registry: ContentRegistry,
+  locale: Locale,
+): EpithetData {
+  const clsId = c.class
+  const tag = dominantPersonalityTag(c)
+  const factionId = dominantFaction(c)
+  const repPeak = peakReputation(c)
+  const tier = reputationTierId(repPeak)
+
+  const prefix = tag ? TAG_EPITHET_PARTS[tag] : (EPITHET_PREFIXES[clsId] ?? { en: "The", es: "El" })
+  const suffix = EPITHET_SUFFIXES[clsId] ?? { en: "Wanderer", es: "Errante" }
+
+  let title: string
+  let subtitle: string
+
+  if (factionId) {
+    const faction = registry.factions.find((f) => f.id === factionId)
+    const factionName = faction ? localize(faction.name, locale) : factionId
+    if (locale === "en") {
+      title = `${prefix.en} ${suffix.en}`
+      subtitle = `${tier.charAt(0).toUpperCase() + tier.slice(1)} of ${factionName}`
+    } else {
+      title = `${suffix.es} ${prefix.es}`
+      subtitle = `${tier.charAt(0).toUpperCase() + tier.slice(1)} de ${factionName}`
+    }
+  } else {
+    if (locale === "en") {
+      title = `${prefix.en} ${suffix.en}`
+      subtitle = tier.charAt(0).toUpperCase() + tier.slice(1)
+    } else {
+      title = `${suffix.es} ${prefix.es}`
+      subtitle = tier.charAt(0).toUpperCase() + tier.slice(1)
+    }
+  }
+
+  return { title, subtitle }
+}
+
+export function computeLegacyScore(c: CharacterState): number {
+  const statues =
+    c.achievements.filter((a) => a.includes("legend") || a.includes("myth")).length * 50
+  const students =
+    c.relationships.filter((r) => r.npcRole === "apprentice" || r.npcRole === "child").length * 30
+  const settlementsSaved = (c.counters["settlements_saved"] ?? 0) * 40
+  const enemies = c.relationships.filter((r) => r.affinity <= -50).length * 20
+  const artifacts = c.inventory.filter((i) => i.qty > 0).length * 25
+  return statues + students + settlementsSaved + enemies + artifacts
+}
+
+export function generateFactionHistory(c: CharacterState): FactionHistoryEntry[] {
+  return c.reputations.map((r) => ({
+    faction: r.faction,
+    peakTier: reputationTierId(r.peakValue),
+    peakValue: r.peakValue,
+  }))
+}
+
+export function generateDistinctions(
+  c: CharacterState,
+  _registry: ContentRegistry,
+): DistinctionEntry[] {
+  const distinctionKeys = ["battles_won", "quests_completed", "rare_cards", "legendary_cards"]
+  const labels: Record<string, { en: string; es: string }> = {
+    battles_won: { en: "Battles Won", es: "Batallas Ganadas" },
+    quests_completed: { en: "Quests Completed", es: "Misiones Completadas" },
+    rare_cards: { en: "Rare Encounters Survived", es: "Encuentros Raros Superados" },
+    legendary_cards: { en: "Legendary Moments", es: "Momentos Legendarios" },
+  }
+  return distinctionKeys
+    .filter((k) => (c.counters[k] ?? 0) > 0)
+    .map((k) => ({
+      id: k,
+      label: labels[k] ?? { en: k, es: k },
+      count: c.counters[k] ?? 0,
+    }))
+}
+
+export function generateRivalComparison(c: CharacterState): RivalComparison | null {
+  if (!c.rival) return null
+  const rv = c.rival
+  const playerScore = (c.counters["battles_won"] ?? 0) + (c.counters["quests_completed"] ?? 0)
+  return {
+    name: rv.name,
+    class: rv.class,
+    playerScore,
+    rivalScore: rv.score,
+    playerPowerLevel: c.powerLevel,
+    rivalPowerLevel: rv.powerLevel,
+    playerAchievements: c.achievements.length,
+    rivalAchievements: rv.achievementsCount,
+  }
+}
+
+export function generateRichEpilogueData(
+  c: CharacterState,
+  endingType: EndingType,
+  score: number,
+  registry: ContentRegistry,
+  locale: Locale,
+): RichEpilogueData {
+  return {
+    epithet: generateEpithet(c, registry, locale),
+    legacyScore: computeLegacyScore(c),
+    peakMarketValue: c.marketValuePeak,
+    totalGoldEarned: c.gold + computeLegacyScore(c) * 10,
+    factionHistory: generateFactionHistory(c),
+    rivalComparison: generateRivalComparison(c),
+    distinctions: generateDistinctions(c, registry),
+    lostEncounters: c.counters["lost_encounters"] ?? 0,
+    achievements: c.achievements.map((id) => {
+      const ach = registry.achievements.find((a) => a.id === id)
+      return (
+        ach ??
+        ({
+          id,
+          icon: "⭐",
+          rarity: "common",
+          name: { en: id, es: id },
+          description: { en: "", es: "" },
+        } as AchievementContent)
+      )
+    }),
+    score,
+  }
+}
+
+// Deterministic, template-based epilogue paragraph.
 export function generateEpilogue(
   c: CharacterState,
   endingType: EndingType,
@@ -18,7 +206,6 @@ export function generateEpilogue(
   const battles = c.counters["battles_won"] ?? 0
   const quests = c.counters["quests_completed"] ?? 0
 
-  // Tail clause for a middling death, kept grammatical when deeds are sparse.
   const modestDeedsTail = {
     en:
       battles > 0

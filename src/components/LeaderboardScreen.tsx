@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { styled } from "styled-components"
-import type { EndingType, Locale, RunType } from "@shared/types"
+import type { EndingType, LeaderboardCategory, Locale, RunType } from "@shared/types"
 import { api, type LeaderboardEntryView } from "../api"
 import { t } from "../i18n/strings"
 import { BtnGhost } from "./ui/Button"
@@ -18,29 +18,50 @@ const ENDING_COLOR: Record<EndingType, string> = {
   other_retirement: "#b6a889",
 }
 
+const CATEGORIES: { id: LeaderboardCategory; labelKey: string }[] = [
+  { id: "score", labelKey: "scoreLabel" },
+  { id: "net_worth", labelKey: "netWorth" },
+  { id: "achievements_count", labelKey: "achievements" },
+  { id: "age_at_end", labelKey: "ageShort" },
+  { id: "battles_won", labelKey: "battlesWon" },
+]
+
 export function LeaderboardScreen({ locale, onBack }: Props) {
   const [runType, setRunType] = useState<RunType>("standard")
+  const [category, setCategory] = useState<LeaderboardCategory>("score")
   const [entries, setEntries] = useState<LeaderboardEntryView[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     let alive = true
-    api
-      .leaderboard(runType, locale)
+
+    const fetchData =
+      category === "score"
+        ? api.leaderboard(runType, locale)
+        : api.leaderboardByCategory(category, runType, locale)
+
+    fetchData
       .then((r) => {
-        if (alive) setEntries(r.entries)
+        if (alive) {
+          setEntries(r.entries)
+          setLoading(false)
+        }
       })
       .catch((e) => {
-        if (alive) setError((e as Error).message)
+        if (alive) {
+          setError((e as Error).message)
+          setLoading(false)
+        }
       })
-      .finally(() => {
-        if (alive) setLoading(false)
-      })
+
     return () => {
       alive = false
     }
-  }, [runType, locale])
+  }, [runType, category, locale])
+
+  const sortLabel = CATEGORIES.find((c) => c.id === category)?.labelKey
+  const isScore = category === "score"
 
   return (
     <BoardScreen>
@@ -68,6 +89,21 @@ export function LeaderboardScreen({ locale, onBack }: Props) {
         </BoardTabs>
       </BoardHeader>
 
+      <CategoryTabs role="tablist">
+        {CATEGORIES.map((c) => (
+          <CatBtn
+            key={c.id}
+            type="button"
+            role="tab"
+            $active={category === c.id}
+            aria-selected={category === c.id}
+            onClick={() => setCategory(c.id)}
+          >
+            {t(locale, c.labelKey)}
+          </CatBtn>
+        ))}
+      </CategoryTabs>
+
       {loading && <BoardMsg>{t(locale, "loading")}</BoardMsg>}
       {error && <BoardError>{error}</BoardError>}
 
@@ -80,19 +116,36 @@ export function LeaderboardScreen({ locale, onBack }: Props) {
             <span>{t(locale, "name")}</span>
             <span>{t(locale, "classLabel")}</span>
             <span>{t(locale, "endingLabel")}</span>
+            <NumCell>
+              {isScore ? t(locale, "scoreLabel") : t(locale, sortLabel ?? "scoreLabel")}
+            </NumCell>
             <NumCell>{t(locale, "ageShort")}</NumCell>
-            <NumCell>{t(locale, "scoreLabel")}</NumCell>
           </BoardRowHead>
           {entries.map((e) => (
             <BoardRow role="row" key={e.id}>
               <Rank $rank={e.rank <= 3 ? e.rank : undefined}>{e.rank}</Rank>
-              <CellName>{e.name}</CellName>
+              <CellName>
+                {e.name}
+                {e.epithet && <EpithetLabel>{e.epithet}</EpithetLabel>}
+              </CellName>
               <span>{t(locale, `class_${e.class}` as never)}</span>
               <EndingTag $ending={e.endingType}>
                 {t(locale, `ending_${e.endingType}` as never)}
               </EndingTag>
+              <NumCell>
+                {isScore
+                  ? e.score.toLocaleString()
+                  : category === "net_worth"
+                    ? e.netWorth?.toLocaleString()
+                    : category === "age_at_end"
+                      ? e.ageAtEnd
+                      : category === "achievements_count"
+                        ? e.achievementsCount
+                        : category === "battles_won"
+                          ? e.battlesWon
+                          : e.score.toLocaleString()}
+              </NumCell>
               <NumCell>{e.ageAtEnd}</NumCell>
-              <ScoreNum>{e.score.toLocaleString()}</ScoreNum>
             </BoardRow>
           ))}
         </BoardTable>
@@ -113,7 +166,7 @@ const BoardHeader = styled.header`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 18px 0 18px;
+  margin: 18px 0 10px;
 
   h1 {
     font-size: clamp(26px, 4vw, 38px);
@@ -126,7 +179,6 @@ const BoardTabs = styled.div`
   border: 1px solid ${({ theme }) => theme.colors.line2};
   border-radius: ${({ theme }) => theme.radii.sm};
   overflow: hidden;
-  margin-bottom: 16px;
 `
 
 const TabBtn = styled.button<{ $active: boolean }>`
@@ -136,6 +188,25 @@ const TabBtn = styled.button<{ $active: boolean }>`
   color: ${({ $active, theme }) => ($active ? theme.colors.ink : theme.colors.muted)};
   font-family: ${({ theme }) => theme.fonts.display};
   font-size: 14px;
+  letter-spacing: 0.04em;
+  font-weight: ${({ $active }) => ($active ? 600 : 400)};
+`
+
+const CategoryTabs = styled.div`
+  display: flex;
+  gap: 4px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+`
+
+const CatBtn = styled.button<{ $active: boolean }>`
+  background: ${({ $active }) => ($active ? "rgba(201,164,76,0.15)" : "transparent")};
+  border: 1px solid ${({ $active, theme }) => ($active ? theme.colors.gold : theme.colors.line2)};
+  padding: 6px 14px;
+  border-radius: ${({ theme }) => theme.radii.sm};
+  color: ${({ $active, theme }) => ($active ? theme.colors.gold : theme.colors.muted)};
+  font-family: ${({ theme }) => theme.fonts.display};
+  font-size: 13px;
   letter-spacing: 0.04em;
   font-weight: ${({ $active }) => ($active ? 600 : 400)};
 `
@@ -150,7 +221,7 @@ const BoardTable = styled.div`
 
 const BoardRow = styled.div`
   display: grid;
-  grid-template-columns: 52px 1fr 110px 210px 64px 110px;
+  grid-template-columns: 52px 1fr 110px 210px 110px 64px;
   align-items: center;
   gap: 14px;
   padding: 13px 16px;
@@ -166,11 +237,6 @@ const BoardRow = styled.div`
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-  }
-
-  .num {
-    text-align: right;
-    font-variant-numeric: tabular-nums;
   }
 
   &:not(&:first-child):hover {
@@ -206,6 +272,16 @@ const Rank = styled.span<{ $rank?: number }>`
 const CellName = styled.span`
   color: ${({ theme }) => theme.colors.parchment};
   font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+`
+
+const EpithetLabel = styled.span`
+  font-size: 11px;
+  color: ${({ theme }) => theme.colors.gold};
+  letter-spacing: 0.06em;
+  font-weight: 400;
 `
 
 const EndingTag = styled.span<{ $ending: EndingType }>`
@@ -233,11 +309,7 @@ const BackBtn = styled(BtnGhost)`
 const NumCell = styled.span`
   text-align: right;
   font-variant-numeric: tabular-nums;
-`
-
-const ScoreNum = styled.span`
-  color: ${({ theme }) => theme.colors.goldBright};
-  font-weight: 600;
-  text-align: right;
-  font-variant-numeric: tabular-nums;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `

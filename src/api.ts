@@ -3,6 +3,7 @@ import type {
   CharacterState,
   EndingType,
   Locale,
+  RichEpilogueData,
   RunType,
   ServedEvent,
 } from "@shared/types"
@@ -40,6 +41,7 @@ export interface ChooseResponse {
   epilogue?: string
   score?: number
   event?: ServedEvent
+  richEpilogueData?: RichEpilogueData
 }
 
 export interface ShopItemView {
@@ -81,6 +83,7 @@ export interface LeaderboardEntryView {
   reputationPeak: number
   endingType: EndingType
   score: number
+  epithet?: string | null
   epilogue: string
 }
 
@@ -145,5 +148,20 @@ export const api = {
   leaderboard: (runType: RunType, locale: Locale) =>
     jfetch<{ runType: RunType; entries: LeaderboardEntryView[] }>(
       `/api/meta/leaderboard?runType=${runType}&locale=${locale}&limit=25`,
+    ),
+
+  leaderboardByCategory: (category: string, runType: RunType, locale: Locale) =>
+    jfetch<{ category: string; runType: RunType; entries: LeaderboardEntryView[] }>(
+      `/api/meta/leaderboard/${category}?runType=${runType}&locale=${locale}&limit=25`,
+    ),
+
+  careerTotals: () =>
+    jfetch<{ totalRuns: number; totalScore: number; totalAchievements: number }>(
+      "/api/meta/career-totals",
+    ),
+
+  playerRuns: (name: string) =>
+    jfetch<{ entries: LeaderboardEntryView[] }>(
+      `/api/meta/player-runs?name=${encodeURIComponent(name)}`,
     ),
 }

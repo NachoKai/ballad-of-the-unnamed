@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS leaderboard (
   ending_type         TEXT NOT NULL,
   score               INTEGER NOT NULL,
   legacy_score        INTEGER NOT NULL DEFAULT 0,
+  epithet             TEXT,
   epilogue            TEXT NOT NULL,
   run_type            TEXT NOT NULL DEFAULT 'standard',
   seed                TEXT NOT NULL DEFAULT '',

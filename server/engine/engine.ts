@@ -3,6 +3,7 @@ import type {
   CharacterState,
   EndingType,
   EventContent,
+  FinaleStage,
   Locale,
   MinigameOutcome,
   OutcomeTier,
@@ -38,6 +39,7 @@ import {
   updateMarketValue,
   updateMomentum,
 } from "./helpers.js"
+import { generateFinaleStage1 } from "./finale.js"
 
 // ---------------------------------------------------------------------------
 // Character creation
@@ -68,6 +70,7 @@ export function createCharacter(input: {
     name: input.name,
     class: cls.id,
     archetype: archetype?.id ?? null,
+    epithet: null,
     age: GAME_CONFIG.startingAge,
     currentArc: arcForAge(GAME_CONFIG.startingAge),
     strength: cls.base.strength + (archetype?.statDeltas.strength ?? 0),
@@ -328,7 +331,36 @@ export function buildServedEvent(
   c: CharacterState,
   registry: ContentRegistry,
   rng: Rng,
-): { event: EventContent; served: ServedEvent } {
+): { event: EventContent; served: ServedEvent; finaleStage?: FinaleStage } {
+  // Finale: if pendingFinaleType is set, serve the two-stage retirement finale.
+  if (c.pendingFinaleType) {
+    const endingType = c.pendingFinaleType
+    const stage = generateFinaleStage1(c, endingType, registry, rng, c.locale)
+    const ev: EventContent = {
+      id: "__finale__",
+      minAge: 0,
+      maxAge: 999,
+      weight: 1,
+      narrative: stage.narrative,
+      choices: (stage.choices ?? []).map((ch) => ({
+        id: ch.id,
+        rarity: "rare" as Rarity,
+        label: ch.label,
+        narrative: ch.narrative,
+        statDeltas: ch.statDeltas,
+        fameDelta: ch.fameDelta,
+        goldDelta: ch.goldDelta,
+        reputationDelta: ch.reputationDelta,
+        reputationFaction: ch.reputationFaction,
+        healthDelta: ch.healthDelta,
+      })),
+    }
+    return {
+      event: ev,
+      served: serveEvent(ev, c, c.locale, registry, rng, false),
+      finaleStage: stage,
+    }
+  }
   // Season boundary: after every seasonLength turns, serve the season summary.
   if (c.turn > 0 && c.turn % GAME_CONFIG.seasonLength === 0) {
     const ev = generateSeasonSummary(c, registry, rng)
@@ -374,7 +406,7 @@ export function buildServedEvent(
           : `${rv.name} (${rvClass}) está activo en ${localizeLocation(rv.location, c.locale)}. Poder: ${rv.powerLevel}, puntos: ${rv.score}`
     }
 
-    return { event: ev, served }
+    return { event: ev, served, finaleStage: undefined }
   }
   // Clan offer: ~8% chance for clanless characters (not on season/retirement turns).
   if (!c.currentClanId && rng.bool(0.08)) {
@@ -402,19 +434,21 @@ export function buildServedEvent(
     const served = serveEvent(ev, c, c.locale, registry, rng, false)
     served.isClanOffer = true
     served.clanOfferChoices = offers
-    return { event: ev, served }
+    return { event: ev, served, finaleStage: undefined }
   }
   if (isRetirementTurn(c)) {
     const ev = retirementOfferEvent()
     return {
       event: ev,
       served: serveEvent(ev, c, c.locale, registry, rng, true),
+      finaleStage: undefined,
     }
   }
   const ev = selectEvent(c, registry, rng)
   return {
     event: ev,
     served: serveEvent(ev, c, c.locale, registry, rng, false),
+    finaleStage: undefined,
   }
 }
 
@@ -540,11 +574,18 @@ export function resolveChoice(
   // Personality tag synergy: past choices amplify present outcomes.
   const tagSynergy = 1 + computeTagSynergy(c, choice)
 
-  // Retirement handling.
+  // Retirement handling — now sets up the two-stage finale instead of ending immediately.
   if (event.id === "__retirement_offer__" && choice.id === "retire") {
     c.status = "retired"
+    c.pendingFinaleType = heroicOrPeaceful(c, "retirement")
+    ended = false
+  }
+
+  // Finale resolution: apply the risky/safe choice effects and end the run.
+  if (event.id === "__finale__") {
+    endingType = c.pendingFinaleType
+    c.pendingFinaleType = undefined
     ended = true
-    endingType = heroicOrPeaceful(c, "retirement")
   }
 
   // Season summary handling.
@@ -641,8 +682,8 @@ export function resolveChoice(
   ageUp(c)
   clearExpiredHunted(c)
 
-  // Death roll (skip if already retired).
-  if (!ended) {
+  // Death roll (skip if already retired or finale-pending).
+  if (!ended && c.status !== "retired") {
     const injuryRisk = choice.injuryRiskDelta ?? 0
     if (rollDeath(c, injuryRisk, rng) || c.age >= GAME_CONFIG.maxAge) {
       c.status = "dead"

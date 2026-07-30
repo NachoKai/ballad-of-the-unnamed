@@ -5,6 +5,7 @@ import type {
   CharacterState,
   EndingType,
   Locale,
+  RichEpilogueData,
   RunType,
   ServedEvent,
 } from "@shared/types"
@@ -28,6 +29,7 @@ interface EndingData {
   epilogue: string
   score: number
   achievements: AchievementContent[]
+  richEpilogueData?: RichEpilogueData
 }
 
 export default function App() {
@@ -111,14 +113,24 @@ export default function App() {
     try {
       res = await api.choose({ runId: currentRunId, choiceId, cardId: choiceId })
     } catch {
-      // The run no longer exists (e.g. server data was reset). Recover by
-      // clearing the stale run and returning to creation instead of throwing.
-      localStorage.removeItem(RUN_KEY)
-      setRunId(null)
-      setCharacter(null)
-      setEvent(null)
-      setScreen("creation")
-      return
+      // Check if the run still exists before abandoning.
+      try {
+        const state = await api.state(currentRunId)
+        if (state.finished || !state.event) {
+          throw new Error("run finished or gone")
+        }
+        // Run is still valid — transient error. Show a brief message.
+        setTurnNarrative("The fates hesitate... try again.")
+        return
+      } catch {
+        // Run truly gone (server restart, DB reset, etc.). Recover gracefully.
+        localStorage.removeItem(RUN_KEY)
+        setRunId(null)
+        setCharacter(null)
+        setEvent(null)
+        setScreen("creation")
+        return
+      }
     }
     setCharacter(res.character)
     pushToasts(res.newAchievements)
@@ -130,6 +142,7 @@ export default function App() {
         epilogue: res.epilogue ?? "",
         score: res.score ?? 0,
         achievements: res.newAchievements,
+        richEpilogueData: res.richEpilogueData,
       })
       setScreen("ending")
       return
@@ -224,6 +237,7 @@ export default function App() {
           epilogue={ending.epilogue}
           score={ending.score}
           achievements={ending.achievements}
+          richEpilogueData={ending.richEpilogueData}
           onNewRun={abandonRun}
           onLeaderboard={() => setScreen("leaderboard")}
         />

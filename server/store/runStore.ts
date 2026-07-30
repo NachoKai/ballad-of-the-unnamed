@@ -125,6 +125,8 @@ export async function insertLeaderboardEntry(input: {
   endingType: EndingType
   score: number
   legacyScore?: number
+  epithet?: string
+  epithetTitle?: string
   epilogue: string
   runType: RunType
   seed: string
@@ -133,8 +135,8 @@ export async function insertLeaderboardEntry(input: {
     `INSERT INTO leaderboard
       (id, run_id, name, character_class, final_power_level, net_worth,
        achievements_count, battles_won, quests_completed, age_at_end,
-       reputation_peak, ending_type, score, legacy_score, epilogue, run_type, seed)
-     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17)`,
+       reputation_peak, ending_type, score, legacy_score, epithet, epilogue, run_type, seed)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18)`,
     [
       randomUUID(),
       input.runId,
@@ -150,6 +152,7 @@ export async function insertLeaderboardEntry(input: {
       input.endingType,
       input.score,
       input.legacyScore ?? 0,
+      input.epithet ?? null,
       input.epilogue,
       input.runType,
       input.seed,
@@ -170,6 +173,7 @@ export interface LeaderboardRow {
   reputation_peak: number
   ending_type: EndingType
   score: number
+  epithet: string | null
   epilogue: string
   created_at: string
 }
@@ -190,5 +194,65 @@ export async function getLeaderboard(input: {
     `SELECT * FROM leaderboard WHERE run_type = 'standard'
      ORDER BY score DESC LIMIT $1`,
     [input.limit],
+  )
+}
+
+const CATEGORY_ORDER: Record<string, string> = {
+  score: "score",
+  net_worth: "net_worth",
+  achievements_count: "achievements_count",
+  age_at_end: "age_at_end",
+  battles_won: "battles_won",
+}
+
+export async function getLeaderboardByCategory(input: {
+  category: string
+  runType: RunType
+  seed?: string
+  limit: number
+}): Promise<LeaderboardRow[]> {
+  const orderCol = CATEGORY_ORDER[input.category] ?? "score"
+  if (input.runType === "daily" && input.seed) {
+    return query<LeaderboardRow>(
+      `SELECT * FROM leaderboard WHERE run_type = 'daily' AND seed = $1
+       ORDER BY ${orderCol} DESC LIMIT $2`,
+      [input.seed, input.limit],
+    )
+  }
+  return query<LeaderboardRow>(
+    `SELECT * FROM leaderboard WHERE run_type = 'standard'
+     ORDER BY ${orderCol} DESC LIMIT $1`,
+    [input.limit],
+  )
+}
+
+export async function getCareerTotals(): Promise<{
+  totalRuns: number
+  totalScore: number
+  totalAchievements: number
+}> {
+  const rows = await query<{
+    total_runs: string
+    total_score: string
+    total_achievements: string
+  }>(
+    `SELECT
+       COUNT(*)::text AS total_runs,
+       COALESCE(SUM(score), 0)::text AS total_score,
+       COALESCE(SUM(achievements_count), 0)::text AS total_achievements
+     FROM leaderboard WHERE run_type = 'standard'`,
+  )
+  const row = rows[0] ?? { total_runs: "0", total_score: "0", total_achievements: "0" }
+  return {
+    totalRuns: Number(row.total_runs),
+    totalScore: Number(row.total_score),
+    totalAchievements: Number(row.total_achievements),
+  }
+}
+
+export async function getPlayerRuns(name: string): Promise<LeaderboardRow[]> {
+  return query<LeaderboardRow>(
+    `SELECT * FROM leaderboard WHERE name = $1 ORDER BY created_at DESC LIMIT 10`,
+    [name],
   )
 }
