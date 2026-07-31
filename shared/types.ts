@@ -298,6 +298,8 @@ export interface CharacterState {
   clanMemberships: ClanMembershipEntry[]
   flags: Record<string, unknown>
   lastEventId?: string | null
+  // Consecutive turns spent at 0 stamina (forced recovery trigger).
+  staminaZeroStreak?: number
   pendingFinaleType?: EndingType
   finaleStage2Choice?: { endingType: EndingType; risky: boolean }
 }

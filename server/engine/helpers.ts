@@ -350,6 +350,8 @@ export function deductStamina(c: CharacterState, extraCost = 0): void {
   const fatigueMod = getActiveModifier(c, "fatigueModifier")
   const cost = Math.max(0, STAMINA_BASE_COST + extraCost + fatigueMod)
   c.stamina = Math.max(0, c.stamina - cost)
+  // Track consecutive turns spent at 0 stamina so the engine can force recovery.
+  c.staminaZeroStreak = c.stamina <= 0 ? (c.staminaZeroStreak ?? 0) + 1 : 0
 }
 
 export function isFatigued(c: CharacterState): boolean {

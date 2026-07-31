@@ -178,7 +178,18 @@ export const api = {
     ),
 
   collection: () =>
-    jfetch<{ uniqueFactions: string[]; uniqueEndings: string[]; totalRuns: number }>(
-      "/api/meta/collection",
-    ),
+    jfetch<{
+      uniqueFactions: string[]
+      uniqueEndings: string[]
+      uniqueClasses: string[]
+      uniqueAchievements: string[]
+      totalRuns: number
+      completion: {
+        endings: { collected: number; total: number }
+        factions: { collected: number; total: number }
+        classes: { collected: number; total: number }
+        achievements: { collected: number; total: number }
+        overall: { collected: number; total: number; pct: number }
+      }
+    }>("/api/meta/collection"),
 }

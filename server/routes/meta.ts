@@ -77,7 +77,30 @@ metaRouter.get("/leaderboard", async (req: Request, res: Response) => {
 // GET /api/meta/collection — cross-run trophy hall stats
 metaRouter.get("/collection", async (_req: Request, res: Response) => {
   const data = await getCrossRunCollection()
-  res.json(data)
+  const totalEndings = 4
+  const totalFactions = registry.factions.length
+  const totalClasses = registry.classes.length
+  const totalAchievements = registry.achievements.length
+  const total = totalEndings + totalFactions + totalClasses + totalAchievements
+  const collected =
+    data.uniqueEndings.length +
+    data.uniqueFactions.length +
+    data.uniqueClasses.length +
+    data.uniqueAchievements.length
+  res.json({
+    ...data,
+    completion: {
+      endings: { collected: data.uniqueEndings.length, total: totalEndings },
+      factions: { collected: data.uniqueFactions.length, total: totalFactions },
+      classes: { collected: data.uniqueClasses.length, total: totalClasses },
+      achievements: { collected: data.uniqueAchievements.length, total: totalAchievements },
+      overall: {
+        collected,
+        total,
+        pct: total === 0 ? 0 : Math.round((collected / total) * 1000) / 10,
+      },
+    },
+  })
 })
 
 // GET /api/meta/leaderboard/:category?runType=standard|daily&limit=25

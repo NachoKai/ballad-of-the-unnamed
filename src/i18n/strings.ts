@@ -226,6 +226,9 @@ const en: StringMap = {
   endingsCollected: "Endings",
   totalRuns: "Total Lives",
   permaAchievements: "Permanent Feats",
+  classesCollected: "Classes",
+  achievementsCollected: "Achievements",
+  completionPct: "Completion",
   emptyCollection: "Complete a run to start your collection.",
 }
 
@@ -450,6 +453,9 @@ const es: StringMap = {
   endingsCollected: "Finales",
   totalRuns: "Vidas Totales",
   permaAchievements: "Hazañas Permanentes",
+  classesCollected: "Clases",
+  achievementsCollected: "Logros",
+  completionPct: "Completado",
   emptyCollection: "Completa una vida para comenzar tu colección.",
 }
 

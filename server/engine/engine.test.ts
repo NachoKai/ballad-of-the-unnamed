@@ -223,6 +223,19 @@ describe("resolveChoice", () => {
     expect(c.personality["Humble"]).toBe(1)
   })
 
+  it("loads authored wantedTags content into the registry", () => {
+    const ev = reg.events.find((e) => e.id === "court_bard_song")
+    if (!ev || !ev.choices) throw new Error("missing court_bard_song")
+    const choice = ev.choices.find((ch) => ch.id === "humble")
+    if (!choice) throw new Error("missing humble choice")
+    expect(choice.wantedTags?.["Humble"]).toBe(0.2)
+    expect(choice.punishedTags?.["Cocky"]).toBe(-0.15)
+    const c = makeChar({ charisma: 5, personality: { Humble: 2 } })
+    resolveChoice(c, ev, "humble", reg, new Rng(1))
+    // charisma 3 * (1 + 0.2) = 3.6 → rounded to 4, plus base 5 = 9
+    expect(c.charisma).toBe(9)
+  })
+
   it("increments age every turnsPerYear turns", () => {
     const c = makeChar({ age: 16, turn: 0 })
     const event: EventContent = {
@@ -632,6 +645,69 @@ describe("stamina & fatigue", () => {
     expect(c.strength).toBe(7)
     // Stamina deduction still applies
     expect(c.stamina).toBe(9)
+  })
+
+  it("tracks consecutive turns at zero stamina", () => {
+    const c = makeChar({ stamina: 1 })
+    const event: EventContent = {
+      id: "test",
+      minAge: 0,
+      maxAge: 99,
+      weight: 1,
+      narrative: { en: "", es: "" },
+      choices: [
+        { id: "ok", rarity: "common", label: { en: "", es: "" }, narrative: { en: "", es: "" } },
+      ],
+    }
+    resolveChoice(c, event, "ok", reg, new Rng(1))
+    expect(c.stamina).toBe(0)
+    expect(c.staminaZeroStreak).toBe(1)
+    resolveChoice(c, event, "ok", reg, new Rng(1))
+    expect(c.staminaZeroStreak).toBe(2)
+  })
+
+  it("resets the zero-stamina streak once recovered", () => {
+    const c = makeChar({ stamina: 1, health: 100 })
+    const event: EventContent = {
+      id: "test",
+      minAge: 0,
+      maxAge: 99,
+      weight: 1,
+      narrative: { en: "", es: "" },
+      choices: [
+        {
+          id: "rest",
+          rarity: "common",
+          label: { en: "", es: "" },
+          narrative: { en: "", es: "" },
+          staminaDelta: 50,
+        },
+      ],
+    }
+    resolveChoice(c, event, "rest", reg, new Rng(1))
+    expect(c.staminaZeroStreak).toBe(0)
+  })
+
+  it("forces a recovery event after forcedRecoveryTurns at zero stamina", () => {
+    const c = makeChar({ stamina: 1 })
+    // Three consecutive turns of exhaustion.
+    for (let i = 0; i < GAME_CONFIG.forcedRecoveryTurns; i++) {
+      const event: EventContent = {
+        id: `t${i}`,
+        minAge: 0,
+        maxAge: 99,
+        weight: 1,
+        narrative: { en: "", es: "" },
+        choices: [
+          { id: "ok", rarity: "common", label: { en: "", es: "" }, narrative: { en: "", es: "" } },
+        ],
+      }
+      resolveChoice(c, event, "ok", reg, new Rng(1))
+    }
+    expect(c.staminaZeroStreak).toBe(GAME_CONFIG.forcedRecoveryTurns)
+    const { event, served } = buildServedEvent(c, reg, new Rng(1))
+    expect(event.id).toBe("__forced_recovery__")
+    expect(served.choices[0].id).toBe("rest")
   })
 })
 

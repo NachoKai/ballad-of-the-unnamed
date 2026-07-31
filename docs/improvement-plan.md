@@ -31,7 +31,7 @@
 **Status notes:**
 
 - B1/B2/B3/B5: implemented (verified via engine tests + content audit).
-- B4: 58 Lucide icons mapped + `Sparkles` fallback prevents crashes; not all minigame icon names audited.
+- B4: 58+ Lucide icons mapped + `Sparkles` fallback prevents crashes; **2026-07-30 audit added `arrow-right`, `book-open`, `circle`, `clock`, `door-open`, `heart` — all 54 minigame icon names now resolve**.
 - B6: fixed 2026-07-30 — `persistCharacterSnapshot()` in `server/store/runStore.ts` upserts the `characters` row and `personality_log` rows when a run finishes (`/choose` end-of-run path).
 
 ---
@@ -81,7 +81,7 @@ Create `content/archetypes.json` — 5-8 archetypes per class, each giving a fla
 
 **Spec ref**: §Personality/response system (p67-76), El Ídolo ref: §7 (press conference minigame)
 
-Status: engine support ✅ (`wantedTags`/`punishedTags` synergy, tag-based epithets) — but no authored content uses `wantedTags`/`punishedTags` yet, and the `press_conference` minigame subtype is not implemented. Negotiation gambit exists but NPC disposition isn't driven by player tag history.
+Status: engine support ✅ (`wantedTags`/`punishedTags` synergy, tag-based epithets) — `press_conference` minigame subtype ⬜ not implemented. **2026-07-30: authored `content/events/personality.json` — 5 social events (`court_bard_song`, `road_merchant_escort`, `tavern_knight_solicit`, `court_strategist_war`, `tavern_commander_advice`) using `wantedTags`/`punishedTags` to make past personality choices amplify or penalize outcomes.**
 
 Tags are tracked but currently have zero gameplay effect. Wire them into:
 
@@ -117,11 +117,11 @@ Tags are tracked but currently have zero gameplay effect. Wire them into:
 
 Surface in HUD as a separate number from gold.
 
-### 1.4 Stamina Depletion/Recovery Loop 🟡
+### 1.4 Stamina Depletion/Recovery Loop ✅
 
 **Spec ref**: §Character/stats (p35 — Stamina/Vigor)
 
-Status: turn cost + fatigue penalty (<20 stamina) ✅. Recovery options are thin — only one authored event choice restores stamina. Forced recovery after 3+ turns at 0 stamina is ⬜ not implemented.
+Status: turn cost + fatigue penalty (<20 stamina) ✅. **2026-07-30: forced recovery implemented — `deductStamina()` tracks `staminaZeroStreak`; after `GAME_CONFIG.forcedRecoveryTurns` (3) consecutive turns at 0 stamina, `buildServedEvent()` serves a synthetic `__forced_recovery__` rest event that restores `forcedRecoveryRestore` (40) stamina.** Recovery content remains thin (only the forced-rest path + camp cook item) — see open items below.
 
 `staminaDelta` exists on choices but nothing depletes/replenishes stamina systematically. Add:
 
@@ -436,11 +436,11 @@ Tiered achievement families on the same underlying stat:
 
 Each tier is its own unlockable, keeping the achievement dopamine loop alive longer.
 
-### 5.4 Cross-Run Meta-Collection 🟡
+### 5.4 Cross-Run Meta-Collection ✅
 
 **El Ídolo ref**: §15 (Vitrina de copas — 54 collectible trophies across runs)
 
-Status: Trophy Hall screen (`CollectionScreen.tsx`) + `GET /api/meta/collection` ✅ — shows total runs, unique factions, unique endings. 🟡 Completion percentage (e.g. "42/70") and per-encounter/per-faction completion tracking are not implemented.
+Status: Trophy Hall screen (`CollectionScreen.tsx`) + `GET /api/meta/collection` ✅. **2026-07-30: completion percentage added — the endpoint now also returns `uniqueClasses`, `uniqueAchievements`, and a `completion` block (`endings`/`factions`/`classes`/`achievements` + overall `collected/total/pct`) computed against the content catalog; `CollectionScreen` renders a progress-bar block plus Classes and Achievements tag sections.**
 
 A "Trophy Hall" screen accessible from the main menu:
 
@@ -469,11 +469,11 @@ Status: not started. No telemetry, event tracking, or run-data analytics exist. 
 
 ```
 Phase 0 (Bugs):    B1-B6 ✅ (B4 partially) — 1-2 days
-Phase 1 (Identity): 1.1 ✅, 1.2 🟡, 1.3 ✅, 1.4 🟡 — 1 week
+Phase 1 (Identity): 1.1 ✅, 1.2 🟡, 1.3 ✅, 1.4 ✅ — 1 week
 Phase 2 (Economy):  2.1 ✅, 2.2 ✅, 2.3 ✅, 2.4 ✅ — 1.5 weeks
 Phase 3 (Social):   3.1 ✅, 3.2 🟡, 3.3 ✅, 3.4 🟡, 3.5 ✅ — 2 weeks
 Phase 4 (Legacy):   4.1 ✅, 4.2 ✅, 4.3 ✅, 4.4 ✅ — 1 week
-Phase 5 (Content):  5.1 🟡 (32/60 events etc.), 5.2 ✅, 5.3 🟡, 5.4 🟡 — ongoing
+Phase 5 (Content):  5.1 🟡 (32/60 events etc.), 5.2 ✅, 5.3 🟡, 5.4 ✅ — ongoing
 Phase 6 (Optional): 6.1 ⬜ Analytics — if/when needed
 ```
 
@@ -481,13 +481,12 @@ Each phase is self-contained and shippable. No phase blocks any other — conten
 
 Remaining work by priority:
 
-1. 🟡 **B4** — audit minigame card icons against `AchIcon.tsx` mapping
-2. 🟡 **1.2** — author content using `wantedTags`/`punishedTags`; add `press_conference` minigame subtype
-3. 🟡 **1.4** — stamina recovery content + forced recovery after 3 turns at 0 stamina
-4. 🟡 **3.2** — separate `rivals` table + parallel rival RNG stream
-5. 🟡 **3.4** — author events using `joinClanId` / `leaveReason` / `requiresNoClan`
-6. 🟡 **5.1/5.3** — content volume targets + spec-aligned achievement tiers
-7. 🟡 **5.4** — Trophy Hall completion percentage
-8. ⬜ **6.1** — analytics (optional)
+1. 🟡 **1.2 (part)** — add `press_conference` minigame subtype (5 personality-tag events with `wantedTags`/`punishedTags` authored ✅)
+2. 🟡 **1.4 (part)** — more authored rest/recovery events using `staminaDelta` beyond the forced-recovery path
+3. 🟡 **3.2** — separate `rivals` table + parallel rival RNG stream
+4. 🟡 **3.4** — author events using `joinClanId` / `leaveReason` / `requiresNoClan`
+5. 🟡 **5.1/5.3** — content volume targets + spec-aligned achievement tiers
+6. 🟡 **5.4 (part)** — per-encounter completion tracking (overall % now implemented)
+7. ⬜ **6.1** — analytics (optional)
 
 Additional feature shipped 2026-07-30: **no consecutive event repeats** — `selectEvent` now tracks `CharacterState.lastEventId` and excludes it from the selection pool (falling back only when it's the sole eligible event), so the same event/minigame never appears two turns in a row.

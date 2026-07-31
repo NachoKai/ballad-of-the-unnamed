@@ -39,6 +39,11 @@ export const GAME_CONFIG = {
   // World events: how many to roll per season.
   worldEventsPerSeason: 2,
 
+  // Exhaustion: after N consecutive turns at 0 stamina, a recovery event is forced.
+  forcedRecoveryTurns: 3,
+  // Stamina restored by a forced recovery turn.
+  forcedRecoveryRestore: 40,
+
   // Top 0.1% of all-time runs get promoted to "legendary" tier.
   legendaryThresholdPercentile: 0.999,
 } as const

@@ -302,6 +302,33 @@ export function generateSeasonSummary(
   }
 }
 
+// A synthetic forced-recovery event served when the character is exhausted.
+export function forcedRecoveryEvent(): EventContent {
+  return {
+    id: "__forced_recovery__",
+    minAge: 0,
+    maxAge: 999,
+    weight: 1,
+    location: "road",
+    narrative: {
+      en: "Your body finally gives out. The road blurs before your eyes — you cannot go on. You must stop and recover.",
+      es: "Tu cuerpo finalmente se rinde. El camino se desdibuja ante tus ojos: no puedes seguir. Debes detenerte y recuperarte.",
+    },
+    choices: [
+      {
+        id: "rest",
+        rarity: "common" as Rarity,
+        label: { en: "Rest & recover", es: "Descansar y recuperarse" },
+        narrative: {
+          en: "You find a quiet spot and sleep through the day. Strength slowly returns.",
+          es: "Encuentras un lugar tranquilo y duermes durante el día. La fuerza regresa lentamente.",
+        },
+        staminaDelta: GAME_CONFIG.forcedRecoveryRestore,
+      },
+    ],
+  }
+}
+
 // A synthetic retirement-offer event (not authored in content).
 export function retirementOfferEvent(): EventContent {
   return {
@@ -454,6 +481,15 @@ export function buildServedEvent(
     }
 
     return { event: ev, served, finaleStage: undefined }
+  }
+  // Exhaustion: after forcedRecoveryTurns consecutive turns at 0 stamina, force a rest.
+  if ((c.staminaZeroStreak ?? 0) >= GAME_CONFIG.forcedRecoveryTurns) {
+    const ev = forcedRecoveryEvent()
+    return {
+      event: ev,
+      served: serveEvent(ev, c, c.locale, registry, rng, false),
+      finaleStage: undefined,
+    }
   }
   // Clan offer: ~8% chance for clanless characters (not on season/retirement turns).
   if (!c.currentClanId && rng.bool(0.08)) {

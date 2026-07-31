@@ -1,0 +1,341 @@
+[
+  {
+    "id": "court_bard_song",
+    "minAge": 18,
+    "maxAge": 99,
+    "weight": 6,
+    "narrative": {
+      "en": "A wandering bard has heard the stories of your deeds and asks to write a ballad about you. 'Tell me, hero — who are you when no one is watching?'",
+      "es": "Un bardo errante ha oído las historias de tus hazañas y pide escribir una balada sobre vos. 'Dime, héroe — ¿quién sos cuando nadie te mira?'"
+    },
+    "choices": [
+      {
+        "id": "humble",
+        "label": {
+          "en": "Speak plainly of your luck",
+          "es": "Hablar con sencillez de tu suerte"
+        },
+        "tag": "Humble",
+        "rarity": "uncommon",
+        "wantedTags": {
+          "Humble": 0.2,
+          "Stoic": 0.1
+        },
+        "punishedTags": {
+          "Cocky": -0.15
+        },
+        "statDeltas": {
+          "charisma": 3
+        },
+        "fameDelta": 4,
+        "reputationDelta": 4,
+        "reputationFaction": "greywater",
+        "narrative": {
+          "en": "The bard weaves modesty into a moving verse. The people remember the hero who thanked the winds.",
+          "es": "El bardo teje la modestia en un verso conmovedor. El pueblo recuerda al héroe que agradeció a los vientos."
+        }
+      },
+      {
+        "id": "boast",
+        "label": {
+          "en": "Tell it with full swagger",
+          "es": "Contarlo con toda la arrogancia"
+        },
+        "tag": "Cocky",
+        "rarity": "rare",
+        "wantedTags": {
+          "Cocky": 0.25,
+          "Confident": 0.1
+        },
+        "punishedTags": {
+          "Humble": -0.1
+        },
+        "statDeltas": {
+          "charisma": 5
+        },
+        "fameDelta": 8,
+        "reputationDelta": -3,
+        "reputationFaction": "greywater",
+        "narrative": {
+          "en": "The ballad is a firebrand, sung in every tavern. The bards love you; the wise wince.",
+          "es": "La balada es un incendiario canto, entonado en cada taberna. Los bardos te aman; los sabios se estremecen."
+        }
+      }
+    ]
+  },
+  {
+    "id": "road_merchant_escort",
+    "minAge": 16,
+    "maxAge": 60,
+    "weight": 7,
+    "narrative": {
+      "en": "A merchant caravan needs protection through bandit country. Their captain eyes you warily. 'Word is you're a blade for hire. Prove you can be trusted.'",
+      "es": "Una caravana mercante necesita protección por tierra de bandidos. Su capitán te observa con desconfianza. 'Dicen que sos una espada a sueldo. Demostrá que se puede confiar en vos.'"
+    },
+    "choices": [
+      {
+        "id": "assure",
+        "label": {
+          "en": "Give your word, quietly",
+          "es": "Dar tu palabra, en silencio"
+        },
+        "tag": "Professional",
+        "rarity": "common",
+        "wantedTags": {
+          "Professional": 0.2,
+          "Stoic": 0.1
+        },
+        "punishedTags": {
+          "Cocky": -0.15,
+          "Aggressive": -0.1
+        },
+        "statDeltas": {
+          "constitution": 2,
+          "charisma": 1
+        },
+        "goldDelta": 50,
+        "countersDelta": {
+          "quests_completed": 1
+        },
+        "narrative": {
+          "en": "A firm handshake. 'We'll see, then.' They did see — and they paid in full.",
+          "es": "Un apretón de manos firme. 'Ya veremos, entonces.' Vieron — y pagaron el total."
+        }
+      },
+      {
+        "id": "intimidate",
+        "label": {
+          "en": "Make your reputation known",
+          "es": "Hacer notar tu reputación"
+        },
+        "tag": "Aggressive",
+        "rarity": "rare",
+        "wantedTags": {
+          "Aggressive": 0.25,
+          "Cocky": 0.1
+        },
+        "punishedTags": {
+          "Humble": -0.1
+        },
+        "statDeltas": {
+          "strength": 3
+        },
+        "goldDelta": 80,
+        "countersDelta": {
+          "quests_completed": 1
+        },
+        "narrative": {
+          "en": "The captain swallows and agrees to your price. They never fully relax around you.",
+          "es": "El capitán traga saliva y acepta tu precio. Nunca se relajan del todo a tu lado."
+        }
+      }
+    ]
+  },
+  {
+    "id": "tavern_knight_solicit",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "narrative": {
+      "en": "A scarred knight nurses an ale at the corner table. He watches you for a long time before speaking. 'I've seen your kind before. The question is — which kind are you?'",
+      "es": "Un caballero marcado bebe una cerveza en la mesa del rincón. Te observa largo rato antes de hablar. 'Ya vi tu clase antes. La pregunta es — ¿cuál clase sos?'"
+    },
+    "choices": [
+      {
+        "id": "joke",
+        "label": {
+          "en": "Crack a joke to break the tension",
+          "es": "Hacer un chiste para romper la tensión"
+        },
+        "tag": "Funny",
+        "rarity": "uncommon",
+        "wantedTags": {
+          "Funny": 0.25,
+          "Supportive": 0.1
+        },
+        "punishedTags": {
+          "Stoic": -0.1
+        },
+        "statDeltas": {
+          "charisma": 3,
+          "intelligence": 1
+        },
+        "reputationDelta": 2,
+        "reputationFaction": "ironhold",
+        "countersDelta": {
+          "allies_made": 1
+        },
+        "narrative": {
+          "en": "A surprised laugh rumbles out of him. 'Ha! Fair enough.' He raises his cup to you — an ally found over foolishness.",
+          "es": "Una risa sorprendida retumba desde su pecho. '¡Ja! Justo.' Levanta su copa hacia vos — un aliado hallado gracias a la tontería."
+        }
+      },
+      {
+        "id": "serious",
+        "label": {
+          "en": "Answer him gravely",
+          "es": "Responderle con gravedad"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "wantedTags": {
+          "Stoic": 0.2,
+          "Professional": 0.1
+        },
+        "punishedTags": {
+          "Funny": -0.15
+        },
+        "statDeltas": {
+          "constitution": 2,
+          "charisma": 1
+        },
+        "reputationDelta": 3,
+        "reputationFaction": "ironhold",
+        "countersDelta": {
+          "allies_made": 1
+        },
+        "narrative": {
+          "en": "He studies you like a map. Then nods, satisfied. 'Good. The serious ones are the ones who last.'",
+          "es": "Te estudia como a un mapa. Luego asiente, satisfecho. 'Bien. Los serios son los que perduran.'"
+        }
+      }
+    ]
+  },
+  {
+    "id": "court_strategist_war",
+    "minAge": 26,
+    "maxAge": 99,
+    "weight": 5,
+    "narrative": {
+      "en": "War councils gather as the kingdom readies for siege. The marshal needs a captain for a flank that may well be a death trap. 'Your mind or your blade — choose how you serve.'",
+      "es": "Los consejos de guerra se reúnen mientras el reino se prepara para el asedio. El mariscal necesita un capitán para un flanco que bien puede ser una trampa mortal. 'Tu mente o tu espada — elegí cómo servís.'"
+    },
+    "choices": [
+      {
+        "id": "plan",
+        "label": {
+          "en": "Study the siege maps and out-think the enemy",
+          "es": "Estudiar los mapas del asedio y superar en ingenio al enemigo"
+        },
+        "tag": "Strategic",
+        "rarity": "rare",
+        "wantedTags": {
+          "Strategic": 0.25,
+          "Leader": 0.1
+        },
+        "punishedTags": {
+          "Aggressive": -0.15
+        },
+        "statDeltas": {
+          "intelligence": 5
+        },
+        "fameDelta": 6,
+        "reputationDelta": 5,
+        "reputationFaction": "crownguard",
+        "countersDelta": {
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "Your flank turns at the exact moment the enemy commits elsewhere. The marshal offers a rare nod of respect.",
+          "es": "Tu flanco gira en el momento exacto en que el enemigo se compromete en otra parte. El mariscal te ofrece un raro gesto de respeto."
+        }
+      },
+      {
+        "id": "charge",
+        "label": {
+          "en": "Lead the charge yourself",
+          "es": "Liderar la carga tú mismo"
+        },
+        "tag": "Aggressive",
+        "rarity": "volatile",
+        "wantedTags": {
+          "Aggressive": 0.2,
+          "Confident": 0.15
+        },
+        "punishedTags": {
+          "Strategic": -0.1
+        },
+        "statDeltas": {
+          "strength": 6,
+          "constitution": 3
+        },
+        "tradeoffDeltas": {
+          "intelligence": -2
+        },
+        "injuryRiskDelta": 0.12,
+        "fameDelta": 12,
+        "reputationDelta": 7,
+        "reputationFaction": "crownguard",
+        "countersDelta": {
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "You break their line with raw fury. The songs say it was genius; the scar on your side says it was courage.",
+          "es": "Rompes su línea con furia pura. Las canciones dicen que fue genialidad; la cicatriz en tu costado dice que fue coraje."
+        }
+      }
+    ]
+  },
+  {
+    "id": "tavern_commander_advice",
+    "minAge": 20,
+    "maxAge": 99,
+    "weight": 4,
+    "narrative": {
+      "en": "A young recruit finds you in the tavern, desperate for guidance. 'Everyone says you've seen everything. What makes a legend?'",
+      "es": "Un recluta joven te encuentra en la taberna, desesperado por una guía. 'Todos dicen que viste de todo. ¿Qué hace a una leyenda?'"
+    },
+    "choices": [
+      {
+        "id": "mentor",
+        "label": {
+          "en": "Take the time to train them",
+          "es": "Tomarte el tiempo de entrenarlo"
+        },
+        "tag": "Supportive",
+        "rarity": "uncommon",
+        "wantedTags": {
+          "Supportive": 0.25,
+          "Leader": 0.1
+        },
+        "punishedTags": {
+          "Cocky": -0.1
+        },
+        "statDeltas": {
+          "charisma": 3
+        },
+        "countersDelta": {
+          "students_trained": 1
+        },
+        "fameDelta": 4,
+        "narrative": {
+          "en": "Days later they win their first duel with a move you taught them. Your name is whispered with theirs.",
+          "es": "Días después ganan su primer duelo con una técnica que les enseñaste. Tu nombre se susurra junto al suyo."
+        }
+      },
+      {
+        "id": "dismiss",
+        "label": {
+          "en": "Brush them off — legends are made alone",
+          "es": "Descartarlos — las leyendas se hacen solas"
+        },
+        "tag": "Confident",
+        "rarity": "common",
+        "wantedTags": {
+          "Confident": 0.2,
+          "Cocky": 0.1
+        },
+        "punishedTags": {
+          "Supportive": -0.15
+        },
+        "statDeltas": {
+          "charisma": 1
+        },
+        "narrative": {
+          "en": "They leave with a stiff upper lip. Years later they're someone's rival — yours, perhaps.",
+          "es": "Se van con el labio superior tenso. Años después son el rival de alguien — quizás el tuyo."
+        }
+      }
+    ]
+  }
+]

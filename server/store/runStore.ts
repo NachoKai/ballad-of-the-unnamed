@@ -364,6 +364,8 @@ export async function getPlayerRuns(name: string): Promise<LeaderboardRow[]> {
 export interface CollectionData {
   uniqueFactions: string[]
   uniqueEndings: string[]
+  uniqueClasses: string[]
+  uniqueAchievements: string[]
   totalRuns: number
 }
 
@@ -379,6 +381,13 @@ export async function getCrossRunCollection(): Promise<CollectionData> {
   const endingRows = await query<{ ending_type: string }>(
     `SELECT DISTINCT ending_type FROM leaderboard`,
   )
+  const classRows = await query<{ character_class: string }>(
+    `SELECT DISTINCT character_class FROM leaderboard`,
+  )
+  const achievementRows = await query<{ achievement: string }>(
+    `SELECT DISTINCT jsonb_array_elements_text(character->'achievements') AS achievement
+     FROM runs WHERE finished = true AND jsonb_array_length(character->'achievements') > 0`,
+  )
   const countRow = await queryOne<{ total: string }>(
     `SELECT COUNT(*)::text AS total FROM leaderboard`,
   )
@@ -390,6 +399,11 @@ export async function getCrossRunCollection(): Promise<CollectionData> {
   return {
     uniqueFactions: [...factionsSet].sort(),
     uniqueEndings: endingRows.map((r) => r.ending_type).sort(),
+    uniqueClasses: classRows
+      .map((r) => r.character_class)
+      .filter(Boolean)
+      .sort(),
+    uniqueAchievements: achievementRows.map((r) => r.achievement).sort(),
     totalRuns: Number(countRow?.total ?? 0),
   }
 }
