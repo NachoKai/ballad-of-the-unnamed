@@ -46,8 +46,8 @@ function FactionHistory({
       <FactionGrid>
         {data.map((f) => (
           <FactionBadge key={f.faction}>
-            <FactionName>{f.faction}</FactionName>
-            <FactionTier>{f.peakTier}</FactionTier>
+            <FactionName>{t(locale, `faction_${f.faction}`)}</FactionName>
+            <FactionTier>{t(locale, `reputation_tier_${f.peakTier}`)}</FactionTier>
             <FactionValue>{f.peakValue}</FactionValue>
           </FactionBadge>
         ))}

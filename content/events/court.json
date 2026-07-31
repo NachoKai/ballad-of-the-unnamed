@@ -11,10 +11,16 @@
     "choices": [
       {
         "id": "professional",
-        "label": { "en": "Speak with measured respect", "es": "Hablar con respeto medido" },
+        "label": {
+          "en": "Speak with measured respect",
+          "es": "Hablar con respeto medido"
+        },
         "tag": "Professional",
         "rarity": "uncommon",
-        "statDeltas": { "charisma": 2, "intelligence": 1 },
+        "statDeltas": {
+          "charisma": 2,
+          "intelligence": 1
+        },
         "fameDelta": 4,
         "reputationDelta": 6,
         "reputationFaction": "crownguard",
@@ -25,16 +31,133 @@
       },
       {
         "id": "cocky",
-        "label": { "en": "Boast of your deeds", "es": "Alardear de tus hazañas" },
+        "label": {
+          "en": "Boast of your deeds",
+          "es": "Alardear de tus hazañas"
+        },
         "tag": "Cocky",
         "rarity": "rare",
-        "statDeltas": { "charisma": 4 },
+        "statDeltas": {
+          "charisma": 4
+        },
         "fameDelta": 8,
         "reputationDelta": -4,
         "reputationFaction": "crownguard",
         "narrative": {
           "en": "The commons love it; the nobles less so. Fame rises, favor cools.",
           "es": "Al pueblo le encanta; a los nobles menos. La fama sube, el favor se enfría."
+        }
+      }
+    ]
+  },
+  {
+    "id": "court_insult_noble",
+    "minAge": 16,
+    "maxAge": 40,
+    "weight": 5,
+    "narrative": {
+      "en": "Baron Vex stands before you at court, smug and dismissive. 'Another peasant with a sword,' he mutters loud enough for all to hear.",
+      "es": "El Barón Vex está frente a vos en la corte, engreído y desdeñoso. 'Otro campesino con una espada', murmura lo suficientemente alto para que todos lo oigan."
+    },
+    "choices": [
+      {
+        "id": "insult_back",
+        "label": {
+          "en": "Answer with a cutting remark",
+          "es": "Responder con un comentario mordaz"
+        },
+        "tag": "Cocky",
+        "rarity": "rare",
+        "statDeltas": {
+          "charisma": 3
+        },
+        "fameDelta": 5,
+        "reputationDelta": -3,
+        "reputationFaction": "crownguard",
+        "setsFlag": {
+          "insulted_baron_vex": {
+            "turn": 0,
+            "severity": "grave"
+          }
+        },
+        "narrative": {
+          "en": "Your words land like daggers. The court erupts in murmurs. Baron Vex's face darkens — he will not forget this.",
+          "es": "Tus palabras caen como dagas. La corte estalla en murmullos. El rostro del Barón Vex se oscurece — no olvidará esto."
+        }
+      },
+      {
+        "id": "stay_silent",
+        "label": {
+          "en": "Let the insult pass",
+          "es": "Dejar pasar el insulto"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": {
+          "constitution": 1
+        },
+        "goldDelta": 20,
+        "narrative": {
+          "en": "You hold your tongue. The court watches, and the baron's smirk fades when you refuse to flinch.",
+          "es": "Te callás. La corte observa, y la sonrisa del barón se desvanece cuando no te inmutás."
+        }
+      }
+    ]
+  },
+  {
+    "id": "court_noble_callback",
+    "minAge": 30,
+    "maxAge": 99,
+    "weight": 3,
+    "requiresFlag": {
+      "insulted_baron_vex": {
+        "turn": 0,
+        "severity": "grave"
+      }
+    },
+    "narrative": {
+      "en": "Baron Vex — now Baron Vex of the High Council — stands before you. His eyes carry twenty years of remembered slight. 'We meet again,' he says coldly. 'The court has a long memory.'",
+      "es": "El Barón Vex — ahora Barón Vex del Alto Consejo — está frente a vos. Sus ojos llevan veinte años de rencor recordado. 'Nos encontramos de nuevo', dice fríamente. 'La corte tiene memoria larga.'"
+    },
+    "choices": [
+      {
+        "id": "apologize",
+        "label": {
+          "en": "Offer a measured apology",
+          "es": "Ofrecer una disculpa mesurada"
+        },
+        "tag": "Humble",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "charisma": 2
+        },
+        "reputationDelta": 5,
+        "reputationFaction": "crownguard",
+        "fameDelta": 3,
+        "goldDelta": 60,
+        "narrative": {
+          "en": "Baron Vex listens, face unreadable. Finally, he nods once. 'The past is past. But I will be watching.'",
+          "es": "El Barón Vex escucha, con el rostro inescrutable. Finalmente, asiente una vez. 'El pasado es pasado. Pero estaré observando.'"
+        }
+      },
+      {
+        "id": "defiant",
+        "label": {
+          "en": "Stand your ground — you meant every word",
+          "es": "Mantener tu posición — dijiste cada palabra"
+        },
+        "tag": "Confident",
+        "rarity": "rare",
+        "statDeltas": {
+          "charisma": 3,
+          "constitution": 2
+        },
+        "fameDelta": 8,
+        "reputationDelta": -6,
+        "reputationFaction": "crownguard",
+        "narrative": {
+          "en": "A long silence. Then the baron laughs — cold and sharp. 'Bold. I almost respect it. Almost.' He turns and walks away.",
+          "es": "Un largo silencio. Entonces el barón ríe — frío y cortante. 'Audaz. Casi lo respeto. Casi.' Se da la vuelta y se va."
         }
       }
     ]
@@ -51,13 +174,21 @@
     "choices": [
       {
         "id": "refuse",
-        "label": { "en": "Refuse to be their knife", "es": "Negarte a ser su cuchillo" },
+        "label": {
+          "en": "Refuse to be their knife",
+          "es": "Negarte a ser su cuchillo"
+        },
         "tag": "Leader",
         "rarity": "uncommon",
-        "statDeltas": { "charisma": 2, "constitution": 1 },
+        "statDeltas": {
+          "charisma": 2,
+          "constitution": 1
+        },
         "reputationDelta": 5,
         "reputationFaction": "crownguard",
-        "countersDelta": { "declined_offers": 1 },
+        "countersDelta": {
+          "declined_offers": 1
+        },
         "narrative": {
           "en": "You will not be spent so cheaply. It costs you coin and wins you standing.",
           "es": "No te dejás usar tan barato. Te cuesta monedas y te gana prestigio."
@@ -65,11 +196,19 @@
       },
       {
         "id": "scheme",
-        "label": { "en": "Play both sides", "es": "Jugar a dos bandas" },
+        "label": {
+          "en": "Play both sides",
+          "es": "Jugar a dos bandas"
+        },
         "tag": "Strategic",
         "rarity": "volatile",
-        "statDeltas": { "intelligence": 7 },
-        "tradeoffDeltas": { "charisma": -3, "constitution": -2 },
+        "statDeltas": {
+          "intelligence": 7
+        },
+        "tradeoffDeltas": {
+          "charisma": -3,
+          "constitution": -2
+        },
         "goldDelta": 180,
         "narrative": {
           "en": "You bleed both houses for coin. Brilliant, exhausting, and never quite safe again.",
@@ -90,10 +229,15 @@
     "choices": [
       {
         "id": "accept",
-        "label": { "en": "Accept the patronage", "es": "Aceptar el mecenazgo" },
+        "label": {
+          "en": "Accept the patronage",
+          "es": "Aceptar el mecenazgo"
+        },
         "tag": "Professional",
         "rarity": "common",
-        "statDeltas": { "charisma": 1 },
+        "statDeltas": {
+          "charisma": 1
+        },
         "goldDelta": 140,
         "fameDelta": 3,
         "narrative": {
@@ -103,11 +247,19 @@
       },
       {
         "id": "independent",
-        "label": { "en": "Keep your independence", "es": "Conservar tu independencia" },
+        "label": {
+          "en": "Keep your independence",
+          "es": "Conservar tu independencia"
+        },
         "tag": "Stoic",
         "rarity": "uncommon",
-        "statDeltas": { "constitution": 2, "intelligence": 1 },
-        "countersDelta": { "declined_offers": 1 },
+        "statDeltas": {
+          "constitution": 2,
+          "intelligence": 1
+        },
+        "countersDelta": {
+          "declined_offers": 1
+        },
         "narrative": {
           "en": "No leash, no stipend. Your name stays entirely your own.",
           "es": "Sin correa, sin estipendio. Tu nombre sigue siendo enteramente tuyo."

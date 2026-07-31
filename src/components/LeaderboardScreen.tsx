@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useReducer, useState } from "react"
 import { styled } from "styled-components"
 import type { EndingType, LeaderboardCategory, Locale, RunType } from "@shared/types"
 import { api, type LeaderboardEntryView } from "../api"
@@ -41,37 +41,55 @@ function sortValue(e: LeaderboardEntryView, cat: LeaderboardCategory): number {
   }
 }
 
+type BoardState = {
+  loading: boolean
+  error: string | null
+  entries: LeaderboardEntryView[]
+}
+
+type BoardAction =
+  | { type: "start" }
+  | { type: "ok"; entries: LeaderboardEntryView[] }
+  | { type: "fail"; message: string }
+
+function boardReducer(_state: BoardState, action: BoardAction): BoardState {
+  switch (action.type) {
+    case "start":
+      return { loading: true, error: null, entries: [] }
+    case "ok":
+      return { loading: false, error: null, entries: action.entries }
+    case "fail":
+      return { loading: false, error: action.message, entries: [] }
+  }
+}
+
 export function LeaderboardScreen({ locale, onBack }: Props) {
   const [runType, setRunType] = useState<RunType>("standard")
+  const [tier, setTier] = useState<string | undefined>(undefined)
   const [category, setCategory] = useState<LeaderboardCategory>("score")
-  const [rawEntries, setRawEntries] = useState<LeaderboardEntryView[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [{ loading, error, entries: rawEntries }, dispatch] = useReducer(boardReducer, {
+    loading: true,
+    error: null,
+    entries: [],
+  })
 
   useEffect(() => {
     let alive = true
-    setLoading(true)
-    setError(null)
+    dispatch({ type: "start" })
 
     api
-      .leaderboard(runType, locale)
+      .leaderboard(runType, locale, tier)
       .then((r) => {
-        if (alive) {
-          setRawEntries(r.entries)
-          setLoading(false)
-        }
+        if (alive) dispatch({ type: "ok", entries: r.entries })
       })
       .catch((e) => {
-        if (alive) {
-          setError((e as Error).message)
-          setLoading(false)
-        }
+        if (alive) dispatch({ type: "fail", message: (e as Error).message })
       })
 
     return () => {
       alive = false
     }
-  }, [runType, locale])
+  }, [runType, tier, locale])
 
   const sorted = useMemo(() => {
     const copy = [...rawEntries]
@@ -91,7 +109,10 @@ export function LeaderboardScreen({ locale, onBack }: Props) {
             role="tab"
             $active={runType === "standard"}
             aria-selected={runType === "standard"}
-            onClick={() => setRunType("standard")}
+            onClick={() => {
+              setRunType("standard")
+              setTier(undefined)
+            }}
           >
             {t(locale, "standardRuns")}
           </TabBtn>
@@ -100,9 +121,24 @@ export function LeaderboardScreen({ locale, onBack }: Props) {
             role="tab"
             $active={runType === "daily"}
             aria-selected={runType === "daily"}
-            onClick={() => setRunType("daily")}
+            onClick={() => {
+              setRunType("daily")
+              setTier(undefined)
+            }}
           >
             {t(locale, "dailyRuns")}
+          </TabBtn>
+          <TabBtn
+            type="button"
+            role="tab"
+            $active={runType === "standard" && tier === "legendary"}
+            aria-selected={runType === "standard" && tier === "legendary"}
+            onClick={() => {
+              setRunType("standard")
+              setTier("legendary")
+            }}
+          >
+            {t(locale, "legendaryBoard")}
           </TabBtn>
         </BoardTabs>
       </BoardHeader>

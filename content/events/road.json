@@ -11,13 +11,21 @@
     "choices": [
       {
         "id": "fight",
-        "label": { "en": "Stand and fight", "es": "Plantarte y pelear" },
+        "label": {
+          "en": "Stand and fight",
+          "es": "Plantarte y pelear"
+        },
         "tag": "Confident",
         "rarity": "uncommon",
-        "statDeltas": { "strength": 2, "constitution": 1 },
+        "statDeltas": {
+          "strength": 2,
+          "constitution": 1
+        },
         "healthDelta": -8,
         "injuryRiskDelta": 0.12,
-        "countersDelta": { "battles_won": 1 },
+        "countersDelta": {
+          "battles_won": 1
+        },
         "narrative": {
           "en": "Bloody work, but the ditch is theirs to bleed in now, not yours.",
           "es": "Trabajo sangriento, pero ahora es su cuneta para desangrarse, no la tuya."
@@ -25,11 +33,18 @@
       },
       {
         "id": "talk",
-        "label": { "en": "Talk your way clear", "es": "Salir hablando" },
+        "label": {
+          "en": "Talk your way clear",
+          "es": "Salir hablando"
+        },
         "tag": "Supportive",
         "rarity": "uncommon",
-        "statDeltas": { "charisma": 3 },
-        "countersDelta": { "talked_down": 1 },
+        "statDeltas": {
+          "charisma": 3
+        },
+        "countersDelta": {
+          "talked_down": 1
+        },
         "narrative": {
           "en": "You offer them a better mark down the road. They take it, laughing.",
           "es": "Les ofrecés un mejor blanco más adelante. Lo aceptan, entre risas."
@@ -37,16 +52,80 @@
       },
       {
         "id": "flee",
-        "label": { "en": "Run for it", "es": "Salir corriendo" },
+        "label": {
+          "en": "Run for it",
+          "es": "Salir corriendo"
+        },
         "tag": "Stoic",
         "rarity": "common",
-        "statDeltas": { "dexterity": 1 },
+        "statDeltas": {
+          "dexterity": 1
+        },
         "goldDelta": -20,
-        "countersDelta": { "fights_fled": 1 },
-        "countersReset": ["never_fled_flag"],
+        "countersDelta": {
+          "fights_fled": 1
+        },
+        "countersReset": [
+          "never_fled_flag"
+        ],
         "narrative": {
           "en": "You drop a purse to slow them and vanish into the trees.",
           "es": "Soltás una bolsa para frenarlos y desaparecés entre los árboles."
+        }
+      }
+    ]
+  },
+  {
+    "id": "road_traveling_mentor",
+    "minAge": 16,
+    "maxAge": 60,
+    "weight": 5,
+    "narrative": {
+      "en": "An old veteran named Ser Aldric sits by the roadside, sharpening a weathered blade. He looks up and offers a dry smile. 'Walk with me a while, and I might teach you something.'",
+      "es": "Un viejo veterano llamado Ser Aldric está sentado junto al camino, afilando una hoja desgastada. Levanta la mirada y ofrece una sonrisa seca. 'Camina conmigo un rato, y quizás te enseñe algo.'"
+    },
+    "choices": [
+      {
+        "id": "accept",
+        "label": {
+          "en": "Accept his offer to travel together",
+          "es": "Aceptar su oferta de viajar juntos"
+        },
+        "tag": "Humble",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "strength": 1,
+          "constitution": 1
+        },
+        "introducesRelationshipId": "ser_aldric",
+        "introducesNpcRole": "mentor",
+        "introducesNpcName": {
+          "en": "Ser Aldric",
+          "es": "Ser Aldric"
+        },
+        "affinityDelta": 20,
+        "countersDelta": {
+          "allies_found": 1
+        },
+        "narrative": {
+          "en": "Ser Aldric walks beside you, telling stories between silences. You feel stronger just for the company.",
+          "es": "Ser Aldric camina a tu lado, contando historias entre silencios. Te sentís más fuerte solo por la compañía."
+        }
+      },
+      {
+        "id": "decline",
+        "label": {
+          "en": "Politely decline and continue alone",
+          "es": "Declinar cortésmente y seguir solo"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": {
+          "intelligence": 1
+        },
+        "narrative": {
+          "en": "He nods, unsurprised. 'The road teaches its own way.' You walk on alone.",
+          "es": "Asiente, sin sorpresa. 'El camino enseña a su manera.' Seguís solo."
         }
       }
     ]
@@ -63,13 +142,21 @@
     "choices": [
       {
         "id": "slay",
-        "label": { "en": "Meet it head-on", "es": "Enfrentarlo de frente" },
+        "label": {
+          "en": "Meet it head-on",
+          "es": "Enfrentarlo de frente"
+        },
         "tag": "Aggressive",
         "rarity": "uncommon",
-        "statDeltas": { "strength": 2 },
+        "statDeltas": {
+          "strength": 2
+        },
         "healthDelta": -10,
         "injuryRiskDelta": 0.15,
-        "countersDelta": { "monsters_killed": 1, "battles_won": 1 },
+        "countersDelta": {
+          "monsters_killed": 1,
+          "battles_won": 1
+        },
         "narrative": {
           "en": "It falls hard. You are wounded, but the road is yours.",
           "es": "Cae con fuerza. Estás herido, pero el camino es tuyo."
@@ -77,11 +164,19 @@
       },
       {
         "id": "track",
-        "label": { "en": "Outmaneuver it", "es": "Superarlo con maniobras" },
+        "label": {
+          "en": "Outmaneuver it",
+          "es": "Superarlo con maniobras"
+        },
         "tag": "Strategic",
         "rarity": "rare",
-        "statDeltas": { "dexterity": 4 },
-        "countersDelta": { "monsters_killed": 1, "battles_won": 1 },
+        "statDeltas": {
+          "dexterity": 4
+        },
+        "countersDelta": {
+          "monsters_killed": 1,
+          "battles_won": 1
+        },
         "narrative": {
           "en": "You bleed it from angles it can't answer. Clean, patient, done.",
           "es": "Lo desangrás desde ángulos que no puede responder. Limpio, paciente, hecho."
@@ -101,10 +196,15 @@
     "choices": [
       {
         "id": "offer",
-        "label": { "en": "Leave a gold offering", "es": "Dejar una ofrenda de oro" },
+        "label": {
+          "en": "Leave a gold offering",
+          "es": "Dejar una ofrenda de oro"
+        },
         "tag": "Humble",
         "rarity": "common",
-        "statDeltas": { "intelligence": 1 },
+        "statDeltas": {
+          "intelligence": 1
+        },
         "goldDelta": -30,
         "staminaDelta": 15,
         "narrative": {
@@ -114,11 +214,19 @@
       },
       {
         "id": "take",
-        "label": { "en": "Take what's in the bowl", "es": "Tomar lo que hay en el cuenco" },
+        "label": {
+          "en": "Take what's in the bowl",
+          "es": "Tomar lo que hay en el cuenco"
+        },
         "tag": "Cocky",
         "rarity": "volatile",
-        "statDeltas": { "dexterity": 5 },
-        "tradeoffDeltas": { "constitution": -3, "charisma": -2 },
+        "statDeltas": {
+          "dexterity": 5
+        },
+        "tradeoffDeltas": {
+          "constitution": -3,
+          "charisma": -2
+        },
         "goldDelta": 120,
         "narrative": {
           "en": "You pocket the coins. Something old and patient marks your face.",
@@ -139,12 +247,20 @@
     "choices": [
       {
         "id": "escort",
-        "label": { "en": "Take the contract", "es": "Tomar el contrato" },
+        "label": {
+          "en": "Take the contract",
+          "es": "Tomar el contrato"
+        },
         "tag": "Professional",
         "rarity": "uncommon",
-        "statDeltas": { "constitution": 2, "dexterity": 1 },
+        "statDeltas": {
+          "constitution": 2,
+          "dexterity": 1
+        },
         "goldDelta": 90,
-        "countersDelta": { "quests_completed": 1 },
+        "countersDelta": {
+          "quests_completed": 1
+        },
         "reputationDelta": 3,
         "reputationFaction": "ironhold",
         "narrative": {
@@ -154,10 +270,15 @@
       },
       {
         "id": "rob",
-        "label": { "en": "Rob them at the pass", "es": "Robarles en el paso" },
+        "label": {
+          "en": "Rob them at the pass",
+          "es": "Robarles en el paso"
+        },
         "tag": "Aggressive",
         "rarity": "rare",
-        "statDeltas": { "strength": 3 },
+        "statDeltas": {
+          "strength": 3
+        },
         "goldDelta": 200,
         "reputationDelta": -12,
         "reputationFaction": "ironhold",

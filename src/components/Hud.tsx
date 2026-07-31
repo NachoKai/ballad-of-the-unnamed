@@ -12,6 +12,33 @@ interface Props {
   onShopOpen?: () => void
 }
 
+const REPUTATION_TIERS: { min: number; id: string }[] = [
+  { min: 0, id: "outcast" },
+  { min: 5, id: "stranger" },
+  { min: 20, id: "known" },
+  { min: 35, id: "acquaintance" },
+  { min: 50, id: "respected" },
+  { min: 65, id: "notable" },
+  { min: 78, id: "renowned" },
+  { min: 90, id: "legend" },
+  { min: 99, id: "myth" },
+]
+
+function reputationTier(value: number): string {
+  let id = REPUTATION_TIERS[0].id
+  for (const tier of REPUTATION_TIERS) {
+    if (value >= tier.min) id = tier.id
+  }
+  return id
+}
+
+function personalitySummary(p: Record<string, number>): string[] {
+  return Object.entries(p)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 3)
+    .map(([tag]) => tag)
+}
+
 export function Hud({ character: c, locale, onShopOpen }: Props) {
   const t = (k: string) => translate(locale, k)
   const className = t(`class_${c.class}`)
@@ -25,13 +52,20 @@ export function Hud({ character: c, locale, onShopOpen }: Props) {
   const inventoryCount = c.inventory?.reduce((s, i) => s + i.qty, 0) ?? 0
   const playerScore = (c.counters["battles_won"] ?? 0) + (c.counters["quests_completed"] ?? 0)
 
+  const primaryRep =
+    c.reputations.length > 0
+      ? c.reputations.reduce((a, b) => (a.peakValue >= b.peakValue ? a : b))
+      : null
+
+  const topTags = personalitySummary(c.personality)
+
   return (
     <HudWrap>
       <TopRow>
         <Name>
           {c.name} <Faint>· {className}</Faint>
-          {c.archetype && <ArchetypeTag>{c.archetype}</ArchetypeTag>}
-          {c.currentClanId && <ClanTag>{c.currentClanId}</ClanTag>}
+          {c.archetype && <ArchetypeTag>{t(`archetype_${c.archetype}`)}</ArchetypeTag>}
+          {c.currentClanId && <ClanTag>{t(`faction_${c.currentClanId}`)}</ClanTag>}
         </Name>
         <TurnPill>
           {t("turn")} <b>{c.turn}</b>
@@ -73,6 +107,15 @@ export function Hud({ character: c, locale, onShopOpen }: Props) {
             {t(STAT_ABBR[k])} <b>{c[k]}</b>
           </StatPill>
         ))}
+        {primaryRep && (
+          <RepPill>
+            {t(`faction_${primaryRep.faction}`)} ·{" "}
+            {t(`reputation_tier_${reputationTier(primaryRep.value)}`)} [{primaryRep.value}]
+          </RepPill>
+        )}
+        {topTags.length > 0 && (
+          <TagPill>{topTags.map((tag) => t(`personality_tag_${tag}`)).join(" · ")}</TagPill>
+        )}
         {c.rival && (
           <RivalBadge>
             ⚔️ {c.rival.name} {t("vs")} <b>{playerScore}</b>—<b>{c.rival.score}</b>
@@ -80,7 +123,7 @@ export function Hud({ character: c, locale, onShopOpen }: Props) {
         )}
         {c.huntedBy && (
           <HuntedBadge>
-            ⚠️ {t("hunted")} {c.huntedBy}
+            ⚠️ {t("hunted")} {t(`faction_${c.huntedBy}`)}
           </HuntedBadge>
         )}
         {onShopOpen && (
@@ -306,4 +349,29 @@ const HuntedBadge = styled.span`
   color: ${({ theme }) => theme.colors.bloodBright};
   text-transform: uppercase;
   letter-spacing: 0.08em;
+`
+
+const RepPill = styled.span`
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  padding: 3px 10px;
+  border: 1px solid ${({ theme }) => theme.colors.gold};
+  border-radius: 999px;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: ${({ theme }) => theme.colors.gold};
+  text-transform: uppercase;
+`
+
+const TagPill = styled.span`
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  padding: 3px 10px;
+  border: 1px solid ${({ theme }) => theme.colors.sage};
+  border-radius: 999px;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: ${({ theme }) => theme.colors.sage};
 `

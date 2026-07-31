@@ -32,6 +32,9 @@ export const GAME_CONFIG = {
 
   // World events: how many to roll per season.
   worldEventsPerSeason: 2,
+
+  // Top 0.1% of all-time runs get promoted to "legendary" tier.
+  legendaryThresholdPercentile: 0.999,
 } as const
 
 import type { Arc } from "./types.js"

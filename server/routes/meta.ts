@@ -7,6 +7,7 @@ import {
   getLeaderboardByCategory,
   getCareerTotals,
   getPlayerRuns,
+  getCrossRunCollection,
 } from "../store/runStore.js"
 import { todayDailySeed } from "../../shared/rng.js"
 import type { LeaderboardCategory, Locale, RunType } from "../../shared/types.js"
@@ -46,12 +47,13 @@ metaRouter.get("/achievements", (req: Request, res: Response) => {
   res.json({ achievements })
 })
 
-// GET /api/meta/leaderboard?runType=standard|daily&limit=25
+// GET /api/meta/leaderboard?runType=standard|daily&tier=legendary&limit=25
 metaRouter.get("/leaderboard", async (req: Request, res: Response) => {
   const runType: RunType = req.query.runType === "daily" ? "daily" : "standard"
   const limit = Math.min(100, Number(req.query.limit) || 25)
   const seed = runType === "daily" ? todayDailySeed() : undefined
-  const rows = await getLeaderboard({ runType, seed, limit })
+  const tier = req.query.tier === "legendary" ? "legendary" : undefined
+  const rows = await getLeaderboard({ runType, seed, limit, tier })
   const entries = rows.map((r, i) => ({
     rank: i + 1,
     id: r.id,
@@ -70,6 +72,12 @@ metaRouter.get("/leaderboard", async (req: Request, res: Response) => {
     epilogue: r.epilogue,
   }))
   res.json({ runType, entries })
+})
+
+// GET /api/meta/collection — cross-run trophy hall stats
+metaRouter.get("/collection", async (_req: Request, res: Response) => {
+  const data = await getCrossRunCollection()
+  res.json(data)
 })
 
 // GET /api/meta/leaderboard/:category?runType=standard|daily&limit=25

@@ -160,11 +160,19 @@ export interface MinigameOutcome {
   narrative: LocaleMap
 }
 
+export type MinigameSubtype =
+  "weighted_hidden_match" | "timing_bar" | "grid_gamble" | "memory_match"
+
 export interface MinigameResolution {
-  type: "weighted_hidden_match"
+  type: MinigameSubtype
   baseWinChance: number
   statInfluence: Partial<Record<StatKey, number>>
   cardModifiers?: Record<string, { winChanceDelta?: number; critChanceDelta?: number }>
+  // timing_bar: statThreshold widens the green zone (higher stat = easier).
+  // grid_gamble: pure luck, no stat influence.
+  // memory_match: statThreshold grants bonus lives.
+  statThreshold?: number
+  bonusLives?: number
 }
 
 export interface EventContent {
@@ -288,6 +296,7 @@ export interface CharacterState {
   clanMemberships: ClanMembershipEntry[]
   flags: Record<string, unknown>
   pendingFinaleType?: EndingType
+  finaleStage2Choice?: { endingType: EndingType; risky: boolean }
 }
 
 export interface ReputationState {

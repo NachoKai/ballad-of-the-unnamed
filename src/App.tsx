@@ -17,11 +17,12 @@ import { GameScreen } from "./components/GameScreen"
 import { AchievementsScreen } from "./components/AchievementsScreen"
 import { EndingScreen } from "./components/EndingScreen"
 import { LeaderboardScreen } from "./components/LeaderboardScreen"
+import { CollectionScreen } from "./components/CollectionScreen"
 import { ShopModal } from "./components/ShopModal"
 import { Toasts, useAchievementToasts } from "./components/Toasts"
 import { LinkBtn } from "./components/ui/Button"
 
-type Screen = "creation" | "game" | "ending" | "leaderboard" | "achievements"
+type Screen = "creation" | "game" | "ending" | "leaderboard" | "achievements" | "collection"
 
 const RUN_KEY = "chronicle_run_id"
 const LOCALE_KEY = "chronicle_locale"
@@ -214,6 +215,11 @@ export default function App() {
               {t(locale, "achievementsTitle")}
             </LinkBtn>
           )}
+          {screen !== "collection" && screen !== "game" && (
+            <LinkBtn type="button" onClick={() => setScreen("collection")}>
+              {t(locale, "trophyHall")}
+            </LinkBtn>
+          )}
           <LocaleSwitch role="group" aria-label="language">
             <LocaleBtn type="button" $active={locale === "en"} onClick={() => changeLocale("en")}>
               EN
@@ -283,6 +289,10 @@ export default function App() {
           achievements={lastAchievements}
           onBack={() => setScreen("creation")}
         />
+      )}
+
+      {screen === "collection" && (
+        <CollectionScreen locale={locale} onBack={() => setScreen("creation")} />
       )}
 
       <Toasts items={toasts} onExpire={dismissToast} />

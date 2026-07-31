@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto"
-import { query } from "../db/client.js"
+import { query, queryOne } from "../db/client.js"
 import type {
   CharacterState,
   EndingType,
@@ -131,12 +131,31 @@ export async function insertLeaderboardEntry(input: {
   runType: RunType
   seed: string
 }): Promise<void> {
+  // Determine tier: runs above the 99.9th percentile become "legendary"
+  let tier = "standard"
+  if (input.runType === "standard") {
+    const countRow = await queryOne<{ total: string }>(
+      `SELECT COUNT(*)::text AS total FROM leaderboard WHERE run_type = 'standard'`,
+    )
+    const total = Number(countRow?.total ?? 0)
+    if (total >= 100) {
+      const cutoffIndex = Math.max(0, Math.floor(total * (1 - 0.999)))
+      const cutoffRows = await query<{ score: number }>(
+        `SELECT score FROM leaderboard WHERE run_type = 'standard' ORDER BY score DESC LIMIT 1 OFFSET $1`,
+        [cutoffIndex],
+      )
+      if (cutoffRows.length > 0 && input.score >= cutoffRows[0].score) {
+        tier = "legendary"
+      }
+    }
+  }
+
   await query(
     `INSERT INTO leaderboard
       (id, run_id, name, character_class, final_power_level, net_worth,
        achievements_count, battles_won, quests_completed, age_at_end,
-       reputation_peak, ending_type, score, legacy_score, epithet, epilogue, run_type, seed)
-     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18)`,
+       reputation_peak, ending_type, score, legacy_score, epithet, epilogue, run_type, seed, leaderboard_tier)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19)`,
     [
       randomUUID(),
       input.runId,
@@ -156,6 +175,7 @@ export async function insertLeaderboardEntry(input: {
       input.epilogue,
       input.runType,
       input.seed,
+      tier,
     ],
   )
 }
@@ -182,6 +202,7 @@ export async function getLeaderboard(input: {
   runType: RunType
   seed?: string
   limit: number
+  tier?: string
 }): Promise<LeaderboardRow[]> {
   if (input.runType === "daily" && input.seed) {
     return query<LeaderboardRow>(
@@ -190,8 +211,15 @@ export async function getLeaderboard(input: {
       [input.seed, input.limit],
     )
   }
+  if (input.tier === "legendary") {
+    return query<LeaderboardRow>(
+      `SELECT * FROM leaderboard WHERE run_type = 'standard' AND leaderboard_tier = 'legendary'
+       ORDER BY score DESC LIMIT $1`,
+      [input.limit],
+    )
+  }
   return query<LeaderboardRow>(
-    `SELECT * FROM leaderboard WHERE run_type = 'standard'
+    `SELECT * FROM leaderboard WHERE run_type = 'standard' AND leaderboard_tier = 'standard'
      ORDER BY score DESC LIMIT $1`,
     [input.limit],
   )
@@ -255,4 +283,37 @@ export async function getPlayerRuns(name: string): Promise<LeaderboardRow[]> {
     `SELECT * FROM leaderboard WHERE name = $1 ORDER BY created_at DESC LIMIT 10`,
     [name],
   )
+}
+
+export interface CollectionData {
+  uniqueFactions: string[]
+  uniqueEndings: string[]
+  totalRuns: number
+}
+
+export async function getCrossRunCollection(): Promise<CollectionData> {
+  const factionRows = await query<{ faction: string }>(
+    `SELECT DISTINCT jsonb_array_elements(character->'reputations')->>'faction' AS faction
+     FROM runs WHERE finished = true AND jsonb_array_length(character->'reputations') > 0`,
+  )
+  const clanRows = await query<{ clan: string }>(
+    `SELECT DISTINCT character->>'currentClanId' AS clan
+     FROM runs WHERE finished = true AND character->>'currentClanId' IS NOT NULL`,
+  )
+  const endingRows = await query<{ ending_type: string }>(
+    `SELECT DISTINCT ending_type FROM leaderboard`,
+  )
+  const countRow = await queryOne<{ total: string }>(
+    `SELECT COUNT(*)::text AS total FROM leaderboard`,
+  )
+
+  const factionsSet = new Set<string>()
+  for (const r of factionRows) if (r.faction) factionsSet.add(r.faction)
+  for (const r of clanRows) if (r.clan) factionsSet.add(r.clan)
+
+  return {
+    uniqueFactions: [...factionsSet].sort(),
+    uniqueEndings: endingRows.map((r) => r.ending_type).sort(),
+    totalRuns: Number(countRow?.total ?? 0),
+  }
 }

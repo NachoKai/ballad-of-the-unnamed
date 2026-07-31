@@ -11,10 +11,15 @@
     "choices": [
       {
         "id": "disarm",
-        "label": { "en": "Disarm it with steady hands", "es": "Desactivarla con pulso firme" },
+        "label": {
+          "en": "Disarm it with steady hands",
+          "es": "Desactivarla con pulso firme"
+        },
         "tag": "Strategic",
         "rarity": "uncommon",
-        "statDeltas": { "dexterity": 3 },
+        "statDeltas": {
+          "dexterity": 3
+        },
         "narrative": {
           "en": "A wire, a breath, a click reversed. The corridor falls silent again.",
           "es": "Un cable, un respiro, un clic al revés. El pasillo vuelve a callar."
@@ -22,10 +27,15 @@
       },
       {
         "id": "brace",
-        "label": { "en": "Brace and take the hit", "es": "Aguantar y encajar el golpe" },
+        "label": {
+          "en": "Brace and take the hit",
+          "es": "Aguantar y encajar el golpe"
+        },
         "tag": "Stoic",
         "rarity": "common",
-        "statDeltas": { "constitution": 2 },
+        "statDeltas": {
+          "constitution": 2
+        },
         "healthDelta": -12,
         "injuryRiskDelta": 0.1,
         "narrative": {
@@ -47,10 +57,15 @@
     "choices": [
       {
         "id": "study",
-        "label": { "en": "Study the runes first", "es": "Estudiar las runas primero" },
+        "label": {
+          "en": "Study the runes first",
+          "es": "Estudiar las runas primero"
+        },
         "tag": "Professional",
         "rarity": "uncommon",
-        "statDeltas": { "intelligence": 3 },
+        "statDeltas": {
+          "intelligence": 3
+        },
         "goldDelta": 70,
         "narrative": {
           "en": "You disarm the ward and take exactly what's safe to take.",
@@ -59,18 +74,83 @@
       },
       {
         "id": "grab",
-        "label": { "en": "Grab it all, now", "es": "Agarrarlo todo, ya" },
+        "label": {
+          "en": "Grab it all, now",
+          "es": "Agarrarlo todo, ya"
+        },
         "tag": "Cocky",
         "rarity": "volatile",
-        "statDeltas": { "charisma": 6 },
-        "tradeoffDeltas": { "constitution": -4 },
+        "statDeltas": {
+          "charisma": 6
+        },
+        "tradeoffDeltas": {
+          "constitution": -4
+        },
         "goldDelta": 260,
         "healthDelta": -15,
         "injuryRiskDelta": 0.25,
-        "countersDelta": { "volatile_greed": 1 },
+        "countersDelta": {
+          "volatile_greed": 1
+        },
         "narrative": {
           "en": "The runes flare. You escape rich and scorched, coins still hot in your fist.",
           "es": "Las runas estallan. Escapás rico y chamuscado, con las monedas aún calientes en el puño."
+        }
+      }
+    ]
+  },
+  {
+    "id": "dungeon_rival_encounter",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 4,
+    "involvesRival": true,
+    "location": "dungeon",
+    "narrative": {
+      "en": "Deep in the dark, you find signs of recent passage — and there, across the chamber, is {rivalName}. Your rival's eyes meet yours in the torchlight.",
+      "es": "En la oscuridad, encontrás señales de paso reciente — y allí, al otro lado de la cámara, está {rivalName}. Los ojos de tu rival se encuentran con los tuyos a la luz de la antorcha."
+    },
+    "choices": [
+      {
+        "id": "challenge",
+        "label": {
+          "en": "Confront them directly",
+          "es": "Enfrentarlos directamente"
+        },
+        "tag": "Confident",
+        "rarity": "rare",
+        "statDeltas": {
+          "strength": 2,
+          "dexterity": 1
+        },
+        "fameDelta": 5,
+        "reputationDelta": 4,
+        "countersDelta": {
+          "battles_won": 1,
+          "duels_won": 1
+        },
+        "narrative": {
+          "en": "Steel clashes in the narrow hall. {rivalName} retreats, but not without leaving a mark. The score between you shifts.",
+          "es": "El acero choca en el pasillo angosto. {rivalName} retrocede, pero no sin dejar una marca. La cuenta entre ustedes cambia."
+        }
+      },
+      {
+        "id": "parley",
+        "label": {
+          "en": "Offer a temporary truce",
+          "es": "Ofrecer una tregua temporal"
+        },
+        "tag": "Strategic",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "charisma": 2,
+          "intelligence": 1
+        },
+        "fameDelta": 3,
+        "goldDelta": 40,
+        "narrative": {
+          "en": "Words — sharp as blades — buy safe passage. {rivalName} nods once, and you both walk out richer for the silence.",
+          "es": "Palabras — afiladas como cuchillas — compran paso seguro. {rivalName} asiente una vez, y ambos salen más ricos por el silencio."
         }
       }
     ]
@@ -87,11 +167,19 @@
     "choices": [
       {
         "id": "refuse",
-        "label": { "en": "Refuse the offer", "es": "Rechazar la oferta" },
+        "label": {
+          "en": "Refuse the offer",
+          "es": "Rechazar la oferta"
+        },
         "tag": "Stoic",
         "rarity": "rare",
-        "statDeltas": { "intelligence": 2, "constitution": 2 },
-        "countersDelta": { "declined_dark_offers": 1 },
+        "statDeltas": {
+          "intelligence": 2,
+          "constitution": 2
+        },
+        "countersDelta": {
+          "declined_dark_offers": 1
+        },
         "narrative": {
           "en": "You turn your back on it. The altar hisses, and something in you stays clean.",
           "es": "Le das la espalda. El altar sisea, y algo en vos permanece limpio."
@@ -99,13 +187,23 @@
       },
       {
         "id": "accept",
-        "label": { "en": "Accept the dark gift", "es": "Aceptar el don oscuro" },
+        "label": {
+          "en": "Accept the dark gift",
+          "es": "Aceptar el don oscuro"
+        },
         "tag": "Aggressive",
         "rarity": "volatile",
-        "statDeltas": { "strength": 8 },
-        "tradeoffDeltas": { "charisma": -4, "constitution": -3 },
+        "statDeltas": {
+          "strength": 8
+        },
+        "tradeoffDeltas": {
+          "charisma": -4,
+          "constitution": -3
+        },
         "healthDelta": -10,
-        "countersDelta": { "dark_pacts": 1 },
+        "countersDelta": {
+          "dark_pacts": 1
+        },
         "narrative": {
           "en": "Power floods your veins like ice. The mirror will never show the same face again.",
           "es": "El poder inunda tus venas como hielo. El espejo nunca volverá a mostrar la misma cara."
@@ -125,13 +223,21 @@
     "choices": [
       {
         "id": "free",
-        "label": { "en": "Break the chains", "es": "Romper las cadenas" },
+        "label": {
+          "en": "Break the chains",
+          "es": "Romper las cadenas"
+        },
         "tag": "Supportive",
         "rarity": "uncommon",
-        "statDeltas": { "strength": 1, "charisma": 2 },
+        "statDeltas": {
+          "strength": 1,
+          "charisma": 2
+        },
         "reputationDelta": 6,
         "reputationFaction": "thornwood",
-        "countersDelta": { "lives_saved": 1 },
+        "countersDelta": {
+          "lives_saved": 1
+        },
         "narrative": {
           "en": "{npcName} kneels, then walks free. Word of your mercy spreads through Thornwood.",
           "es": "{npcName} se arrodilla, luego camina libre. La fama de tu clemencia se difunde por Espinar."
@@ -139,10 +245,15 @@
       },
       {
         "id": "leave",
-        "label": { "en": "Leave them; it's not your fight", "es": "Dejarlo; no es tu pelea" },
+        "label": {
+          "en": "Leave them; it's not your fight",
+          "es": "Dejarlo; no es tu pelea"
+        },
         "tag": "Professional",
         "rarity": "common",
-        "statDeltas": { "intelligence": 1 },
+        "statDeltas": {
+          "intelligence": 1
+        },
         "narrative": {
           "en": "You move on. The cell's silence follows you a while.",
           "es": "Seguís tu camino. El silencio de la celda te acompaña un rato."

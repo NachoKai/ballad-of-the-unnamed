@@ -3,6 +3,7 @@ import type {
   CharacterState,
   EndingType,
   EventContent,
+  FinaleChoice,
   FinaleStage,
   Locale,
   MinigameOutcome,
@@ -20,12 +21,14 @@ import type { ContentRegistry } from "../content/registry.js"
 import {
   adjustAffinity,
   adjustReputation,
+  applyAgeDecline,
   applyClanBetrayal,
   clearExpiredHunted,
   deductStamina,
   effectiveWeight,
   ensureRelationship,
   fillSlots,
+  getActiveModifier,
   isFatigued,
   isEligible,
   localizeLocation,
@@ -39,7 +42,7 @@ import {
   updateMarketValue,
   updateMomentum,
 } from "./helpers.js"
-import { generateFinaleStage1 } from "./finale.js"
+import { generateFinaleStage1, generateFinaleStage2 } from "./finale.js"
 
 // ---------------------------------------------------------------------------
 // Character creation
@@ -106,6 +109,7 @@ export function createCharacter(input: {
     huntedUntilTurn: null,
     clanMemberships: [],
     flags: {},
+    finaleStage2Choice: undefined,
   }
   recomputeDerived(base)
   return base
@@ -190,8 +194,9 @@ export function generateClanOffer(
   for (let i = 0; i < count; i++) {
     const f = shuffled[i]
     const specialty = rng.pick(CLAN_SPECIALTIES)
+    const qualityMod = getActiveModifier(c, "offerQualityModifier")
     const signingGold = Math.round(
-      (500 + c.fame * 10 + c.powerLevel * 5) * (0.5 + rng.next() * 1.0),
+      (500 + c.fame * 10 + c.powerLevel * 5) * (0.5 + rng.next() * 1.0) * (1 + qualityMod),
     )
     offers.push({
       clanId: f.id,
@@ -332,7 +337,40 @@ export function buildServedEvent(
   registry: ContentRegistry,
   rng: Rng,
 ): { event: EventContent; served: ServedEvent; finaleStage?: FinaleStage } {
-  // Finale: if pendingFinaleType is set, serve the two-stage retirement finale.
+  // Finale stage 2: outcome narrative with a single "continue" button.
+  if (c.finaleStage2Choice) {
+    const stage2 = generateFinaleStage2(
+      c,
+      c.finaleStage2Choice.endingType,
+      c.finaleStage2Choice.risky
+        ? ({ id: "finale_risky" } as FinaleChoice)
+        : ({ id: "finale_safe" } as FinaleChoice),
+      registry,
+      rng,
+      c.locale,
+    )
+    const ev: EventContent = {
+      id: "__finale_outcome__",
+      minAge: 0,
+      maxAge: 999,
+      weight: 1,
+      narrative: stage2.narrative,
+      choices: [
+        {
+          id: "continue",
+          rarity: "common" as Rarity,
+          label: { en: "The end", es: "El final" },
+          narrative: { en: "The story closes.", es: "La historia se cierra." },
+        },
+      ],
+    }
+    return {
+      event: ev,
+      served: serveEvent(ev, c, c.locale, registry, rng, false),
+      finaleStage: stage2,
+    }
+  }
+  // Finale stage 1: if pendingFinaleType is set, serve the risky/safe choice.
   if (c.pendingFinaleType) {
     const endingType = c.pendingFinaleType
     const stage = generateFinaleStage1(c, endingType, registry, rng, c.locale)
@@ -515,9 +553,11 @@ function recordRarity(c: CharacterState, rarity: Rarity): void {
 // ---------------------------------------------------------------------------
 
 function rollDeath(c: CharacterState, pendingInjuryRisk: number, rng: Rng): boolean {
-  // Injury/accident risk from the chosen outcome, mitigated by constitution.
+  // Shop item injury risk modifier (battle_healer, season_healer).
+  const shopMitigation = getActiveModifier(c, "injuryRiskModifier")
+  // Injury/accident risk from the chosen outcome, mitigated by constitution + shop.
   const conMitigation = Math.min(0.4, c.constitution * 0.01)
-  const injuryChance = Math.max(0, pendingInjuryRisk - conMitigation)
+  const injuryChance = Math.max(0, pendingInjuryRisk - conMitigation + shopMitigation)
   if (injuryChance > 0 && rng.bool(injuryChance)) return true
 
   // Age-based background risk after ageRiskStart.
@@ -534,6 +574,7 @@ function ageUp(c: CharacterState): void {
   if (c.turn % GAME_CONFIG.turnsPerYear === 0) {
     c.age += 1
     c.currentArc = arcForAge(c.age)
+    applyAgeDecline(c)
   }
 }
 
@@ -581,10 +622,21 @@ export function resolveChoice(
     ended = false
   }
 
-  // Finale resolution: apply the risky/safe choice effects and end the run.
+  // Finale stage 1 resolution: apply the risky/safe choice, generate stage 2.
   if (event.id === "__finale__") {
     endingType = c.pendingFinaleType
     c.pendingFinaleType = undefined
+    c.finaleStage2Choice = {
+      endingType: endingType as EndingType,
+      risky: choice.id === "finale_risky",
+    }
+    ended = false
+  }
+
+  // Finale stage 2 resolution: the story ends.
+  if (event.id === "__finale_outcome__") {
+    endingType = c.finaleStage2Choice?.endingType
+    c.finaleStage2Choice = undefined
     ended = true
   }
 
@@ -733,6 +785,29 @@ export function resolveMinigame(
   if (mod) {
     winChance += mod.winChanceDelta ?? 0
     critChance += mod.critChanceDelta ?? 0
+  }
+  winChance = Math.max(0.02, Math.min(0.97, winChance))
+
+  // Subtype-specific adjustments.
+  const subtype = res.type ?? "weighted_hidden_match"
+  if (subtype === "grid_gamble") {
+    // Pure luck: ignore stat influence, keep only base + card modifiers.
+    winChance = Math.max(0.02, Math.min(0.97, res.baseWinChance + (mod?.winChanceDelta ?? 0)))
+    critChance = 0.05
+  }
+  if (subtype === "timing_bar" && res.statThreshold) {
+    // Stat widens the green zone: bonus if primary stat >= threshold.
+    const primaryStat = event.primaryStat
+    if (primaryStat && (c[primaryStat as keyof CharacterState] as number) >= res.statThreshold) {
+      winChance += 0.08
+    }
+  }
+  if (subtype === "memory_match" && res.statThreshold) {
+    // Stat-gated bonus: higher stat = better recall.
+    const primaryStat = event.primaryStat
+    if (primaryStat && (c[primaryStat as keyof CharacterState] as number) >= res.statThreshold) {
+      winChance += 0.1
+    }
   }
   winChance = Math.max(0.02, Math.min(0.97, winChance))
 

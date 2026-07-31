@@ -154,9 +154,9 @@ export const api = {
       body: JSON.stringify(input),
     }),
 
-  leaderboard: (runType: RunType, locale: Locale) =>
+  leaderboard: (runType: RunType, locale: Locale, tier?: string) =>
     jfetch<{ runType: RunType; entries: LeaderboardEntryView[] }>(
-      `/api/meta/leaderboard?runType=${runType}&locale=${locale}&limit=25`,
+      `/api/meta/leaderboard?runType=${runType}&locale=${locale}&limit=25${tier ? `&tier=${tier}` : ""}`,
     ),
 
   leaderboardByCategory: (category: string, runType: RunType, locale: Locale) =>
@@ -175,5 +175,10 @@ export const api = {
   playerRuns: (name: string) =>
     jfetch<{ entries: LeaderboardEntryView[] }>(
       `/api/meta/player-runs?name=${encodeURIComponent(name)}`,
+    ),
+
+  collection: () =>
+    jfetch<{ uniqueFactions: string[]; uniqueEndings: string[]; totalRuns: number }>(
+      "/api/meta/collection",
     ),
 }

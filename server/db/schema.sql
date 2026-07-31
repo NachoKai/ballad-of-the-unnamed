@@ -155,3 +155,5 @@ CREATE INDEX IF NOT EXISTS idx_leaderboard_runtype ON leaderboard_entries (run_t
 -- Migrations for columns added after initial table creation --------------------
 ALTER TABLE leaderboard ADD COLUMN IF NOT EXISTS legacy_score INTEGER NOT NULL DEFAULT 0;
 ALTER TABLE leaderboard ADD COLUMN IF NOT EXISTS epithet TEXT;
+ALTER TABLE leaderboard ADD COLUMN IF NOT EXISTS leaderboard_tier TEXT NOT NULL DEFAULT 'standard';
+CREATE INDEX IF NOT EXISTS idx_lb_tier ON leaderboard (leaderboard_tier, score DESC);

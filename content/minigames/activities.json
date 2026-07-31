@@ -892,5 +892,299 @@
         }
       }
     }
+  },
+  {
+    "id": "timing_waterfall_dodge",
+    "type": "minigame",
+    "subtype": "timing_bar",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "primaryStat": "dexterity",
+    "narrative": {
+      "en": "A crumbling bridge spans a roaring gorge. The stones shift underfoot — one wrong step and you're swept away. Timing is everything.",
+      "es": "Un puente derruido cruza un desfiladero rugiente. Las piedras se mueven bajo tus pies — un paso en falso y serás arrastrado. El tiempo lo es todo."
+    },
+    "cards": [
+      {
+        "id": "leap_early",
+        "icon": "arrow-up",
+        "label": {
+          "en": "Leap at the first gap",
+          "es": "Saltar en el primer hueco"
+        }
+      },
+      {
+        "id": "wait_and_spring",
+        "icon": "clock",
+        "label": {
+          "en": "Wait for the right moment",
+          "es": "Esperar el momento justo"
+        }
+      },
+      {
+        "id": "feel_the_rhythm",
+        "icon": "heart",
+        "label": {
+          "en": "Trust your instincts",
+          "es": "Confiar en tu instinto"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "timing_bar",
+      "baseWinChance": 0.35,
+      "statInfluence": {
+        "dexterity": 0.015,
+        "strength": 0.005
+      },
+      "statThreshold": 20,
+      "cardModifiers": {
+        "feel_the_rhythm": {
+          "winChanceDelta": 0.08,
+          "critChanceDelta": 0.03
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "dexterity": 3,
+          "constitution": 1
+        },
+        "fameDelta": 6,
+        "goldDelta": 100,
+        "countersDelta": {
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "You flow across the bridge as if the stones themselves were placed for your feet. The gorge roars below, but you're already on the other side, breathing clean air.",
+          "es": "Cruzas el puente como si las piedras mismas estuvieran puestas para tus pies. El desfiladero ruge abajo, pero ya estás al otro lado, respirando aire limpio."
+        }
+      },
+      "success": {
+        "statDeltas": {
+          "dexterity": 1
+        },
+        "fameDelta": 2,
+        "goldDelta": 30,
+        "countersDelta": {
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "You make it across — bruised, breathless, but whole. The bridge groans behind you and collapses into the gorge.",
+          "es": "Llegás al otro lado — magullado, sin aliento, pero entero. El puente gime detrás de vos y se derrumba en el desfiladero."
+        }
+      },
+      "partial": {
+        "healthDelta": -8,
+        "narrative": {
+          "en": "You slip on the final span and crash into the water. Bruised and half-drowned, you drag yourself to shore, clutching your pack.",
+          "es": "Resbalás en el último tramo y caes al agua. Magullado y medio ahogado, te arrastrás a la orilla, aferrando tu equipaje."
+        }
+      },
+      "fail": {
+        "healthDelta": -20,
+        "injuryRiskDelta": 0.2,
+        "goldDelta": -30,
+        "narrative": {
+          "en": "The stone turns beneath you. You fall. The gorge swallows you whole. You wake on a sandbar downstream, half-drowned and stripped of your gear.",
+          "es": "La piedra gira bajo tus pies. Caés. El desfiladero te traga entero. Despertás en un banco de arena río abajo, medio ahogado y sin tu equipo."
+        }
+      }
+    }
+  },
+  {
+    "id": "gamble_dragon_den",
+    "type": "minigame",
+    "subtype": "grid_gamble",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "primaryStat": "charisma",
+    "narrative": {
+      "en": "A hooded figure beckons from a shadowy table. 'Three treasures among nine cups. Pick well — or walk away with nothing.' The dice have no loyalty.",
+      "es": "Una figura encapuchada te llama desde una mesa oscura. 'Tres tesoros entre nueve copas. Elegí bien — o andate con las manos vacías.' Los dados no tienen lealtad."
+    },
+    "cards": [
+      {
+        "id": "left_cluster",
+        "icon": "hand",
+        "label": {
+          "en": "Three on the left",
+          "es": "Tres a la izquierda"
+        }
+      },
+      {
+        "id": "center_spread",
+        "icon": "circle",
+        "label": {
+          "en": "Spread across the middle",
+          "es": "Repartidas en el centro"
+        }
+      },
+      {
+        "id": "right_gamble",
+        "icon": "arrow-right",
+        "label": {
+          "en": "All on the right side",
+          "es": "Todas a la derecha"
+        }
+      },
+      {
+        "id": "walk_away",
+        "icon": "door-open",
+        "label": {
+          "en": "Walk away",
+          "es": "Irte"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "grid_gamble",
+      "baseWinChance": 0.33,
+      "statInfluence": {},
+      "cardModifiers": {
+        "walk_away": {
+          "winChanceDelta": 0
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "goldDelta": 400,
+        "fameDelta": 8,
+        "countersDelta": {
+          "gambles_won": 1
+        },
+        "narrative": {
+          "en": "You flip the cups with a showman's flair. Three treasures gleam beneath. The hooded figure nods, pays out in gold, and vanishes into the crowd.",
+          "es": "Levantás las copas con estilo de showman. Tres tesoros brillan debajo. La figura encapuchada asiente, paga en oro, y desaparece entre la multitud."
+        }
+      },
+      "success": {
+        "goldDelta": 150,
+        "countersDelta": {
+          "gambles_won": 1
+        },
+        "narrative": {
+          "en": "You find one treasure among the cups. Not the jackpot — but enough to keep playing.",
+          "es": "Encontrás un tesoro entre las copas. No es el premio mayor — pero suficiente para seguir jugando."
+        }
+      },
+      "partial": {
+        "goldDelta": 30,
+        "narrative": {
+          "en": "You pick poorly. A single copper coin sits under your cup — a mercy prize. The hooded figure's laughter follows you out.",
+          "es": "Elegiste mal. Una sola moneda de cobre está bajo tu copa — un premio de consolación. La risa de la figura encapuchada te sigue hasta la salida."
+        }
+      },
+      "fail": {
+        "goldDelta": -50,
+        "fameDelta": -2,
+        "narrative": {
+          "en": "Empty. Every cup empty. The hooded figure claps slowly. 'Luck is a fickle god.' You slink away, lighter in the purse.",
+          "es": "Vacías. Todas las copas vacías. La figura encapuchada aplaude lentamente. 'La suerte es un dios voluble.' Te escabullís, más liviano de bolsillo."
+        }
+      }
+    }
+  },
+  {
+    "id": "memory_ancient_tablets",
+    "type": "minigame",
+    "subtype": "memory_match",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "primaryStat": "intelligence",
+    "narrative": {
+      "en": "An ancient archive of paired memory tablets lies scattered across the temple floor. Match the symbols before the torch goes out — your wits are the only light.",
+      "es": "Un archivo antiguo de tabletas de memoria emparejadas yace esparcido por el suelo del templo. Emparejá los símbolos antes de que la antorcha se apague — tu ingenio es la única luz."
+    },
+    "cards": [
+      {
+        "id": "study_first",
+        "icon": "book-open",
+        "label": {
+          "en": "Study the layout carefully",
+          "es": "Estudiar el diseño cuidadosamente"
+        }
+      },
+      {
+        "id": "quick_flips",
+        "icon": "zap",
+        "label": {
+          "en": "Start flipping fast",
+          "es": "Empezar a voltear rápido"
+        }
+      },
+      {
+        "id": "trust_patterns",
+        "icon": "brain",
+        "label": {
+          "en": "Trust your pattern sense",
+          "es": "Confiar en tu sentido de patrones"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "memory_match",
+      "baseWinChance": 0.38,
+      "statInfluence": {
+        "intelligence": 0.015,
+        "charisma": 0.003
+      },
+      "statThreshold": 20,
+      "bonusLives": 1,
+      "cardModifiers": {
+        "trust_patterns": {
+          "winChanceDelta": 0.05,
+          "critChanceDelta": 0.04
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "intelligence": 3
+        },
+        "fameDelta": 6,
+        "goldDelta": 80,
+        "countersDelta": {
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "Every pair finds its match. The temple groans in approval and a hidden compartment slides open, revealing ancient lore and gold.",
+          "es": "Cada par encuentra su pareja. El templo gruñe en aprobación y un compartimento oculto se desliza, revelando saber antiguo y oro."
+        }
+      },
+      "success": {
+        "statDeltas": {
+          "intelligence": 1
+        },
+        "goldDelta": 40,
+        "countersDelta": {
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "You match most of the tablets before the last torch gutters. The archive yields its secrets — enough knowledge to be worth the effort.",
+          "es": "Emparejás la mayoría de las tabletas antes de que la última antorcha se apague. El archivo cede sus secretos — suficiente saber para valer el esfuerzo."
+        }
+      },
+      "partial": {
+        "narrative": {
+          "en": "You get half the pairs right, but the torch dies before you can finish. The room goes dark, and you fumble your way out with whatever you found.",
+          "es": "Acertás la mitad de los pares, pero la antorcha se apaga antes de que puedas terminar. La habitación se oscurece, y salís a tientas con lo que encontraste."
+        }
+      },
+      "fail": {
+        "healthDelta": -5,
+        "fameDelta": -2,
+        "narrative": {
+          "en": "The symbols blur. You flip tablet after tablet in a panic, but nothing matches. The torch dies, and you stumble out into the night, empty-handed.",
+          "es": "Los símbolos se vuelven borrosos. Volteás tableta tras tableta en pánico, pero nada coincide. La antorcha se apaga, y salís tropezando a la noche, con las manos vacías."
+        }
+      }
+    }
   }
 ]

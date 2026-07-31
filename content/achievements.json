@@ -633,6 +633,147 @@
         "en": "Complete 5 quests.",
         "es": "Completa 5 misiones."
       }
+    },
+    {
+      "id": "quest_complete_1",
+      "icon": "scroll-text",
+      "rarity": "rare",
+      "condition": {
+        "type": "counter_gte",
+        "key": "quests_completed",
+        "value": 10
+      },
+      "name": {
+        "en": "Pathfinder",
+        "es": "Explorador"
+      },
+      "description": {
+        "en": "Complete 10 quests.",
+        "es": "Completa 10 misiones."
+      }
+    },
+    {
+      "id": "quest_complete_2",
+      "icon": "scroll-text",
+      "rarity": "epic",
+      "condition": {
+        "type": "counter_gte",
+        "key": "quests_completed",
+        "value": 20
+      },
+      "name": {
+        "en": "Legendary Pathfinder",
+        "es": "Explorador Legendario"
+      },
+      "description": {
+        "en": "Complete 20 quests.",
+        "es": "Completa 20 misiones."
+      }
+    },
+    {
+      "id": "battle_hardened_1",
+      "icon": "swords",
+      "rarity": "uncommon",
+      "condition": {
+        "type": "counter_gte",
+        "key": "battles_won",
+        "value": 15
+      },
+      "name": {
+        "en": "Battle-Hardened",
+        "es": "Endurecido en Batalla"
+      },
+      "description": {
+        "en": "Win 15 battles.",
+        "es": "Gana 15 batallas."
+      }
+    },
+    {
+      "id": "battle_hardened_2",
+      "icon": "crosshair",
+      "rarity": "rare",
+      "condition": {
+        "type": "counter_gte",
+        "key": "battles_won",
+        "value": 30
+      },
+      "name": {
+        "en": "Veteran",
+        "es": "Veterano"
+      },
+      "description": {
+        "en": "Win 30 battles.",
+        "es": "Gana 30 batallas."
+      }
+    },
+    {
+      "id": "battle_hardened_3",
+      "icon": "crown",
+      "rarity": "epic",
+      "condition": {
+        "type": "counter_gte",
+        "key": "battles_won",
+        "value": 50
+      },
+      "name": {
+        "en": "Warmaster",
+        "es": "Señor de la Guerra"
+      },
+      "description": {
+        "en": "Win 50 battles.",
+        "es": "Gana 50 batallas."
+      }
+    },
+    {
+      "id": "respected_figure",
+      "icon": "star",
+      "rarity": "rare",
+      "condition": {
+        "type": "reputation_gte",
+        "value": 65
+      },
+      "name": {
+        "en": "Respected Figure",
+        "es": "Figura Respetada"
+      },
+      "description": {
+        "en": "Become Notable with any faction.",
+        "es": "Vuélvete Notable con cualquier facción."
+      }
+    },
+    {
+      "id": "faction_icon",
+      "icon": "crown",
+      "rarity": "epic",
+      "condition": {
+        "type": "reputation_gte",
+        "value": 78
+      },
+      "name": {
+        "en": "Faction Icon",
+        "es": "Icono de Facción"
+      },
+      "description": {
+        "en": "Become Renowned with any faction.",
+        "es": "Vuélvete Renombrado con cualquier facción."
+      }
+    },
+    {
+      "id": "living_myth",
+      "icon": "gem",
+      "rarity": "legendary",
+      "condition": {
+        "type": "reputation_gte",
+        "value": 99
+      },
+      "name": {
+        "en": "Living Myth",
+        "es": "Mito Viviente"
+      },
+      "description": {
+        "en": "Become a Myth with any faction.",
+        "es": "Vuélvete un Mito con cualquier facción."
+      }
     }
   ]
 }

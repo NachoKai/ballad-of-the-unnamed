@@ -79,8 +79,11 @@ export function reputationLabel(c: CharacterState): string {
 
 // Momentum shifts based on how the last few turns trended (stored in counters).
 export function updateMomentum(c: CharacterState, netStatGain: number): void {
-  if (netStatGain > 2) c.momentum = "rising"
-  else if (netStatGain < 0) c.momentum = "falling"
+  // Shop momentum modifier (camp_seer): helps recover from bad streaks.
+  const momentumMod = getActiveModifier(c, "momentumRecoveryModifier")
+  const adjusted = netStatGain + (c.momentum === "falling" ? Math.abs(momentumMod) : 0)
+  if (adjusted > 2) c.momentum = "rising"
+  else if (adjusted < 0) c.momentum = "falling"
   else c.momentum = "normal"
 }
 
@@ -310,12 +313,58 @@ export const STAMINA_BASE_COST = 1
 export const STAMINA_FATIGUE_THRESHOLD = 20
 export const FATIGUE_MULTIPLIER = 0.5
 
+// Read aggregate modifier value for a given effect type from owned inventory.
+// Retinue items apply their effect value as a flat sum; consumables with the same
+// effect type stack additively while active.
+export function getActiveModifier(c: CharacterState, effectType: string): number {
+  let total = 0
+  for (const entry of c.inventory) {
+    // Shop item effects are looked up from content data; we don't store them
+    // on the inventory entry, so we match by known item ids.
+    const MOD_MAP: Record<string, { type: string; value: number }> = {
+      camp_cook: { type: "fatigueModifier", value: -0.15 },
+      battle_healer: { type: "injuryRiskModifier", value: -0.15 },
+      camp_seer: { type: "momentumRecoveryModifier", value: -0.2 },
+      weapon_master: { type: "ageDeclineDelay", value: 3 },
+      guild_herald: { type: "offerQualityModifier", value: 0.15 },
+      season_healer: { type: "injuryRiskModifier", value: -0.1 },
+    }
+    const mod = MOD_MAP[entry.itemId]
+    if (mod && mod.type === effectType) {
+      total += mod.value * entry.qty
+    }
+  }
+  return total
+}
+
 export function deductStamina(c: CharacterState, extraCost = 0): void {
-  c.stamina = Math.max(0, c.stamina - STAMINA_BASE_COST - extraCost)
+  const fatigueMod = getActiveModifier(c, "fatigueModifier")
+  const cost = Math.max(0, STAMINA_BASE_COST + extraCost + fatigueMod)
+  c.stamina = Math.max(0, c.stamina - cost)
 }
 
 export function isFatigued(c: CharacterState): boolean {
   return c.stamina < STAMINA_FATIGUE_THRESHOLD
+}
+
+// Age-related stat decline: after ageRiskStart, stats decay each season.
+// "weapon_master" retinue delays this by adding years to the effective start.
+export function ageDeclineStart(c: CharacterState): number {
+  const delay = getActiveModifier(c, "ageDeclineDelay")
+  return GAME_CONFIG.ageRiskStart + delay
+}
+
+export function applyAgeDecline(c: CharacterState): void {
+  const declineStart = ageDeclineStart(c)
+  if (c.age <= declineStart) return
+  const yearsOver = c.age - declineStart
+  if (yearsOver % 3 === 0) {
+    // Every 3 years past decline start, lose 1 from a random physical stat.
+    const physicalStats = ["strength", "dexterity", "constitution"] as const
+    for (const k of physicalStats) {
+      if (c[k] > 0) c[k] -= 1
+    }
+  }
 }
 
 const LOCALE_LOCATION: Record<string, string> = {
