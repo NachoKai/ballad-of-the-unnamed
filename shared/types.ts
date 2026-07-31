@@ -2,6 +2,10 @@
 
 export type Locale = "en" | "es"
 
+// How the character is addressed in gendered languages (Spanish). Neutral "e"
+// forms are the authored default; male/female inflect content at render time.
+export type Gender = "male" | "female" | "nonbinary"
+
 // Every player-facing string in content is authored as a locale map so Spanish
 // can be added later without touching game logic. See i18n section of the spec.
 export type LocaleMap = Record<Locale, string>
@@ -262,6 +266,7 @@ export interface SlotPools {
 export interface CharacterState {
   id: string
   name: string
+  gender: Gender
   class: string
   archetype: string | null
   epithet: string | null

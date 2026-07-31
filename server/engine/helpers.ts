@@ -13,6 +13,7 @@ import { STAT_KEYS } from "../../shared/types.js"
 import type { Rng } from "../../shared/rng.js"
 import type { ContentRegistry } from "../content/registry.js"
 import { reputationTierId, affinityTierId, GAME_CONFIG } from "../../shared/config.js"
+import { genderize } from "../../shared/genderize.js"
 
 // Fill {slot:pool} placeholders in a narrative string deterministically.
 // The same rng sequence + same seed => identical filled text for daily mode.
@@ -23,8 +24,12 @@ export function fillSlots(
   rng: Rng,
   character?: CharacterState,
 ): string {
+  // Gender-inflect player-referential Spanish words BEFORE slots are filled so
+  // NPC/group text pulled from slot pools is never regendered with the player.
+  // Runs without a stored gender (old saves) stay on the authored neutral forms.
+  const gendered = character && locale === "es" ? genderize(text, character.gender) : text
   // Supports both {poolName} and {slot:poolName} placeholder styles.
-  return text.replace(/\{(?:slot:)?([a-zA-Z_]+)\}/g, (_m, pool: string) => {
+  return gendered.replace(/\{(?:slot:)?([a-zA-Z_]+)\}/g, (_m, pool: string) => {
     // {rivalName} is special: substituted with the actual run's rival, not a pool.
     if (pool === "rivalName") {
       return character?.rival?.name ?? "your rival"

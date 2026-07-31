@@ -7,7 +7,7 @@ import type {
   Locale,
   RichEpilogueData,
 } from "@shared/types"
-import { t } from "../i18n/strings"
+import { gt, t } from "../i18n/strings"
 import { AchIcon } from "./AchIcon"
 import { FactionFlag } from "./FactionFlag"
 import { BtnPrimary, BtnGhost } from "./ui/Button"
@@ -35,9 +35,11 @@ const ENDING_ICON: Record<EndingType, typeof Skull> = {
 
 function FactionHistory({
   locale,
+  gender,
   data,
 }: {
   locale: Locale
+  gender: CharacterState["gender"]
   data: RichEpilogueData["factionHistory"]
 }) {
   if (data.length === 0) return null
@@ -51,7 +53,7 @@ function FactionHistory({
               <FactionFlag factionId={f.faction} size={22} />
             </FactionFlagWrap>
             <FactionName>{t(locale, `faction_${f.faction}`)}</FactionName>
-            <FactionTier>{t(locale, `reputation_tier_${f.peakTier}`)}</FactionTier>
+            <FactionTier>{gt(locale, gender, `reputation_tier_${f.peakTier}`)}</FactionTier>
             <FactionValue>{f.peakValue}</FactionValue>
           </FactionBadge>
         ))}
@@ -220,7 +222,11 @@ export function EndingScreen({
 
         {richEpilogueData && (
           <>
-            <FactionHistory locale={locale} data={richEpilogueData.factionHistory} />
+            <FactionHistory
+              locale={locale}
+              gender={character.gender}
+              data={richEpilogueData.factionHistory}
+            />
             <RivalBlock locale={locale} data={richEpilogueData.rivalComparison} />
             <DistinctionsBlock locale={locale} distinctions={richEpilogueData.distinctions} />
             <LostEncountersBlock locale={locale} count={richEpilogueData.lostEncounters} />

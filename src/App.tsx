@@ -4,6 +4,7 @@ import type {
   AchievementContent,
   CharacterState,
   EndingType,
+  Gender,
   Locale,
   RichEpilogueData,
   RunType,
@@ -91,8 +92,8 @@ export default function App() {
     localStorage.setItem(LOCALE_KEY, next)
   }
 
-  async function startRun(name: string, classId: string, runType: RunType) {
-    const res = await api.newRun({ name, classId, runType, locale })
+  async function startRun(name: string, gender: Gender, classId: string, runType: RunType) {
+    const res = await api.newRun({ name, gender, classId, runType, locale })
     setRunId(res.runId)
     localStorage.setItem(RUN_KEY, res.runId)
     setCharacter(res.character)
@@ -104,11 +105,12 @@ export default function App() {
 
   async function startRunWithArchetype(
     name: string,
+    gender: Gender,
     classId: string,
     archetypeId: string,
     runType: RunType,
   ) {
-    const res = await api.newRun({ name, classId, archetypeId, runType, locale })
+    const res = await api.newRun({ name, gender, classId, archetypeId, runType, locale })
     setRunId(res.runId)
     localStorage.setItem(RUN_KEY, res.runId)
     setCharacter(res.character)

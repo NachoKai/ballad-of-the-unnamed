@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { styled } from "styled-components"
-import type { Locale, RunType } from "@shared/types"
+import type { Gender, Locale, RunType } from "@shared/types"
 import { api, type ArchetypeView, type ClassInfo } from "../api"
 import { t } from "../i18n/strings"
 import { STAT_ABBR } from "../constants"
@@ -11,9 +11,10 @@ import { rise } from "./ui/Animation"
 
 interface Props {
   locale: Locale
-  onStart: (name: string, classId: string, runType: RunType) => Promise<void>
+  onStart: (name: string, gender: Gender, classId: string, runType: RunType) => Promise<void>
   onStartWithArchetype: (
     name: string,
+    gender: Gender,
     classId: string,
     archetypeId: string,
     runType: RunType,
@@ -27,6 +28,7 @@ export function CreationScreen({ locale, onStart, onStartWithArchetype }: Props)
   const [classes, setClasses] = useState<ClassInfo[]>([])
   const [dailySeed, setDailySeed] = useState("")
   const [name, setName] = useState("")
+  const [gender, setGender] = useState<Gender>("nonbinary")
   const [classId, setClassId] = useState<string | null>(null)
   const [runType, setRunType] = useState<RunType>("standard")
   const [busy, setBusy] = useState(false)
@@ -59,7 +61,7 @@ export function CreationScreen({ locale, onStart, onStartWithArchetype }: Props)
     } catch (err) {
       console.error("Failed to draw archetypes:", err)
       // Fallback: if archetype-draw fails, skip straight to game with no archetype.
-      await onStart(name.trim() || "Wanderer", classId, runType)
+      await onStart(name.trim() || "Wanderer", gender, classId, runType)
     } finally {
       setBusy(false)
     }
@@ -70,7 +72,7 @@ export function CreationScreen({ locale, onStart, onStartWithArchetype }: Props)
     setBusy(true)
     setError(null)
     try {
-      await onStartWithArchetype(name.trim() || "Wanderer", classId, archetypeId, runType)
+      await onStartWithArchetype(name.trim() || "Wanderer", gender, classId, archetypeId, runType)
     } catch (e) {
       setError(String((e as Error).message))
       setBusy(false)
@@ -113,6 +115,36 @@ export function CreationScreen({ locale, onStart, onStartWithArchetype }: Props)
           placeholder={t(locale, "namePlaceholder")}
           onChange={(e) => setName(e.target.value)}
         />
+      </CreationBlock>
+
+      <CreationBlock>
+        <BlockLabel as="span">{t(locale, "chooseGender")}</BlockLabel>
+        <GenderOptions role="group" aria-label={t(locale, "chooseGender")}>
+          <GenderPill
+            type="button"
+            $active={gender === "male"}
+            onClick={() => setGender("male")}
+            aria-pressed={gender === "male"}
+          >
+            {t(locale, "genderMale")}
+          </GenderPill>
+          <GenderPill
+            type="button"
+            $active={gender === "female"}
+            onClick={() => setGender("female")}
+            aria-pressed={gender === "female"}
+          >
+            {t(locale, "genderFemale")}
+          </GenderPill>
+          <GenderPill
+            type="button"
+            $active={gender === "nonbinary"}
+            onClick={() => setGender("nonbinary")}
+            aria-pressed={gender === "nonbinary"}
+          >
+            {t(locale, "genderNonbinary")}
+          </GenderPill>
+        </GenderOptions>
       </CreationBlock>
 
       <CreationBlock>
@@ -341,6 +373,36 @@ const ModePill = styled.button<{ $active: boolean }>`
     color: ${({ theme }) => theme.colors.muted};
     font-size: 15px;
   }
+
+  &:hover {
+    border-color: ${({ theme }) => theme.colors.line2};
+  }
+`
+
+const GenderOptions = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+
+  @media (max-width: 680px) {
+    grid-template-columns: 1fr;
+  }
+`
+
+const GenderPill = styled.button<{ $active: boolean }>`
+  background: ${({ $active, theme }) => ($active ? theme.colors.ink2 : theme.colors.ink2)};
+  border: 1px solid ${({ $active, theme }) => ($active ? theme.colors.gold : theme.colors.line)};
+  border-radius: ${({ theme }) => theme.radii.lg};
+  padding: 12px 14px;
+  color: ${({ $active, theme }) => ($active ? theme.colors.goldBright : theme.colors.parchmentDim)};
+  font-family: ${({ theme }) => theme.fonts.display};
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
+  box-shadow: ${({ $active }) => ($active ? "0 0 0 1px #c9a44c" : "none")};
+  cursor: pointer;
 
   &:hover {
     border-color: ${({ theme }) => theme.colors.line2};

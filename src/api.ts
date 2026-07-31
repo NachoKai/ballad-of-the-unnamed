@@ -2,6 +2,7 @@ import type {
   AchievementContent,
   CharacterState,
   EndingType,
+  Gender,
   Locale,
   RichEpilogueData,
   RunType,
@@ -121,6 +122,7 @@ export const api = {
 
   newRun: (input: {
     name: string
+    gender: Gender
     classId: string
     archetypeId?: string
     runType: RunType

@@ -1,4 +1,5 @@
-import type { Locale } from "@shared/types"
+import type { Gender, Locale } from "@shared/types"
+import { genderize } from "@shared/genderize"
 
 // UI chrome strings (labels, buttons). Content strings live in /content as
 // LocaleMaps and are resolved server-side. Same EN/ES parity discipline here so
@@ -10,6 +11,10 @@ const en: StringMap = {
   subtitle: "A life, one turn at a time",
   newLife: "Begin a New Life",
   chooseName: "Name your wanderer",
+  chooseGender: "How will the bards sing of you?",
+  genderMale: "He",
+  genderFemale: "She",
+  genderNonbinary: "They",
   chooseClass: "Choose your path",
   namePlaceholder: "e.g. Kaelen",
   standard: "Standard",
@@ -237,6 +242,10 @@ const es: StringMap = {
   subtitle: "Una vida, turno a turno",
   newLife: "Comenzar una nueva vida",
   chooseName: "Nombra a tu errante",
+  chooseGender: "¿Cómo te cantarán los bardos?",
+  genderMale: "Él",
+  genderFemale: "Ella",
+  genderNonbinary: "Elle",
   chooseClass: "Elige tu camino",
   namePlaceholder: "p. ej. Kaelen",
   standard: "Estándar",
@@ -271,7 +280,7 @@ const es: StringMap = {
   battles: "Batallas",
   ending: "Destino",
   achievements: "Hazañas",
-  emptyBoard: "Aún no hay leyendas. Sé el primero.",
+  emptyBoard: "Aún no hay leyendas. Sé quien las inaugure.",
   standardBoard: "Histórico",
   dailyBoard: "Semilla de hoy",
   ending_heroic_death: "Una muerte heroica",
@@ -297,7 +306,7 @@ const es: StringMap = {
   standardRuns: "Histórico",
   dailyRuns: "Semilla de hoy",
   legendaryBoard: "Legendario",
-  noEntries: "Aún no hay leyendas. Sé el primero.",
+  noEntries: "Aún no hay leyendas. Sé quien las inaugure.",
   classLabel: "Clase",
   endingLabel: "Destino",
   ageShort: "Edad",
@@ -470,4 +479,13 @@ export function makeT(locale: Locale) {
 export function t(locale: Locale, key: string): string {
   const table = TABLES[locale] ?? en
   return table[key] ?? en[key] ?? key
+}
+
+// Gender-aware lookup for player-facing chrome labels (reputation tiers,
+// personality tags). Spanish labels are authored masculine; female characters
+// get feminine forms via the shared inflector. English is unaffected.
+export function gt(locale: Locale, gender: Gender | null | undefined, key: string): string {
+  const value = t(locale, key)
+  if (locale !== "es") return value
+  return genderize(value, gender)
 }

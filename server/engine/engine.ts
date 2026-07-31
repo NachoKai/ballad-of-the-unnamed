@@ -5,6 +5,7 @@ import type {
   EventContent,
   FinaleChoice,
   FinaleStage,
+  Gender,
   Locale,
   MinigameOutcome,
   OutcomeTier,
@@ -51,6 +52,7 @@ import { generateFinaleStage1, generateFinaleStage2 } from "./finale.js"
 export function createCharacter(input: {
   id: string
   name: string
+  gender?: Gender
   classId: string
   archetypeId?: string | null
   locale: Locale
@@ -71,6 +73,7 @@ export function createCharacter(input: {
   const base: CharacterState = {
     id: input.id,
     name: input.name,
+    gender: input.gender ?? "nonbinary",
     class: cls.id,
     archetype: archetype?.id ?? null,
     epithet: null,

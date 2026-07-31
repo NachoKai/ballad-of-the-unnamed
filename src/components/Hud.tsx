@@ -1,7 +1,7 @@
 import type { CharacterState, Locale } from "@shared/types"
 import { STAT_KEYS } from "@shared/types"
 import { styled } from "styled-components"
-import { t as translate } from "../i18n/strings"
+import { gt as translateFor, t as translate } from "../i18n/strings"
 import { STAT_ABBR } from "../constants"
 import { FactionFlag } from "./FactionFlag"
 import { Panel } from "./ui/Panel"
@@ -117,11 +117,16 @@ export function Hud({ character: c, locale, onShopOpen }: Props) {
           <RepPill>
             <FactionFlag factionId={primaryRep.faction} size={14} />
             {t(`faction_${primaryRep.faction}`)} ·{" "}
-            {t(`reputation_tier_${reputationTier(primaryRep.value)}`)} [{primaryRep.value}]
+            {translateFor(locale, c.gender, `reputation_tier_${reputationTier(primaryRep.value)}`)}{" "}
+            [{primaryRep.value}]
           </RepPill>
         )}
         {topTags.length > 0 && (
-          <TagPill>{topTags.map((tag) => t(`personality_tag_${tag}`)).join(" · ")}</TagPill>
+          <TagPill>
+            {topTags
+              .map((tag) => translateFor(locale, c.gender, `personality_tag_${tag}`))
+              .join(" · ")}
+          </TagPill>
         )}
         {c.rival && (
           <RivalBadge>

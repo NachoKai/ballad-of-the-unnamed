@@ -29,6 +29,7 @@ import {
 import type {
   AchievementContent,
   ArchetypeContent,
+  Gender,
   Locale,
   RunType,
   TurnResult,
@@ -102,6 +103,8 @@ gameRouter.post("/new", async (req: Request, res: Response) => {
     const archetypeId = String(req.body?.archetypeId ?? "").trim() || null
     const runType: RunType = req.body?.runType === "daily" ? "daily" : "standard"
     const locale = localeOf(req)
+    const gender: Gender =
+      req.body?.gender === "male" || req.body?.gender === "female" ? req.body.gender : "nonbinary"
 
     if (!registry.classesById.has(classId)) {
       return res.status(400).json({ error: "invalid_class" })
@@ -113,6 +116,7 @@ gameRouter.post("/new", async (req: Request, res: Response) => {
     const character = createCharacter({
       id: crypto.randomUUID(),
       name,
+      gender,
       classId,
       archetypeId,
       locale,
