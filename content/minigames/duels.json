@@ -89,9 +89,7 @@
       },
       "partial": {
         "injuryRiskDelta": 0.1,
-        "countersReset": [
-          "duel_streak"
-        ],
+        "countersReset": ["duel_streak"],
         "narrative": {
           "en": "You trade blows and scrape a win, but you'll feel it tomorrow.",
           "es": "Intercambian golpes y arañás la victoria, pero lo vas a sentir mañana."
@@ -101,9 +99,7 @@
         "injuryRiskDelta": 0.3,
         "reputationDelta": -3,
         "reputationFaction": "ironhold",
-        "countersReset": [
-          "duel_streak"
-        ],
+        "countersReset": ["duel_streak"],
         "narrative": {
           "en": "They see it coming. Steel bites, and you go down in the dust.",
           "es": "Lo ven venir. El acero muerde, y caés en el polvo."
@@ -198,9 +194,7 @@
       },
       "partial": {
         "goldDelta": 20,
-        "countersReset": [
-          "negotiation_streak"
-        ],
+        "countersReset": ["negotiation_streak"],
         "narrative": {
           "en": "You avoid a fight but take a worse deal than you wanted.",
           "es": "Evitás una pelea pero aceptás un trato peor del que querías."
@@ -210,9 +204,7 @@
         "reputationDelta": -2,
         "reputationFaction": "greywater",
         "injuryRiskDelta": 0.08,
-        "countersReset": [
-          "negotiation_streak"
-        ],
+        "countersReset": ["negotiation_streak"],
         "narrative": {
           "en": "You misjudge the room. Tempers flare and the deal collapses.",
           "es": "Malinterpretás el ambiente. Los ánimos se encienden y el trato se derrumba."
@@ -310,9 +302,7 @@
       },
       "partial": {
         "injuryRiskDelta": 0.15,
-        "countersReset": [
-          "duel_streak"
-        ],
+        "countersReset": ["duel_streak"],
         "narrative": {
           "en": "You hold your own but take a stool to the ribs. You're still standing when it's over — barely.",
           "es": "Te mantenés pero te comés un taburete en las costillas. Todavía estás de pie cuando termina — apenas."
@@ -322,9 +312,7 @@
         "healthDelta": -12,
         "injuryRiskDelta": 0.25,
         "reputationDelta": -1,
-        "countersReset": [
-          "duel_streak"
-        ],
+        "countersReset": ["duel_streak"],
         "narrative": {
           "en": "A sucker punch sends you into a barrel. You go down hard and wake up to the barkeep charging you for the damage.",
           "es": "Un golpe traicionero te manda contra un barril. Caés fuerte y despertás con el tabernero cobrándote los daños."
@@ -426,9 +414,7 @@
       "partial": {
         "healthDelta": -5,
         "injuryRiskDelta": 0.08,
-        "countersReset": [
-          "duel_streak"
-        ],
+        "countersReset": ["duel_streak"],
         "narrative": {
           "en": "Your spell fizzles but you deflect the rebound. A draw that leaves both of you singed and suspicious.",
           "es": "Tu hechizo falla pero desviás el rebote. Un empate que deja a ambos chamuscados y sospechosos."
@@ -439,9 +425,7 @@
         "injuryRiskDelta": 0.2,
         "reputationDelta": -2,
         "reputationFaction": "arcanum",
-        "countersReset": [
-          "duel_streak"
-        ],
+        "countersReset": ["duel_streak"],
         "narrative": {
           "en": "Your weave collapses. Magic lashes back, throwing you across the room. The Arcanum will remember this embarrassment.",
           "es": "Tu tejido colapsa. La magia azota de vuelta y te lanza al otro lado de la sala. El Arcanum recordará esta vergüenza."
@@ -541,9 +525,7 @@
         "healthDelta": -6,
         "goldDelta": -20,
         "injuryRiskDelta": 0.12,
-        "countersReset": [
-          "duel_streak"
-        ],
+        "countersReset": ["duel_streak"],
         "narrative": {
           "en": "You fight them off but take a knife across the arm. They grab a few coins and vanish. Could've been worse.",
           "es": "Los ahuyentás pero recibís un cuchillazo en el brazo. Agarran unas monedas y desaparecen. Podría haber sido peor."
@@ -553,12 +535,342 @@
         "healthDelta": -15,
         "goldDelta": -80,
         "injuryRiskDelta": 0.3,
-        "countersReset": [
-          "duel_streak"
-        ],
+        "countersReset": ["duel_streak"],
         "narrative": {
           "en": "Too many. Too fast. You go down under a flurry of boots and blades. They take everything.",
           "es": "Demasiados. Demasiado rápido. Caés bajo una lluvia de botas y cuchillas. Se llevan todo."
+        }
+      }
+    }
+  },
+  {
+    "id": "fencing_formal_duel",
+    "type": "minigame",
+    "subtype": "duel_strike",
+    "minAge": 18,
+    "maxAge": 99,
+    "weight": 5,
+    "primaryStat": "dexterity",
+    "narrative": {
+      "en": "Morning mist clings to the dueling ground. Your opponent is a Crownguard fencing master, light on their feet with a rapier that hums. Honor demands first blood — speed decides who gives it.",
+      "es": "La niebla matinal se aferra al campo de duelo. Tu rival es una maestra de esgrima de la Guardia de la Corona, ligera de pies con un estoque que zumba. El honor exige primera sangre — la velocidad decide quién la da."
+    },
+    "cards": [
+      {
+        "id": "flick_lunge",
+        "icon": "sword",
+        "label": {
+          "en": "Flick a quick lunge",
+          "es": "Tirar una estocada rápida"
+        }
+      },
+      {
+        "id": "riposte_wait",
+        "icon": "shield",
+        "label": {
+          "en": "Wait and riposte",
+          "es": "Esperar y contraatacar"
+        }
+      },
+      {
+        "id": "bind_blade",
+        "icon": "rotate-3d",
+        "label": {
+          "en": "Bind their blade",
+          "es": "Atar su hoja"
+        }
+      },
+      {
+        "id": "high_disengage",
+        "icon": "arrow-up",
+        "label": {
+          "en": "Disengage high",
+          "es": "Desengancharse en alto"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.42,
+      "statInfluence": {
+        "dexterity": 0.014,
+        "intelligence": 0.003
+      },
+      "cardModifiers": {
+        "bind_blade": {
+          "winChanceDelta": 0.09,
+          "critChanceDelta": 0.04
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "dexterity": 2
+        },
+        "goldDelta": 180,
+        "fameDelta": 6,
+        "reputationDelta": 3,
+        "reputationFaction": "crownguard",
+        "countersDelta": {
+          "battles_won": 1,
+          "duels_won": 1,
+          "fencing_won": 1
+        },
+        "narrative": {
+          "en": "You catch their lunge on your bind and turn it in a single motion. The blade's point rests at their throat before the mist settles. The master salutes — and so does half the academy.",
+          "es": "Atrapás su estocada en tu enlace y la devolvés en un solo movimiento. La punta de la hoja descansa en su garganta antes de que la niebla se asiente. La maestra saluda — y con ella media academia."
+        }
+      },
+      "success": {
+        "fameDelta": 3,
+        "reputationDelta": 1,
+        "reputationFaction": "crownguard",
+        "countersDelta": {
+          "battles_won": 1,
+          "duels_won": 1
+        },
+        "narrative": {
+          "en": "First blood, and it's theirs to give. Your riposte lands clean on the wrist. The master concedes with a graceful nod.",
+          "es": "Primera sangre, y la dan ellos. Tu contraataque aterriza limpio en la muñeca. La maestra concede con un gesto elegante."
+        }
+      },
+      "partial": {
+        "injuryRiskDelta": 0.1,
+        "countersReset": ["duel_streak"],
+        "narrative": {
+          "en": "A grueling exchange of touches ends in a draw called by the judges. Neither of you yields, and the mist has all but burned away.",
+          "es": "Un intercambio agotador de toques termina en empate declarado por los jueces. Ninguno cede, y la niebla ya casi se ha quemado."
+        }
+      },
+      "fail": {
+        "injuryRiskDelta": 0.25,
+        "reputationDelta": -2,
+        "reputationFaction": "crownguard",
+        "countersReset": ["duel_streak"],
+        "narrative": {
+          "en": "You overcommit on the disengage and eat a clean touch to the shoulder. The master's salute is polite, but the crowd's murmur isn't.",
+          "es": "Te sobreexigís en el desenganche y recibís un toque limpio en el hombro. El saludo de la maestra es cortés, pero el murmullo de la multitud no lo es."
+        }
+      }
+    }
+  },
+  {
+    "id": "underground_pit",
+    "type": "minigame",
+    "subtype": "brawl",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "primaryStat": "strength",
+    "narrative": {
+      "en": "Torches gutter over a sawdust pit. A bare-knuckle champion twice your size rolls their neck and spits. The crowd chants for blood. The house rules: no weapons, no mercy, no leaving early.",
+      "es": "Las antorchas parpadean sobre un foso de aserrín. Una campeona a puño limpio, del doble de tu tamaño, gira el cuello y escupe. La multitud corea por sangre. Reglas de la casa: sin armas, sin piedad, sin salir temprano."
+    },
+    "cards": [
+      {
+        "id": "circle_fast",
+        "icon": "footprints",
+        "label": {
+          "en": "Circle and stay fast",
+          "es": "Circular y mantenerse rápido"
+        }
+      },
+      {
+        "id": "clinch_ground",
+        "icon": "hand",
+        "label": {
+          "en": "Clinch and drag it to the ground",
+          "es": "Agarrarse y llevarlo al piso"
+        }
+      },
+      {
+        "id": "bait_punch",
+        "icon": "shield-off",
+        "label": {
+          "en": "Bait the big haymaker",
+          "es": "Provocar el golpe demoledor"
+        }
+      },
+      {
+        "id": "body_shots",
+        "icon": "fist",
+        "label": {
+          "en": "Work the body, break them slow",
+          "es": "Trabajar el cuerpo, romperlos despacio"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.4,
+      "statInfluence": {
+        "strength": 0.012,
+        "constitution": 0.006
+      },
+      "cardModifiers": {
+        "bait_punch": {
+          "winChanceDelta": 0.1
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "strength": 2,
+          "constitution": 1
+        },
+        "goldDelta": 250,
+        "fameDelta": 5,
+        "countersDelta": {
+          "battles_won": 1,
+          "duels_won": 1,
+          "brawls_won": 1
+        },
+        "narrative": {
+          "en": "You slip the haymaker, duck under, and fold the champion with one body shot they never saw coming. The pit erupts. The house pays out double to keep you fighting.",
+          "es": "Esquivás el golpe demoledor, te agachás, y derribás a la campeona con un golpe al cuerpo que nunca vio venir. El foso estalla. La casa paga el doble para que sigas peleando."
+        }
+      },
+      "success": {
+        "fameDelta": 3,
+        "goldDelta": 100,
+        "countersDelta": {
+          "battles_won": 1,
+          "duels_won": 1
+        },
+        "narrative": {
+          "en": "You grind them down with body shots until the champion taps out on one knee. The crowd cheers your name — or their best guess at it.",
+          "es": "Los desgastás a golpes al cuerpo hasta que la campeona se rinde sobre una rodilla. La multitud aclama tu nombre — o su mejor suposición del mismo."
+        }
+      },
+      "partial": {
+        "healthDelta": -6,
+        "injuryRiskDelta": 0.12,
+        "goldDelta": 30,
+        "countersReset": ["duel_streak"],
+        "narrative": {
+          "en": "You take more than you give, but you stay on your feet long enough to claim a draw. The house tosses you a few coins and a towel.",
+          "es": "Recibís más de lo que das, pero te mantenés en pie el tiempo suficiente para reclamar un empate. La casa te tira unas monedas y una toalla."
+        }
+      },
+      "fail": {
+        "healthDelta": -15,
+        "goldDelta": -30,
+        "injuryRiskDelta": 0.25,
+        "reputationDelta": -1,
+        "countersReset": ["duel_streak"],
+        "narrative": {
+          "en": "The haymaker lands flush. You wake up in the sawdust to the crowd's laughter and a healer who charges double for pit wounds.",
+          "es": "El golpe demoledor aterriza de lleno. Despertás en el aserrín con la risa de la multitud y una curandera que cobra el doble por heridas de foso."
+        }
+      }
+    }
+  },
+  {
+    "id": "caravan_negotiation",
+    "type": "minigame",
+    "subtype": "negotiation",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "primaryStat": "charisma",
+    "narrative": {
+      "en": "A Thornwood caravan master sits across from you, arms folded. Their wagons are heavy with ironwork and ore. Your offer needs to match their stubbornness — and they're very, very stubborn.",
+      "es": "Una maestra de caravana del Espinar se sienta frente a vos, con los brazos cruzados. Sus carromatos van cargados de hierro y mineral. Tu oferta debe igualar su terquedad — y son muy, muy tercos."
+    },
+    "cards": [
+      {
+        "id": "offer_grain",
+        "icon": "leaf",
+        "label": {
+          "en": "Sweeten it with grain",
+          "es": "Endulzarla con grano"
+        }
+      },
+      {
+        "id": "quote_market",
+        "icon": "coins",
+        "label": {
+          "en": "Quote the Greywater market rate",
+          "es": "Citar el precio de mercado de Villa Aguagrís"
+        }
+      },
+      {
+        "id": "promise_escort",
+        "icon": "shield",
+        "label": {
+          "en": "Promise a safe escort",
+          "es": "Prometer una escolta segura"
+        }
+      },
+      {
+        "id": "stand_firm",
+        "icon": "hand",
+        "label": {
+          "en": "Stand firm and walk away",
+          "es": "Mantenerse firme y retirarse"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.43,
+      "statInfluence": {
+        "charisma": 0.012,
+        "intelligence": 0.004
+      },
+      "cardModifiers": {
+        "promise_escort": {
+          "winChanceDelta": 0.09
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "charisma": 2
+        },
+        "goldDelta": 200,
+        "fameDelta": 4,
+        "reputationDelta": 3,
+        "reputationFaction": "thornwood",
+        "countersDelta": {
+          "negotiations_won": 1
+        },
+        "narrative": {
+          "en": "You trade, barter, and bend their price to half of what they asked. The caravan master laughs and claps you on the back — 'You could sell sand to the desert.' A standing deal is struck.",
+          "es": "Negociás, regateás y bajás su precio a la mitad de lo que pidieron. La maestra de caravana ríe y te da una palmada en la espalda — 'Podrías venderle arena al desierto.' Se cierra un trato permanente."
+        }
+      },
+      "success": {
+        "goldDelta": 80,
+        "reputationDelta": 1,
+        "reputationFaction": "thornwood",
+        "countersDelta": {
+          "negotiations_won": 1
+        },
+        "narrative": {
+          "en": "A fair bargain, struck without bloodshed or bad blood. The caravan master seals it with a firm handshake.",
+          "es": "Un trato justo, cerrado sin derramamiento de sangre ni rencores. La maestra de caravana lo sella con un apretón firme."
+        }
+      },
+      "partial": {
+        "goldDelta": 25,
+        "countersReset": ["negotiation_streak"],
+        "narrative": {
+          "en": "You get most of what you wanted, but the master talks you into a worse rate than you'd planned. Still, a deal is a deal.",
+          "es": "Conseguís la mayor parte de lo que querías, pero la maestra te convence de una tarifa peor de la planeada. Aún así, trato es trato."
+        }
+      },
+      "fail": {
+        "goldDelta": -40,
+        "reputationDelta": -2,
+        "reputationFaction": "thornwood",
+        "countersReset": ["negotiation_streak"],
+        "narrative": {
+          "en": "You push too hard and the master folds their arms for good. The caravan rolls out without you, and the deal rolls with it.",
+          "es": "Empujás demasiado y la maestra cruza los brazos para siempre. La caravana parte sin vos, y el trato se va con ella."
         }
       }
     }
@@ -659,9 +971,7 @@
       "partial": {
         "injuryRiskDelta": 0.1,
         "fameDelta": 1,
-        "countersReset": [
-          "duel_streak"
-        ],
+        "countersReset": ["duel_streak"],
         "narrative": {
           "en": "You hold your ground but can't break through. The judges call it a draw. You live to fight another round.",
           "es": "Mantenés el terreno pero no lográs abrirte paso. Los jueces declaran empate. Vivís para pelear otra ronda."
@@ -673,9 +983,7 @@
         "fameDelta": -2,
         "reputationDelta": -2,
         "reputationFaction": "crownguard",
-        "countersReset": [
-          "duel_streak"
-        ],
+        "countersReset": ["duel_streak"],
         "narrative": {
           "en": "You miss the parry. The knight's blade connects with a crack. You go down in the dirt as the crowd sighs. A long walk back to the tents.",
           "es": "Fallás la parada. La hoja de la caballera conecta con un chasquido. Caés en el polvo mientras la multitud suspira. Una larga caminata de vuelta a las carpas."

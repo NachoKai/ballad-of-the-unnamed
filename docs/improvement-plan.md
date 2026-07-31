@@ -394,13 +394,13 @@ Goal: Enough variety for 20+ runs before repetition sets in.
 
 **Spec ref**: — (volume targets)
 
-Status: current counts as of audit — Events **32**/60, Minigames **17**/25, Achievements **44**/50, Archetypes **30**/30+, World events **10**/20+, Clans 25 factions (few with joinable perks), NPC relationships system in place but <15 recurring authored NPCs. Target numbers in the table below are the Phase 5 goals, not yet reached.
+Status: current counts as of audit — Events **54**/60, Minigames **25**/25, Achievements **52**/50, Archetypes **30**/30+, World events **10**/20+, Clans 25 factions (few with joinable perks), NPC relationships system in place but <15 recurring authored NPCs. Target numbers in the table below are the Phase 5 goals. **2026-07-30: content expansion shipped — 17 new events (9 clan + 8 rest/recovery), 8 new minigames, 8 new achievement tiers.**
 
 | Category                           | Current       | Phase 5 Target          |
 | ---------------------------------- | ------------- | ----------------------- |
-| Events (tavern/road/dungeon/court) | 32            | 60+                     |
-| Minigames (duels + activities)     | 17            | 25+                     |
-| Achievements                       | 44            | 50+                     |
+| Events (tavern/road/dungeon/court) | 54            | 60+                     |
+| Minigames (duels + activities)     | 25            | 25+                     |
+| Achievements                       | 52            | 50+                     |
 | Slot pool entries                  | ~140          | 300+                    |
 | Archetypes                         | 30            | 30+ (5-8 per class)     |
 | World events                       | 10            | 20+                     |

@@ -1,0 +1,440 @@
+[
+  {
+    "id": "rest_inn_night",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 8,
+    "location": "road",
+    "narrative": {
+      "en": "A warm inn glows at {locationName}, its sign swinging in the wind. The scent of roast meat and hearth-fire drifts out. Your bones ache for a bed that doesn't move.",
+      "es": "Una posada cálida brilla en {locationName}, su letrero meciéndose en el viento. El aroma de carne asada y fuego de hogar se desprende. Tus huesos añoran una cama que no se mueva."
+    },
+    "choices": [
+      {
+        "id": "take_room",
+        "label": {
+          "en": "Pay for a room and a hot meal",
+          "es": "Pagar por una habitación y una comida caliente"
+        },
+        "tag": "Professional",
+        "rarity": "uncommon",
+        "goldDelta": -30,
+        "staminaDelta": 40,
+        "healthDelta": 8,
+        "statDeltas": {
+          "constitution": 1
+        },
+        "narrative": {
+          "en": "You sleep like the dead and wake at noon, fed and whole. The road can wait a day.",
+          "es": "Dormís como un tronco y despertás al mediodía, alimentade y entero. El camino puede esperar un día."
+        }
+      },
+      {
+        "id": "stable",
+        "label": {
+          "en": "Sleep in the stable to save coin",
+          "es": "Dormir en el establo para ahorrar monedas"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "goldDelta": -5,
+        "staminaDelta": 18,
+        "statDeltas": {
+          "constitution": 1
+        },
+        "narrative": {
+          "en": "Hay makes a poor mattress, but the horses keep you warm. You wake stiff but rested.",
+          "es": "El heno hace un colchón pobre, pero les caballos te dan calor. Despertás tieso pero descansade."
+        }
+      },
+      {
+        "id": "push_on",
+        "label": {
+          "en": "Push on through the night",
+          "es": "Seguir de largo durante la noche"
+        },
+        "tag": "Confident",
+        "rarity": "rare",
+        "staminaDelta": -10,
+        "statDeltas": {
+          "dexterity": 2
+        },
+        "countersDelta": {
+          "nights_pushed": 1
+        },
+        "narrative": {
+          "en": "The moon lights your way and your feet keep time. You make up distance — but the firelight fades behind you.",
+          "es": "La luna ilumina tu camino y tus pies marcan el ritmo. Ganás distancia — pero la luz del fuego se desvanece detrás tuyo."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rest_campfire_story",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 7,
+    "location": "road",
+    "narrative": {
+      "en": "You make camp at a sheltered bend of the road. A {npcRole} tending their own small fire waves you over. 'Share the flame, stranger. A night shared is a night half as cold.'",
+      "es": "Acampás en un recodo resguardado del camino. Une {npcRole} cuidando su propio fuego te hace señas. 'Compartí la llama, extrañe. Una noche compartida es una noche a mitad de frío.'"
+    },
+    "choices": [
+      {
+        "id": "share_tales",
+        "label": {
+          "en": "Sit, share stories, and sleep warm",
+          "es": "Sentarte, compartir historias y dormir abrigade"
+        },
+        "tag": "Supportive",
+        "rarity": "uncommon",
+        "staminaDelta": 30,
+        "statDeltas": {
+          "charisma": 2
+        },
+        "narrative": {
+          "en": "Tales trade until the fire sinks to coals. You wake rested, and the stranger is gone — but the story stays with you.",
+          "es": "Las historias se intercambian hasta que el fuego se apaga en brasas. Despertás descansade, y le extrañe se fue — pero la historia se queda con vos."
+        }
+      },
+      {
+        "id": "keep_watch",
+        "label": {
+          "en": "Keep first watch, wary of the dark",
+          "es": "Quedarte de primer guardia, alerta a la oscuridad"
+        },
+        "tag": "Strategic",
+        "rarity": "common",
+        "staminaDelta": 12,
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "narrative": {
+          "en": "You sit with your back to a stone and your eyes on the treeline. Nothing comes. A watch kept is a night won.",
+          "es": "Te sentás con la espalda contra una piedra y los ojos en el borde del bosque. Nada llega. Una guardia cumplida es una noche ganada."
+        }
+      },
+      {
+        "id": "walk_the_dark",
+        "label": {
+          "en": "Leave the fire behind and travel by starlight",
+          "es": "Dejar el fuego atrás y viajar a la luz de las estrellas"
+        },
+        "tag": "Cocky",
+        "rarity": "volatile",
+        "staminaDelta": -8,
+        "statDeltas": {
+          "dexterity": 3
+        },
+        "injuryRiskDelta": 0.06,
+        "narrative": {
+          "en": "The starlit road has its own music. You make ground while others sleep — and the night keeps your secret.",
+          "es": "El camino estrellado tiene su propia música. Ganás terreno mientras otres duermen — y la noche guarda tu secreto."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rest_hot_springs",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "location": "dungeon",
+    "narrative": {
+      "en": "Steam rises from a cleft in the rock — a natural hot spring, hidden where no map marks it. The water glows faintly, and the air smells of minerals and peace.",
+      "es": "El vapor asciende de una grieta en la roca — una fuente termal natural, oculta donde ningún mapa la marca. El agua brilla débilmente, y el aire huele a minerales y paz."
+    },
+    "choices": [
+      {
+        "id": "soak",
+        "label": {
+          "en": "Strip down and soak away the aches",
+          "es": "Desnudarte y remojar los dolores"
+        },
+        "tag": "Humble",
+        "rarity": "uncommon",
+        "staminaDelta": 45,
+        "healthDelta": 10,
+        "statDeltas": {
+          "constitution": 1
+        },
+        "narrative": {
+          "en": "The warm water draws the poison of fatigue from your bones. You emerge reborn, skin tingling, ready for anything.",
+          "es": "El agua tibia extrae el veneno del cansancio de tus huesos. Salís renacide, con la piel hormigueando, liste para cualquier cosa."
+        }
+      },
+      {
+        "id": "sketch_map",
+        "label": {
+          "en": "Note the location and move on",
+          "es": "Anotar la ubicación y seguir"
+        },
+        "tag": "Strategic",
+        "rarity": "common",
+        "staminaDelta": 10,
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "narrative": {
+          "en": "You mark the spring on your map and press onward. Knowledge is its own kind of treasure.",
+          "es": "Marcás la fuente en tu mapa y seguís adelante. El conocimiento es su propio tipo de tesoro."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rest_village_feast",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "location": "road",
+    "narrative": {
+      "en": "A village in the shadow of {locationName} is celebrating the harvest. Long tables line the square, and a {npcRole} beckons you to an empty seat. 'Eat, traveler. A full belly fears no ghost.'",
+      "es": "Un pueblo a la sombra de {locationName} celebra la cosecha. Largas mesas bordean la plaza, y une {npcRole} te hace señas desde un asiento vacío. 'Comé, viajere. Una panza llena no teme a los fantasmas.'"
+    },
+    "choices": [
+      {
+        "id": "join_feast",
+        "label": {
+          "en": "Join the feast and dance till dawn",
+          "es": "Unirte a la fiesta y bailar hasta el amanecer"
+        },
+        "tag": "Funny",
+        "rarity": "uncommon",
+        "staminaDelta": 35,
+        "healthDelta": 5,
+        "statDeltas": {
+          "charisma": 2
+        },
+        "fameDelta": 2,
+        "narrative": {
+          "en": "You eat, drink, and dance until the fiddles go hoarse. The village loves you by sunrise, and your cup is never empty.",
+          "es": "Comés, bebés y bailás hasta que los violines se quedan roncos. El pueblo te adora al amanecer, y tu copa nunca queda vacía."
+        }
+      },
+      {
+        "id": "help_serve",
+        "label": {
+          "en": "Help the cooks and earn their gratitude",
+          "es": "Ayudar a les cocineres y ganarte su gratitud"
+        },
+        "tag": "Supportive",
+        "rarity": "common",
+        "staminaDelta": 20,
+        "statDeltas": {
+          "charisma": 1
+        },
+        "reputationDelta": 3,
+        "reputationFaction": "thornwood",
+        "narrative": {
+          "en": "You carry platters and chop herbs till your hands are flour-white. The elder slips a coin into your palm and a promise into your ear.",
+          "es": "Cargás bandejas y cortás hierbas hasta tener las manos blancas de harina. L'anciane desliza una moneda en tu palma y una promesa en tu oído."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rest_temple_sanctuary",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "location": "road",
+    "narrative": {
+      "en": "A small shrine of the Luminari stands by the roadside, its door propped open. An acolyte bows. 'The light welcomes all who need rest. Stay, and let the vigil keep while you sleep.'",
+      "es": "Un pequeño santuario de los Luminari se alza junto al camino, con su puerta entornada. Une acólite se inclina. 'La luz acoge a todes quienes necesitan descanso. Quedate, y dejá que la vigilia siga mientras dormís.'"
+    },
+    "choices": [
+      {
+        "id": "rest_blessed",
+        "label": {
+          "en": "Accept the sanctuary's blessing",
+          "es": "Aceptar la bendición del santuario"
+        },
+        "tag": "Humble",
+        "rarity": "uncommon",
+        "staminaDelta": 40,
+        "healthDelta": 5,
+        "statDeltas": {
+          "charisma": 1
+        },
+        "countersDelta": {
+          "temples_visited": 1
+        },
+        "narrative": {
+          "en": "You sleep beneath a softly glowing icon and wake feeling watched over. Something light clings to your step.",
+          "es": "Dormís bajo un icono que brilla suavemente y despertás sintiéndote cuidada. Algo luminoso se pega a tus pasos."
+        }
+      },
+      {
+        "id": "donate_and_go",
+        "label": {
+          "en": "Leave an offering and press on",
+          "es": "Dejar una ofrenda y seguir"
+        },
+        "tag": "Professional",
+        "rarity": "common",
+        "goldDelta": -15,
+        "staminaDelta": 15,
+        "statDeltas": {
+          "intelligence": 1
+        },
+        "narrative": {
+          "en": "Coin for the shrine, a brief prayer for the road, and you're off. A small blessing is better than none.",
+          "es": "Monedas para el santuario, una breve oración por el camino, y seguís. Una bendición pequeña es mejor que ninguna."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rest_roadside_hermit",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "location": "road",
+    "narrative": {
+      "en": "A hermit crouches by {locationName}, tending a pot that smells of roots and herbs. 'You've the look of a body that's been running on empty. Sit. My pot is patient.'",
+      "es": "Une ermitañe se agacha junto a {locationName}, cuidando una olla que huele a raíces y hierbas. 'Tenés cara de alguien que anda a puro resto. Sentate. Mi olla tiene paciencia.'"
+    },
+    "choices": [
+      {
+        "id": "eat_stew",
+        "label": {
+          "en": "Accept the hermit's stew",
+          "es": "Aceptar el guiso de l'ermitañe"
+        },
+        "tag": "Humble",
+        "rarity": "uncommon",
+        "staminaDelta": 30,
+        "statDeltas": {
+          "constitution": 2
+        },
+        "narrative": {
+          "en": "The stew is bitter and miraculous. By the last spoonful your hands are steady again. The hermit only smiles and waves you on.",
+          "es": "El guiso es amargo y milagroso. Con la última cucharada, tus manos vuelven a estar firmes. L'ermitañe solo sonríe y te despide con la mano."
+        }
+      },
+      {
+        "id": "share_lore",
+        "label": {
+          "en": "Trade road stories for the recipe",
+          "es": "Cambiar historias de camino por la receta"
+        },
+        "tag": "Strategic",
+        "rarity": "rare",
+        "staminaDelta": 20,
+        "statDeltas": {
+          "intelligence": 3
+        },
+        "countersDelta": {
+          "lore_exchanged": 1
+        },
+        "narrative": {
+          "en": "You talk till the stars wheel overhead. The hermit teaches you to see the road the way the old herbs do — as medicine for the tired.",
+          "es": "Hablan hasta que las estrellas giran sobre sus cabezas. L'ermitañe te enseña a ver el camino como lo ven las viejas hierbas — como medicina para les cansades."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rest_druid_glade",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "location": "thornwood",
+    "narrative": {
+      "en": "A ring of standing stones opens onto a hidden glade where the grass is impossibly soft. A faint humming rises from the earth, and the air tastes of wild mint. The land itself seems to rest here.",
+      "es": "Un círculo de piedras erguidas abre hacia un claro oculto donde la hierba es imposiblemente suave. Un leve zumbido asciende de la tierra, y el aire sabe a menta salvaje. La tierra misma parece descansar aquí."
+    },
+    "choices": [
+      {
+        "id": "lie_down",
+        "label": {
+          "en": "Lie down and let the glade restore you",
+          "es": "Recostarte y dejar que el claro te restaure"
+        },
+        "tag": "Stoic",
+        "rarity": "uncommon",
+        "staminaDelta": 50,
+        "healthDelta": 5,
+        "statDeltas": {
+          "constitution": 1
+        },
+        "reputationDelta": 2,
+        "reputationFaction": "thornwood",
+        "narrative": {
+          "en": "The glade pours itself into you. When you open your eyes, hours have passed and the world is freshly painted. The Wardens would approve of one who lets the land heal them.",
+          "es": "El claro se derrama en vos. Cuando abrís los ojos, pasaron horas y el mundo está recién pintado. Les Guardianes aprobarían a quien deja que la tierra lo sane."
+        }
+      },
+      {
+        "id": "study_stones",
+        "label": {
+          "en": "Trace the runes on the standing stones",
+          "es": "Recorrer las runas de las piedras erguidas"
+        },
+        "tag": "Strategic",
+        "rarity": "rare",
+        "staminaDelta": 15,
+        "statDeltas": {
+          "intelligence": 3
+        },
+        "narrative": {
+          "en": "The runes hum under your fingers. You leave with a fragment of old understanding and a vow to return when the world is less loud.",
+          "es": "Las runas zumban bajo tus dedos. Partís con un fragmento de saber antiguo y una promesa de volver cuando el mundo esté menos ruidoso."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rest_mountain_cabin",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 4,
+    "location": "road",
+    "narrative": {
+      "en": "A storm rolls in as you climb the pass. Ahead, a smoke-wisp rises from a hunter's cabin, its shutters tight against the wind. The door is unlocked — hunters leave hospitality for the road.",
+      "es": "Una tormenta se desata mientras subís el paso. Adelante, un hilo de humo asciende de la cabaña de une cazadore, con las contraventanas bien cerradas contra el viento. La puerta está sin llave — les cazadores dejan hospitalidad para el camino."
+    },
+    "choices": [
+      {
+        "id": "shelter",
+        "label": {
+          "en": "Take shelter and rebuild the fire",
+          "es": "Refugiarte y reavivar el fuego"
+        },
+        "tag": "Supportive",
+        "rarity": "uncommon",
+        "staminaDelta": 40,
+        "healthDelta": 8,
+        "statDeltas": {
+          "constitution": 1
+        },
+        "narrative": {
+          "en": "You bank the fire, dry your gear, and sleep to the drum of rain on the roof. By dawn the storm has passed and the pass is clear.",
+          "es": "Avivás el fuego, secás tu equipo y dormís al ritmo de la lluvia sobre el techo. Al amanecer, la tormenta pasó y el paso está despejado."
+        }
+      },
+      {
+        "id": "brave_storm",
+        "label": {
+          "en": "Press on through the driving storm",
+          "es": "Seguir adelante en plena tormenta"
+        },
+        "tag": "Aggressive",
+        "rarity": "volatile",
+        "staminaDelta": -15,
+        "statDeltas": {
+          "strength": 3
+        },
+        "injuryRiskDelta": 0.1,
+        "countersDelta": {
+          "storms_braved": 1
+        },
+        "narrative": {
+          "en": "You lean into the wind and claw up the pass. Soaked and half-frozen, you crest the ridge — and the storm behind you feels smaller.",
+          "es": "Te inclinás contra el viento y trepás el paso a zarpazos. Empapade y medio congelade, coronás la cima — y la tormenta detrás tuyo parece más pequeña."
+        }
+      }
+    ]
+  }
+]

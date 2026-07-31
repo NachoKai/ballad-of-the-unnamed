@@ -88,9 +88,7 @@
       "partial": {
         "goldDelta": 30,
         "injuryRiskDelta": 0.1,
-        "countersReset": [
-          "heist_streak"
-        ],
+        "countersReset": ["heist_streak"],
         "narrative": {
           "en": "You trigger a minor ward. You escape singed, pockets half-full, with guards on your tail.",
           "es": "Activás un sello menor. Escapás chamuscado, los bolsillos a medio llenar, con guardias pisándote los talones."
@@ -100,9 +98,7 @@
         "reputationDelta": -3,
         "reputationFaction": "arcanum",
         "injuryRiskDelta": 0.3,
-        "countersReset": [
-          "heist_streak"
-        ],
+        "countersReset": ["heist_streak"],
         "narrative": {
           "en": "The vault seals behind you. Magic binds your limbs as the Arcanum's wardens close in. This will cost you.",
           "es": "La bóveda se sella detrás de vos. La magia atrapa tus miembros mientras los guardianes del Arcanum se acercan. Esto te va a costar."
@@ -199,9 +195,7 @@
       "partial": {
         "goldDelta": -15,
         "injuryRiskDelta": 0.05,
-        "countersReset": [
-          "drinking_streak"
-        ],
+        "countersReset": ["drinking_streak"],
         "narrative": {
           "en": "You manage to finish, barely. You split the tab and stagger home with your pride dented.",
           "es": "Lográs terminar, apenas. Dividen la cuenta y volvés tambaleándote con el orgullo abollado."
@@ -211,9 +205,7 @@
         "goldDelta": -30,
         "reputationDelta": -1,
         "injuryRiskDelta": 0.15,
-        "countersReset": [
-          "drinking_streak"
-        ],
+        "countersReset": ["drinking_streak"],
         "narrative": {
           "en": "The room spins. You slide off the stool and wake up face-down outside, missing a pouch and your dignity.",
           "es": "La habitación da vueltas. Resbalás del taburete y despertás boca abajo afuera, sin una bolsa y sin dignidad."
@@ -309,9 +301,7 @@
       "partial": {
         "healthDelta": -5,
         "injuryRiskDelta": 0.1,
-        "countersReset": [
-          "chase_streak"
-        ],
+        "countersReset": ["chase_streak"],
         "narrative": {
           "en": "You slip on wet cobbles and twist your ankle. A street vendor trips them, and you both limp away empty-handed.",
           "es": "Resbalás en los adoquines mojados y te torcés el tobillo. Un vendedor callejero los hace tropezar, y ambos se van cojeando con las manos vacías."
@@ -320,9 +310,7 @@
       "fail": {
         "fameDelta": -2,
         "injuryRiskDelta": 0.2,
-        "countersReset": [
-          "chase_streak"
-        ],
+        "countersReset": ["chase_streak"],
         "narrative": {
           "en": "They vanish into the sewers. You stand at the grate, gasping, as the echoes of their laughter fade below.",
           "es": "Desaparecen en las alcantarillas. Te quedás frente a la reja, jadeando, mientras los ecos de su risa se apagan allá abajo."
@@ -417,9 +405,7 @@
       },
       "partial": {
         "goldDelta": -30,
-        "countersReset": [
-          "gamble_streak"
-        ],
+        "countersReset": ["gamble_streak"],
         "narrative": {
           "en": "You win a few rounds but lose more. You walk away near even — wiser, if poorer.",
           "es": "Ganás algunas rondas pero perdés más. Te vas casi empatado — más sabio, si acaso más pobre."
@@ -428,9 +414,7 @@
       "fail": {
         "goldDelta": -100,
         "reputationDelta": -1,
-        "countersReset": [
-          "gamble_streak"
-        ],
+        "countersReset": ["gamble_streak"],
         "narrative": {
           "en": "The dealer was three moves ahead. You clean out your pockets and slink out into the rain, cleaned out.",
           "es": "La crupier iba tres movimientos adelante. Vacías tus bolsillos y te escabullís bajo la lluvia, pelado."
@@ -530,9 +514,7 @@
       "partial": {
         "healthDelta": -8,
         "injuryRiskDelta": 0.12,
-        "countersReset": [
-          "survival_streak"
-        ],
+        "countersReset": ["survival_streak"],
         "narrative": {
           "en": "You endure, but barely. Cold and hunger gnaw at you. The Thornwood let you live — this time.",
           "es": "Aguantás, pero apenas. El frío y el hambre te carcomen. El Espinar te dejó vivir — esta vez."
@@ -541,9 +523,7 @@
       "fail": {
         "healthDelta": -15,
         "injuryRiskDelta": 0.3,
-        "countersReset": [
-          "survival_streak"
-        ],
+        "countersReset": ["survival_streak"],
         "narrative": {
           "en": "The night takes everything. You stumble out at dawn, frostbitten and lost, owing your life to a Thornwood patrol.",
           "es": "La noche se lo lleva todo. Salís tambaleante al amanecer, congelado y perdido, debiéndole la vida a una patrulla de Espinar."
@@ -645,9 +625,7 @@
         "goldDelta": 20,
         "reputationDelta": -1,
         "reputationFaction": "crownguard",
-        "countersReset": [
-          "courtly_streak"
-        ],
+        "countersReset": ["courtly_streak"],
         "narrative": {
           "en": "You hold your ground but fail to sway the room. A minor concession is granted — barely enough.",
           "es": "Mantenés tu posición pero no lográs convencer a la sala. Te conceden una concesión menor — apenas suficiente."
@@ -657,9 +635,7 @@
         "reputationDelta": -4,
         "reputationFaction": "crownguard",
         "fameDelta": -2,
-        "countersReset": [
-          "courtly_streak"
-        ],
+        "countersReset": ["courtly_streak"],
         "narrative": {
           "en": "You misread the room badly. The seneschal's stare could cut glass. You're escorted out before you make things worse.",
           "es": "Malinterpretás la sala por completo. La mirada del senescal podría cortar vidrio. Te escoltan fuera antes de que empeores las cosas."
@@ -761,9 +737,7 @@
       "partial": {
         "goldDelta": 20,
         "injuryRiskDelta": 0.08,
-        "countersReset": [
-          "smithing_streak"
-        ],
+        "countersReset": ["smithing_streak"],
         "narrative": {
           "en": "The steel cools too fast and your edge chips. You salvage what you can, but the Guild's eyes say 'next time.'",
           "es": "El acero se enfría muy rápido y el filo se astilla. Salvá lo que podés, pero la mirada del Gremio dice 'la próxima.'"
@@ -774,9 +748,7 @@
         "reputationDelta": -2,
         "reputationFaction": "ironhold",
         "injuryRiskDelta": 0.15,
-        "countersReset": [
-          "smithing_streak"
-        ],
+        "countersReset": ["smithing_streak"],
         "narrative": {
           "en": "Your hammer lands wrong. The billet twists into scrap. You leave the forge to the sound of pitying murmurs.",
           "es": "Tu martillo cae mal. El tocho se retuerce en chatarra. Dejás la forja entre murmullos de lástima."
@@ -872,9 +844,7 @@
       },
       "partial": {
         "fameDelta": -1,
-        "countersReset": [
-          "archery_streak"
-        ],
+        "countersReset": ["archery_streak"],
         "narrative": {
           "en": "You flinch on the last shot. It strays wide. The crowd sighs, and you step back with a shrug.",
           "es": "Parpadeás en el último tiro. Se desvía. La multitud suspira, y retrocedés con un encogimiento de hombros."
@@ -883,9 +853,7 @@
       "fail": {
         "fameDelta": -3,
         "goldDelta": -10,
-        "countersReset": [
-          "archery_streak"
-        ],
+        "countersReset": ["archery_streak"],
         "narrative": {
           "en": "The bowstring snaps on your second pull. Your shots go wild. You slink off as the next contender takes the line.",
           "es": "La cuerda del arco se rompe en tu segundo tiro. Tus flechas se pierden. Te escabullís mientras la siguiente contendiente toma la línea."
@@ -1085,6 +1053,528 @@
         "narrative": {
           "en": "Empty. Every cup empty. The hooded figure claps slowly. 'Luck is a fickle god.' You slink away, lighter in the purse.",
           "es": "Vacías. Todas las copas vacías. La figura encapuchada aplaude lentamente. 'La suerte es un dios voluble.' Te escabullís, más liviano de bolsillo."
+        }
+      }
+    }
+  },
+  {
+    "id": "fishing_contest",
+    "type": "minigame",
+    "subtype": "fishing",
+    "minAge": 14,
+    "maxAge": 99,
+    "weight": 6,
+    "primaryStat": "dexterity",
+    "narrative": {
+      "en": "The Greywater river bends slow and green at dawn. A weathered fisher slaps a rod into your hands. 'First catch wins the pot — and the bragging rights.' The line waits for no one.",
+      "es": "El río de Villa Aguagrís serpentea lento y verde al amanecer. Una pescadora curtida te pone una caña en las manos. 'Primera captura gana el pozo — y el derecho a presumir.' La línea no espera a nadie."
+    },
+    "cards": [
+      {
+        "id": "cast_deep",
+        "icon": "fish",
+        "label": {
+          "en": "Cast deep where the big ones hide",
+          "es": "Lanzar profundo donde se esconden los grandes"
+        }
+      },
+      {
+        "id": "still_wait",
+        "icon": "clock",
+        "label": {
+          "en": "Stay still and wait it out",
+          "es": "Quedarte quieto y esperar"
+        }
+      },
+      {
+        "id": "read_water",
+        "icon": "droplets",
+        "label": {
+          "en": "Read the current for the best spot",
+          "es": "Leer la corriente para encontrar el mejor lugar"
+        }
+      },
+      {
+        "id": "chum_the_waters",
+        "icon": "flask-conical",
+        "label": {
+          "en": "Chum the waters with bait",
+          "es": "Cebar las aguas con carnada"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.45,
+      "statInfluence": {
+        "dexterity": 0.008,
+        "constitution": 0.005
+      },
+      "cardModifiers": {
+        "read_water": {
+          "winChanceDelta": 0.08
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "dexterity": 2
+        },
+        "goldDelta": 120,
+        "fameDelta": 4,
+        "countersDelta": {
+          "fishing_won": 1,
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "The line sings. You haul in a silver-scaled monster that makes the whole dock go quiet. The old fisher shakes her head and hands over the pot with a grin.",
+          "es": "La línea canta. Sacás un monstruo de escamas plateadas que hace callar a todo el muelle. La vieja pescadora niega con la cabeza y te entrega el pozo con una sonrisa."
+        }
+      },
+      "success": {
+        "goldDelta": 50,
+        "fameDelta": 2,
+        "countersDelta": {
+          "fishing_won": 1
+        },
+        "narrative": {
+          "en": "A solid catch — big enough to win the pot, small enough not to break your arm. The dock nods in approval.",
+          "es": "Una captura sólida — lo bastante grande para ganar el pozo, lo bastante chica para no romperte el brazo. El muelle asiente con aprobación."
+        }
+      },
+      "partial": {
+        "goldDelta": 10,
+        "countersReset": ["fishing_streak"],
+        "narrative": {
+          "en": "You land a minnow just as the sun rises. It wins a pity copper and the dock's softest laughter.",
+          "es": "Atrapás un pececito justo cuando sale el sol. Gana un cobre por lástima y la risa más suave del muelle."
+        }
+      },
+      "fail": {
+        "goldDelta": -15,
+        "fameDelta": -1,
+        "countersReset": ["fishing_streak"],
+        "narrative": {
+          "en": "The line snaps on your one big bite. You reel in nothing but a broken hook and a crowd that saw the whole thing.",
+          "es": "La línea se corta en tu única mordida grande. Recogés nada más que un anzuelo roto y una multitud que vio todo."
+        }
+      }
+    }
+  },
+  {
+    "id": "temple_treasure_run",
+    "type": "minigame",
+    "subtype": "timing_bar",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "primaryStat": "dexterity",
+    "narrative": {
+      "en": "The reliquary door grinds shut behind you. Dust falls. Somewhere deep below, the mechanism you tripped has begun to count down. Every step must land exactly right.",
+      "es": "La puerta del relicario se cierra a tus espaldas. Cae polvo. En algún lugar profundo, el mecanismo que activaste ha empezado a contar. Cada paso debe caer exactamente en el lugar correcto."
+    },
+    "cards": [
+      {
+        "id": "sprint_gaps",
+        "icon": "person-running",
+        "label": {
+          "en": "Sprint the collapsing gaps",
+          "es": "Correr por los huecos que se derrumban"
+        }
+      },
+      {
+        "id": "time_pillars",
+        "icon": "clock",
+        "label": {
+          "en": "Wait for the pillar cycle",
+          "es": "Esperar el ciclo de los pilares"
+        }
+      },
+      {
+        "id": "feel_stones",
+        "icon": "heart",
+        "label": {
+          "en": "Trust your feet on the stones",
+          "es": "Confiar en tus pies sobre las piedras"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "timing_bar",
+      "baseWinChance": 0.35,
+      "statInfluence": {
+        "dexterity": 0.015,
+        "intelligence": 0.004
+      },
+      "statThreshold": 20,
+      "cardModifiers": {
+        "feel_stones": {
+          "winChanceDelta": 0.07,
+          "critChanceDelta": 0.03
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "dexterity": 3
+        },
+        "goldDelta": 220,
+        "fameDelta": 5,
+        "countersDelta": {
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "You dance across the stone as the temple sheds its old skin around you. You burst out the far door with a relic tucked under your arm, not a scratch on you.",
+          "es": "Bailás sobre la piedra mientras el templo muda su vieja piel a tu alrededor. Salís por la puerta lejana con una reliquia bajo el brazo, sin un rasguño."
+        }
+      },
+      "success": {
+        "statDeltas": {
+          "dexterity": 1
+        },
+        "goldDelta": 90,
+        "fameDelta": 2,
+        "countersDelta": {
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "You make the last leap by a hair and roll into the open air as the floor behind you gives way. Bruised, dusty, richer.",
+          "es": "Hacés el último salto por un pelo y rodás hacia el aire libre mientras el piso cede detrás de vos. Magullado, cubierto de polvo, más rico."
+        }
+      },
+      "partial": {
+        "healthDelta": -8,
+        "goldDelta": 20,
+        "narrative": {
+          "en": "You slip on the final corridor and take a stone to the shoulder. You crawl out with a small prize and a thick bruise.",
+          "es": "Resbalás en el último pasillo y recibís una piedra en el hombro. Salís arrastrándote con un premio pequeño y un moretón grande."
+        }
+      },
+      "fail": {
+        "healthDelta": -18,
+        "goldDelta": -20,
+        "injuryRiskDelta": 0.2,
+        "narrative": {
+          "en": "The floor gives way mid-stride. You fall through two levels of crumbling masonry and wake under a pile of rubble, picking dust from your teeth.",
+          "es": "El piso cede en plena carrera. Caés por dos niveles de mampostería derrumbada y despertás bajo un montón de escombros, sacándote polvo de los dientes."
+        }
+      }
+    }
+  },
+  {
+    "id": "alchemy_brew_off",
+    "type": "minigame",
+    "subtype": "grid_gamble",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "primaryStat": "intelligence",
+    "narrative": {
+      "en": "Nine unmarked vials sit on the apothecary's bench. Three hold pure essence; the rest are cheap decoys. The Alchemist's Guild judges by the brew — and the brew is all luck.",
+      "es": "Nueve frascos sin marcar descansan en la mesa del boticario. Tres contienen esencia pura; el resto son señuelos baratos. El Gremio de Alquimistas juzga por la poción — y la poción es pura suerte."
+    },
+    "cards": [
+      {
+        "id": "left_three",
+        "icon": "hand",
+        "label": {
+          "en": "The left three look aged",
+          "es": "Los tres de la izquierda parecen añejos"
+        }
+      },
+      {
+        "id": "center_row",
+        "icon": "circle",
+        "label": {
+          "en": "Split the center row",
+          "es": "Repartir la fila del centro"
+        }
+      },
+      {
+        "id": "back_shelf",
+        "icon": "layers",
+        "label": {
+          "en": "Grab from the back shelf",
+          "es": "Agarrar de la estantería de atrás"
+        }
+      },
+      {
+        "id": "play_safe",
+        "icon": "door-open",
+        "label": {
+          "en": "Walk away with a minor brew",
+          "es": "Irte con una poción menor"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "grid_gamble",
+      "baseWinChance": 0.33,
+      "statInfluence": {},
+      "cardModifiers": {
+        "play_safe": {
+          "winChanceDelta": 0
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "goldDelta": 350,
+        "fameDelta": 6,
+        "reputationDelta": 3,
+        "reputationFaction": "arcanum",
+        "countersDelta": {
+          "alchemy_won": 1
+        },
+        "narrative": {
+          "en": "All three vials are pure essence. Your brew blooms gold and violet, and the Guild Master stands to applaud. They commission the recipe on the spot.",
+          "es": "Los tres frascos son esencia pura. Tu poción florece en oro y violeta, y la Maestra del Gremio se pone de pie para aplaudir. Te encargan la receta en el acto."
+        }
+      },
+      "success": {
+        "goldDelta": 120,
+        "reputationDelta": 1,
+        "reputationFaction": "arcanum",
+        "countersDelta": {
+          "alchemy_won": 1
+        },
+        "narrative": {
+          "en": "One pure vial finds its way into your brew. The result is respectable, and the Guild pays you a fair sum for the effort.",
+          "es": "Un frasco puro se cuela en tu poción. El resultado es respetable, y el Gremio te paga una suma justa por el esfuerzo."
+        }
+      },
+      "partial": {
+        "goldDelta": 25,
+        "narrative": {
+          "en": "Your brew is a muddy brown that fizzes without charm. The Guild awards you a consolation coin and a polite cough.",
+          "es": "Tu poción es un marrón turbio que burbujea sin encanto. El Gremio te da una moneda de consolación y una tos cortés."
+        }
+      },
+      "fail": {
+        "goldDelta": -60,
+        "fameDelta": -2,
+        "reputationDelta": -2,
+        "reputationFaction": "arcanum",
+        "narrative": {
+          "en": "The vial you chose was a decoy — sour milk and sulfur. The Guild banishes the smell with a wave and you slink out, lighter in gold and pride.",
+          "es": "El frasco que elegiste era un señuelo — leche agria y azufre. El Gremio despide el olor con un gesto y te escabullís, más liviano en oro y orgullo."
+        }
+      }
+    }
+  },
+  {
+    "id": "noble_politics_memory",
+    "type": "minigame",
+    "subtype": "memory_match",
+    "minAge": 18,
+    "maxAge": 99,
+    "weight": 5,
+    "primaryStat": "charisma",
+    "narrative": {
+      "en": "The Crownguard ballroom spins with silks and silver lies. You've been given one task: pair each noble face to their house sigil before the dancing ends. Forget one, and you'll insult a dynasty.",
+      "es": "El salón de baile de la Guardia de la Corona gira en sedas y mentiras plateadas. Te dieron una tarea: emparejar cada rostro noble con su blasón antes de que termine el baile. Olvidá uno, e insultarás a una dinastía."
+    },
+    "cards": [
+      {
+        "id": "watch_carriages",
+        "icon": "eye",
+        "label": {
+          "en": "Watch who arrives with whom",
+          "es": "Observar quién llega con quién"
+        }
+      },
+      {
+        "id": "scan_gallery",
+        "icon": "building-2",
+        "label": {
+          "en": "Scan the portrait gallery first",
+          "es": "Escaneá la galería de retratos primero"
+        }
+      },
+      {
+        "id": "note_sigils",
+        "icon": "scroll-text",
+        "label": {
+          "en": "Note the sigils on each cloak",
+          "es": "Anotar los blasones en cada capa"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "memory_match",
+      "baseWinChance": 0.38,
+      "statInfluence": {
+        "charisma": 0.012,
+        "intelligence": 0.006
+      },
+      "statThreshold": 20,
+      "bonusLives": 1,
+      "cardModifiers": {
+        "note_sigils": {
+          "winChanceDelta": 0.06,
+          "critChanceDelta": 0.04
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "charisma": 3
+        },
+        "goldDelta": 150,
+        "fameDelta": 7,
+        "reputationDelta": 4,
+        "reputationFaction": "crownguard",
+        "countersDelta": {
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "You match every face to its sigil without a stumble. The Duke himself asks your name. By midnight, the whole court knows it — and wants it.",
+          "es": "Emparejás cada rostro con su blasón sin tropezarte. El propio Duque pregunta tu nombre. Para la medianoche, toda la corte lo sabe — y lo quiere."
+        }
+      },
+      "success": {
+        "statDeltas": {
+          "charisma": 1
+        },
+        "fameDelta": 3,
+        "reputationDelta": 2,
+        "reputationFaction": "crownguard",
+        "countersDelta": {
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "You pair the great houses correctly, missing only a minor baron. A smooth performance that earns approving nods from the highest tables.",
+          "es": "Emparejás correctamente las grandes casas, fallando solo un barón menor. Una actuación fluida que gana asentimientos de las mesas más altas."
+        }
+      },
+      "partial": {
+        "narrative": {
+          "en": "You get the big houses right but fumble a few lesser sigils. The court forgives you — barely. A few cold stares follow you to the refreshment table.",
+          "es": "Acertás las grandes casas pero tropezás con algunos blasones menores. La corte te perdona — apenas. Unas cuantas miradas frías te siguen hasta la mesa de refrescos."
+        }
+      },
+      "fail": {
+        "fameDelta": -2,
+        "reputationDelta": -3,
+        "reputationFaction": "crownguard",
+        "narrative": {
+          "en": "You mistake a Baroness for a serving maid and a Count for a footman. The ballroom goes quiet in the way that means damage done.",
+          "es": "Confundís a una Baronesa con una sirvienta y a un Conde con un lacayo. El salón enmudece de la forma que significa daño hecho."
+        }
+      }
+    }
+  },
+  {
+    "id": "hunt_shadow_stag",
+    "type": "minigame",
+    "subtype": "hunting",
+    "minAge": 14,
+    "maxAge": 99,
+    "weight": 7,
+    "primaryStat": "dexterity",
+    "narrative": {
+      "en": "A great shadow stag feeds in the Thornwood clearing, its antlers catching the moonlight. The wardens have offered a bounty on it. The shot must be perfect — or it's gone forever.",
+      "es": "Un gran ciervo sombrío pace en el claro del Espinar, sus astas capturando la luz de la luna. Las guardias ofrecieron recompensa por él. El disparo debe ser perfecto — o se irá para siempre."
+    },
+    "cards": [
+      {
+        "id": "track_first",
+        "icon": "footprints",
+        "label": {
+          "en": "Track it downwind first",
+          "es": "Seguir el rastro a favor del viento"
+        }
+      },
+      {
+        "id": "climb_high",
+        "icon": "arrow-up",
+        "label": {
+          "en": "Climb the ridge for elevation",
+          "es": "Trepar al risco para tener altura"
+        }
+      },
+      {
+        "id": "bait_the_path",
+        "icon": "leaf",
+        "label": {
+          "en": "Lay bait on the deer path",
+          "es": "Colocar cebo en el sendero del ciervo"
+        }
+      },
+      {
+        "id": "wait_dawn",
+        "icon": "eye",
+        "label": {
+          "en": "Wait for first light",
+          "es": "Esperar la primera luz"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.4,
+      "statInfluence": {
+        "dexterity": 0.012,
+        "intelligence": 0.004
+      },
+      "cardModifiers": {
+        "track_first": {
+          "winChanceDelta": 0.08,
+          "critChanceDelta": 0.04
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "dexterity": 2
+        },
+        "goldDelta": 180,
+        "fameDelta": 5,
+        "reputationDelta": 3,
+        "reputationFaction": "thornwood",
+        "countersDelta": {
+          "hunts_won": 1,
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "One arrow, one breath, one heartbeat. The stag folds gently and the Thornwood wardens gather around your shot in silence — then the bounty purse appears, doubled for the clean kill.",
+          "es": "Una flecha, un aliento, un latido. El ciervo se pliega con suavidad y las guardias del Espinar se reúnen en silencio alrededor de tu disparo — luego aparece la bolsa de la recompensa, duplicada por la muerte limpia."
+        }
+      },
+      "success": {
+        "fameDelta": 2,
+        "goldDelta": 70,
+        "reputationDelta": 1,
+        "reputationFaction": "thornwood",
+        "countersDelta": {
+          "hunts_won": 1
+        },
+        "narrative": {
+          "en": "Your arrow finds its mark a hair low, but the stag doesn't run far. The wardens accept the kill and pay the bounty.",
+          "es": "Tu flecha encuentra su objetivo un pelo bajo, pero el ciervo no corre lejos. Las guardias aceptan la caza y pagan la recompensa."
+        }
+      },
+      "partial": {
+        "healthDelta": -5,
+        "injuryRiskDelta": 0.1,
+        "countersReset": ["hunt_streak"],
+        "narrative": {
+          "en": "The shot grazes — the stag bolts into the deep wood, leaving you with a torn sleeve from the brambles and no bounty.",
+          "es": "El disparo roza — el ciervo dispara hacia el bosque profundo, dejándote con la manga rota por las zarzas y sin recompensa."
+        }
+      },
+      "fail": {
+        "fameDelta": -2,
+        "reputationDelta": -1,
+        "reputationFaction": "thornwood",
+        "countersReset": ["hunt_streak"],
+        "narrative": {
+          "en": "Your bowstring snaps in the cold. The stag is gone before you can nock another arrow. The wardens' disappointment is worse than the lost bounty.",
+          "es": "La cuerda de tu arco se rompe con el frío. El ciervo se va antes de que puedas enganchar otra flecha. La decepción de las guardias es peor que la recompensa perdida."
         }
       }
     }

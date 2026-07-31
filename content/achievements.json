@@ -89,6 +89,57 @@
       }
     },
     {
+      "id": "gold_hoarder",
+      "icon": "gem",
+      "rarity": "rare",
+      "condition": {
+        "type": "gold_gte",
+        "value": 1000
+      },
+      "name": {
+        "en": "Gold Hoarder",
+        "es": "Acaparador de Oro"
+      },
+      "description": {
+        "en": "Hold 1000 gold at once.",
+        "es": "Ten 1000 de oro a la vez."
+      }
+    },
+    {
+      "id": "magnate",
+      "icon": "crown",
+      "rarity": "epic",
+      "condition": {
+        "type": "gold_gte",
+        "value": 10000
+      },
+      "name": {
+        "en": "Magnate",
+        "es": "Magnate"
+      },
+      "description": {
+        "en": "Hold 10,000 gold at once.",
+        "es": "Ten 10.000 de oro a la vez."
+      }
+    },
+    {
+      "id": "dragon_hoard",
+      "icon": "gem",
+      "rarity": "legendary",
+      "condition": {
+        "type": "gold_gte",
+        "value": 100000
+      },
+      "name": {
+        "en": "Dragon's Hoard",
+        "es": "Tesoro de Dragón"
+      },
+      "description": {
+        "en": "Hold 100,000 gold at once.",
+        "es": "Ten 100.000 de oro a la vez."
+      }
+    },
+    {
       "id": "renowned",
       "icon": "star",
       "rarity": "uncommon",
@@ -103,6 +154,40 @@
       "description": {
         "en": "Reach 50 fame.",
         "es": "Alcanza 50 de fama."
+      }
+    },
+    {
+      "id": "known_face",
+      "icon": "star",
+      "rarity": "common",
+      "condition": {
+        "type": "fame_gte",
+        "value": 25
+      },
+      "name": {
+        "en": "Known Face",
+        "es": "Cara Conocida"
+      },
+      "description": {
+        "en": "Reach 25 fame.",
+        "es": "Alcanza 25 de fama."
+      }
+    },
+    {
+      "id": "celebrated",
+      "icon": "star",
+      "rarity": "rare",
+      "condition": {
+        "type": "fame_gte",
+        "value": 75
+      },
+      "name": {
+        "en": "Celebrated",
+        "es": "Celebrado"
+      },
+      "description": {
+        "en": "Reach 75 fame.",
+        "es": "Alcanza 75 de fama."
       }
     },
     {
@@ -208,6 +293,23 @@
       "description": {
         "en": "Live to age 60.",
         "es": "Vive hasta los 60 años."
+      }
+    },
+    {
+      "id": "ancient",
+      "icon": "hourglass",
+      "rarity": "legendary",
+      "condition": {
+        "type": "age_gte",
+        "value": 80
+      },
+      "name": {
+        "en": "Ancient",
+        "es": "Ancestral"
+      },
+      "description": {
+        "en": "Live to age 80.",
+        "es": "Vive hasta los 80 años."
       }
     },
     {
@@ -671,6 +773,24 @@
       }
     },
     {
+      "id": "battle_hardened_0",
+      "icon": "swords",
+      "rarity": "common",
+      "condition": {
+        "type": "counter_gte",
+        "key": "battles_won",
+        "value": 10
+      },
+      "name": {
+        "en": "Skirmisher",
+        "es": "Escaramuzador"
+      },
+      "description": {
+        "en": "Win 10 battles.",
+        "es": "Gana 10 batallas."
+      }
+    },
+    {
       "id": "battle_hardened_1",
       "icon": "swords",
       "rarity": "uncommon",
@@ -722,6 +842,24 @@
       "description": {
         "en": "Win 50 battles.",
         "es": "Gana 50 batallas."
+      }
+    },
+    {
+      "id": "battle_hardened_4",
+      "icon": "crown",
+      "rarity": "legendary",
+      "condition": {
+        "type": "counter_gte",
+        "key": "battles_won",
+        "value": 100
+      },
+      "name": {
+        "en": "Warlord",
+        "es": "Caudillo"
+      },
+      "description": {
+        "en": "Win 100 battles.",
+        "es": "Gana 100 batallas."
       }
     },
     {
