@@ -489,3 +489,5 @@ Remaining work by priority:
 6. 🟡 **5.1/5.3** — content volume targets + spec-aligned achievement tiers
 7. 🟡 **5.4** — Trophy Hall completion percentage
 8. ⬜ **6.1** — analytics (optional)
+
+Additional feature shipped 2026-07-30: **no consecutive event repeats** — `selectEvent` now tracks `CharacterState.lastEventId` and excludes it from the selection pool (falling back only when it's the sole eligible event), so the same event/minigame never appears two turns in a row.

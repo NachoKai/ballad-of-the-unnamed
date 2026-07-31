@@ -109,6 +109,7 @@ export function createCharacter(input: {
     huntedUntilTurn: null,
     clanMemberships: [],
     flags: {},
+    lastEventId: null,
     finaleStage2Choice: undefined,
   }
   recomputeDerived(base)
@@ -239,7 +240,9 @@ export function selectEvent(c: CharacterState, registry: ContentRegistry, rng: R
   if (wouldBeDestinyTurn(c)) {
     const destinyPool = registry.events.filter((e) => e.type === "destiny" && isEligible(e, c))
     if (destinyPool.length > 0) {
-      return rng.weighted(destinyPool, (ev) => effectiveWeight(ev, c))
+      const picked = rng.weighted(destinyPool, (ev) => effectiveWeight(ev, c))
+      c.lastEventId = picked.id
+      return picked
     }
   }
   // Occasionally offer a minigame instead of a normal event.
@@ -250,13 +253,19 @@ export function selectEvent(c: CharacterState, registry: ContentRegistry, rng: R
     if (ev.type === "destiny") continue
     if (isEligible(ev, c)) pool.push(ev)
   }
+  // Avoid serving the exact same event twice in a row.
+  const noRepeat = pool.filter((ev) => ev.id !== c.lastEventId)
+  const preferred = noRepeat.length > 0 ? noRepeat : pool
   // Fallback: if the chosen pool is empty, try the other pool, then any event.
-  const finalPool = pool.length > 0 ? pool : registry.events.filter((e) => isEligible(e, c))
+  const finalPool =
+    preferred.length > 0 ? preferred : registry.events.filter((e) => isEligible(e, c))
   if (finalPool.length === 0) {
     // Absolute fallback: first event ignoring gating.
     return registry.events[0]
   }
-  return rng.weighted(finalPool, (ev) => effectiveWeight(ev, c))
+  const picked = rng.weighted(finalPool, (ev) => effectiveWeight(ev, c))
+  c.lastEventId = picked.id
+  return picked
 }
 
 // A synthetic season-summary event (generated server-side at season boundaries).

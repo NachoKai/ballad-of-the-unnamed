@@ -12,6 +12,7 @@ import {
   resolveSeasonSummary,
   retirementOfferEvent,
   rollWorldEvents,
+  selectEvent,
 } from "./engine.js"
 import { generateEpilogue } from "./epilogue.js"
 import { evaluateAchievements } from "./achievements.js"
@@ -836,6 +837,48 @@ describe("Rng determinism", () => {
     const seqA = Array.from({ length: 10 }, () => a.next())
     const seqB = Array.from({ length: 10 }, () => b.next())
     expect(seqA).not.toEqual(seqB)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// No-consecutive-repeat event selection
+// ---------------------------------------------------------------------------
+describe("selectEvent no consecutive repeats", () => {
+  it("never serves the same event twice in a row", () => {
+    // Run many selections on one character; the previously-served event id must
+    // never come up immediately after itself.
+    const c = makeChar()
+    const rng = new Rng(hashSeed("no-repeat"))
+    let prev: string | null = null
+    for (let i = 0; i < 40; i++) {
+      const ev = selectEvent(c, reg, rng)
+      expect(ev.id).not.toBe(prev)
+      prev = ev.id
+    }
+  })
+
+  it("falls back to a repeat when it is the only eligible event", () => {
+    const c = makeChar()
+    const rng = new Rng(hashSeed("no-repeat-fallback"))
+    const first = selectEvent(c, reg, rng)
+    // Restrict eligibility to just that event: whichever pool selectEvent draws
+    // from (events or minigames), only the one event is present, so the
+    // no-repeat filter empties the pool and it falls back to the repeat.
+    const tinyRegistry = {
+      ...reg,
+      events: [first],
+      minigames: [first],
+    } as unknown as ContentRegistry
+    const rng2 = new Rng(hashSeed("no-repeat-fallback"))
+    const again = selectEvent(c, tinyRegistry, rng2)
+    expect(again.id).toBe(first.id)
+  })
+
+  it("records the last served event id on the character", () => {
+    const c = makeChar()
+    const rng = new Rng(hashSeed("no-repeat-record"))
+    const ev = selectEvent(c, reg, rng)
+    expect(c.lastEventId).toBe(ev.id)
   })
 })
 

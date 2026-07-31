@@ -297,6 +297,7 @@ export interface CharacterState {
   huntedUntilTurn: number | null
   clanMemberships: ClanMembershipEntry[]
   flags: Record<string, unknown>
+  lastEventId?: string | null
   pendingFinaleType?: EndingType
   finaleStage2Choice?: { endingType: EndingType; risky: boolean }
 }
