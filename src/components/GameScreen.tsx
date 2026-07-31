@@ -4,6 +4,7 @@ import type { CharacterState, ServedEvent, Rarity } from "@shared/types"
 import type { Locale } from "@shared/types"
 import { t } from "../i18n/strings"
 import { AchIcon } from "./AchIcon"
+import { FactionFlag } from "./FactionFlag"
 import { Hud } from "./Hud"
 import { StatTag } from "./StatTag"
 import { LinkBtn } from "./ui/Button"
@@ -105,7 +106,11 @@ export function GameScreen({
                 <RarityPip $rarity={c.rarity} aria-hidden="true" />
               )}
               <ChoiceLabel>
-                {c.icon && <AchIcon name={c.icon} size={20} />}
+                {c.factionId ? (
+                  <FactionFlag factionId={c.factionId} size={20} />
+                ) : c.icon ? (
+                  <AchIcon name={c.icon} size={20} />
+                ) : null}
                 {c.label}
               </ChoiceLabel>
               {isSeasonSummary && c.id === "continue" ? null : (

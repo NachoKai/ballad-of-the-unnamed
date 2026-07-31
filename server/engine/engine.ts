@@ -466,6 +466,7 @@ export function buildServedEvent(
           label: faction?.name ?? { en: o.name, es: o.name },
           narrative: { en: o.perkLabel, es: o.perkLabel },
           joinClanId: o.clanId,
+          factionId: o.clanId,
         }
       }),
     }
@@ -500,6 +501,7 @@ export function buildServedEvent(
               label: faction?.name ?? { en: o.name, es: o.name },
               narrative: { en: o.perkLabel, es: o.perkLabel },
               joinClanId: o.clanId,
+              factionId: o.clanId,
             }
           }),
           {
@@ -517,6 +519,7 @@ export function buildServedEvent(
             },
             reputationDelta: 3,
             reputationFaction: c.currentClanId,
+            factionId: c.currentClanId,
             fameDelta: 1,
           },
         ],

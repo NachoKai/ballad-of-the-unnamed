@@ -3,6 +3,7 @@ import { styled } from "styled-components"
 import type { Locale } from "@shared/types"
 import { t } from "../i18n/strings"
 import { api } from "../api"
+import { FactionFlag } from "./FactionFlag"
 import { Panel } from "./ui/Panel"
 import { BtnGhost } from "./ui/Button"
 import { rise } from "./ui/Animation"
@@ -66,7 +67,10 @@ export function CollectionScreen({ locale, onBack }: Props) {
             ) : (
               <TagGrid>
                 {factions.map((f) => (
-                  <Tag key={f}>{t(locale, `faction_${f}`)}</Tag>
+                  <Tag key={f}>
+                    <FactionFlag factionId={f} size={16} />
+                    {t(locale, `faction_${f}`)}
+                  </Tag>
                 ))}
               </TagGrid>
             )}
@@ -158,7 +162,9 @@ const TagGrid = styled.div`
 `
 
 const Tag = styled.span`
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   padding: 5px 12px;
   background: ${({ theme }) => theme.colors.ink3};
   border: 1px solid ${({ theme }) => theme.colors.line};

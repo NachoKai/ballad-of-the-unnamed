@@ -3,6 +3,7 @@ import { STAT_KEYS } from "@shared/types"
 import { styled } from "styled-components"
 import { t as translate } from "../i18n/strings"
 import { STAT_ABBR } from "../constants"
+import { FactionFlag } from "./FactionFlag"
 import { Panel } from "./ui/Panel"
 import { Faint } from "./ui/Text"
 
@@ -65,7 +66,12 @@ export function Hud({ character: c, locale, onShopOpen }: Props) {
         <Name>
           {c.name} <Faint>· {className}</Faint>
           {c.archetype && <ArchetypeTag>{t(`archetype_${c.archetype}`)}</ArchetypeTag>}
-          {c.currentClanId && <ClanTag>{t(`faction_${c.currentClanId}`)}</ClanTag>}
+          {c.currentClanId && (
+            <ClanTag>
+              <FactionFlag factionId={c.currentClanId} size={14} />
+              {t(`faction_${c.currentClanId}`)}
+            </ClanTag>
+          )}
         </Name>
         <TurnPill>
           {t("turn")} <b>{c.turn}</b>
@@ -109,6 +115,7 @@ export function Hud({ character: c, locale, onShopOpen }: Props) {
         ))}
         {primaryRep && (
           <RepPill>
+            <FactionFlag factionId={primaryRep.faction} size={14} />
             {t(`faction_${primaryRep.faction}`)} ·{" "}
             {t(`reputation_tier_${reputationTier(primaryRep.value)}`)} [{primaryRep.value}]
           </RepPill>
@@ -306,9 +313,11 @@ const InvBadge = styled.span`
 `
 
 const ClanTag = styled.span`
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   margin-left: 6px;
-  padding: 1px 8px;
+  padding: 2px 8px;
   border: 1px solid ${({ theme }) => theme.colors.sage};
   border-radius: 999px;
   font-size: 11px;
@@ -353,7 +362,7 @@ const HuntedBadge = styled.span`
 
 const RepPill = styled.span`
   display: inline-flex;
-  align-items: baseline;
+  align-items: center;
   gap: 5px;
   padding: 3px 10px;
   border: 1px solid ${({ theme }) => theme.colors.gold};

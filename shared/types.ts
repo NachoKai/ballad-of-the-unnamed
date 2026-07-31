@@ -137,6 +137,8 @@ export interface ChoiceContent {
   setsFlag?: Record<string, unknown>
   // Clan system: join a clan through a choice.
   joinClanId?: string
+  // Faction association for display (e.g. flag icon).
+  factionId?: string
   leaveReason?: string
 }
 
@@ -317,6 +319,8 @@ export interface ServedChoice {
   fameDelta?: number
   reputationDelta?: number
   goldDelta?: number
+  // Faction association for flag icon display in choice cards.
+  factionId?: string
 }
 
 export interface ServedEvent {

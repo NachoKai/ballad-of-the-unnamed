@@ -9,6 +9,7 @@ import type {
 } from "@shared/types"
 import { t } from "../i18n/strings"
 import { AchIcon } from "./AchIcon"
+import { FactionFlag } from "./FactionFlag"
 import { BtnPrimary, BtnGhost } from "./ui/Button"
 import { TextBalance, TextPretty } from "./ui/Text"
 import { rise } from "./ui/Animation"
@@ -46,6 +47,9 @@ function FactionHistory({
       <FactionGrid>
         {data.map((f) => (
           <FactionBadge key={f.faction}>
+            <FactionFlagWrap>
+              <FactionFlag factionId={f.faction} size={22} />
+            </FactionFlagWrap>
             <FactionName>{t(locale, `faction_${f.faction}`)}</FactionName>
             <FactionTier>{t(locale, `reputation_tier_${f.peakTier}`)}</FactionTier>
             <FactionValue>{f.peakValue}</FactionValue>
@@ -420,12 +424,19 @@ const FactionBadge = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
+  gap: 4px;
   padding: 10px 14px;
   border: 1px solid ${({ theme }) => theme.colors.line};
   border-radius: ${({ theme }) => theme.radii.sm};
   background: ${({ theme }) => theme.colors.ink2};
   min-width: 100px;
+`
+
+const FactionFlagWrap = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2px;
 `
 
 const FactionName = styled.span`
