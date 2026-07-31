@@ -2,6 +2,7 @@ import { Router } from "express"
 import type { Request, Response } from "express"
 import { Rng, hashSeed, todayDailySeed } from "../../shared/rng.js"
 import { computeScore, GAME_CONFIG } from "../../shared/config.js"
+import { genderize } from "../../shared/genderize.js"
 import { loadContent } from "../content/registry.js"
 import {
   buildServedEvent,
@@ -65,10 +66,12 @@ function serveAchievements(list: AchievementContent[], locale: Locale): Achievem
   }))
 }
 
-// POST /api/game/archetype-draw  { classId, locale }
+// POST /api/game/archetype-draw  { classId, locale, gender }
 gameRouter.post("/archetype-draw", (req: Request, res: Response) => {
   const classId = String(req.body?.classId ?? "")
   const locale = localeOf(req)
+  const gender: Gender =
+    req.body?.gender === "male" || req.body?.gender === "female" ? req.body.gender : "male"
   const pool = registry.archetypes[classId]
   if (!pool || pool.length === 0) {
     return res.status(400).json({ error: "no_archetypes_for_class" })
@@ -81,12 +84,13 @@ gameRouter.post("/archetype-draw", (req: Request, res: Response) => {
     const idx = rng.int(0, poolCopy.length - 1)
     drawn.push(poolCopy.splice(idx, 1)[0])
   }
-  // Localize flavor text.
+  // Localize flavor text, inflecting the player-referential titles for gender.
   const served = drawn.map((a) => ({
     id: a.id,
     icon: a.icon,
-    name: localize(a.name, locale),
-    flavor: localize(a.flavor, locale),
+    name: locale === "es" ? genderize(localize(a.name, locale), gender) : localize(a.name, locale),
+    flavor:
+      locale === "es" ? genderize(localize(a.flavor, locale), gender) : localize(a.flavor, locale),
     statDeltas: a.statDeltas,
   }))
   res.json({ archetypes: served })
@@ -104,7 +108,7 @@ gameRouter.post("/new", async (req: Request, res: Response) => {
     const runType: RunType = req.body?.runType === "daily" ? "daily" : "standard"
     const locale = localeOf(req)
     const gender: Gender =
-      req.body?.gender === "male" || req.body?.gender === "female" ? req.body.gender : "nonbinary"
+      req.body?.gender === "male" || req.body?.gender === "female" ? req.body.gender : "male"
 
     if (!registry.classesById.has(classId)) {
       return res.status(400).json({ error: "invalid_class" })

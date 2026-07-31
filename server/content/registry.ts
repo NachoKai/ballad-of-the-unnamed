@@ -6,6 +6,7 @@ import type {
   ArchetypePool,
   ClassContent,
   EventContent,
+  FactionContent,
   LocaleMap,
   ShopItem,
   SlotPools,
@@ -43,7 +44,8 @@ export interface ContentRegistry {
   minigames: EventContent[]
   achievements: AchievementContent[]
   slots: SlotPools
-  factions: { id: string; name: LocaleMap }[]
+  factions: FactionContent[]
+  factionsById: Map<string, FactionContent>
   reputationTiers: Record<string, LocaleMap>
   shop: ShopItem[]
 }
@@ -74,11 +76,12 @@ export function loadContent(): ContentRegistry {
 
   const factionsRaw = readJson<{
     tiers: Record<string, LocaleMap>
-    factions: Record<string, LocaleMap>
+    factions: Record<string, { name: LocaleMap; wealth: number }>
   }>("factions.json")
-  const factions = Object.entries(factionsRaw.factions).map(([id, name]) => ({
+  const factions = Object.entries(factionsRaw.factions).map(([id, f]) => ({
     id,
-    name,
+    name: f.name,
+    wealth: f.wealth,
   }))
   for (const f of factions) validateLocaleMap(f.name, `faction ${f.id}`)
   const reputationTiers = factionsRaw.tiers
@@ -139,6 +142,7 @@ export function loadContent(): ContentRegistry {
 
   const eventsById = new Map(events.map((e) => [e.id, e]))
   const classesById = new Map(classes.map((c) => [c.id, c]))
+  const factionsById = new Map(factions.map((f) => [f.id, f]))
 
   cached = {
     classes,
@@ -150,6 +154,7 @@ export function loadContent(): ContentRegistry {
     achievements,
     slots,
     factions,
+    factionsById,
     reputationTiers,
     shop,
   }

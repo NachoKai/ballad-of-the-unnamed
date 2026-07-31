@@ -295,6 +295,7 @@ export function serveEvent(
       reputationDelta: ch.reputationDelta,
       goldDelta: ch.goldDelta,
       factionId: ch.factionId ?? ch.joinClanId ?? ch.reputationFaction,
+      stipend: ch.stipend,
     }))
     // Sort so rarer, more interesting choices read last (feels like a reveal).
     choices.sort((a, b) => RARITY_ORDER.indexOf(a.rarity) - RARITY_ORDER.indexOf(b.rarity))

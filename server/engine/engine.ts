@@ -73,7 +73,7 @@ export function createCharacter(input: {
   const base: CharacterState = {
     id: input.id,
     name: input.name,
-    gender: input.gender ?? "nonbinary",
+    gender: input.gender ?? "male",
     class: cls.id,
     archetype: archetype?.id ?? null,
     epithet: null,
@@ -113,6 +113,7 @@ export function createCharacter(input: {
     clanMemberships: [],
     flags: {},
     lastEventId: null,
+    lastClanOfferSeason: null,
     finaleStage2Choice: undefined,
   }
   recomputeDerived(base)
@@ -183,6 +184,49 @@ export function rollWorldEvents(
 }
 
 // ---------------------------------------------------------------------------
+// Faction wealth -> signing gold & season stipend
+// ---------------------------------------------------------------------------
+
+// A faction's relative size/wealth (1-10, authored in content/factions.json).
+// Falls back to a mid value for unknown ids.
+function factionWealth(factionId: string, registry: ContentRegistry): number {
+  return registry.factionsById.get(factionId)?.wealth ?? 3
+}
+
+// Clan offers fire at most once per season. The guard just skips the roll when
+// an offer already appeared this season (lastClanOfferSeason === seasonCount);
+// per-turn rates are unchanged.
+function clanOfferDueThisSeason(c: CharacterState): boolean {
+  return (c.lastClanOfferSeason ?? -1) < c.seasonCount
+}
+
+// Deterministic signing gold for joining a faction. Scales with the faction's
+// wealth plus the character's fame/power, so high-renown characters face
+// richer offers and richer factions outbid poorer ones.
+export function signingGoldFor(
+  c: CharacterState,
+  factionId: string,
+  registry: ContentRegistry,
+): number {
+  const wealth = factionWealth(factionId, registry)
+  const qualityMod = getActiveModifier(c, "offerQualityModifier")
+  return Math.round((100 + wealth * 100 + c.fame * 8 + c.powerLevel * 4) * (1 + qualityMod))
+}
+
+// Per-season stipend a faction pays its members. Scales with the faction's
+// wealth, the character's fame, and their standing inside that faction —
+// loyalty literally pays, which gives a reason to stay beyond honor.
+export function seasonStipendFor(
+  c: CharacterState,
+  factionId: string,
+  registry: ContentRegistry,
+): number {
+  const wealth = factionWealth(factionId, registry)
+  const rep = c.reputations.find((r) => r.faction === factionId)?.value ?? 0
+  return Math.round((30 + wealth * 40) * (1 + c.fame * 0.01 + rep * 0.008))
+}
+
+// ---------------------------------------------------------------------------
 // Clan offer generation
 // ---------------------------------------------------------------------------
 
@@ -198,16 +242,15 @@ export function generateClanOffer(
   for (let i = 0; i < count; i++) {
     const f = shuffled[i]
     const specialty = rng.pick(CLAN_SPECIALTIES)
-    const qualityMod = getActiveModifier(c, "offerQualityModifier")
-    const signingGold = Math.round(
-      (500 + c.fame * 10 + c.powerLevel * 5) * (0.5 + rng.next() * 1.0) * (1 + qualityMod),
-    )
+    const signingGold = signingGoldFor(c, f.id, registry)
+    const stipend = seasonStipendFor(c, f.id, registry)
     offers.push({
       clanId: f.id,
       name: localize(f.name, c.locale),
       specialty: localize(specialty.label, c.locale),
       signingGold,
-      perkLabel: `+${Math.floor(signingGold / 500)} renown`,
+      stipend,
+      perkLabel: `+${signingGold}g signing, +${stipend}g/season`,
       icon: "🏛️",
     })
   }
@@ -472,6 +515,12 @@ export function buildServedEvent(
     // Roll world events and embed in season summary.
     served.worldEvents = rollWorldEvents(c, registry, rng)
 
+    // Faction stipend earned this season (shown on the summary before the
+    // player continues; resolveSeasonSummary applies the same deterministic amount).
+    if (c.currentClanId) {
+      served.stipendEarned = seasonStipendFor(c, c.currentClanId, registry)
+    }
+
     // Rival update.
     if (c.rival) {
       const rv = c.rival
@@ -494,8 +543,10 @@ export function buildServedEvent(
       finaleStage: undefined,
     }
   }
-  // Clan offer: ~8% chance for clanless characters (not on season/retirement turns).
-  if (!c.currentClanId && rng.bool(0.08)) {
+  // Clan offer: ~8% chance for clanless characters (not on season/retirement
+  // turns), at most once per season.
+  if (!c.currentClanId && clanOfferDueThisSeason(c) && rng.bool(0.08)) {
+    c.lastClanOfferSeason = c.seasonCount
     const { offers } = generateClanOffer(c, registry, rng)
     const ev: EventContent = {
       id: "__clan_offer__",
@@ -515,6 +566,8 @@ export function buildServedEvent(
           narrative: { en: o.perkLabel, es: o.perkLabel },
           joinClanId: o.clanId,
           factionId: o.clanId,
+          goldDelta: o.signingGold,
+          stipend: o.stipend,
         }
       }),
     }
@@ -523,13 +576,15 @@ export function buildServedEvent(
     served.clanOfferChoices = offers
     return { event: ev, served, finaleStage: undefined }
   }
-  // Poaching offer for clan members — rate scales with powerLevel.
-  if (c.currentClanId) {
+  // Poaching offer for clan members — rate scales with powerLevel. At most once
+  // per season, shared with the clanless joining offer.
+  if (c.currentClanId && clanOfferDueThisSeason(c)) {
     const memberRate = Math.min(
       GAME_CONFIG.memberOfferRateCap,
       GAME_CONFIG.memberOfferBaseRate + c.powerLevel * GAME_CONFIG.memberOfferRatePerPower,
     )
     if (rng.bool(memberRate)) {
+      c.lastClanOfferSeason = c.seasonCount
       const { offers } = generateClanOffer(c, registry, rng)
       const ev: EventContent = {
         id: "__clan_poach__",
@@ -550,6 +605,8 @@ export function buildServedEvent(
               narrative: { en: o.perkLabel, es: o.perkLabel },
               joinClanId: o.clanId,
               factionId: o.clanId,
+              goldDelta: o.signingGold,
+              stipend: o.stipend,
             }
           }),
           {
@@ -594,10 +651,15 @@ export function buildServedEvent(
   }
 }
 
-// Resolve a season summary event: advance season, clean up expired inventory.
-export function resolveSeasonSummary(c: CharacterState): void {
+// Resolve a season summary event: advance season, pay the faction stipend,
+// clean up expired inventory.
+export function resolveSeasonSummary(c: CharacterState, registry: ContentRegistry): void {
   c.seasonCount += 1
   c.turn += 1
+  // Faction stipend: a faction pays its members each season.
+  if (c.currentClanId) {
+    c.gold += seasonStipendFor(c, c.currentClanId, registry)
+  }
   // Clean up expired consumables.
   c.inventory = c.inventory.filter((entry) => {
     if (entry.expiresAtTurn && entry.expiresAtTurn <= c.turn) return false
@@ -746,7 +808,7 @@ export function resolveChoice(
 
   // Season summary handling.
   if (event.id === "__season_summary__") {
-    resolveSeasonSummary(c)
+    resolveSeasonSummary(c, registry)
     return {
       narrative: "",
       ended: false,
@@ -801,7 +863,9 @@ export function resolveChoice(
     if (c.currentClanId) {
       applyClanBetrayal(c, choice.joinClanId, c.turn)
     }
-    const signingGold = Math.round(500 + c.fame * 10)
+    // Use the offered amount (goldDelta on the offer card) when present so the
+    // gold actually granted matches what the player saw; otherwise compute one.
+    const signingGold = choice.goldDelta ?? signingGoldFor(c, choice.joinClanId, registry)
     joinClan(c, choice.joinClanId, c.turn, signingGold)
   }
 
@@ -812,7 +876,8 @@ export function resolveChoice(
 
   const net = applyStatDeltas(c, choice.statDeltas, tagSynergy)
   applyStatDeltas(c, choice.tradeoffDeltas, tagSynergy)
-  if (choice.goldDelta) c.gold += choice.goldDelta
+  // Join choices apply their gold through joinClan above — avoid double pay.
+  if (!choice.joinClanId && choice.goldDelta) c.gold += choice.goldDelta
   if (choice.fameDelta) c.fame += choice.fameDelta
   if (choice.staminaDelta) c.stamina += choice.staminaDelta
   if (choice.healthDelta) c.health += choice.healthDelta

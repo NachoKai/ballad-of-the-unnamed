@@ -144,6 +144,11 @@ export function GameScreen({
                       {t(locale, "gold")} {c.goldDelta > 0 ? `+${c.goldDelta}` : c.goldDelta}
                     </BonusTag>
                   )}
+                  {c.stipend && c.stipend !== 0 && (
+                    <BonusTag $tint="gold">
+                      +{c.stipend} {t(locale, "stipendPerSeason")}
+                    </BonusTag>
+                  )}
                 </ChoiceDeltas>
               )}
             </ChoiceCard>
@@ -187,6 +192,12 @@ export function GameScreen({
                 <span>{t(locale, "battles")}</span>
                 <b>{character.counters["battles_won"] ?? 0}</b>
               </SeasonStat>
+              {event.stipendEarned != null && event.stipendEarned > 0 && (
+                <SeasonStat>
+                  <span>{t(locale, "stipend")}</span>
+                  <b>+{event.stipendEarned}</b>
+                </SeasonStat>
+              )}
             </SeasonStatRow>
           </>
         )}

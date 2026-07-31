@@ -39,104 +39,179 @@
   },
   "factions": {
     "greywater": {
-      "en": "Greywater Town",
-      "es": "Villa Aguagrís"
+      "name": {
+        "en": "Greywater Town",
+        "es": "Villa Aguagrís"
+      },
+      "wealth": 2
     },
     "ironhold": {
-      "en": "Ironhold Guild",
-      "es": "Gremio de Fuertehierro"
+      "name": {
+        "en": "Ironhold Guild",
+        "es": "Gremio de Fuertehierro"
+      },
+      "wealth": 5
     },
     "thornwood": {
-      "en": "Thornwood Wardens",
-      "es": "Guardianes de Espinar"
+      "name": {
+        "en": "Thornwood Wardens",
+        "es": "Guardianes de Espinar"
+      },
+      "wealth": 2
     },
     "arcanum": {
-      "en": "The Arcanum",
-      "es": "El Arcanum"
+      "name": {
+        "en": "The Arcanum",
+        "es": "El Arcanum"
+      },
+      "wealth": 6
     },
     "crownguard": {
-      "en": "The Crownguard",
-      "es": "La Guardia de la Corona"
+      "name": {
+        "en": "The Crownguard",
+        "es": "La Guardia de la Corona"
+      },
+      "wealth": 7
     },
     "ashwalkers": {
-      "en": "Ashwalkers",
-      "es": "Caminacenizas"
+      "name": {
+        "en": "Ashwalkers",
+        "es": "Caminacenizas"
+      },
+      "wealth": 3
     },
     "blacktide": {
-      "en": "Blacktide Corsairs",
-      "es": "Corsarios de Marea Negra"
+      "name": {
+        "en": "Blacktide Corsairs",
+        "es": "Corsarios de Marea Negra"
+      },
+      "wealth": 5
     },
     "bronzehammer": {
-      "en": "Bronzehammer Clan",
-      "es": "Clan Martillobronce"
+      "name": {
+        "en": "Bronzehammer Clan",
+        "es": "Clan Martillobronce"
+      },
+      "wealth": 6
     },
     "crimsonveil": {
-      "en": "Crimson Veil",
-      "es": "Velo Carmesí"
+      "name": {
+        "en": "Crimson Veil",
+        "es": "Velo Carmesí"
+      },
+      "wealth": 7
     },
     "deepfolk": {
-      "en": "Deepfolk",
-      "es": "Gentes Profundas"
+      "name": {
+        "en": "Deepfolk",
+        "es": "Gentes Profundas"
+      },
+      "wealth": 3
     },
     "embersworn": {
-      "en": "Embersworn",
-      "es": "Jurabrasas"
+      "name": {
+        "en": "Embersworn",
+        "es": "Jurabrasas"
+      },
+      "wealth": 4
     },
     "frostwood_tribe": {
-      "en": "Frostwood Tribe",
-      "es": "Tribu del Bosque Helado"
+      "name": {
+        "en": "Frostwood Tribe",
+        "es": "Tribu del Bosque Helado"
+      },
+      "wealth": 3
     },
     "golden_lotus": {
-      "en": "Golden Lotus",
-      "es": "Loto Dorado"
+      "name": {
+        "en": "Golden Lotus",
+        "es": "Loto Dorado"
+      },
+      "wealth": 9
     },
     "iron_covenant": {
-      "en": "Iron Covenant",
-      "es": "Pacto de Hierro"
+      "name": {
+        "en": "Iron Covenant",
+        "es": "Pacto de Hierro"
+      },
+      "wealth": 4
     },
     "ivy_circle": {
-      "en": "Ivy Circle",
-      "es": "Círculo de la Hiedra"
+      "name": {
+        "en": "Ivy Circle",
+        "es": "Círculo de la Hiedra"
+      },
+      "wealth": 4
     },
     "meridian_company": {
-      "en": "Meridian Company",
-      "es": "Compañía del Meridiano"
+      "name": {
+        "en": "Meridian Company",
+        "es": "Compañía del Meridiano"
+      },
+      "wealth": 8
     },
     "nightfall_order": {
-      "en": "Nightfall Order",
-      "es": "Orden del Ocaso"
+      "name": {
+        "en": "Nightfall Order",
+        "es": "Orden del Ocaso"
+      },
+      "wealth": 6
     },
     "rust_priests": {
-      "en": "Rust Priests",
-      "es": "Sacerdotes del Óxido"
+      "name": {
+        "en": "Rust Priests",
+        "es": "Sacerdotes del Óxido"
+      },
+      "wealth": 1
     },
     "sandspear": {
-      "en": "Spear of the Sands",
-      "es": "Lanza de las Arenas"
+      "name": {
+        "en": "Spear of the Sands",
+        "es": "Lanza de las Arenas"
+      },
+      "wealth": 5
     },
     "silver_mask": {
-      "en": "Silver Mask Syndicate",
-      "es": "Sindicato de la Máscara de Plata"
+      "name": {
+        "en": "Silver Mask Syndicate",
+        "es": "Sindicato de la Máscara de Plata"
+      },
+      "wealth": 8
     },
     "stonewardens": {
-      "en": "Stonewardens",
-      "es": "Guardapiedras"
+      "name": {
+        "en": "Stonewardens",
+        "es": "Guardapiedras"
+      },
+      "wealth": 6
     },
     "sunken_church": {
-      "en": "Sunken Church",
-      "es": "Iglesia Sumergida"
+      "name": {
+        "en": "Sunken Church",
+        "es": "Iglesia Sumergida"
+      },
+      "wealth": 3
     },
     "whispering_reed": {
-      "en": "Whispering Reed",
-      "es": "Caña Susurrante"
+      "name": {
+        "en": "Whispering Reed",
+        "es": "Caña Susurrante"
+      },
+      "wealth": 2
     },
     "luminari": {
-      "en": "Luminari Order",
-      "es": "Orden Luminari"
+      "name": {
+        "en": "Luminari Order",
+        "es": "Orden Luminari"
+      },
+      "wealth": 7
     },
     "gildedtongue": {
-      "en": "Gilded Tongue",
-      "es": "Lengua Dorada"
+      "name": {
+        "en": "Gilded Tongue",
+        "es": "Lengua Dorada"
+      },
+      "wealth": 8
     }
   }
 }

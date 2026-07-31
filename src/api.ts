@@ -114,7 +114,7 @@ export const api = {
   classes: (locale: Locale) =>
     jfetch<{ classes: ClassInfo[]; dailySeed: string }>(`/api/meta/classes?locale=${locale}`),
 
-  drawArchetypes: (input: { classId: string; locale: Locale }) =>
+  drawArchetypes: (input: { classId: string; locale: Locale; gender: Gender }) =>
     jfetch<{ archetypes: ArchetypeView[] }>("/api/game/archetype-draw", {
       method: "POST",
       body: JSON.stringify(input),

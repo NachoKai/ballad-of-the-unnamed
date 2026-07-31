@@ -20,7 +20,7 @@
       "icon": "shield",
       "name": {
         "en": "Guardian",
-        "es": "Guardiana"
+        "es": "Guardiane"
       },
       "flavor": {
         "en": "You stand between others and harm. Unmoving, unbroken.",
@@ -50,7 +50,7 @@
       "icon": "crown",
       "name": {
         "en": "Knight",
-        "es": "Caballera"
+        "es": "Caballere"
       },
       "flavor": {
         "en": "Honor is a weapon as sharp as any steel.",
@@ -65,7 +65,7 @@
       "icon": "brain",
       "name": {
         "en": "Tactician",
-        "es": "Táctica"
+        "es": "Táctique"
       },
       "flavor": {
         "en": "The battlefield is a game of moves and countermoves.",
@@ -97,7 +97,7 @@
       "icon": "sparkles",
       "name": {
         "en": "Enchanter",
-        "es": "Encantadora"
+        "es": "Encantadore"
       },
       "flavor": {
         "en": "A whisper in the right ear moves kingdoms.",
@@ -162,7 +162,7 @@
       "icon": "swords",
       "name": {
         "en": "Assassin",
-        "es": "Asesina"
+        "es": "Asesine"
       },
       "flavor": {
         "en": "One strike. One life. No witnesses.",
@@ -177,7 +177,7 @@
       "icon": "hand",
       "name": {
         "en": "Thief",
-        "es": "Ladrón"
+        "es": "Ladrone"
       },
       "flavor": {
         "en": "Their purse is lighter, and you are already gone.",
@@ -209,7 +209,7 @@
       "icon": "eye-off",
       "name": {
         "en": "Infiltrator",
-        "es": "Infiltradora"
+        "es": "Infiltradore"
       },
       "flavor": {
         "en": "Every locked door is just an invitation.",
@@ -241,11 +241,11 @@
       "icon": "target",
       "name": {
         "en": "Hunter",
-        "es": "Cazadora"
+        "es": "Cazadore"
       },
       "flavor": {
         "en": "Patient. Silent. The hunt is all that matters.",
-        "es": "Paciente. Silenciosa. La caza es lo único que importa."
+        "es": "Paciente. Silenciose. La caza es lo único que importa."
       },
       "statDeltas": {
         "dexterity": 8
@@ -256,7 +256,7 @@
       "icon": "heart-handshake",
       "name": {
         "en": "Beastmaster",
-        "es": "Maestra de Bestias"
+        "es": "Maestroe de Bestias"
       },
       "flavor": {
         "en": "Beasts do not fear you. They follow.",
@@ -271,7 +271,7 @@
       "icon": "footprints",
       "name": {
         "en": "Scout",
-        "es": "Exploradora"
+        "es": "Exploradore"
       },
       "flavor": {
         "en": "The road remembers every step you take.",
@@ -287,7 +287,7 @@
       "icon": "crosshair",
       "name": {
         "en": "Sniper",
-        "es": "Francotiradora"
+        "es": "Francotiradore"
       },
       "flavor": {
         "en": "Distance is not safety. It is precision.",
@@ -303,7 +303,7 @@
       "icon": "layers",
       "name": {
         "en": "Trapper",
-        "es": "Trampera"
+        "es": "Trampere"
       },
       "flavor": {
         "en": "Let your enemy come to you. The ground is your ally.",
@@ -335,7 +335,7 @@
       "icon": "heart-pulse",
       "name": {
         "en": "Healer",
-        "es": "Sanadora"
+        "es": "Sanadore"
       },
       "flavor": {
         "en": "Where there is life, there is hope. You carry both.",
@@ -350,7 +350,7 @@
       "icon": "shield",
       "name": {
         "en": "Paladin",
-        "es": "Paladina"
+        "es": "Paladine"
       },
       "flavor": {
         "en": "Your oath is your code. Unbroken, unbending.",
@@ -365,7 +365,7 @@
       "icon": "brain",
       "name": {
         "en": "Inquisitor",
-        "es": "Inquisidora"
+        "es": "Inquisidore"
       },
       "flavor": {
         "en": "Truth is a weapon. You wield it without mercy.",
@@ -413,7 +413,7 @@
       "icon": "message-circle",
       "name": {
         "en": "Comedian",
-        "es": "Cómica"
+        "es": "Cómique"
       },
       "flavor": {
         "en": "Laughter disarms what steel cannot touch.",

@@ -143,6 +143,8 @@ export interface ChoiceContent {
   joinClanId?: string
   // Faction association for display (e.g. flag icon).
   factionId?: string
+  // Per-season stipend offered by a faction (clan offer cards).
+  stipend?: number
   leaveReason?: string
 }
 
@@ -257,6 +259,14 @@ export interface ArchetypeContent {
 
 export type ArchetypePool = Record<string, ArchetypeContent[]>
 
+export interface FactionContent {
+  id: string
+  name: LocaleMap
+  // Relative size/wealth of the faction (1-10). Drives signing gold and the
+  // per-season stipend members receive — richer factions pay more.
+  wealth: number
+}
+
 export interface SlotPools {
   [poolName: string]: LocaleMap[]
 }
@@ -305,6 +315,10 @@ export interface CharacterState {
   lastEventId?: string | null
   // Consecutive turns spent at 0 stamina (forced recovery trigger).
   staminaZeroStreak?: number
+  // Season (seasonCount) in which the last clan offer appeared. Clan offers
+  // fire at most once per season; this resets automatically when seasonCount
+  // advances past it.
+  lastClanOfferSeason?: number | null
   pendingFinaleType?: EndingType
   finaleStage2Choice?: { endingType: EndingType; risky: boolean }
 }
@@ -329,6 +343,8 @@ export interface ServedChoice {
   goldDelta?: number
   // Faction association for flag icon display in choice cards.
   factionId?: string
+  // Per-season stipend offered by a faction (clan offer cards).
+  stipend?: number
 }
 
 export interface ServedEvent {
@@ -343,6 +359,8 @@ export interface ServedEvent {
   rivalUpdate?: string
   isClanOffer?: boolean
   clanOfferChoices?: ServedClanOffer[]
+  // Gold paid to the character this season by their faction (season summary).
+  stipendEarned?: number
   flagLabel?: string
 }
 
@@ -351,6 +369,8 @@ export interface ServedClanOffer {
   name: string
   specialty: string
   signingGold: number
+  // Per-season stipend if the character joins.
+  stipend: number
   perkLabel: string
   icon: string
 }

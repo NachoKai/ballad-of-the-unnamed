@@ -12,7 +12,9 @@ import {
   resolveSeasonSummary,
   retirementOfferEvent,
   rollWorldEvents,
+  seasonStipendFor,
   selectEvent,
+  signingGoldFor,
 } from "./engine.js"
 import { generateEpilogue } from "./epilogue.js"
 import { evaluateAchievements } from "./achievements.js"
@@ -156,7 +158,7 @@ describe("createCharacter", () => {
 // ---------------------------------------------------------------------------
 
 describe("gender inflection", () => {
-  it("createCharacter defaults gender to nonbinary", () => {
+  it("createCharacter defaults gender to male", () => {
     const c = createCharacter({
       id: "g1",
       name: "X",
@@ -164,7 +166,7 @@ describe("gender inflection", () => {
       locale: "en",
       registry: reg,
     })
-    expect(c.gender).toBe("nonbinary")
+    expect(c.gender).toBe("male")
   })
 
   it("createCharacter accepts an explicit gender", () => {
@@ -865,7 +867,7 @@ describe("season summary", () => {
         { itemId: "warhorse", qty: 1, expiresAtTurn: null },
       ],
     })
-    resolveSeasonSummary(c)
+    resolveSeasonSummary(c, reg)
     expect(c.seasonCount).toBe(1)
     expect(c.turn).toBe(6)
     // warhorse has no expiry, should persist; enchanted_boots expires at 10, still > 6
@@ -881,11 +883,24 @@ describe("season summary", () => {
         { itemId: "permanent_item", qty: 1, expiresAtTurn: null },
       ],
     })
-    resolveSeasonSummary(c)
+    resolveSeasonSummary(c, reg)
     // expired_item (expiresAtTurn 8 <= 10) should be removed
     expect(c.inventory.find((i) => i.itemId === "expired_item")).toBeUndefined()
     expect(c.inventory.find((i) => i.itemId === "active_item")).toBeDefined()
     expect(c.inventory.find((i) => i.itemId === "permanent_item")).toBeDefined()
+  })
+
+  it("pays a season stipend to clan members at the season boundary", () => {
+    const c = makeChar({ currentClanId: "ironhold", gold: 100, turn: 5, seasonCount: 0 })
+    const before = c.gold
+    resolveSeasonSummary(c, reg)
+    expect(c.gold).toBeGreaterThan(before)
+  })
+
+  it("does not pay a stipend to clanless characters", () => {
+    const c = makeChar({ currentClanId: null, gold: 100, turn: 5, seasonCount: 0 })
+    resolveSeasonSummary(c, reg)
+    expect(c.gold).toBe(100)
   })
 })
 
@@ -1473,7 +1488,73 @@ describe("generateClanOffer", () => {
       expect(offer.specialty).toBeTruthy()
       expect(offer.clanId).toBeTruthy()
       expect(offer.signingGold).toBeGreaterThan(0)
+      expect(offer.stipend).toBeGreaterThan(0)
     }
+  })
+
+  it("offers richer signing gold and stipend from wealthier factions", () => {
+    const c = makeChar()
+    const poor = signingGoldFor(c, "rust_priests", reg) // wealth 1
+    const rich = signingGoldFor(c, "golden_lotus", reg) // wealth 9
+    expect(rich).toBeGreaterThan(poor)
+    expect(seasonStipendFor(c, "golden_lotus", reg)).toBeGreaterThan(
+      seasonStipendFor(c, "rust_priests", reg),
+    )
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Clan joining pays the offered signing gold
+// ---------------------------------------------------------------------------
+describe("joinClan signing gold", () => {
+  it("applies the offered goldDelta exactly when joining through a choice", () => {
+    const c = makeChar({ gold: 100 })
+    const event: EventContent = {
+      id: "join_test",
+      minAge: 0,
+      maxAge: 99,
+      weight: 1,
+      narrative: { en: "", es: "" },
+      choices: [
+        {
+          id: "join_ironhold",
+          rarity: "uncommon",
+          label: { en: "", es: "" },
+          narrative: { en: "", es: "" },
+          joinClanId: "ironhold",
+          factionId: "ironhold",
+          goldDelta: 750,
+        },
+      ],
+    }
+    resolveChoice(c, event, "join_ironhold", reg, new Rng(1))
+    expect(c.currentClanId).toBe("ironhold")
+    expect(c.gold).toBe(100 + 750)
+  })
+
+  it("computes a signing gold when the choice has no goldDelta", () => {
+    const c = makeChar({ gold: 100, fame: 0, powerLevel: 0 })
+    const event: EventContent = {
+      id: "join_test",
+      minAge: 0,
+      maxAge: 99,
+      weight: 1,
+      narrative: { en: "", es: "" },
+      choices: [
+        {
+          id: "join_ironhold",
+          rarity: "uncommon",
+          label: { en: "", es: "" },
+          narrative: { en: "", es: "" },
+          joinClanId: "ironhold",
+          factionId: "ironhold",
+        },
+      ],
+    }
+    resolveChoice(c, event, "join_ironhold", reg, new Rng(1))
+    // ironhold wealth is 5 -> 100 + 500 = 600
+    expect(c.currentClanId).toBe("ironhold")
+    expect(c.gold).toBe(100 + 600)
   })
 })
 
@@ -1529,6 +1610,232 @@ describe("buildServedEvent clan offer", () => {
       }
     }
     expect(found).toBe(true)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Clan offers: at most once per season
+// ---------------------------------------------------------------------------
+describe("clan offer once per season", () => {
+  it("never serves an offer after one already appeared this season", () => {
+    const c = makeChar({
+      currentClanId: null,
+      turn: 1,
+      seasonCount: 5,
+      lastClanOfferSeason: 5,
+    })
+    for (let i = 0; i < 200; i++) {
+      const result = buildServedEvent(c, reg, new Rng(4000 + i))
+      expect(result.served.isClanOffer).toBeFalsy()
+    }
+  })
+
+  it("serves offers again once the season advances", () => {
+    const c = makeChar({
+      currentClanId: null,
+      turn: 1,
+      seasonCount: 5,
+      lastClanOfferSeason: 4,
+    })
+    let found = false
+    for (let i = 0; i < 200; i++) {
+      const result = buildServedEvent(c, reg, new Rng(5000 + i))
+      if (result.served.isClanOffer) {
+        found = true
+        expect(c.lastClanOfferSeason).toBe(5)
+        break
+      }
+    }
+    expect(found).toBe(true)
+  })
+
+  it("caps poaching offers for clan members too", () => {
+    const c = makeChar({
+      currentClanId: "ironhold",
+      powerLevel: 60,
+      turn: 1,
+      seasonCount: 5,
+      lastClanOfferSeason: 5,
+    })
+    for (let i = 0; i < 200; i++) {
+      const result = buildServedEvent(c, reg, new Rng(6000 + i))
+      expect(result.served.isClanOffer).toBeFalsy()
+    }
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Signing gold & stipend surfacing
+// ---------------------------------------------------------------------------
+describe("clan offer amounts", () => {
+  it("buildServedEvent marks stipendEarned on the season summary for clan members", () => {
+    const c = makeChar({ currentClanId: "ironhold", turn: GAME_CONFIG.seasonLength })
+    const result = buildServedEvent(c, reg, new Rng(42))
+    expect(result.event.id).toBe("__season_summary__")
+    expect(result.served.stipendEarned).toBe(seasonStipendFor(c, "ironhold", reg))
+    expect(result.served.stipendEarned).toBeGreaterThan(0)
+  })
+
+  it("leaves stipendEarned undefined for clanless characters", () => {
+    const c = makeChar({ currentClanId: null, turn: GAME_CONFIG.seasonLength })
+    const result = buildServedEvent(c, reg, new Rng(42))
+    expect(result.event.id).toBe("__season_summary__")
+    expect(result.served.stipendEarned).toBeUndefined()
+  })
+
+  it("serveEvent exposes stipend and goldDelta on served choices", () => {
+    const c = makeChar()
+    const event: EventContent = {
+      id: "offer_test",
+      minAge: 0,
+      maxAge: 99,
+      weight: 1,
+      narrative: { en: "", es: "" },
+      choices: [
+        {
+          id: "join_ironhold",
+          rarity: "uncommon",
+          label: { en: "", es: "" },
+          narrative: { en: "", es: "" },
+          joinClanId: "ironhold",
+          factionId: "ironhold",
+          goldDelta: 750,
+          stipend: 255,
+        },
+      ],
+    }
+    const served = serveEvent(event, c, "en", reg, new Rng(1), false)
+    const ch = served.choices.find((x) => x.id === "join_ironhold")
+    expect(ch?.goldDelta).toBe(750)
+    expect(ch?.stipend).toBe(255)
+    expect(ch?.factionId).toBe("ironhold")
+  })
+
+  it("poach offer join choices expose signing gold and stipend to the client", () => {
+    const c = makeChar({ currentClanId: "ironhold", powerLevel: 60, turn: 1 })
+    let found = false
+    for (let i = 0; i < 100; i++) {
+      const result = buildServedEvent(c, reg, new Rng(7000 + i))
+      if (result.event.id === "__clan_poach__") {
+        found = true
+        const joinChoices = (result.event.choices ?? []).filter((ch) => ch.joinClanId)
+        expect(joinChoices.length).toBeGreaterThan(0)
+        for (const jc of joinChoices) {
+          expect(jc.goldDelta).toBeGreaterThan(0)
+          expect(jc.stipend).toBeGreaterThan(0)
+        }
+        break
+      }
+    }
+    expect(found).toBe(true)
+  })
+
+  it("the gold applied on join matches the amount shown on the offer card", () => {
+    const c = makeChar({ currentClanId: "ironhold", powerLevel: 60, turn: 1, gold: 100 })
+    let tested = false
+    for (let i = 0; i < 100; i++) {
+      const rng = new Rng(8000 + i)
+      const { event, served } = buildServedEvent(c, reg, rng)
+      if (event.id === "__clan_poach__") {
+        const joinChoice = served.choices.find((ch) => ch.id.startsWith("join_"))
+        if (!joinChoice) continue
+        const displayed = joinChoice.goldDelta ?? 0
+        expect(displayed).toBeGreaterThan(0)
+        const goldBefore = c.gold
+        resolveChoice(c, event, joinChoice.id, reg, rng)
+        expect(c.gold).toBe(goldBefore + displayed)
+        tested = true
+        break
+      }
+    }
+    expect(tested).toBe(true)
+  })
+
+  it("stipend scales with fame and with standing inside the faction", () => {
+    const base = makeChar({ fame: 0 })
+    const famous = makeChar({ fame: 50 })
+    const loyal = makeChar({
+      fame: 0,
+      reputations: [{ faction: "ironhold", value: 60, peakValue: 60 }],
+    })
+    const famousLoyal = makeChar({
+      fame: 50,
+      reputations: [{ faction: "ironhold", value: 60, peakValue: 60 }],
+    })
+    const b = seasonStipendFor(base, "ironhold", reg)
+    expect(seasonStipendFor(famous, "ironhold", reg)).toBeGreaterThan(b)
+    expect(seasonStipendFor(loyal, "ironhold", reg)).toBeGreaterThan(b)
+    expect(seasonStipendFor(famousLoyal, "ironhold", reg)).toBeGreaterThan(
+      seasonStipendFor(famous, "ironhold", reg),
+    )
+  })
+
+  it("accepting a poach offer betrays the old clan, joins the new one, and pays the offered gold once", () => {
+    const c = makeChar({
+      currentClanId: "ironhold",
+      gold: 100,
+      turn: 10,
+      reputations: [{ faction: "ironhold", value: 50, peakValue: 50 }],
+      clanMemberships: [
+        {
+          clanId: "ironhold",
+          rank: "recruit",
+          joinedAtTurn: 1,
+          leftAtTurn: null,
+          leftReason: null,
+        },
+      ],
+    })
+    const event: EventContent = {
+      id: "poach_test",
+      minAge: 0,
+      maxAge: 99,
+      weight: 1,
+      narrative: { en: "", es: "" },
+      choices: [
+        {
+          id: "join_blacktide",
+          rarity: "uncommon",
+          label: { en: "", es: "" },
+          narrative: { en: "", es: "" },
+          joinClanId: "blacktide",
+          factionId: "blacktide",
+          goldDelta: 500,
+        },
+      ],
+    }
+    resolveChoice(c, event, "join_blacktide", reg, new Rng(1))
+    expect(c.huntedBy).toBe("ironhold")
+    expect(c.currentClanId).toBe("blacktide")
+    expect(c.gold).toBe(100 + 500)
+    expect(c.clanMemberships.find((m) => m.clanId === "ironhold")?.leftReason).toBe("betrayed")
+  })
+
+  it("clan_loyalty_bribe pays exactly the authored bribe, no computed bonus on top", () => {
+    const c = makeChar({
+      age: 25,
+      currentClanId: "greywater",
+      gold: 100,
+      turn: 10,
+      reputations: [{ faction: "greywater", value: 40, peakValue: 40 }],
+      clanMemberships: [
+        {
+          clanId: "greywater",
+          rank: "trusted",
+          joinedAtTurn: 1,
+          leftAtTurn: null,
+          leftReason: null,
+        },
+      ],
+    })
+    const ev = reg.events.find((e) => e.id === "clan_loyalty_bribe")
+    if (!ev) throw new Error("missing clan_loyalty_bribe fixture")
+    resolveChoice(c, ev, "betray", reg, new Rng(1))
+    expect(c.currentClanId).toBe("blacktide")
+    expect(c.gold).toBe(100 + 200)
+    expect(c.huntedBy).toBe("greywater")
+    expect(c.counters["clans_betrayed"]).toBe(1)
+    expect(c.clanMemberships.find((m) => m.clanId === "greywater")?.leftReason).toBe("betrayed")
   })
 })
 
