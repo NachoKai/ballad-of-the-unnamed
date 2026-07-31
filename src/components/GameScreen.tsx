@@ -113,11 +113,31 @@ export function GameScreen({
                   {t(locale, `rarity_${c.rarity}` as never)}
                 </ChoiceRarity>
               )}
-              {(c.statDeltas || c.tradeoffDeltas) && (
+              {(c.statDeltas ||
+                c.tradeoffDeltas ||
+                c.fameDelta ||
+                c.reputationDelta ||
+                c.goldDelta) && (
                 <ChoiceDeltas>
                   {c.statDeltas && <StatTag locale={locale} deltas={c.statDeltas} />}
                   {c.tradeoffDeltas && (
                     <StatTag locale={locale} deltas={c.tradeoffDeltas} tradeoff />
+                  )}
+                  {c.fameDelta && c.fameDelta !== 0 && (
+                    <BonusTag $tint="fame">
+                      {t(locale, "fame")} {c.fameDelta > 0 ? `+${c.fameDelta}` : c.fameDelta}
+                    </BonusTag>
+                  )}
+                  {c.reputationDelta && c.reputationDelta !== 0 && (
+                    <BonusTag $tint="rep">
+                      {t(locale, "reputation")}{" "}
+                      {c.reputationDelta > 0 ? `+${c.reputationDelta}` : c.reputationDelta}
+                    </BonusTag>
+                  )}
+                  {c.goldDelta && c.goldDelta !== 0 && (
+                    <BonusTag $tint="gold">
+                      {t(locale, "gold")} {c.goldDelta > 0 ? `+${c.goldDelta}` : c.goldDelta}
+                    </BonusTag>
                   )}
                 </ChoiceDeltas>
               )}
@@ -300,6 +320,22 @@ const ChoiceDeltas = styled.span`
   align-items: center;
   gap: 5px;
   margin-top: 8px;
+`
+
+const BONUS_COLOR: Record<string, string> = {
+  fame: "#c9803c",
+  rep: "#6f8f6a",
+  gold: "#e6c84a",
+}
+
+const BonusTag = styled.span<{ $tint: string }>`
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  color: ${({ $tint }) => BONUS_COLOR[$tint] ?? "#9c8f74"};
+  background: ${({ $tint }) => `${BONUS_COLOR[$tint] ?? "#9c8f74"}18`};
+  line-height: 1.5;
 `
 
 const SummaryBanner = styled.div`

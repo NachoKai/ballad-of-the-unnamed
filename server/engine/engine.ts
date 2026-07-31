@@ -474,6 +474,59 @@ export function buildServedEvent(
     served.clanOfferChoices = offers
     return { event: ev, served, finaleStage: undefined }
   }
+  // Poaching offer for clan members — rate scales with powerLevel.
+  if (c.currentClanId) {
+    const memberRate = Math.min(
+      GAME_CONFIG.memberOfferRateCap,
+      GAME_CONFIG.memberOfferBaseRate + c.powerLevel * GAME_CONFIG.memberOfferRatePerPower,
+    )
+    if (rng.bool(memberRate)) {
+      const { offers } = generateClanOffer(c, registry, rng)
+      const ev: EventContent = {
+        id: "__clan_poach__",
+        minAge: 0,
+        maxAge: 999,
+        weight: 1,
+        narrative: {
+          en: "Your reputation has spread. A rival faction sends emissaries with an offer...",
+          es: "Tu reputación se ha extendido. Una facción rival envía emisarios con una oferta...",
+        },
+        choices: [
+          ...offers.map((o) => {
+            const faction = registry.factions.find((f) => f.id === o.clanId)
+            return {
+              id: `join_${o.clanId}`,
+              rarity: "uncommon" as Rarity,
+              label: faction?.name ?? { en: o.name, es: o.name },
+              narrative: { en: o.perkLabel, es: o.perkLabel },
+              joinClanId: o.clanId,
+            }
+          }),
+          {
+            id: "stay_loyal",
+            rarity: "common" as Rarity,
+            label: (() => {
+              const cf = registry.factions.find((f) => f.id === c.currentClanId)
+              return cf?.name
+                ? { en: `Stay Loyal to ${cf.name.en}`, es: `Mantenerse Leal a ${cf.name.es}` }
+                : { en: "Stay Loyal", es: "Mantenerse Leal" }
+            })(),
+            narrative: {
+              en: "Your loyalty is unwavering. Your current clan respects your commitment.",
+              es: "Tu lealtad es inquebrantable. Tu clan actual respeta tu compromiso.",
+            },
+            reputationDelta: 3,
+            reputationFaction: c.currentClanId,
+            fameDelta: 1,
+          },
+        ],
+      }
+      const served = serveEvent(ev, c, c.locale, registry, rng, false)
+      served.isClanOffer = true
+      served.clanOfferChoices = offers
+      return { event: ev, served, finaleStage: undefined }
+    }
+  }
   if (isRetirementTurn(c)) {
     const ev = retirementOfferEvent()
     return {

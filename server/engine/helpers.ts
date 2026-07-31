@@ -281,6 +281,9 @@ export function serveEvent(
       rarity: ch.rarity,
       statDeltas: ch.statDeltas,
       tradeoffDeltas: ch.tradeoffDeltas,
+      fameDelta: ch.fameDelta,
+      reputationDelta: ch.reputationDelta,
+      goldDelta: ch.goldDelta,
     }))
     // Sort so rarer, more interesting choices read last (feels like a reveal).
     choices.sort((a, b) => RARITY_ORDER.indexOf(a.rarity) - RARITY_ORDER.indexOf(b.rarity))

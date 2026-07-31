@@ -30,6 +30,12 @@ export const GAME_CONFIG = {
   // Clan hunting: turns a betrayed clan hunts the character.
   huntedDurationTurns: 8,
 
+  // Faction offer rates for clan members (poaching).
+  // Scales with powerLevel: base + powerLevel * perPower, capped.
+  memberOfferBaseRate: 0.06,
+  memberOfferRatePerPower: 0.002,
+  memberOfferRateCap: 0.2,
+
   // World events: how many to roll per season.
   worldEventsPerSeason: 2,
 

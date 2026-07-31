@@ -1248,12 +1248,11 @@ describe("generateClanOffer", () => {
 })
 
 // ---------------------------------------------------------------------------
-// Gap fixes: clan offer can be produced by buildServedEvent
+// Gap fixes: buildServedEvent clan offer
 // ---------------------------------------------------------------------------
 describe("buildServedEvent clan offer", () => {
   it("can produce a clan offer for clanless characters with right rng", () => {
     const c = makeChar({ currentClanId: null, turn: 1 })
-    // Try many times to hit the 8% chance.
     let found = false
     for (let i = 0; i < 200; i++) {
       const result = buildServedEvent(c, reg, new Rng(1000 + i))
@@ -1267,12 +1266,39 @@ describe("buildServedEvent clan offer", () => {
     expect(found).toBe(true)
   })
 
-  it("does not produce clan offer for characters with a clan", () => {
-    const c = makeChar({ currentClanId: "ironhold", turn: 1 })
+  it("produces a poaching offer for clan members with high powerLevel", () => {
+    const c = makeChar({ currentClanId: "ironhold", powerLevel: 60, turn: 1 })
+    let found = false
     for (let i = 0; i < 100; i++) {
       const result = buildServedEvent(c, reg, new Rng(2000 + i))
-      expect(result.served.isClanOffer).toBeFalsy()
+      if (result.served.isClanOffer) {
+        found = true
+        expect(result.event.id).toBe("__clan_poach__")
+        const choices = result.event.choices ?? []
+        expect(choices.some((ch) => ch.id === "stay_loyal")).toBe(true)
+        break
+      }
     }
+    expect(found).toBe(true)
+  })
+
+  it("poaching offer choices include join options and stay_loyal", () => {
+    const c = makeChar({ currentClanId: "ironhold", powerLevel: 60, turn: 1 })
+    let found = false
+    for (let i = 0; i < 100; i++) {
+      const result = buildServedEvent(c, reg, new Rng(3000 + i))
+      if (result.event.id === "__clan_poach__") {
+        found = true
+        const choices = result.event.choices ?? []
+        const joinChoices = choices.filter((ch) => ch.joinClanId)
+        expect(joinChoices.length).toBeGreaterThan(0)
+        const loyal = choices.find((ch) => ch.id === "stay_loyal")
+        expect(loyal).toBeDefined()
+        expect(loyal!.reputationDelta).toBe(3)
+        break
+      }
+    }
+    expect(found).toBe(true)
   })
 })
 

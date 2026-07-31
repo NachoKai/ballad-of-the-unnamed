@@ -314,6 +314,9 @@ export interface ServedChoice {
   rarity: Rarity
   statDeltas?: StatDeltas
   tradeoffDeltas?: StatDeltas
+  fameDelta?: number
+  reputationDelta?: number
+  goldDelta?: number
 }
 
 export interface ServedEvent {
