@@ -22,6 +22,7 @@ import {
   createRun,
   getRun,
   insertLeaderboardEntry,
+  persistCharacterSnapshot,
   saveRun,
   type RunRecord,
 } from "../store/runStore.js"
@@ -367,6 +368,8 @@ gameRouter.post("/choose", async (req: Request, res: Response) => {
       run.pendingEvent = null
       run.rngState = rng.getState()
       await saveRun(run)
+
+      await persistCharacterSnapshot(run)
 
       await insertLeaderboardEntry({
         runId: run.id,

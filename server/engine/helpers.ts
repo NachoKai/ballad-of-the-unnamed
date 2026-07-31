@@ -21,9 +21,14 @@ export function fillSlots(
   locale: Locale,
   registry: ContentRegistry,
   rng: Rng,
+  character?: CharacterState,
 ): string {
   // Supports both {poolName} and {slot:poolName} placeholder styles.
   return text.replace(/\{(?:slot:)?([a-zA-Z_]+)\}/g, (_m, pool: string) => {
+    // {rivalName} is special: substituted with the actual run's rival, not a pool.
+    if (pool === "rivalName") {
+      return character?.rival?.name ?? "your rival"
+    }
     const entries = registry.slots[pool]
     if (!entries || entries.length === 0) return pool
     const chosen = rng.pick(entries)
@@ -260,7 +265,7 @@ export function serveEvent(
   rng: Rng,
   isRetirementOffer: boolean,
 ): ServedEvent {
-  const narrative = fillSlots(localize(ev.narrative, locale), locale, registry, rng)
+  const narrative = fillSlots(localize(ev.narrative, locale), locale, registry, rng, c)
 
   // Minigames present their cards as choices; regular events present choices.
   const isMinigame = ev.type === "minigame" || Boolean(ev.cards)
@@ -268,7 +273,7 @@ export function serveEvent(
   if (isMinigame && ev.cards) {
     choices = ev.cards.map((card) => ({
       id: card.id,
-      label: fillSlots(localize(card.label, locale), locale, registry, rng),
+      label: fillSlots(localize(card.label, locale), locale, registry, rng, c),
       icon: card.icon,
       rarity: "uncommon" as Rarity,
     }))
@@ -276,7 +281,7 @@ export function serveEvent(
   } else {
     choices = (ev.choices ?? []).map((ch) => ({
       id: ch.id,
-      label: fillSlots(localize(ch.label, locale), locale, registry, rng),
+      label: fillSlots(localize(ch.label, locale), locale, registry, rng, c),
       tag: ch.tag,
       rarity: ch.rarity,
       statDeltas: ch.statDeltas,

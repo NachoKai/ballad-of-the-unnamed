@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto"
 import { query, queryOne } from "../db/client.js"
+import { hashSeed } from "../../shared/rng.js"
 import type {
   CharacterState,
   EndingType,
@@ -109,6 +110,81 @@ export async function findDailyRun(seed: string): Promise<RunRecord | null> {
     [seed],
   )
   return rows[0] ? rowToRecord(rows[0]) : null
+}
+
+// Mirror a finished run into the normalized `characters` + `personality_log`
+// tables (schema: B6 — personality tags were tracked on the character JSONB
+// but never persisted to the normalized table). Idempotent: upserts keyed on
+// the character id, so re-finalizing or re-saving a run won't duplicate rows.
+export async function persistCharacterSnapshot(run: RunRecord): Promise<void> {
+  const c = run.character
+  const now = Date.now()
+  await query(
+    `INSERT INTO characters (
+       id, name, class, age, turn, strength, dexterity, constitution,
+       intelligence, charisma, stamina, health, fame, gold, momentum, status,
+       current_clan_id, hunted_by_clan_id, hunted_until_turn, locale,
+       counters, seen_event_ids, run_type, daily_seed, rng_seed, rng_state,
+       pending_event, created_at, updated_at
+     ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29)
+     ON CONFLICT (id) DO UPDATE SET
+       name = EXCLUDED.name, class = EXCLUDED.class, age = EXCLUDED.age,
+       turn = EXCLUDED.turn, strength = EXCLUDED.strength,
+       dexterity = EXCLUDED.dexterity, constitution = EXCLUDED.constitution,
+       intelligence = EXCLUDED.intelligence, charisma = EXCLUDED.charisma,
+       stamina = EXCLUDED.stamina, health = EXCLUDED.health,
+       fame = EXCLUDED.fame, gold = EXCLUDED.gold,
+       momentum = EXCLUDED.momentum, status = EXCLUDED.status,
+       current_clan_id = EXCLUDED.current_clan_id,
+       hunted_by_clan_id = EXCLUDED.hunted_by_clan_id,
+       hunted_until_turn = EXCLUDED.hunted_until_turn,
+       locale = EXCLUDED.locale, counters = EXCLUDED.counters,
+       seen_event_ids = EXCLUDED.seen_event_ids,
+       run_type = EXCLUDED.run_type, daily_seed = EXCLUDED.daily_seed,
+       rng_seed = EXCLUDED.rng_seed, rng_state = EXCLUDED.rng_state,
+       pending_event = EXCLUDED.pending_event, updated_at = EXCLUDED.updated_at`,
+    [
+      c.id,
+      c.name,
+      c.class,
+      c.age,
+      c.turn,
+      c.strength,
+      c.dexterity,
+      c.constitution,
+      c.intelligence,
+      c.charisma,
+      c.stamina,
+      c.health,
+      c.fame,
+      c.gold,
+      c.momentum,
+      c.status,
+      c.currentClanId,
+      c.huntedBy,
+      c.huntedUntilTurn,
+      c.locale,
+      JSON.stringify(c.counters),
+      JSON.stringify([]),
+      run.runType,
+      run.runType === "daily" ? run.seed : null,
+      hashSeed(run.seed),
+      run.rngState,
+      run.pendingEvent ? JSON.stringify(run.pendingEvent) : null,
+      now,
+      now,
+    ],
+  )
+
+  // Personality tags → normalized personality_log (upsert per tag).
+  for (const [tag, count] of Object.entries(c.personality)) {
+    await query(
+      `INSERT INTO personality_log (character_id, tag, count)
+       VALUES ($1, $2, $3)
+       ON CONFLICT (character_id, tag) DO UPDATE SET count = EXCLUDED.count`,
+      [c.id, tag, count],
+    )
+  }
 }
 
 export async function insertLeaderboardEntry(input: {

@@ -489,6 +489,20 @@ describe("fillSlots", () => {
     const result = fillSlots("{slot:npcName} draws their blade", "en", reg, rng)
     expect(result).not.toContain("{slot:")
   })
+
+  it("substitutes {rivalName} with the run's rival when a character is provided", () => {
+    const rng = new Rng(hashSeed("slot-test-3"))
+    const c = makeChar({ rival: { name: "Grimjaw" } as CharacterState["rival"] })
+    const result = fillSlots("{rivalName} blocks your path", "en", reg, rng, c)
+    expect(result).toBe("Grimjaw blocks your path")
+  })
+
+  it("falls back to a placeholder-safe phrase when there is no rival", () => {
+    const rng = new Rng(hashSeed("slot-test-4"))
+    const c = makeChar({ rival: null })
+    const result = fillSlots("{rivalName} watches you", "en", reg, rng, c)
+    expect(result).toBe("your rival watches you")
+  })
 })
 
 // ---------------------------------------------------------------------------

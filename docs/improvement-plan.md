@@ -4,18 +4,35 @@
 >
 > Current state: core game loop works end-to-end (creation → events → death/retirement → leaderboard). 15 events, 14 minigames, 36 achievements, 6 classes, bilingual EN/ES, deterministic RNG, server-authoritative, deployed on Neon + Vite + Express.
 
+## Status Legend
+
+| Marker | Meaning                                   |
+| ------ | ----------------------------------------- |
+| ✅     | Implemented & verified (engine + content) |
+| 🟡     | Partially implemented (see notes)         |
+| ⬜     | Not implemented / not started             |
+| ❌     | Removed / intentionally out of scope      |
+
+> Last audit: 2026-07-30. Verified against the codebase (server engine, content files, routes, store, UI).
+
 ---
 
 ## Bugs & Immediate Fixes (do first)
 
-| #   | Issue                                                                                                                           | File                            | Fix                                                                                                |
-| --- | ------------------------------------------------------------------------------------------------------------------------------- | ------------------------------- | -------------------------------------------------------------------------------------------------- |
-| B1  | `luminari` & `gildedtongue` factions referenced in `classes.json` but absent from `factions.json`                               | `content/classes.json:100,120`  | Add both factions to `content/factions.json` or remove them                                        |
-| B2  | `retired_hero` achievement condition `"value": "retired"` doesn't match engine's `"peaceful_retirement"` / `"other_retirement"` | `content/achievements.json:219` | Fix to `"peaceful_retirement"` or add a separate condition type that checks `status === "retired"` |
-| B3  | `legacy_score` excluded from `computeScore()` despite being in the spec formula                                                 | `shared/config.ts`              | Add parameter and weighting                                                                        |
-| B4  | Lucide icons on minigame cards may not exist in `AchIcon.tsx` mapping (21 icons mapped, minigames use ~40+ unique icon names)   | `src/components/AchIcon.tsx`    | Audit minigame card icons and add missing Lucide mappings; or use a fallback icon                  |
-| B5  | No server-side tests at all                                                                                                     | —                               | Add engine unit tests for `resolveChoice`, `resolveMinigame`, `rollDeath`, `selectEvent`           |
-| B6  | `personality_log` table exists in schema but no code writes to it                                                               | `server/db/schema.sql`          | Personality tags are tracked in `c.personality` but never persisted to the normalized table        |
+| #   | Status | Issue                                                                                                                           | File                            | Fix                                                                                                |
+| --- | ------ | ------------------------------------------------------------------------------------------------------------------------------- | ------------------------------- | -------------------------------------------------------------------------------------------------- |
+| B1  | ✅     | `luminari` & `gildedtongue` factions referenced in `classes.json` but absent from `factions.json`                               | `content/classes.json:100,120`  | Add both factions to `content/factions.json` or remove them                                        |
+| B2  | ✅     | `retired_hero` achievement condition `"value": "retired"` doesn't match engine's `"peaceful_retirement"` / `"other_retirement"` | `content/achievements.json:219` | Fix to `"peaceful_retirement"` or add a separate condition type that checks `status === "retired"` |
+| B3  | ✅     | `legacy_score` excluded from `computeScore()` despite being in the spec formula                                                 | `shared/config.ts`              | Add parameter and weighting                                                                        |
+| B4  | 🟡     | Lucide icons on minigame cards may not exist in `AchIcon.tsx` mapping (21 icons mapped, minigames use ~40+ unique icon names)   | `src/components/AchIcon.tsx`    | Audit minigame card icons and add missing Lucide mappings; or use a fallback icon                  |
+| B5  | ✅     | No server-side tests at all                                                                                                     | —                               | Add engine unit tests for `resolveChoice`, `resolveMinigame`, `rollDeath`, `selectEvent`           |
+| B6  | ✅     | `personality_log` table exists in schema but no code writes to it                                                               | `server/db/schema.sql`          | Personality tags are tracked in `c.personality` but never persisted to the normalized table        |
+
+**Status notes:**
+
+- B1/B2/B3/B5: implemented (verified via engine tests + content audit).
+- B4: 58 Lucide icons mapped + `Sparkles` fallback prevents crashes; not all minigame icon names audited.
+- B6: fixed 2026-07-30 — `persistCharacterSnapshot()` in `server/store/runStore.ts` upserts the `characters` row and `personality_log` rows when a run finishes (`/choose` end-of-run path).
 
 ---
 
@@ -23,7 +40,7 @@
 
 Goal: Make each character feel distinct at creation and throughout the run, not just a stat bundle.
 
-### 1.1 Starting Archetype Roll
+### 1.1 Starting Archetype Roll ✅
 
 **Spec ref**: §Starting archetype roll (p50-64), El Ídolo ref: §1 (3-card archetype roll)
 
@@ -60,9 +77,11 @@ Create `content/archetypes.json` — 5-8 archetypes per class, each giving a fla
 
 **Achievement tie-in**: "One True Blade" — already spec'd, auto-unlocked since no respec exists.
 
-### 1.2 Personality-Tag Gameplay Effects
+### 1.2 Personality-Tag Gameplay Effects 🟡
 
 **Spec ref**: §Personality/response system (p67-76), El Ídolo ref: §7 (press conference minigame)
+
+Status: engine support ✅ (`wantedTags`/`punishedTags` synergy, tag-based epithets) — but no authored content uses `wantedTags`/`punishedTags` yet, and the `press_conference` minigame subtype is not implemented. Negotiation gambit exists but NPC disposition isn't driven by player tag history.
 
 Tags are tracked but currently have zero gameplay effect. Wire them into:
 
@@ -85,7 +104,7 @@ Tags are tracked but currently have zero gameplay effect. Wire them into:
 
 4. **Epilogue flavor**: Tag history already feeds character personality — render a nicknames / reputation epithet based on most-used tags.
 
-### 1.3 Market Value as Separate Stat
+### 1.3 Market Value as Separate Stat ✅
 
 **Spec ref**: §Character/stats (p38-39), El Ídolo ref: §2 (Valor vs Ganado)
 
@@ -98,9 +117,11 @@ Tags are tracked but currently have zero gameplay effect. Wire them into:
 
 Surface in HUD as a separate number from gold.
 
-### 1.4 Stamina Depletion/Recovery Loop
+### 1.4 Stamina Depletion/Recovery Loop 🟡
 
 **Spec ref**: §Character/stats (p35 — Stamina/Vigor)
+
+Status: turn cost + fatigue penalty (<20 stamina) ✅. Recovery options are thin — only one authored event choice restores stamina. Forced recovery after 3+ turns at 0 stamina is ⬜ not implemented.
 
 `staminaDelta` exists on choices but nothing depletes/replenishes stamina systematically. Add:
 
@@ -115,7 +136,7 @@ Surface in HUD as a separate number from gold.
 
 Goal: Give gold a purpose beyond score, create meaningful spending decisions.
 
-### 2.1 Full Shop System (3 Tiers)
+### 2.1 Full Shop System (3 Tiers) ✅
 
 **Spec ref**: §Shop/economy (p662-735), El Ídolo ref: §10 (three shop tiers)
 
@@ -140,7 +161,7 @@ Build the complete shop from the spec:
 - Show owned items with active effects in HUD row (El Ídolo ref: §10 — persistent loadout icons)
 - Chapter-gated: Adventurer items only, Kingdom Hero unlocks more, Legend unlocks top tier
 
-### 2.2 Chapter-Gated Event Progression
+### 2.2 Chapter-Gated Event Progression ✅
 
 **Spec ref**: §Career arcs & chapters (p449-490)
 
@@ -179,7 +200,7 @@ Next season
 
 Currently the engine does: event → choice → resolve → event. This phase restructures turns into seasons of ~5 turns with the full loop.
 
-### 2.3 Season Summary / Newspaper Card
+### 2.3 Season Summary / Newspaper Card ✅
 
 **Spec ref**: §Season Summary (p490), El Ídolo ref: §3 (Potrero Deportivo recap cards)
 
@@ -194,7 +215,7 @@ After every season (every N turns), instead of a normal event, serve a summary c
 
 **Implementation**: synthetic event type `season_summary` generated server-side, similar to `retirementOfferEvent()`. Single "Continuar" button.
 
-### 2.4 Destiny Cards
+### 2.4 Destiny Cards ✅
 
 **Spec ref**: §Destiny cards (p400-407)
 
@@ -211,7 +232,7 @@ Rare standalone events (roughly every 8-10 in-game years) offering permanent, ru
 
 Goal: The world feels alive. The player has rivals, friends, and a wider world that moves without them.
 
-### 3.1 NPC Relationships
+### 3.1 NPC Relationships ✅
 
 **Spec ref**: §Relationships (p638-660), El Ídolo ref: §4 (rival system)
 
@@ -230,9 +251,11 @@ Goal: The world feels alive. The player has rivals, friends, and a wider world t
 
 **Achievements**: "Bonded for Life" (max affinity), "Burned That Bridge" (min affinity), "Silver Tongue" (talked out of fights via Charisma)
 
-### 3.2 Archrival System
+### 3.2 Archrival System 🟡
 
 **Spec ref**: §Archrival (p562-589), El Ídolo ref: §4 (full detail)
+
+Status: rival generation, parallel advancement, HUD widget, season updates, end-game comparison, and direct encounters ✅. `{rivalName}` slot rendering fixed 2026-07-30. ⬜ Not done: separate `rivals` table (rival is stored inline in the run JSONB) and a fully parallel RNG stream (rival shares the run's single deterministic RNG).
 
 A rival is a second character running in parallel, fully simulated through the same deterministic RNG.
 
@@ -251,7 +274,7 @@ A rival is a second character running in parallel, fully simulated through the s
 
 **Comparison metric**: `counters.battles_won + counters.quests_completed` vs rival's equivalent
 
-### 3.3 World Events
+### 3.3 World Events ✅
 
 **Spec ref**: §World events (p492-496), El Ídolo ref: §6 (event categories)
 
@@ -263,9 +286,11 @@ Once per season, roll 1-2 world events from their own content pool:
 
 **Content file**: `content/events/world.json` with `type: "world"` events, mostly flavor text with small stat nudges to the world at large.
 
-### 3.4 Clans / Faction Allegiance
+### 3.4 Clans / Faction Allegiance 🟡
 
 **Spec ref**: §Clans (p591-633), El Ídolo ref: §11 (transfer/clan market)
+
+Status: join/leave/betray engine, `hunted_by` system, clan offer/poach cards, and solo path (`requiresNoClan`) ✅. 🟡 No authored content events yet use `joinClanId` / `leaveReason` / `requiresNoClan` — the mechanics are engine-ready but not exercised by the content bank.
 
 Already partially implemented (factions exist in content, starting faction per class). Extend:
 
@@ -280,7 +305,7 @@ Already partially implemented (factions exist in content, starting faction per c
 - Clan offer cards render like shop items (specialty + signing gold + perk)
 - Fame-gated offers: low fame = minor local clans, high fame = rival clans poaching
 
-### 3.5 Long-Term Flags & Narrative Callbacks
+### 3.5 Long-Term Flags & Narrative Callbacks ✅
 
 **Spec ref**: §Long-term flags (p409-417), El Ídolo ref: §6 (event callbacks)
 
@@ -302,7 +327,7 @@ Already partially implemented (factions exist in content, starting faction per c
 
 Goal: The ending is a narratively satisfying capstone, not a stat dump.
 
-### 4.1 Scripted Two-Stage Retirement Finale
+### 4.1 Scripted Two-Stage Retirement Finale ✅
 
 **Spec ref**: El Ídolo ref: §13 (the single most reusable idea in the whole transcript)
 
@@ -316,7 +341,7 @@ Replace the current single-paragraph retirement epilogue with a two-stage final 
 
 **Implementation**: `generateFinale()` in a new `server/engine/finale.ts`, replacing the current minigame-less retirement resolution. The risky/safe choice reuses the existing choice-resolution infrastructure.
 
-### 4.2 Legacy Score & Auto-Generated Epithets
+### 4.2 Legacy Score & Auto-Generated Epithets ✅
 
 **Spec ref**: §Legacy (p429-439), El Ídolo ref: §14 (epilogue screen)
 
@@ -335,7 +360,7 @@ Replace the current single-paragraph retirement epilogue with a two-stage final 
 
 Store as `leaderboard_entries.epithet` (already in schema).
 
-### 4.3 Rich Epilogue Screen
+### 4.3 Rich Epilogue Screen ✅
 
 **Spec ref**: El Ídolo ref: §14 (full anatomy)
 
@@ -350,7 +375,7 @@ Extend `EndingScreen.tsx` with:
 - **Achievement gallery**: personalized descriptions with actual numbers filled in
 - **Score/ranking feedback**: "268k puntos de Gloria" + ranking position
 
-### 4.4 Leaderboard Expansion
+### 4.4 Leaderboard Expansion ✅
 
 **Spec ref**: §Ranking (p130-167), El Ídolo ref: §16 (leaderboard structure)
 
@@ -365,24 +390,30 @@ Extend `EndingScreen.tsx` with:
 
 Goal: Enough variety for 20+ runs before repetition sets in.
 
-### 5.1 Content Expansion Targets
+### 5.1 Content Expansion Targets 🟡
+
+**Spec ref**: — (volume targets)
+
+Status: current counts as of audit — Events **32**/60, Minigames **17**/25, Achievements **44**/50, Archetypes **30**/30+, World events **10**/20+, Clans 25 factions (few with joinable perks), NPC relationships system in place but <15 recurring authored NPCs. Target numbers in the table below are the Phase 5 goals, not yet reached.
 
 | Category                           | Current       | Phase 5 Target          |
 | ---------------------------------- | ------------- | ----------------------- |
-| Events (tavern/road/dungeon/court) | 15            | 60+                     |
-| Minigames (duels + activities)     | 14            | 25+                     |
-| Achievements                       | 32            | 50+                     |
+| Events (tavern/road/dungeon/court) | 32            | 60+                     |
+| Minigames (duels + activities)     | 17            | 25+                     |
+| Achievements                       | 44            | 50+                     |
 | Slot pool entries                  | ~140          | 300+                    |
-| Archetypes                         | 0             | 30+ (5-8 per class)     |
-| World events                       | 0             | 20+                     |
-| Clans                              | 23 (factions) | 10+ joinable with perks |
-| NPC relationships                  | 0             | 15+ recurring NPCs      |
+| Archetypes                         | 30            | 30+ (5-8 per class)     |
+| World events                       | 10            | 20+                     |
+| Clans                              | 25 (factions) | 10+ joinable with perks |
+| NPC relationships                  | <15           | 15+ recurring NPCs      |
 
 **Key principle**: Composability over raw count. Each authored event template + slot pools + age/class/fame gating produces many distinct felt variants. A few hundred templates should produce thousands of unique-feeling runs.
 
-### 5.2 Minigame Type Expansion
+### 5.2 Minigame Type Expansion ✅
 
 **El Ídolo ref**: §8 (5 distinct minigame types, currently only 1 implemented)
+
+Status: `timing_bar`, `grid_gamble`, and `memory_match` subtypes are implemented in the engine (`MinigameSubtype`) with authored content in `content/minigames/activities.json`. All three originally planned subtypes ✅.
 
 Currently only `weighted_hidden_match` exists. Add these subtypes:
 
@@ -390,9 +421,11 @@ Currently only `weighted_hidden_match` exists. Add these subtypes:
 2. **Grid gamble** (`subtype: "grid_gamble"`): N goals hidden in a grid, pick M cells. No stat influence — pure luck for the highest-stakes moments. Losing narrowly still framed as achievement.
 3. **Memory match** (`subtype: "memory_match"`): face-down tile board, flip pairs, limited lives. Stat-gated bonus life (e.g. `Intelligence >= 80 → +1 life`).
 
-### 5.3 Achievement Families
+### 5.3 Achievement Families 🟡
 
 **El Ídolo ref**: §15 (graduated tiers)
+
+Status: tiered families exist (duels 1/5/10, gold 500/2000, fame 50/100/150, age 40/60, quests 5/10/20, battles 15/30/50, reputation 65/78/99). 🟡 Thresholds don't match the spec (gold isn't 1K/10K/100K, no age-80 tier, battles aren't 10/50/100).
 
 Tiered achievement families on the same underlying stat:
 
@@ -403,9 +436,11 @@ Tiered achievement families on the same underlying stat:
 
 Each tier is its own unlockable, keeping the achievement dopamine loop alive longer.
 
-### 5.4 Cross-Run Meta-Collection
+### 5.4 Cross-Run Meta-Collection 🟡
 
 **El Ídolo ref**: §15 (Vitrina de copas — 54 collectible trophies across runs)
+
+Status: Trophy Hall screen (`CollectionScreen.tsx`) + `GET /api/meta/collection` ✅ — shows total runs, unique factions, unique endings. 🟡 Completion percentage (e.g. "42/70") and per-encounter/per-faction completion tracking are not implemented.
 
 A "Trophy Hall" screen accessible from the main menu:
 
@@ -416,20 +451,13 @@ A "Trophy Hall" screen accessible from the main menu:
 
 ---
 
-## Phase 6: Analytics & AI Layer (Optional)
+## Phase 6: Analytics (Optional)
 
-### 6.1 AI Narration Layer
+### 6.1 Analytics ⬜
 
 **Spec ref**: §Do we need an LLM? (p23-25)
 
-Off the critical path — if the API call fails, fall back to the authored template string.
-
-- Slots into `generateEpilogue()`: pass the structured recap JSON to Claude API, ask it to write 2-3 paragraphs of flavor
-- Similarly for `generateFinale()`: give it the character's life stats + ending type for a unique parting scene
-- Toggleable: settings page has "AI narration" on/off switch
-- Never let AI decide stat changes, gold amounts, or outcomes
-
-### 6.2 Analytics
+Status: not started. No telemetry, event tracking, or run-data analytics exist. The original AI Narration section (6.1) was removed by project decision — no LLM/AI features are planned.
 
 - Track per-run metrics: average turn duration, most-picked personality tags, most common ending types, achievement completion rates
 - Content bank analytics: which events are never seen (weight tuning), which minigames are skipped most
@@ -440,13 +468,24 @@ Off the critical path — if the API call fails, fall back to the authored templ
 ## Implementation Order Summary
 
 ```
-Phase 0 (Bugs):    B1-B6 → 1-2 days
-Phase 1 (Identity): 1.1 Archetypes, 1.2 Personality effects, 1.3 Market Value, 1.4 Stamina → 1 week
-Phase 2 (Economy):  2.1 Shop, 2.2 Chapters, 2.3 Season Summary, 2.4 Destiny Cards → 1.5 weeks
-Phase 3 (Social):   3.1 Relationships, 3.2 Archrival, 3.3 World Events, 3.4 Clans, 3.5 Flags → 2 weeks
-Phase 4 (Legacy):   4.1 Retirement Finale, 4.2 Legacy Score, 4.3 Rich Epilogue, 4.4 Leaderboards → 1 week
-Phase 5 (Content):  5.1-5.4 Content expansion + minigame types + achievements → ongoing
-Phase 6 (Optional): 6.1 AI layer, 6.2 Analytics → if/when needed
+Phase 0 (Bugs):    B1-B6 ✅ (B4 partially) — 1-2 days
+Phase 1 (Identity): 1.1 ✅, 1.2 🟡, 1.3 ✅, 1.4 🟡 — 1 week
+Phase 2 (Economy):  2.1 ✅, 2.2 ✅, 2.3 ✅, 2.4 ✅ — 1.5 weeks
+Phase 3 (Social):   3.1 ✅, 3.2 🟡, 3.3 ✅, 3.4 🟡, 3.5 ✅ — 2 weeks
+Phase 4 (Legacy):   4.1 ✅, 4.2 ✅, 4.3 ✅, 4.4 ✅ — 1 week
+Phase 5 (Content):  5.1 🟡 (32/60 events etc.), 5.2 ✅, 5.3 🟡, 5.4 🟡 — ongoing
+Phase 6 (Optional): 6.1 ⬜ Analytics — if/when needed
 ```
 
 Each phase is self-contained and shippable. No phase blocks any other — content can be authored in parallel with systems work.
+
+Remaining work by priority:
+
+1. 🟡 **B4** — audit minigame card icons against `AchIcon.tsx` mapping
+2. 🟡 **1.2** — author content using `wantedTags`/`punishedTags`; add `press_conference` minigame subtype
+3. 🟡 **1.4** — stamina recovery content + forced recovery after 3 turns at 0 stamina
+4. 🟡 **3.2** — separate `rivals` table + parallel rival RNG stream
+5. 🟡 **3.4** — author events using `joinClanId` / `leaveReason` / `requiresNoClan`
+6. 🟡 **5.1/5.3** — content volume targets + spec-aligned achievement tiers
+7. 🟡 **5.4** — Trophy Hall completion percentage
+8. ⬜ **6.1** — analytics (optional)

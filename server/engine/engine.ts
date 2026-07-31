@@ -170,9 +170,9 @@ export function rollWorldEvents(
     const ev = rng.pick(worldPool)
     if (!ev) continue
     const headline = ev.worldEventHeadline
-      ? fillSlots(localize(ev.worldEventHeadline, c.locale), c.locale, registry, rng)
+      ? fillSlots(localize(ev.worldEventHeadline, c.locale), c.locale, registry, rng, c)
       : "The World Turns"
-    const narrative = fillSlots(localize(ev.narrative, c.locale), c.locale, registry, rng)
+    const narrative = fillSlots(localize(ev.narrative, c.locale), c.locale, registry, rng, c)
     results.push({ headline, narrative })
   }
   return results
@@ -800,7 +800,7 @@ export function resolveChoice(
     }
   }
 
-  const narrative = fillSlots(localize(choice.narrative, c.locale), c.locale, registry, rng)
+  const narrative = fillSlots(localize(choice.narrative, c.locale), c.locale, registry, rng, c)
 
   return {
     narrative,
@@ -911,7 +911,7 @@ export function resolveMinigame(
     endingType = heroicOrPeaceful(c, "death")
   }
 
-  const narrative = fillSlots(localize(outcome.narrative, c.locale), c.locale, registry, rng)
+  const narrative = fillSlots(localize(outcome.narrative, c.locale), c.locale, registry, rng, c)
 
   return {
     narrative,

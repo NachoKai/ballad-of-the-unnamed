@@ -45,6 +45,7 @@ Do you charge forward, risking everything for one last moment of {slot:glory}? O
       locale,
       registry,
       rng,
+      c,
     )
   }
 
@@ -57,6 +58,7 @@ Do you take the risky path — uncertain, but ablaze with {slot:glory}? Or the s
     locale,
     registry,
     rng,
+    c,
   )
 }
 
@@ -138,12 +140,14 @@ export function generateFinaleStage2(
         locale,
         registry,
         rng,
+        c,
       )
     : fillSlots(
         `${name} the ${className} chooses wisely. Not every ending needs fire — some need the quiet {slot:weather} of a morning after. A young {slot:creature} watches from the crowd, gripping a {slot:weapon} for the first time. They do not know it yet, but they carry what comes next.`,
         locale,
         registry,
         rng,
+        c,
       )
 
   return { stage: "outcome", narrative: { en: narrative, es: narrative } }
