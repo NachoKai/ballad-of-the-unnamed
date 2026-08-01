@@ -54,7 +54,7 @@ function ToastCard({ item, onExpire }: { item: ToastItem; onExpire: (id: string)
   }, [item.id, onExpire])
 
   return (
-    <Toast role="status">
+    <Toast role="status" onClick={() => onExpire(item.id)}>
       <ToastIcon>
         <AchIcon name={item.icon} size={26} />
       </ToastIcon>
@@ -96,6 +96,7 @@ const Toast = styled.div`
   border-radius: ${({ theme }) => theme.radii.sm};
   box-shadow: ${({ theme }) => theme.shadow};
   animation: ${toastIn} 0.35s ease both;
+  cursor: pointer;
 `
 
 const ToastIcon = styled.span`
