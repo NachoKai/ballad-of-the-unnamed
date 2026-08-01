@@ -22,6 +22,8 @@ export const theme = {
       uncommon: "#6f8f6a",
       rare: "#5a86c8",
       volatile: "#c9803c",
+      epic: "#b674e0",
+      legendary: "#e6c874",
     },
 
     rank1: "#ffd76e",
@@ -41,5 +43,11 @@ export const theme = {
 
   shadow: "0 10px 40px rgba(0, 0, 0, 0.55)",
 } as const
+
+export function rarityColor(rarity: string): string {
+  return (
+    theme.colors.rarity[rarity as keyof typeof theme.colors.rarity] ?? theme.colors.rarity.common
+  )
+}
 
 export type Theme = typeof theme

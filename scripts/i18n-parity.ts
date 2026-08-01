@@ -3,10 +3,10 @@
 import { readFileSync, readdirSync } from "node:fs"
 import { fileURLToPath } from "node:url"
 import { dirname, join } from "node:path"
+import { LOCALES } from "../shared/i18n.js"
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const CONTENT = join(__dirname, "..", "content")
-const LOCALES = ["en", "es"] as const
 
 let problems = 0
 

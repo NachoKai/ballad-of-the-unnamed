@@ -236,7 +236,7 @@ const TabBtn = styled.button<{ $active: boolean }>`
 
 const CategoryTabs = styled.div`
   display: flex;
-  gap: 4px;
+  gap: 6px;
   margin-bottom: 16px;
   flex-wrap: wrap;
 `

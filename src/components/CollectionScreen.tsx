@@ -279,7 +279,7 @@ const SectionTitle = styled.h2`
 const TagGrid = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 12px;
 `
 
 const Tag = styled.span`
@@ -297,7 +297,7 @@ const Tag = styled.span`
 const ProgressRow = styled.div`
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
   margin-bottom: 10px;
 `
 

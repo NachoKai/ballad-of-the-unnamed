@@ -10,7 +10,11 @@ import { StatTag } from "./StatTag"
 import { LinkBtn } from "./ui/Button"
 import { TextPretty } from "./ui/Text"
 import { rise } from "./ui/Animation"
+import { ElectricBorder } from "./ui/ElectricBorder"
 import { capitalize } from "../lib/capitalize"
+import { RARITY_CHAOS } from "../constants"
+import { rarityRank } from "@shared/config"
+import { theme } from "../theme"
 
 interface Props {
   locale: Locale
@@ -21,13 +25,6 @@ interface Props {
   onChoose: (choiceId: string) => Promise<void>
   onAbandon: () => void
   onShopOpen?: () => void
-}
-
-const RARITY_ORDER: Record<string, number> = {
-  common: 0,
-  uncommon: 1,
-  rare: 2,
-  volatile: 3,
 }
 
 export function GameScreen({
@@ -55,9 +52,7 @@ export function GameScreen({
   }
 
   // Sort choices by rarity so the "safe" option is first and rare/volatile pop last.
-  const choices = [...event.choices].sort(
-    (a, b) => (RARITY_ORDER[a.rarity] ?? 0) - (RARITY_ORDER[b.rarity] ?? 0),
-  )
+  const choices = [...event.choices].sort((a, b) => rarityRank(a.rarity) - rarityRank(b.rarity))
 
   const isSeasonSummary = event.isSeasonSummary
 
@@ -94,64 +89,70 @@ export function GameScreen({
 
         <ChoiceGrid role="group" aria-label={t(locale, "chooseAction")}>
           {choices.map((c) => (
-            <ChoiceCard
+            <ChoiceCardWrap
               key={c.id}
-              type="button"
-              $rarity={c.rarity}
-              $selected={selected === c.id}
-              onClick={() => pick(c.id)}
-              disabled={busy}
+              color={theme.colors.rarity[c.rarity]}
+              chaos={RARITY_CHAOS[c.rarity]}
+              borderRadius={8}
             >
-              {isSeasonSummary && c.id === "continue" ? null : (
-                <RarityPip $rarity={c.rarity} aria-hidden="true" />
-              )}
-              <ChoiceLabel>
-                {c.factionId ? (
-                  <FactionFlag factionId={c.factionId} size={20} />
-                ) : c.icon ? (
-                  <AchIcon name={c.icon} size={20} />
-                ) : null}
-                {c.label}
-              </ChoiceLabel>
-              {isSeasonSummary && c.id === "continue" ? null : (
-                <ChoiceRarity $rarity={c.rarity}>
-                  {t(locale, `rarity_${c.rarity}` as never)}
-                </ChoiceRarity>
-              )}
-              {(c.statDeltas ||
-                c.tradeoffDeltas ||
-                c.fameDelta ||
-                c.reputationDelta ||
-                c.goldDelta) && (
-                <ChoiceDeltas>
-                  {c.statDeltas && <StatTag locale={locale} deltas={c.statDeltas} />}
-                  {c.tradeoffDeltas && (
-                    <StatTag locale={locale} deltas={c.tradeoffDeltas} tradeoff />
-                  )}
-                  {c.fameDelta && c.fameDelta !== 0 && (
-                    <BonusTag $tint="fame">
-                      {t(locale, "fame")} {c.fameDelta > 0 ? `+${c.fameDelta}` : c.fameDelta}
-                    </BonusTag>
-                  )}
-                  {c.reputationDelta && c.reputationDelta !== 0 && (
-                    <BonusTag $tint="rep">
-                      {t(locale, "reputation")}{" "}
-                      {c.reputationDelta > 0 ? `+${c.reputationDelta}` : c.reputationDelta}
-                    </BonusTag>
-                  )}
-                  {c.goldDelta && c.goldDelta !== 0 && (
-                    <BonusTag $tint="gold">
-                      {t(locale, "gold")} {c.goldDelta > 0 ? `+${c.goldDelta}` : c.goldDelta}
-                    </BonusTag>
-                  )}
-                  {c.stipend && c.stipend !== 0 && (
-                    <BonusTag $tint="gold">
-                      +{c.stipend} {t(locale, "stipendPerSeason")}
-                    </BonusTag>
-                  )}
-                </ChoiceDeltas>
-              )}
-            </ChoiceCard>
+              <ChoiceCard
+                type="button"
+                $rarity={c.rarity}
+                $selected={selected === c.id}
+                onClick={() => pick(c.id)}
+                disabled={busy}
+              >
+                {isSeasonSummary && c.id === "continue" ? null : (
+                  <RarityPip $rarity={c.rarity} aria-hidden="true" />
+                )}
+                <ChoiceLabel>
+                  {c.factionId ? (
+                    <FactionFlag factionId={c.factionId} size={20} />
+                  ) : c.icon ? (
+                    <AchIcon name={c.icon} size={20} />
+                  ) : null}
+                  {c.label}
+                </ChoiceLabel>
+                {isSeasonSummary && c.id === "continue" ? null : (
+                  <ChoiceRarity $rarity={c.rarity}>
+                    {t(locale, `rarity_${c.rarity}` as never)}
+                  </ChoiceRarity>
+                )}
+                {(c.statDeltas ||
+                  c.tradeoffDeltas ||
+                  c.fameDelta ||
+                  c.reputationDelta ||
+                  c.goldDelta) && (
+                  <ChoiceDeltas>
+                    {c.statDeltas && <StatTag locale={locale} deltas={c.statDeltas} />}
+                    {c.tradeoffDeltas && (
+                      <StatTag locale={locale} deltas={c.tradeoffDeltas} tradeoff />
+                    )}
+                    {c.fameDelta && c.fameDelta !== 0 && (
+                      <BonusTag $tint="fame">
+                        {t(locale, "fame")} {c.fameDelta > 0 ? `+${c.fameDelta}` : c.fameDelta}
+                      </BonusTag>
+                    )}
+                    {c.reputationDelta && c.reputationDelta !== 0 && (
+                      <BonusTag $tint="rep">
+                        {t(locale, "reputation")}{" "}
+                        {c.reputationDelta > 0 ? `+${c.reputationDelta}` : c.reputationDelta}
+                      </BonusTag>
+                    )}
+                    {c.goldDelta && c.goldDelta !== 0 && (
+                      <BonusTag $tint="gold">
+                        {t(locale, "gold")} {c.goldDelta > 0 ? `+${c.goldDelta}` : c.goldDelta}
+                      </BonusTag>
+                    )}
+                    {c.stipend && c.stipend !== 0 && (
+                      <BonusTag $tint="gold">
+                        +{c.stipend} {t(locale, "stipendPerSeason")}
+                      </BonusTag>
+                    )}
+                  </ChoiceDeltas>
+                )}
+              </ChoiceCard>
+            </ChoiceCardWrap>
           ))}
         </ChoiceGrid>
 
@@ -210,13 +211,6 @@ export function GameScreen({
   )
 }
 
-const RARITY_COLOR: Record<Rarity, string> = {
-  common: "#9c8f74",
-  uncommon: "#6f8f6a",
-  rare: "#5a86c8",
-  volatile: "#c9803c",
-}
-
 const GameLayout = styled.div`
   display: grid;
   gap: 22px;
@@ -269,28 +263,35 @@ const RetireBanner = styled.div`
 
 const ChoiceGrid = styled.div`
   display: grid;
-  gap: 12px;
+  gap: 16px;
   margin-top: 22px;
   margin-bottom: 18px;
+`
+
+const ChoiceCardWrap = styled(ElectricBorder)`
+  transition: transform 0.12s;
+
+  &:hover {
+    transform: translateX(4px);
+  }
 `
 
 const ChoiceCard = styled.button<{ $rarity: Rarity; $selected: boolean }>`
   position: relative;
   text-align: left;
+  width: 100%;
   background: ${({ theme }) => theme.colors.ink2};
   border: 1px solid ${({ theme }) => theme.colors.line2};
-  border-left: 4px solid ${({ $rarity }) => RARITY_COLOR[$rarity]};
+  border-left: 4px solid ${({ theme, $rarity }) => theme.colors.rarity[$rarity]};
   border-radius: ${({ theme }) => theme.radii.sm};
   padding: 15px 18px;
   color: ${({ theme }) => theme.colors.parchment};
   font-size: 18px;
   transition:
-    transform 0.12s,
     border-color 0.15s,
     background 0.15s;
 
   &:hover:not(:disabled) {
-    transform: translateX(4px);
     background: ${({ theme }) => theme.colors.ink3};
   }
 
@@ -307,7 +308,7 @@ const RarityPip = styled.span<{ $rarity: Rarity }>`
   width: 8px;
   height: 8px;
   border-radius: 999px;
-  background: ${({ $rarity }) => RARITY_COLOR[$rarity]};
+  background: ${({ theme, $rarity }) => theme.colors.rarity[$rarity]};
 `
 
 const ChoiceLabel = styled(TextPretty)`
@@ -398,7 +399,7 @@ const SummarySub = styled.span`
 const SeasonStatRow = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 12px;
   margin-top: 16px;
   padding: 14px;
   border: 1px solid ${({ theme }) => theme.colors.line};
@@ -441,7 +442,7 @@ const AbandonBtn = styled(LinkBtn)`
 const WorldEventsBlock = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
   margin-bottom: 16px;
   padding: 14px;
   border: 1px solid ${({ theme }) => theme.colors.line};

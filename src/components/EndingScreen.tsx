@@ -310,7 +310,7 @@ const EndingName = styled.p`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 16px;
   flex-wrap: wrap;
 `
 
@@ -430,7 +430,7 @@ const FactionBadge = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   padding: 10px 14px;
   border: 1px solid ${({ theme }) => theme.colors.line};
   border-radius: ${({ theme }) => theme.radii.sm};
@@ -486,7 +486,7 @@ const RivalLabel = styled.span`
 const RivalValue = styled.span`
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
 `
 
 const RivalStat = styled.span<{ $win: boolean }>`
@@ -512,7 +512,7 @@ const RivalOutcome = styled.p`
 const DistinctionsList = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 12px;
 `
 
 const DistinctionChip = styled.div`
@@ -610,7 +610,7 @@ const AchIconWrap = styled.span`
 
 const EndingActions = styled.div`
   display: flex;
-  gap: 12px;
+  gap: 16px;
   justify-content: center;
   margin-top: 26px;
 `

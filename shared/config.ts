@@ -48,7 +48,7 @@ export const GAME_CONFIG = {
   legendaryThresholdPercentile: 0.999,
 } as const
 
-import type { Arc } from "./types.js"
+import type { Arc, Rarity } from "./types.js"
 
 // Arc thresholds: age at which each chapter begins.
 export const ARC_THRESHOLDS: { minAge: number; arc: Arc }[] = [
@@ -66,6 +66,15 @@ export function arcForAge(age: number): Arc {
     if (age >= t.minAge) arc = t.arc
   }
   return arc
+}
+
+// Rarity ordering (low → high). Also the canonical rarity list; drives how
+// choices are sorted so rarer/more volatile options read last.
+export const RARITY_ORDER: Rarity[] = ["common", "uncommon", "rare", "volatile"]
+
+export function rarityRank(rarity: string): number {
+  const i = RARITY_ORDER.indexOf(rarity as Rarity)
+  return i === -1 ? 0 : i
 }
 
 // Reputation tiers (localized names live in content/reputationTiers.json later;

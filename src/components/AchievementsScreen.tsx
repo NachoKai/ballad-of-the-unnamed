@@ -5,20 +5,12 @@ import { t } from "../i18n/strings"
 import { AchIcon } from "./AchIcon"
 import { BtnGhost } from "./ui/Button"
 import { rise } from "./ui/Animation"
+import { rarityColor } from "../theme"
 
 interface Props {
   locale: Locale
   achievements: AchievementView[]
   onBack: () => void
-}
-
-const RARITY_COLOR: Record<string, string> = {
-  common: "#9c8f74",
-  uncommon: "#6f8f6a",
-  rare: "#5a86c8",
-  volatile: "#c9803c",
-  epic: "#b674e0",
-  legendary: "#e6c874",
 }
 
 export function AchievementsScreen({ locale, achievements, onBack }: Props) {
@@ -85,7 +77,7 @@ const Grid = styled.div`
 const Card = styled.div`
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
   padding: 12px 14px;
   background: ${({ theme }) => theme.colors.ink2};
   border: 1px solid ${({ theme }) => theme.colors.line};
@@ -143,10 +135,10 @@ const RarityBadge = styled.span<{ $rarity: string }>`
   border-radius: 4px;
   flex-shrink: 0;
   background: ${({ $rarity }) => {
-    const c = RARITY_COLOR[$rarity]
+    const c = rarityColor($rarity)
     return c ? `${c}22` : "rgba(156,143,116,0.15)"
   }};
-  color: ${({ $rarity }) => RARITY_COLOR[$rarity] ?? "#9c8f74"};
+  color: ${({ $rarity }) => rarityColor($rarity)};
 `
 
 const BackBtn = styled(BtnGhost)`

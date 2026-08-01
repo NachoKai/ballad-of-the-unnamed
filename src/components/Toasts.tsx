@@ -83,7 +83,7 @@ const toastIn = keyframes`
 const Toast = styled.div`
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
   min-width: 260px;
   max-width: 340px;
   padding: 14px 16px;

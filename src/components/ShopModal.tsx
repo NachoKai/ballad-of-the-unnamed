@@ -140,7 +140,7 @@ const Modal = styled.div`
 const Header = styled.div`
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
   padding: 18px 20px;
   border-bottom: 1px solid ${({ theme }) => theme.colors.line};
 `
@@ -197,7 +197,7 @@ const ErrorMsg = styled.p`
 const ItemGrid = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
   padding: 16px;
 `
 

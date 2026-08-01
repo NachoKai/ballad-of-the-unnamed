@@ -253,7 +253,7 @@ const StatsStrip = styled.div`
   flex: 1 1 100%;
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 12px;
   align-items: center;
   padding: 16px 18px;
   border-top: 1px solid ${({ theme }) => theme.colors.line};

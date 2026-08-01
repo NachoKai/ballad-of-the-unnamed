@@ -131,7 +131,7 @@ const StatList = styled.div`
 const StatChip = styled.span`
   display: inline-flex;
   align-items: baseline;
-  gap: 4px;
+  gap: 6px;
   background: ${({ theme }) => theme.colors.ink3};
   border: 1px solid ${({ theme }) => theme.colors.line};
   border-radius: 999px;

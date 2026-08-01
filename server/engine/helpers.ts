@@ -12,7 +12,7 @@ import type {
 import { STAT_KEYS } from "../../shared/types.js"
 import type { Rng } from "../../shared/rng.js"
 import type { ContentRegistry } from "../content/registry.js"
-import { reputationTierId, affinityTierId, GAME_CONFIG } from "../../shared/config.js"
+import { reputationTierId, affinityTierId, GAME_CONFIG, rarityRank } from "../../shared/config.js"
 import { genderize } from "../../shared/genderize.js"
 
 // Fill {slot:pool} placeholders in a narrative string deterministically.
@@ -260,8 +260,6 @@ export function effectiveWeight(ev: EventContent, c: CharacterState): number {
 
 // ---- Serving events to the client (strip hidden fields) ----
 
-const RARITY_ORDER: Rarity[] = ["common", "uncommon", "rare", "volatile"]
-
 export function serveEvent(
   ev: EventContent,
   c: CharacterState,
@@ -298,7 +296,7 @@ export function serveEvent(
       stipend: ch.stipend,
     }))
     // Sort so rarer, more interesting choices read last (feels like a reveal).
-    choices.sort((a, b) => RARITY_ORDER.indexOf(a.rarity) - RARITY_ORDER.indexOf(b.rarity))
+    choices.sort((a, b) => rarityRank(a.rarity) - rarityRank(b.rarity))
   }
   const flagLabel = ev.flagLabel ? localize(ev.flagLabel, locale) : undefined
   return { eventId: ev.id, narrative, choices, isRetirementOffer, flagLabel }
@@ -376,8 +374,8 @@ export function applyAgeDecline(c: CharacterState): void {
   if (c.age <= declineStart) return
   const yearsOver = c.age - declineStart
   if (yearsOver % 3 === 0) {
-    // Every 3 years past decline start, lose 1 from a random physical stat.
-    const physicalStats = ["strength", "dexterity", "constitution"] as const
+    // Every 3 years past decline start, lose 1 from every physical stat.
+    const physicalStats = STAT_KEYS.filter((k) => k !== "intelligence" && k !== "charisma")
     for (const k of physicalStats) {
       if (c[k] > 0) c[k] -= 1
     }

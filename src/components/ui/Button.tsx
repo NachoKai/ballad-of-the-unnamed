@@ -4,7 +4,7 @@ export const BtnPrimary = styled.button<{ $block?: boolean }>`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 12px;
   background: linear-gradient(
     180deg,
     ${({ theme }) => theme.colors.goldBright},
@@ -39,7 +39,7 @@ export const BtnPrimary = styled.button<{ $block?: boolean }>`
 export const BtnGhost = styled.button`
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
   background: transparent;
   border: 1px solid ${({ theme }) => theme.colors.line2};
   border-radius: ${({ theme }) => theme.radii.sm};
