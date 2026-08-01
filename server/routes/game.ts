@@ -57,15 +57,6 @@ async function loadOwnedRun(req: Request): Promise<RunRecord | null> {
   return getRun(id)
 }
 
-// -- Serialize the achievements to localized client shape.
-function serveAchievements(list: AchievementContent[], locale: Locale): AchievementContent[] {
-  return list.map((a) => ({
-    ...a,
-    name: { en: localize(a.name, locale), es: a.name.es },
-    description: { en: localize(a.description, locale), es: a.description.es },
-  }))
-}
-
 // POST /api/game/archetype-draw  { classId, locale, gender }
 gameRouter.post("/archetype-draw", (req: Request, res: Response) => {
   const classId = String(req.body?.classId ?? "")
@@ -263,6 +254,11 @@ gameRouter.get("/shop", async (req: Request, res: Response) => {
 })
 
 // POST /api/game/buy  { runId, itemId }
+//
+// The `newAchievements` field below is served with raw locale maps; the client
+// resolves them against its own active locale (Toasts, EndingScreen, and
+// App.tsx all use resolveLocaleMap), so pre-localizing here would bake the
+// run's language into the payload and break a mid-run locale toggle.
 gameRouter.post("/buy", async (req: Request, res: Response) => {
   try {
     const run = await loadOwnedRun(req)
@@ -298,6 +294,16 @@ gameRouter.post("/buy", async (req: Request, res: Response) => {
       c.inventory.push({ itemId, qty: 1, expiresAtTurn })
     }
 
+    // Items can declare an achievementTrigger (e.g. the floating_realm luxury)
+    // — bump that counter and unlock the achievement right away so the purchase
+    // has a felt reward. `achievementTrigger` doubles as the counter key,
+    // matching the authored `jetset_life` achievement condition.
+    let newAchievements: AchievementContent[] = []
+    if (item.achievementTrigger) {
+      c.counters[item.achievementTrigger] = (c.counters[item.achievementTrigger] ?? 0) + 1
+      newAchievements = evaluateAchievements(c, registry)
+    }
+
     run.character = c
     await saveRun(run)
 
@@ -306,6 +312,7 @@ gameRouter.post("/buy", async (req: Request, res: Response) => {
       purchased: itemId,
       gold: c.gold,
       inventory: c.inventory,
+      newAchievements,
     })
   } catch (err) {
     console.log("[v0] /buy error", (err as Error).message)
@@ -405,7 +412,7 @@ gameRouter.post("/choose", async (req: Request, res: Response) => {
       result = {
         character: c,
         narrative: outcome.narrative,
-        newAchievements: serveAchievements(newAchievements, locale),
+        newAchievements,
         ended: true,
         endingType: outcome.endingType,
         epilogue,
@@ -423,7 +430,7 @@ gameRouter.post("/choose", async (req: Request, res: Response) => {
     result = {
       character: run.character,
       narrative: outcome.narrative,
-      newAchievements: serveAchievements(newAchievements, locale),
+      newAchievements,
       ended: false,
     }
     return res.json({ ...result, event: served })

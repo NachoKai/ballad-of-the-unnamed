@@ -79,6 +79,8 @@ export interface BuyResponse {
   purchased: string
   gold: number
   inventory: { itemId: string; qty: number; expiresAtTurn: number | null }[]
+  // Achievements unlocked by the purchase (e.g. luxury-item triggers).
+  newAchievements: AchievementContent[]
 }
 
 export interface LeaderboardEntryView {

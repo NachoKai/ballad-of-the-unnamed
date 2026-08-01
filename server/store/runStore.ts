@@ -113,9 +113,9 @@ export async function findDailyRun(seed: string): Promise<RunRecord | null> {
 }
 
 // Mirror a finished run into the normalized `characters` + `personality_log`
-// tables (schema: B6 — personality tags were tracked on the character JSONB
-// but never persisted to the normalized table). Idempotent: upserts keyed on
-// the character id, so re-finalizing or re-saving a run won't duplicate rows.
+// tables (personality tags were tracked on the character JSONB but never
+// persisted to the normalized table). Idempotent: upserts keyed on the
+// character id, so re-finalizing or re-saving a run won't duplicate rows.
 export async function persistCharacterSnapshot(run: RunRecord): Promise<void> {
   const c = run.character
   const now = Date.now()

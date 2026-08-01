@@ -601,6 +601,67 @@ describe("evaluateAchievements", () => {
 })
 
 // ---------------------------------------------------------------------------
+// Counter-backed achievements: jetset_life + the 10 counters that previously
+// had no achievement tracking them.
+// ---------------------------------------------------------------------------
+describe("counter achievements", () => {
+  const COUNTER_ACH: [string, string, number][] = [
+    ["jetset_life", "jetset_life", 1],
+    ["wandering_blade", "clans_joined", 2],
+    ["oathbreaker", "clans_betrayed", 1],
+    ["master_angler", "fishing_won", 3],
+    ["grand_huntsman", "hunts_won", 3],
+    ["unbroken", "survivals_won", 3],
+    ["court_favorite", "courtly_won", 3],
+    ["fleet_footed", "chases_won", 3],
+    ["alley_king", "street_fights_won", 3],
+    ["master_alchemist", "alchemy_won", 3],
+    ["clutch_artist", "clutch_duels", 1],
+  ]
+
+  it.each(COUNTER_ACH)(
+    "unlocks %s when counter %s reaches %d",
+    (achId, key, value) => {
+      const c = makeChar({ counters: { [key]: value } })
+      const result = evaluateAchievements(c, reg)
+      expect(result.map((a) => a.id)).toContain(achId)
+      expect(c.achievements).toContain(achId)
+    },
+  )
+
+  it.each(COUNTER_ACH)(
+    "does not unlock %s below the threshold",
+    (achId, key, value) => {
+      const c = makeChar({ counters: { [key]: Math.max(0, value - 1) } })
+      expect(evaluateAchievements(c, reg).map((a) => a.id)).not.toContain(achId)
+    },
+  )
+
+  it("every authored counter is actually incremented by content or engine", () => {
+    // Collect every counter key the content bank bumps via countersDelta.
+    const bumped = new Set<string>()
+    for (const ev of [...reg.events, ...reg.minigames]) {
+      for (const ch of ev.choices ?? []) {
+        if (ch.countersDelta) for (const k of Object.keys(ch.countersDelta)) bumped.add(k)
+      }
+      if (ev.outcomes) {
+        for (const tier of ["critical", "success", "partial", "fail"] as const) {
+          const deltas = ev.outcomes[tier]?.countersDelta
+          if (deltas) for (const k of Object.keys(deltas)) bumped.add(k)
+        }
+      }
+    }
+    // bench_joined is bumped by the engine (joinClan), not content — checked
+    // in the bench mechanic tests. Every counter above must be bumped somewhere.
+    const engineBumped = new Set(["bench_joined"])
+    for (const [, key] of COUNTER_ACH) {
+      if (key === "jetset_life") continue // bumped by the /buy route, not content
+      expect(bumped.has(key) || engineBumped.has(key), `${key} never incremented`).toBe(true)
+    }
+  })
+})
+
+// ---------------------------------------------------------------------------
 // generateEpilogue
 // ---------------------------------------------------------------------------
 describe("generateEpilogue", () => {

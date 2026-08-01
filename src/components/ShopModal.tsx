@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { styled } from "styled-components"
-import type { Locale } from "@shared/types"
+import type { AchievementContent, Locale } from "@shared/types"
 import { t } from "../i18n/strings"
 import { api, type ShopResponse } from "../api"
 import { BtnPrimary } from "./ui/Button"
@@ -13,6 +13,7 @@ interface Props {
   onPurchased: (res: {
     gold: number
     inventory: { itemId: string; qty: number; expiresAtTurn: number | null }[]
+    newAchievements?: AchievementContent[]
   }) => void
 }
 

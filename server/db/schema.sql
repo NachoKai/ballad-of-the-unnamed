@@ -124,36 +124,14 @@ CREATE TABLE IF NOT EXISTS turn_log (
   created_at    BIGINT NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS leaderboard_entries (
-  id                  TEXT PRIMARY KEY,
-  character_id        TEXT NOT NULL,
-  name                TEXT NOT NULL,
-  class               TEXT NOT NULL,
-  final_power_level   INTEGER NOT NULL,
-  net_worth           INTEGER NOT NULL,
-  achievements_count  INTEGER NOT NULL DEFAULT 0,
-  battles_won         INTEGER NOT NULL DEFAULT 0,
-  quests_completed    INTEGER NOT NULL DEFAULT 0,
-  age_at_end          INTEGER NOT NULL,
-  reputation_peak     INTEGER NOT NULL DEFAULT 0,
-  ending_type         TEXT NOT NULL,
-  score               INTEGER NOT NULL,
-  -- structured recap so the epilogue can render in the viewer's locale
-  epilogue_recap      JSONB NOT NULL,
-  run_type            TEXT NOT NULL DEFAULT 'standard',
-  daily_seed          TEXT,
-  created_at          BIGINT NOT NULL
-);
-
-CREATE INDEX IF NOT EXISTS idx_leaderboard_score ON leaderboard_entries (score DESC);
-CREATE INDEX IF NOT EXISTS idx_leaderboard_networth ON leaderboard_entries (net_worth DESC);
-CREATE INDEX IF NOT EXISTS idx_leaderboard_age ON leaderboard_entries (age_at_end DESC);
-CREATE INDEX IF NOT EXISTS idx_leaderboard_battles ON leaderboard_entries (battles_won DESC);
-CREATE INDEX IF NOT EXISTS idx_leaderboard_achievements ON leaderboard_entries (achievements_count DESC);
-CREATE INDEX IF NOT EXISTS idx_leaderboard_runtype ON leaderboard_entries (run_type, daily_seed);
-
 -- Migrations for columns added after initial table creation --------------------
 ALTER TABLE leaderboard ADD COLUMN IF NOT EXISTS legacy_score INTEGER NOT NULL DEFAULT 0;
 ALTER TABLE leaderboard ADD COLUMN IF NOT EXISTS epithet TEXT;
 ALTER TABLE leaderboard ADD COLUMN IF NOT EXISTS leaderboard_tier TEXT NOT NULL DEFAULT 'standard';
 CREATE INDEX IF NOT EXISTS idx_lb_tier ON leaderboard (leaderboard_tier, score DESC);
+
+-- B11: the normalized `leaderboard_entries` table was dead schema — no code
+-- ever read or wrote it (leaderboard routes use the `leaderboard` table).
+-- Dropped here so fresh installs don't create it and existing installs clean
+-- up the orphaned table on the next migration.
+DROP TABLE IF EXISTS leaderboard_entries;

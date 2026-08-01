@@ -2,7 +2,7 @@
 
 > Based on: `docs/fantasy-cyoa-rpg-spec.md` (810 lines), `docs/el-idolo-reference-notes.md` (253 lines), and full codebase audit.
 >
-> Current state: core game loop works end-to-end (creation → events → death/retirement → leaderboard). 15 events, 14 minigames, 36 achievements, 6 classes, bilingual EN/ES, deterministic RNG, server-authoritative, deployed on Neon + Vite + Express.
+> Current state: core game loop works end-to-end (creation → events → death/retirement → leaderboard). 65 events, 25 minigames, 67 achievements, 6 classes, bilingual EN/ES, deterministic RNG, server-authoritative, deployed on Neon + Vite + Express.
 
 ## Status Legend
 
@@ -13,7 +13,9 @@
 | ⬜     | Not implemented / not started             |
 | ❌     | Removed / intentionally out of scope      |
 
-> Last audit: 2026-07-30. Verified against the codebase (server engine, content files, routes, store, UI).
+> Last audit: 2026-08-01. Verified against the codebase (server engine, content files, routes, store, UI) — engine, content, routes, and UI all read end-to-end.
+>
+> **2026-08-01 bugfix pass (B7-B12):** all six fixed — see the bug table below. Follow-up polish in the same pass: unit tests added for the 11 new counter achievements + `POST /buy` trigger wiring (`server/routes/game.test.ts`), and `serveAchievements` no longer pre-localizes on the server — achievements travel with raw locale maps and the client resolves against its own active locale (fixes the mid-run locale-toggle edge case).
 
 ---
 
@@ -33,6 +35,17 @@
 - B1/B2/B3/B5: implemented (verified via engine tests + content audit).
 - B4: 58+ Lucide icons mapped + `Sparkles` fallback prevents crashes; **2026-07-30 audit added `arrow-right`, `book-open`, `circle`, `clock`, `door-open`, `heart` — all 54 minigame icon names now resolve**.
 - B6: fixed 2026-07-30 — `persistCharacterSnapshot()` in `server/store/runStore.ts` upserts the `characters` row and `personality_log` rows when a run finishes (`/choose` end-of-run path).
+
+### New bugs surfaced in the 2026-08-01 audit
+
+| #  | Status | Issue                                                                                                                      | File                              | Fix                                                                                                            |
+| -- | ------ | -------------------------------------------------------------------------------------------------------------------------- | --------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| B7 | ✅ | Achievement toast titles/descriptions hardcode `.en`, ignoring the player's selected locale                                | `src/components/Toasts.tsx:22-23` | **Fixed 2026-08-01** — `useAchievementToasts` now takes the active `locale` and resolves via `resolveLocaleMap` (same path as the rest of the UI) |
+| B8 | ✅ | `floating_realm` shop item declares `achievementTrigger: "jetset_life"` but no achievement with that id exists             | `content/shop.json`               | **Fixed 2026-08-01** — authored the `jetset_life` achievement (`counter_gte` on the `jetset_life` counter) **and** wired `/buy` to bump the trigger counter, evaluate, and return `newAchievements` so the toast fires |
+| B9 | ✅ | `bench_to_banner` achievement checks counter `bench_joined`, but no content/engine code ever increments it                  | `content/achievements.json`, `server/engine/helpers.ts` | **Already fixed in code** — `joinClan()` in `helpers.ts` bumps `bench_joined` when the bench state is applied (test `engine.test.ts:2009` asserts it); doc was stale |
+| B10 | ✅ | `wastelands` is one of the 6 regions but no region-gated event uses it (`regions.json` events cover vale/coast/highlands/capital/isles only) | `content/events/regions.json` | **Fixed 2026-08-01** — authored `region_wastelands_cinder` (cinder-duel/scavenge/ember-camp) covering all 6 regions |
+| B11 | ✅ | `leaderboard_entries` table is dead schema — full normalized layout + 5 category indexes exist but no code reads/writes it; leaderboard routes use the `leaderboard` table instead | `server/db/schema.sql:127` | **Fixed 2026-08-01** — dropped the table + indexes from schema; added `DROP TABLE IF EXISTS leaderboard_entries;` to the migration section so existing installs clean up on next migrate |
+| B12 | ✅ | Many event/minigame counters have no achievement tracking them (`clans_joined`, `clans_betrayed`, `fishing_won`, `hunts_won`, `survivals_won`, `courtly_won`, `chases_won`, `street_fights_won`, `alchemy_won`, `clutch_duels`) | `content/achievements.json` | **Fixed 2026-08-01** — authored 10 achievements over the counters (`wandering_blade`, `oathbreaker`, `master_angler`, `grand_huntsman`, `unbroken`, `court_favorite`, `fleet_footed`, `alley_king`, `master_alchemist`, `clutch_artist`) |
 
 ---
 
@@ -81,7 +94,7 @@ Create `content/archetypes.json` — 5-8 archetypes per class, each giving a fla
 
 **Spec ref**: §Personality/response system (p67-76), El Ídolo ref: §7 (press conference minigame)
 
-Status: engine support ✅ (`wantedTags`/`punishedTags` synergy, tag-based epithets) — `press_conference` minigame subtype ⬜ not implemented. **2026-07-30: authored `content/events/personality.json` — 5 social events (`court_bard_song`, `road_merchant_escort`, `tavern_knight_solicit`, `court_strategist_war`, `tavern_commander_advice`) using `wantedTags`/`punishedTags` to make past personality choices amplify or penalize outcomes.**
+Status: engine support ✅ (`wantedTags`/`punishedTags` synergy via `computeTagSynergy`, tag-based epithets) — `press_conference` minigame subtype ⬜ still not implemented. **2026-07-30: authored `content/events/personality.json` — 5 social events (`court_bard_song`, `road_merchant_escort`, `tavern_knight_solicit`, `court_strategist_war`, `tavern_commander_advice`) using `wantedTags`/`punishedTags` to make past personality choices amplify or penalize outcomes.** `computeTagSynergy` (`server/engine/engine.ts`) multiplies stat gains by `1 + Σ(wantedTag bonus) + Σ(punishedTag malus)` whenever the player's accumulated tag counts match a choice's declared tags — so a player who has been consistently Humble gets a real bonus on Humble-wanted choices, and a Cocky history penalizes Cocky-punished ones.
 
 Tags are tracked but currently have zero gameplay effect. Wire them into:
 
@@ -255,9 +268,7 @@ Goal: The world feels alive. The player has rivals, friends, and a wider world t
 
 **Spec ref**: §Archrival (p562-589), El Ídolo ref: §4 (full detail)
 
-Status: rival generation, parallel advancement, HUD widget, season updates, end-game comparison, and direct encounters ✅. `{rivalName}` slot rendering fixed 2026-07-30. ⬜ Not done: separate `rivals` table (rival is stored inline in the run JSONB) and a fully parallel RNG stream (rival shares the run's single deterministic RNG).
-
-A rival is a second character running in parallel, fully simulated through the same deterministic RNG.
+Status: rival generation (`generateRival`), parallel advancement (`advanceRival` at the season boundary), HUD widget (`served.rivalUpdate` + `{rivalName}` slot substitution), end-game comparison (`generateRivalComparison` in the epilogue), and direct encounters (the `dungeon_rival_encounter` event tagged `involvesRival`) ✅. `{rivalName}` slot rendering fixed 2026-07-30. ⬜ Not done: separate `rivals` table (rival is stored inline in the run JSONB — `server/db/schema.sql` has no `rivals` table) and a fully parallel RNG stream (rival shares the run's single deterministic RNG).
 
 **Implementation**:
 
@@ -286,11 +297,11 @@ Once per season, roll 1-2 world events from their own content pool:
 
 **Content file**: `content/events/world.json` with `type: "world"` events, mostly flavor text with small stat nudges to the world at large.
 
-### 3.4 Clans / Faction Allegiance 🟡
+### 3.4 Clans / Faction Allegiance ✅
 
 **Spec ref**: §Clans (p591-633), El Ídolo ref: §11 (transfer/clan market)
 
-Status: join/leave/betray engine, `hunted_by` system, clan offer/poach cards, and solo path (`requiresNoClan`) ✅. 🟡 No authored content events yet use `joinClanId` / `leaveReason` / `requiresNoClan` — the mechanics are engine-ready but not exercised by the content bank.
+Status: join/leave/betray engine (`joinClan`, `leaveClanAmicably`, `applyClanBetrayal`), `hunted_by` system with expiry (`clearExpiredHunted`), clan offer/poach cards (`generateClanOffer` with `roleSignal`), and solo path (`requiresNoClan`) ✅. ✅ Content now authored — `content/events/clans.json` has 9 events exercising the full cycle: `clan_induction_trial` / `clan_small_village_offer` (join from solo via `requiresNoClan`+`joinClanId`), `clan_loyalty_bribe` / `clan_poach_bidding_war` (rival poach with `excludesIfClanId`), `clan_honorable_release` (`leaveReason: "amicable"`), `clan_ambush_betrayed` / `clan_hunted_refuge` (`requiresHuntedBy`), plus `clan_march_of_war` and `clan_wanderer_toll`.
 
 Already partially implemented (factions exist in content, starting faction per class). Extend:
 
@@ -394,18 +405,18 @@ Goal: Enough variety for 20+ runs before repetition sets in.
 
 **Spec ref**: — (volume targets)
 
-Status: current counts as of audit — Events **54**/60, Minigames **25**/25, Achievements **52**/50, Archetypes **30**/30+, World events **10**/20+, Clans 25 factions (few with joinable perks), NPC relationships system in place but <15 recurring authored NPCs. Target numbers in the table below are the Phase 5 goals. **2026-07-30: content expansion shipped — 17 new events (9 clan + 8 rest/recovery), 8 new minigames, 8 new achievement tiers.**
+Status: current counts as of audit — Events **65**/60, Minigames **25**/25, Achievements **67**/50, Archetypes **30**/30+, World events **10**/20+, Clans 25 factions all region-tagged (9 authored clan events exercising join/leave/betray), NPC relationships system in place with 2 authored recurring NPCs (`ser_aldric`, `wanderer_of_the_homeland`). Target numbers in the table below are the Phase 5 goals. **2026-07-30: content expansion shipped — 17 new events (9 clan + 8 rest/recovery), 8 new minigames, 8 new achievement tiers. 2026-08-01 audit: added 10 world events, 5 region-variant events, 5 foreign/outsider events, 5 personality events, 3 destiny events. 2026-08-01 bugfix pass (B7-B12): +1 region event (`region_wastelands_cinder`), +11 achievements (`jetset_life` + 10 counter achievements).**
 
 | Category                           | Current       | Phase 5 Target          |
 | ---------------------------------- | ------------- | ----------------------- |
-| Events (tavern/road/dungeon/court) | 54            | 60+                     |
+| Events (tavern/road/dungeon/court + new themes) | 65            | 80+                     |
 | Minigames (duels + activities)     | 25            | 25+                     |
-| Achievements                       | 52            | 50+                     |
-| Slot pool entries                  | ~140          | 300+                    |
+| Achievements                       | 67            | 60+                     |
+| Slot pool entries                  | ~152          | 300+                    |
 | Archetypes                         | 30            | 30+ (5-8 per class)     |
 | World events                       | 10            | 20+                     |
-| Clans                              | 25 (factions) | 10+ joinable with perks |
-| NPC relationships                  | <15           | 15+ recurring NPCs      |
+| Clans                              | 25 (factions) | 10+ joinable with perks (9 clan events now ✅) |
+| NPC relationships                  | 2             | 15+ recurring NPCs      |
 
 **Key principle**: Composability over raw count. Each authored event template + slot pools + age/class/fame gating produces many distinct felt variants. A few hundred templates should produce thousands of unique-feeling runs.
 
@@ -421,18 +432,18 @@ Currently only `weighted_hidden_match` exists. Add these subtypes:
 2. **Grid gamble** (`subtype: "grid_gamble"`): N goals hidden in a grid, pick M cells. No stat influence — pure luck for the highest-stakes moments. Losing narrowly still framed as achievement.
 3. **Memory match** (`subtype: "memory_match"`): face-down tile board, flip pairs, limited lives. Stat-gated bonus life (e.g. `Intelligence >= 80 → +1 life`).
 
-### 5.3 Achievement Families 🟡
+### 5.3 Achievement Families ✅
 
 **El Ídolo ref**: §15 (graduated tiers)
 
-Status: tiered families exist (duels 1/5/10, gold 500/2000, fame 50/100/150, age 40/60, quests 5/10/20, battles 15/30/50, reputation 65/78/99). 🟡 Thresholds don't match the spec (gold isn't 1K/10K/100K, no age-80 tier, battles aren't 10/50/100).
+Status: tiered families exist and are now spec-aligned ✅. **2026-08-01 audit confirmed the full chains:** duels `first_blood`/`duelist`/`untouchable` (1/5/10), gold `deep_pockets`/`gold_hoarder`/`merchant_prince`/`magnate`/`dragon_hoard` (500/1K/2K/10K/100K — full 1K/10K/100K spec ladder ✅), fame `known_face`/`renowned`/`celebrated`/`beloved`/`legend` (25/50/75/100/150), age `survivor`/`elder`/`ancient` (40/60/80 — age-80 tier ✅), quests `completionist`/`quest_complete_1`/`quest_complete_2` (5/10/20), battles `battle_hardened_0`→`_4` "Skirmisher/Warlord" (10/15/30/50/100 — 10/50/100 spec ladder ✅), reputation `faction_champion`/`respected_figure`/`faction_icon`/`living_myth` (60/65/78/99). Plus minigame-counter families (brawls, arcane duels, heists, archery, smithing, gambling, drinking, negotiation, monsters) and compound honors (`underdog`, `bench_to_banner`, `champion_of_the_age`).
 
-Tiered achievement families on the same underlying stat:
+Tiered achievement families on the same underlying stat — all now shipped:
 
-- Gold: 1K / 10K / 100K (not just a single threshold)
-- Age: 40 / 60 / 80 (not just "survive to old age")
-- Battles won: 10 / 50 / 100
-- Fame: 25 / 50 / 75 / 100
+- Gold: 500 / 1K / 2K / 10K / 100K ✅
+- Age: 40 / 60 / 80 ✅
+- Battles won: 10 / 15 / 30 / 50 / 100 ✅
+- Fame: 25 / 50 / 75 / 100 / 150 ✅
 
 Each tier is its own unlockable, keeping the achievement dopamine loop alive longer.
 
@@ -471,11 +482,13 @@ Goal: Take the four orthogonal creation dials (§19-20), region-driven content (
 
 > El Ídolo ref: `docs/el-idolo-reference-notes.md` §19-§26.
 
-### 7.1 Homeland vs. Geography — the "Outsider" (§19) ⬜
+### 7.1 Homeland vs. Geography — the "Outsider" (§19) ✅
 
 **Spec ref**: — | **El Ídolo ref**: §19 (identity axis never crosses the geography axis; the _extranjero del vestuario_ status)
 
-**Current state**: creation is name → gender → class → archetype. Each class has a fixed `startingFaction` (`content/classes.json`), but there is no "home identity" concept separate from "where you currently belong." A clan move never changes anything about your identity.
+**Status (2026-08-01): fully implemented.** `homeFactionId` / `homeRegion` / `currentRegion` live on `CharacterState`; home is set once at creation and never moves. `regionOf()` reads `FactionContent.region`; `currentRegion` updates on join/betray/amicable-leave. Eligibility predicates `requiresForeign`, `requiresHomeRegion`, `requiresRegion` all gate in `isEligible()`. All 25 factions in `content/factions.json` carry a `region` (vale/coast/highlands/wastelands/capital/isles), localized via `content/regions.json`. HUD shows an `🌍 Abroad` / `🏠 Home` tag in `Hud.tsx`. Authored content: `content/events/foreign.json` (5 outsider events — `foreign_changing_room`, `foreign_accent_jeers`, `foreign_home_letter`, `foreign_match_fix`, `foreign_kinsman_found`, all `requiresForeign: true`) + `content/events/regions.json` (6 region-variant events — B10 added `region_wastelands_cinder`, so all 6 regions now have a variant). Epithet subtitle still names the home faction.
+
+**Original spec retained for reference** — creation was name → gender → class → archetype with no "home identity" concept separate from "where you currently belong."
 
 **Implementation**:
 
@@ -491,11 +504,13 @@ Goal: Take the four orthogonal creation dials (§19-20), region-driven content (
 
 **Verification**: create a character, accept a clan offer in a foreign region → HUD tag flips to Abroad, foreign events become eligible, home events pause; the end-of-run epithet still names the home faction.
 
-### 7.2 Rise-from-Nowhere Origin & Over-Reaching Bench Risk (§20) ⬜
+### 7.2 Rise-from-Nowhere Origin & Over-Reaching Bench Risk (§20) ✅
 
 **Spec ref**: §Career arcs & chapters (structural pacing) | **El Ídolo ref**: §20 (start in the B, real promotion, "arriving above your level leaves you on the bench")
 
-**Current state**: every run starts at age 16 with the same gold and a small reputation head-start in the home faction (`createCharacter` sets rep 10). Joining a big clan has no level gate; a wealth-9 faction and a wealth-1 faction are equally joinable.
+**Status (2026-08-01): fully implemented.** `origin` dial (`humble` default / `established`) is a 2-card pick in `CreationScreen.tsx`; humble → 0.5× gold + 0 starting home rep and unlocks `requiresOrigin: "humble"` underdog events; established → full gold + rep 10. Over-reaching bench mechanic: in `joinClan()`, joining a `wealth ≥ 6` clan below its level sets `benchedUntilTurn`; `isBenched()` applies a ×0.8 to positive stat gains while benched. `roleSignal` (`up`/`same`/`bench`) is computed by `roleSignalFor()` from `powerLevel` vs `faction.wealth`, surfaced on served clan offers, and rendered as a `RoleSignalTag` in `GameScreen.tsx`. Achievements wired: `underdog` (humble + home rep ≥ 90) and `bench_to_banner` (bench-join + rep ≥ 78; the `bench_joined` counter is bumped in `joinClan()` — B9 verified, test `engine.test.ts:2009`).
+
+**Original spec retained for reference** — every run previously started at age 16 with the same gold and a small reputation head-start, and joining a big clan had no level gate.
 
 **Implementation**:
 
@@ -509,11 +524,13 @@ Goal: Take the four orthogonal creation dials (§19-20), region-driven content (
 
 **Verification**: a humble run starts poor with underdog events; a low-power character accepting a `golden_lotus` (wealth 9) offer sees the "bench" signal before accepting and gets reduced stat gains until power catches up.
 
-### 7.3 Region-Gated Event Variants (§21) 🟡
+### 7.3 Region-Gated Event Variants (§21) ✅
 
 **Spec ref**: §Content storage & scale strategy (composability, slot-filling) | **El Ídolo ref**: §21 (same archetype, Montevideo vs. Múnich flavor)
 
-**Current state**: events carry a `location` tag (tavern/road/dungeon/court) and `localizeLocation`, but nothing is region-keyed. The slot-filling machinery (`fillSlots`, `content/slots.json`) already exists.
+**Status (2026-08-01): fully implemented.** `requiresRegion` is on `EventContent` and enforced in `isEligible()` via `regionOf(currentClanId)`. `content/events/regions.json` ships the same narrative archetype in 6 region variants — `region_vale_harvest`, `region_coast_regatta`, `region_highlands_siege`, `region_capital_gala`, `region_isles_moonlit`, `region_wastelands_cinder` (B10) — same choice structure, different dressing. `content/slots.json` carries a `regionVariant` slot pool (6 entries) feeding the existing `fillSlots` path, so a single template can slot-fill local names. All 6 regions covered.
+
+**Original spec retained for reference** — events previously carried only a `location` tag (tavern/road/dungeon/court) and nothing was region-keyed.
 
 **Implementation**:
 
@@ -523,11 +540,13 @@ Goal: Take the four orthogonal creation dials (§19-20), region-driven content (
 
 **Verification**: move clans across regions → the region-flavored variant of an archetype fires; slot text renders the local name.
 
-### 7.4 Whole-Arc Tournament + Self-Selected Resolution Mode (§22) 🟡
+### 7.4 Whole-Arc Tournament + Self-Selected Resolution Mode (§22) ✅
 
 **Spec ref**: §Career arcs & chapters (arcs), §Mini-games | **El Ídolo ref**: §22 (playable tournament arcs, luck-mode vs. skill-mode chosen once up front)
 
-**Current state**: `MinigameSubtype` already includes `grid_gamble` (pure luck) and `memory_match` (skill, stat-gated bonus lives) — exactly the two resolution modes the reference offers. But minigames are single-fixture; there's no multi-fixture arc.
+**Status (2026-08-01): fully implemented.** `pendingTournament` / `pendingTournamentResult` / `lastTournamentSeason` on state; `wouldBeTournamentTurn()` gates an arc roughly every `tournamentCadenceYears` (6) years. Synthetic `__tournament_intro__` event offers a one-time `mode_luck` vs `mode_skill` pick — the self-selected engagement dial. Each fixture is a synthetic `__tournament_fixture__` minigame (3 bouts) resolved through the existing `resolveMinigame` path: luck → `grid_gamble`, skill → `memory_match`. `__tournament_outcome__` delivers the honor beat; finishing bumps `counters.tournaments_won`. All draws go through the run's seeded RNG. Drives the `tournament_victor` achievement and feeds `champion_of_the_age`.
+
+**Original spec retained for reference** — minigames were previously single-fixture with no multi-fixture arc, even though the two resolution subtypes existed.
 
 **Implementation** (smallest scoped version):
 

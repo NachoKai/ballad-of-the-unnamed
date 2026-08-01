@@ -1014,6 +1014,204 @@
         "en": "Seize two single moments of legend.",
         "es": "Aprovecha dos momentos únicos de leyenda."
       }
+    },
+    {
+      "id": "jetset_life",
+      "icon": "gem",
+      "rarity": "epic",
+      "condition": {
+        "type": "counter_gte",
+        "key": "jetset_life",
+        "value": 1
+      },
+      "name": {
+        "en": "Sky-Borne Luxury",
+        "es": "Lujo Celestial"
+      },
+      "description": {
+        "en": "Own a floating pocket realm.",
+        "es": "Posee un reino de bolsillo flotante."
+      }
+    },
+    {
+      "id": "wandering_blade",
+      "icon": "flag",
+      "rarity": "uncommon",
+      "condition": {
+        "type": "counter_gte",
+        "key": "clans_joined",
+        "value": 2
+      },
+      "name": {
+        "en": "Two Roads",
+        "es": "Dos Caminos"
+      },
+      "description": {
+        "en": "Swear to two different clans.",
+        "es": "Jura lealtad a dos clanes distintos."
+      }
+    },
+    {
+      "id": "oathbreaker",
+      "icon": "skull",
+      "rarity": "rare",
+      "condition": {
+        "type": "counter_gte",
+        "key": "clans_betrayed",
+        "value": 1
+      },
+      "name": {
+        "en": "Oathbreaker",
+        "es": "Rompejuramentos"
+      },
+      "description": {
+        "en": "Betray a clan that trusted you.",
+        "es": "Traiciona a un clan que confió en ti."
+      }
+    },
+    {
+      "id": "master_angler",
+      "icon": "fish",
+      "rarity": "uncommon",
+      "condition": {
+        "type": "counter_gte",
+        "key": "fishing_won",
+        "value": 3
+      },
+      "name": {
+        "en": "Master Angler",
+        "es": "Maestro Pescador"
+      },
+      "description": {
+        "en": "Win 3 fishing contests.",
+        "es": "Gana 3 concursos de pesca."
+      }
+    },
+    {
+      "id": "grand_huntsman",
+      "icon": "crosshair",
+      "rarity": "uncommon",
+      "condition": {
+        "type": "counter_gte",
+        "key": "hunts_won",
+        "value": 3
+      },
+      "name": {
+        "en": "Grand Huntsman",
+        "es": "Gran Cazador"
+      },
+      "description": {
+        "en": "Win 3 hunts.",
+        "es": "Gana 3 cacerías."
+      }
+    },
+    {
+      "id": "unbroken",
+      "icon": "heart-pulse",
+      "rarity": "rare",
+      "condition": {
+        "type": "counter_gte",
+        "key": "survivals_won",
+        "value": 3
+      },
+      "name": {
+        "en": "Unbroken",
+        "es": "Inquebrantable"
+      },
+      "description": {
+        "en": "Win 3 survival trials.",
+        "es": "Gana 3 pruebas de supervivencia."
+      }
+    },
+    {
+      "id": "court_favorite",
+      "icon": "message-circle",
+      "rarity": "uncommon",
+      "condition": {
+        "type": "counter_gte",
+        "key": "courtly_won",
+        "value": 3
+      },
+      "name": {
+        "en": "Court Favorite",
+        "es": "Favorito de la Corte"
+      },
+      "description": {
+        "en": "Win 3 courtly contests.",
+        "es": "Gana 3 concursos cortesanos."
+      }
+    },
+    {
+      "id": "fleet_footed",
+      "icon": "wind",
+      "rarity": "uncommon",
+      "condition": {
+        "type": "counter_gte",
+        "key": "chases_won",
+        "value": 3
+      },
+      "name": {
+        "en": "Fleet-Footed",
+        "es": "Pies Ligeros"
+      },
+      "description": {
+        "en": "Win 3 chases.",
+        "es": "Gana 3 persecuciones."
+      }
+    },
+    {
+      "id": "alley_king",
+      "icon": "fist",
+      "rarity": "rare",
+      "condition": {
+        "type": "counter_gte",
+        "key": "street_fights_won",
+        "value": 3
+      },
+      "name": {
+        "en": "Alley King",
+        "es": "Rey del Callejón"
+      },
+      "description": {
+        "en": "Win 3 street fights.",
+        "es": "Gana 3 peleas callejeras."
+      }
+    },
+    {
+      "id": "master_alchemist",
+      "icon": "flask-conical",
+      "rarity": "rare",
+      "condition": {
+        "type": "counter_gte",
+        "key": "alchemy_won",
+        "value": 3
+      },
+      "name": {
+        "en": "Master Alchemist",
+        "es": "Maestro Alquimista"
+      },
+      "description": {
+        "en": "Win 3 alchemy contests.",
+        "es": "Gana 3 concursos de alquimia."
+      }
+    },
+    {
+      "id": "clutch_artist",
+      "icon": "zap",
+      "rarity": "epic",
+      "condition": {
+        "type": "counter_gte",
+        "key": "clutch_duels",
+        "value": 1
+      },
+      "name": {
+        "en": "Clutch Artist",
+        "es": "Artista de la Remontada"
+      },
+      "description": {
+        "en": "End a duel in a single perfect strike.",
+        "es": "Termina un duelo con un solo golpe perfecto."
+      }
     }
   ]
 }

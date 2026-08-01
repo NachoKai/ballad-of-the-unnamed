@@ -279,6 +279,76 @@
     ]
   },
   {
+    "id": "region_wastelands_cinder",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 7,
+    "requiresRegion": "wastelands",
+    "narrative": {
+      "en": "Ash drifts over the ruins during {slot:regionVariant}. Scavengers and rust-priests gather where the dead road ends, and a cinder-duel decides who carries the season's claim through the wastes.",
+      "es": "La ceniza vaga sobre las ruinas durante {slot:regionVariant}. Buscadores y sacerdotes del óxido se reúnen donde termina el camino muerto, y un duelo de brasas decide quién lleva la reclamación de la temporada por las Tierras Yermas."
+    },
+    "choices": [
+      {
+        "id": "cinder_duel",
+        "label": {
+          "en": "Walk the cinder-duel",
+          "es": "Caminar el duelo de brasas"
+        },
+        "tag": "Aggressive",
+        "rarity": "rare",
+        "statDeltas": {
+          "constitution": 2
+        },
+        "fameDelta": 7,
+        "injuryRiskDelta": 0.12,
+        "countersDelta": {
+          "deeds_of_the_year": 1
+        },
+        "narrative": {
+          "en": "You walk the coals and come out the far side standing. The wastes roar a name they will not forget, and the claim is yours.",
+          "es": "Caminás sobre las brasas y salís del otro lado en pie. Las Tierras Yermas rugen un nombre que no olvidarán, y la reclamación es tuya."
+        }
+      },
+      {
+        "id": "scavenge",
+        "label": {
+          "en": "Scavenge the drowned ruins beside the rust-priests",
+          "es": "Rebuscar en las ruinas sumergidas junto a los sacerdotes del óxido"
+        },
+        "tag": "Strategic",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "reputationDelta": 4,
+        "reputationFaction": "rust_priests",
+        "goldDelta": 120,
+        "narrative": {
+          "en": "You trade salvage and riddles with the rust-priests until you both walk away richer. In the wastes, knowledge is the only currency that never rusts.",
+          "es": "Intercambiás botín y acertijos con los sacerdotes del óxido hasta que ambos se van más ricos. En las Tierras Yermas, el conocimiento es la única moneda que nunca se oxida."
+        }
+      },
+      {
+        "id": "camp",
+        "label": {
+          "en": "Share the ember-camp and its stories",
+          "es": "Compartir el campamento de brasas y sus historias"
+        },
+        "tag": "Supportive",
+        "rarity": "common",
+        "statDeltas": {
+          "charisma": 2
+        },
+        "staminaDelta": 16,
+        "narrative": {
+          "en": "You feed the fire and the fire feeds the talk. By dawn the scavengers count you among their own — a rare warmth in the cinder country.",
+          "es": "Alimentás el fuego y el fuego alimenta la charla. Al amanecer, los buscadores te cuentan entre los suyos — un calor escaso en el país de las cenizas."
+        }
+      }
+    ]
+  },
+  {
     "id": "region_isles_moonlit",
     "minAge": 16,
     "maxAge": 99,

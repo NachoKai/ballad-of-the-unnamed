@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { styled, keyframes } from "styled-components"
-import type { AchievementContent } from "@shared/types"
+import type { AchievementContent, Locale } from "@shared/types"
+import { t as resolveLocaleMap } from "@shared/i18n"
 import { AchIcon } from "./AchIcon"
 
 export interface ToastItem {
@@ -10,7 +11,7 @@ export interface ToastItem {
   desc: string
 }
 
-export function useAchievementToasts(t: (k: string) => string) {
+export function useAchievementToasts(locale: Locale, t: (k: string) => string) {
   const [toasts, setToasts] = useState<ToastItem[]>([])
 
   function push(achievements: AchievementContent[]) {
@@ -18,8 +19,8 @@ export function useAchievementToasts(t: (k: string) => string) {
     const items = achievements.map((a) => ({
       id: `${a.id}-${Date.now()}-${Math.random()}`,
       icon: a.icon,
-      title: `${t("achievementUnlocked")}: ${a.name.en}`,
-      desc: a.description.en,
+      title: `${t("achievementUnlocked")}: ${resolveLocaleMap(a.name, locale)}`,
+      desc: resolveLocaleMap(a.description, locale),
     }))
     setToasts((prev) => [...prev, ...items])
   }

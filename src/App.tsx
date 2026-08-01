@@ -64,7 +64,7 @@ export default function App() {
     toasts,
     push: pushToasts,
     remove: dismissToast,
-  } = useAchievementToasts((k) => makeT(locale)(k))
+  } = useAchievementToasts(locale, (k) => makeT(locale)(k))
 
   // Resume an in-progress run after reload.
   useEffect(() => {
@@ -288,6 +288,7 @@ export default function App() {
                   ? { ...prev, gold: res.gold, inventory: res.inventory ?? prev.inventory }
                   : prev,
               )
+              if (res.newAchievements?.length) pushToasts(res.newAchievements)
             }}
           />
         )}
