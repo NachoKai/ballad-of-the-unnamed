@@ -152,11 +152,7 @@ export function Hud({ character: c, locale, onShopOpen }: Props) {
   )
 }
 
-const HudWrap = styled(Panel)`
-  position: sticky;
-  top: 78px;
-  z-index: 10;
-`
+const HudWrap = styled(Panel)``
 
 const TurnPill = styled.span`
   margin-left: auto;

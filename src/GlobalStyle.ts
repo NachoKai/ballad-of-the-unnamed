@@ -14,6 +14,17 @@ export const GlobalStyle = createGlobalStyle`
     min-height: 100%;
   }
 
+  * {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  *::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+
   html {
     background: ${({ theme }) => theme.colors.ink};
   }
