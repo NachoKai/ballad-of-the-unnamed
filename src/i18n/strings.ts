@@ -236,6 +236,29 @@ const en: StringMap = {
   achievementsCollected: "Achievements",
   completionPct: "Completion",
   emptyCollection: "Complete a run to start your collection.",
+
+  tooltip_turn: "One season of your life. Each turn you face a choice that shapes your fate.",
+  tooltip_age: "Your age in years. Time flows one season per turn.",
+  tooltip_season: "The current season of the year.",
+  tooltip_health: "Your health. If it reaches zero, your tale ends.",
+  tooltip_stamina: "Your stamina. Low stamina weighs on your options and your survival.",
+  tooltip_gold: "Your gold. Spend it in the shop or let it build your legacy.",
+  tooltip_fame: "Your fame. The bards sing of deeds — fame shapes your ending and your score.",
+  tooltip_power: "Your power level. A measure of your strength and standing.",
+  tooltip_mv: "Market value. The worth of your name to patrons and chroniclers.",
+  tooltip_momentum: "Momentum. Rising when fortune smiles, falling when it does not.",
+  tooltip_arc: "The chapter of your life you currently walk.",
+  tooltip_archetype: "Your specialty — it shapes the choices fate offers you.",
+  tooltip_reputation: "Your renown with a faction. Higher renown unlocks greater favor.",
+  tooltip_rival: "A rival shares your path. Outpace them for glory.",
+  tooltip_shop: "Spend your gold on gear, retinue, and luxuries.",
+  tooltip_hunted: "A faction hunts you. Danger follows.",
+  tooltip_abandon: "Abandon this life and begin anew. This run's progress is lost forever.",
+  tooltip_stat_strength: "Strength — feats of might and battle.",
+  tooltip_stat_dexterity: "Dexterity — speed, precision, and cunning hands.",
+  tooltip_stat_constitution: "Constitution — endurance and resilience.",
+  tooltip_stat_intelligence: "Intelligence — learning, lore, and wit.",
+  tooltip_stat_charisma: "Charisma — presence, persuasion, and command.",
 }
 
 const es: StringMap = {
@@ -468,6 +491,32 @@ const es: StringMap = {
   achievementsCollected: "Logros",
   completionPct: "Completado",
   emptyCollection: "Completa una vida para comenzar tu colección.",
+
+  tooltip_turn:
+    "Una temporada de tu vida. En cada turno enfrentas una elección que forja tu destino.",
+  tooltip_age: "Tu edad en años. El tiempo fluye una temporada por turno.",
+  tooltip_season: "La temporada actual del año.",
+  tooltip_health: "Tu salud. Si llega a cero, tu historia termina.",
+  tooltip_stamina:
+    "Tu resistencia. Una resistencia baja pesa sobre tus opciones y tu supervivencia.",
+  tooltip_gold: "Tu oro. Gástalo en la tienda o deja que construya tu legado.",
+  tooltip_fame: "Tu fama. Los bardos cantan tus hazañas: la fama moldea tu final y tu puntuación.",
+  tooltip_power: "Tu poder. Una medida de tu fuerza y tu renombre.",
+  tooltip_mv: "Valor de mercado. El valor de tu nombre para mecenas y cronistas.",
+  tooltip_momentum: "Impulso. Crece cuando la fortuna sonríe, cae cuando no lo hace.",
+  tooltip_arc: "El capítulo de tu vida que estás viviendo.",
+  tooltip_archetype: "Tu especialidad: moldea las elecciones que el destino te ofrece.",
+  tooltip_reputation: "Tu renombre ante una facción. Un mayor renombre desbloquea mayores favores.",
+  tooltip_rival: "Un rival comparte tu camino. Supéralo para lograr gloria.",
+  tooltip_shop: "Gasta tu oro en equipo, séquito y lujos.",
+  tooltip_hunted: "Una facción te persigue. El peligro te sigue.",
+  tooltip_abandon:
+    "Abandonar esta vida y empezar de nuevo. El progreso de esta partida se pierde para siempre.",
+  tooltip_stat_strength: "Fuerza: proezas de poderío y combate.",
+  tooltip_stat_dexterity: "Destreza: velocidad, precisión y manos astutas.",
+  tooltip_stat_constitution: "Constitución: resistencia y fortaleza.",
+  tooltip_stat_intelligence: "Inteligencia: saber, erudición e ingenio.",
+  tooltip_stat_charisma: "Carisma: presencia, persuasión y mando.",
 }
 
 const TABLES: Record<Locale, StringMap> = { en, es }

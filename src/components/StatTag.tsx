@@ -3,6 +3,7 @@ import { STAT_KEYS } from "@shared/types"
 import type { Locale } from "@shared/types"
 import { styled } from "styled-components"
 import { t } from "../i18n/strings"
+import { Tooltip } from "./ui/Tooltip"
 
 interface Props {
   locale: Locale
@@ -24,10 +25,12 @@ export function StatTag({ locale, deltas, tradeoff }: Props) {
         const Tag = e.delta > 0 ? TagUp : TagDown
         const sign = e.delta > 0 ? "+" : ""
         return (
-          <Tag key={e.key}>
-            {sign}
-            {e.delta} {t(locale, `stat_${e.key}_tag`)}
-          </Tag>
+          <Tooltip key={e.key} content={t(locale, `tooltip_stat_${e.key}`)}>
+            <Tag>
+              {sign}
+              {e.delta} {t(locale, `stat_${e.key}_tag`)}
+            </Tag>
+          </Tooltip>
         )
       })}
     </Group>

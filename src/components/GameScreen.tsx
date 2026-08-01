@@ -11,6 +11,7 @@ import { LinkBtn } from "./ui/Button"
 import { TextPretty } from "./ui/Text"
 import { rise } from "./ui/Animation"
 import { ElectricBorder } from "./ui/ElectricBorder"
+import { Tooltip } from "./ui/Tooltip"
 import { capitalize } from "../lib/capitalize"
 import { RARITY_CHAOS } from "../constants"
 import { rarityRank } from "@shared/config"
@@ -129,25 +130,33 @@ export function GameScreen({
                       <StatTag locale={locale} deltas={c.tradeoffDeltas} tradeoff />
                     )}
                     {c.fameDelta && c.fameDelta !== 0 && (
-                      <BonusTag $tint="fame">
-                        {t(locale, "fame")} {c.fameDelta > 0 ? `+${c.fameDelta}` : c.fameDelta}
-                      </BonusTag>
+                      <Tooltip content={t(locale, "tooltip_fame")}>
+                        <BonusTag $tint="fame">
+                          {t(locale, "fame")} {c.fameDelta > 0 ? `+${c.fameDelta}` : c.fameDelta}
+                        </BonusTag>
+                      </Tooltip>
                     )}
                     {c.reputationDelta && c.reputationDelta !== 0 && (
-                      <BonusTag $tint="rep">
-                        {t(locale, "reputation")}{" "}
-                        {c.reputationDelta > 0 ? `+${c.reputationDelta}` : c.reputationDelta}
-                      </BonusTag>
+                      <Tooltip content={t(locale, "tooltip_reputation")}>
+                        <BonusTag $tint="rep">
+                          {t(locale, "reputation")}{" "}
+                          {c.reputationDelta > 0 ? `+${c.reputationDelta}` : c.reputationDelta}
+                        </BonusTag>
+                      </Tooltip>
                     )}
                     {c.goldDelta && c.goldDelta !== 0 && (
-                      <BonusTag $tint="gold">
-                        {t(locale, "gold")} {c.goldDelta > 0 ? `+${c.goldDelta}` : c.goldDelta}
-                      </BonusTag>
+                      <Tooltip content={t(locale, "tooltip_gold")}>
+                        <BonusTag $tint="gold">
+                          {t(locale, "gold")} {c.goldDelta > 0 ? `+${c.goldDelta}` : c.goldDelta}
+                        </BonusTag>
+                      </Tooltip>
                     )}
                     {c.stipend && c.stipend !== 0 && (
-                      <BonusTag $tint="gold">
-                        +{c.stipend} {t(locale, "stipendPerSeason")}
-                      </BonusTag>
+                      <Tooltip content={t(locale, "tooltip_gold")}>
+                        <BonusTag $tint="gold">
+                          +{c.stipend} {t(locale, "stipendPerSeason")}
+                        </BonusTag>
+                      </Tooltip>
                     )}
                   </ChoiceDeltas>
                 )}
@@ -203,9 +212,11 @@ export function GameScreen({
           </>
         )}
 
-        <AbandonBtn type="button" onClick={onAbandon} disabled={busy}>
-          {t(locale, "abandonRun")}
-        </AbandonBtn>
+        <Tooltip content={t(locale, "tooltip_abandon")} align="end">
+          <AbandonBtn type="button" onClick={onAbandon} disabled={busy}>
+            {t(locale, "abandonRun")}
+          </AbandonBtn>
+        </Tooltip>
       </Scene>
     </GameLayout>
   )

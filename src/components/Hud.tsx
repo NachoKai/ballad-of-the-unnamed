@@ -7,6 +7,7 @@ import { STAT_ABBR } from "../constants"
 import { FactionFlag } from "./FactionFlag"
 import { Panel } from "./ui/Panel"
 import { Faint } from "./ui/Text"
+import { Tooltip } from "./ui/Tooltip"
 
 interface Props {
   character: CharacterState
@@ -67,7 +68,9 @@ export function Hud({ character: c, locale, onShopOpen }: Props) {
         <Name>
           {c.name} <Faint>· {className}</Faint>
           {c.archetype && (
-            <ArchetypeTag>{genderize(t(`archetype_${c.archetype}`), c.gender)}</ArchetypeTag>
+            <Tooltip content={t("tooltip_archetype")} side="bottom">
+              <ArchetypeTag>{genderize(t(`archetype_${c.archetype}`), c.gender)}</ArchetypeTag>
+            </Tooltip>
           )}
           {c.currentClanId && (
             <ClanTag>
@@ -76,53 +79,83 @@ export function Hud({ character: c, locale, onShopOpen }: Props) {
             </ClanTag>
           )}
         </Name>
-        <TurnPill>
-          {t("turn")} <b>{c.turn}</b>
-        </TurnPill>
+        <TurnTip content={t("tooltip_turn")} align="end" side="bottom">
+          <TurnPill>
+            {t("turn")} <b>{c.turn}</b>
+          </TurnPill>
+        </TurnTip>
       </TopRow>
 
       <MetersRow>
-        <Meter>
-          {t("age")} <b>{c.age}</b>
-        </Meter>
-        <Meter>
-          {t("season")} <b>{c.seasonCount}</b>
-        </Meter>
-        <Meter>
-          {t("health")} <b>{c.health}</b>
-        </Meter>
-        <Meter $low={c.stamina < 20}>
-          {t("stamina")} <b>{c.stamina}</b>
-        </Meter>
-        <Meter>
-          {t("gold")} <b>{c.gold}</b>
-        </Meter>
-        <Meter>
-          {t("fame")} <b>{c.fame}</b>
-        </Meter>
-        <Meter>
-          {t("power")} <b>{c.powerLevel}</b>
-        </Meter>
-        <Meter>
-          MV <b>{c.marketValue}</b>
-        </Meter>
-        <MomentumBadge $variant={c.momentum}>{t(momentumKey)}</MomentumBadge>
+        <Tooltip content={t("tooltip_age")}>
+          <Meter>
+            {t("age")} <b>{c.age}</b>
+          </Meter>
+        </Tooltip>
+        <Tooltip content={t("tooltip_season")}>
+          <Meter>
+            {t("season")} <b>{c.seasonCount}</b>
+          </Meter>
+        </Tooltip>
+        <Tooltip content={t("tooltip_health")}>
+          <Meter>
+            {t("health")} <b>{c.health}</b>
+          </Meter>
+        </Tooltip>
+        <Tooltip content={t("tooltip_stamina")}>
+          <Meter $low={c.stamina < 20}>
+            {t("stamina")} <b>{c.stamina}</b>
+          </Meter>
+        </Tooltip>
+        <Tooltip content={t("tooltip_gold")}>
+          <Meter>
+            {t("gold")} <b>{c.gold}</b>
+          </Meter>
+        </Tooltip>
+        <Tooltip content={t("tooltip_fame")}>
+          <Meter>
+            {t("fame")} <b>{c.fame}</b>
+          </Meter>
+        </Tooltip>
+        <Tooltip content={t("tooltip_power")}>
+          <Meter>
+            {t("power")} <b>{c.powerLevel}</b>
+          </Meter>
+        </Tooltip>
+        <Tooltip content={t("tooltip_mv")}>
+          <Meter>
+            MV <b>{c.marketValue}</b>
+          </Meter>
+        </Tooltip>
+        <MomentumTip content={t("tooltip_momentum")} align="end">
+          <MomentumBadge $variant={c.momentum}>{t(momentumKey)}</MomentumBadge>
+        </MomentumTip>
       </MetersRow>
 
       <StatsStrip>
-        <ArcPill>{t(arcKey)}</ArcPill>
+        <Tooltip content={t("tooltip_arc")}>
+          <ArcPill>{t(arcKey)}</ArcPill>
+        </Tooltip>
         {STAT_KEYS.map((k) => (
-          <StatPill key={k}>
-            {t(STAT_ABBR[k])} <b>{c[k]}</b>
-          </StatPill>
+          <Tooltip key={k} content={t(`tooltip_stat_${k}`)}>
+            <StatPill>
+              {t(STAT_ABBR[k])} <b>{c[k]}</b>
+            </StatPill>
+          </Tooltip>
         ))}
         {primaryRep && (
-          <RepPill>
-            <FactionFlag factionId={primaryRep.faction} size={14} />
-            {t(`faction_${primaryRep.faction}`)} ·{" "}
-            {translateFor(locale, c.gender, `reputation_tier_${reputationTier(primaryRep.value)}`)}{" "}
-            [{primaryRep.value}]
-          </RepPill>
+          <Tooltip content={t("tooltip_reputation")}>
+            <RepPill>
+              <FactionFlag factionId={primaryRep.faction} size={14} />
+              {t(`faction_${primaryRep.faction}`)} ·{" "}
+              {translateFor(
+                locale,
+                c.gender,
+                `reputation_tier_${reputationTier(primaryRep.value)}`,
+              )}{" "}
+              [{primaryRep.value}]
+            </RepPill>
+          </Tooltip>
         )}
         {topTags.length > 0 && (
           <TagPill>
@@ -132,20 +165,26 @@ export function Hud({ character: c, locale, onShopOpen }: Props) {
           </TagPill>
         )}
         {c.rival && (
-          <RivalBadge>
-            ⚔️ {c.rival.name} {t("vs")} <b>{playerScore}</b>—<b>{c.rival.score}</b>
-          </RivalBadge>
+          <Tooltip content={t("tooltip_rival")}>
+            <RivalBadge>
+              ⚔️ {c.rival.name} {t("vs")} <b>{playerScore}</b>—<b>{c.rival.score}</b>
+            </RivalBadge>
+          </Tooltip>
         )}
         {c.huntedBy && (
-          <HuntedBadge>
-            ⚠️ {t("hunted")} {t(`faction_${c.huntedBy}`)}
-          </HuntedBadge>
+          <Tooltip content={t("tooltip_hunted")}>
+            <HuntedBadge>
+              ⚠️ {t("hunted")} {t(`faction_${c.huntedBy}`)}
+            </HuntedBadge>
+          </Tooltip>
         )}
         {onShopOpen && (
-          <ShopBtn type="button" onClick={onShopOpen}>
-            {t("shop")}
-            {inventoryCount > 0 && <InvBadge>{inventoryCount}</InvBadge>}
-          </ShopBtn>
+          <ShopTip content={t("tooltip_shop")} align="end">
+            <ShopBtn type="button" onClick={onShopOpen}>
+              {t("shop")}
+              {inventoryCount > 0 && <InvBadge>{inventoryCount}</InvBadge>}
+            </ShopBtn>
+          </ShopTip>
         )}
       </StatsStrip>
     </HudWrap>
@@ -154,8 +193,19 @@ export function Hud({ character: c, locale, onShopOpen }: Props) {
 
 const HudWrap = styled(Panel)``
 
-const TurnPill = styled.span`
+const TurnTip = styled(Tooltip)`
   margin-left: auto;
+`
+
+const MomentumTip = styled(Tooltip)`
+  margin-left: auto;
+`
+
+const ShopTip = styled(Tooltip)`
+  margin-left: auto;
+`
+
+const TurnPill = styled.span`
   display: inline-flex;
   align-items: baseline;
   gap: 5px;
@@ -232,7 +282,6 @@ const Meter = styled.span<{ $low?: boolean }>`
 `
 
 const MomentumBadge = styled.span<{ $variant: string }>`
-  margin-left: auto;
   padding: 5px 12px;
   border: 1px solid ${({ theme }) => theme.colors.line2};
   border-radius: 999px;
@@ -283,7 +332,6 @@ const ArcPill = styled(StatPill)`
 `
 
 const ShopBtn = styled.button`
-  margin-left: auto;
   display: inline-flex;
   align-items: center;
   gap: 6px;
