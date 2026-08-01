@@ -352,7 +352,6 @@ const TopBar = styled.div`
   position: sticky;
   top: 0;
   z-index: 20;
-  background: linear-gradient(${({ theme }) => theme.colors.ink} 70%, transparent);
 `
 
 const Brand = styled.button`
