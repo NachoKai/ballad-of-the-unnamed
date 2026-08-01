@@ -45,6 +45,7 @@ function FactionHistory({
   data: RichEpilogueData["factionHistory"]
 }) {
   if (data.length === 0) return null
+
   return (
     <Section>
       <SectionTitle>{t(locale, "factionHistory")}</SectionTitle>

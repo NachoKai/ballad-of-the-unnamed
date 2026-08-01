@@ -2,7 +2,9 @@ import { useEffect, useMemo, useReducer, useState } from "react"
 import { styled } from "styled-components"
 import type { EndingType, LeaderboardCategory, Locale, RunType } from "@shared/types"
 import { api, type LeaderboardEntryView } from "../api"
+import { ENDING_COLOR, LEADERBOARD_CATEGORIES } from "../constants"
 import { t } from "../i18n/strings"
+import { boardReducer } from "../lib/boardReducer"
 import { BtnGhost } from "./ui/Button"
 import { rise } from "./ui/Animation"
 
@@ -10,21 +12,6 @@ interface Props {
   locale: Locale
   onBack: () => void
 }
-
-const ENDING_COLOR: Record<EndingType, string> = {
-  heroic_death: "#c85a5a",
-  peaceful_retirement: "#6f8f6a",
-  other_death: "#7d715a",
-  other_retirement: "#b6a889",
-}
-
-const CATEGORIES: { id: LeaderboardCategory; labelKey: string }[] = [
-  { id: "score", labelKey: "scoreLabel" },
-  { id: "net_worth", labelKey: "netWorth" },
-  { id: "achievements_count", labelKey: "achievements" },
-  { id: "age_at_end", labelKey: "ageShort" },
-  { id: "battles_won", labelKey: "battlesWon" },
-]
 
 function sortValue(e: LeaderboardEntryView, cat: LeaderboardCategory): number {
   switch (cat) {
@@ -41,37 +28,14 @@ function sortValue(e: LeaderboardEntryView, cat: LeaderboardCategory): number {
   }
 }
 
-type BoardState = {
-  loading: boolean
-  error: string | null
-  entries: LeaderboardEntryView[]
-}
-
-type BoardAction =
-  | { type: "start" }
-  | { type: "ok"; entries: LeaderboardEntryView[] }
-  | { type: "fail"; message: string }
-
-function boardReducer(_state: BoardState, action: BoardAction): BoardState {
-  switch (action.type) {
-    case "start":
-      return { loading: true, error: null, entries: [] }
-    case "ok":
-      return { loading: false, error: null, entries: action.entries }
-    case "fail":
-      return { loading: false, error: action.message, entries: [] }
-  }
-}
-
 export function LeaderboardScreen({ locale, onBack }: Props) {
   const [runType, setRunType] = useState<RunType>("standard")
   const [tier, setTier] = useState<string | undefined>(undefined)
   const [category, setCategory] = useState<LeaderboardCategory>("score")
-  const [{ loading, error, entries: rawEntries }, dispatch] = useReducer(boardReducer, {
-    loading: true,
-    error: null,
-    entries: [],
-  })
+  const [{ loading, error, entries: rawEntries }, dispatch] = useReducer(
+    boardReducer<LeaderboardEntryView>,
+    { loading: true, error: null, entries: [] },
+  )
 
   useEffect(() => {
     let alive = true
@@ -97,7 +61,7 @@ export function LeaderboardScreen({ locale, onBack }: Props) {
     return copy.map((e, i) => ({ ...e, rank: i + 1 }))
   }, [rawEntries, category])
 
-  const sortLabel = CATEGORIES.find((c) => c.id === category)?.labelKey
+  const sortLabel = LEADERBOARD_CATEGORIES.find((c) => c.id === category)?.labelKey
 
   return (
     <BoardScreen>
@@ -144,7 +108,7 @@ export function LeaderboardScreen({ locale, onBack }: Props) {
       </BoardHeader>
 
       <CategoryTabs role="tablist">
-        {CATEGORIES.map((c) => (
+        {LEADERBOARD_CATEGORIES.map((c) => (
           <CatBtn
             key={c.id}
             type="button"

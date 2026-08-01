@@ -3,8 +3,10 @@ import type { CharacterState, Locale } from "@shared/types"
 import { STAT_KEYS } from "@shared/types"
 import { styled } from "styled-components"
 import { genderize } from "@shared/genderize"
+import { reputationTierId } from "@shared/config"
 import { gt as translateFor, t as translate } from "../i18n/strings"
 import { STAT_ABBR } from "../constants"
+import { personalitySummary } from "../lib/personality"
 import { FactionFlag } from "./FactionFlag"
 import { Panel } from "./ui/Panel"
 import { Faint } from "./ui/Text"
@@ -14,33 +16,6 @@ interface Props {
   character: CharacterState
   locale: Locale
   onShopOpen?: () => void
-}
-
-const REPUTATION_TIERS: { min: number; id: string }[] = [
-  { min: 0, id: "outcast" },
-  { min: 5, id: "stranger" },
-  { min: 20, id: "known" },
-  { min: 35, id: "acquaintance" },
-  { min: 50, id: "respected" },
-  { min: 65, id: "notable" },
-  { min: 78, id: "renowned" },
-  { min: 90, id: "legend" },
-  { min: 99, id: "myth" },
-]
-
-function reputationTier(value: number): string {
-  let id = REPUTATION_TIERS[0].id
-  for (const tier of REPUTATION_TIERS) {
-    if (value >= tier.min) id = tier.id
-  }
-  return id
-}
-
-function personalitySummary(p: Record<string, number>): string[] {
-  return Object.entries(p)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 3)
-    .map(([tag]) => tag)
 }
 
 export function Hud({ character: c, locale, onShopOpen }: Props) {
@@ -164,7 +139,7 @@ export function Hud({ character: c, locale, onShopOpen }: Props) {
                 {translateFor(
                   locale,
                   c.gender,
-                  `reputation_tier_${reputationTier(primaryRep.value)}`,
+                  `reputation_tier_${reputationTierId(primaryRep.value)}`,
                 )}{" "}
                 [{primaryRep.value}]
               </RepPill>

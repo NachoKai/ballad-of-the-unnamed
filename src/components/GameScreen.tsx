@@ -15,21 +15,9 @@ import { ElectricBorder } from "./ui/ElectricBorder"
 import { SpecularBorder } from "./ui/SpecularBorder"
 import { Tooltip } from "./ui/Tooltip"
 import { capitalize } from "../lib/capitalize"
-import { RARITY_CHAOS } from "../constants"
+import { RARITY_CHAOS, ROLE_SIGNAL } from "../constants"
 import { rarityRank } from "@shared/config"
 import { theme } from "../theme"
-
-// §20 minutes-signal shown on clan-join offer cards before the player commits.
-const ROLE_SIGNAL_ICON: Record<RoleSignal, string> = {
-  up: "⬆️",
-  same: "➡️",
-  bench: "🪑",
-}
-const ROLE_SIGNAL_LABEL: Record<RoleSignal, string> = {
-  up: "Up",
-  same: "Same",
-  bench: "Bench",
-}
 
 interface Props {
   locale: Locale
@@ -91,8 +79,8 @@ export function GameScreen({
           ) : null}
           {c.label}
           {c.roleSignal && (
-            <Tooltip content={t(locale, `roleSignal${ROLE_SIGNAL_LABEL[c.roleSignal]}`)}>
-              <RoleSignalTag $signal={c.roleSignal}>{ROLE_SIGNAL_ICON[c.roleSignal]}</RoleSignalTag>
+            <Tooltip content={t(locale, `roleSignal${ROLE_SIGNAL[c.roleSignal].labelKey}`)}>
+              <RoleSignalTag $signal={c.roleSignal}>{ROLE_SIGNAL[c.roleSignal].icon}</RoleSignalTag>
             </Tooltip>
           )}
         </ChoiceLabel>
@@ -314,11 +302,7 @@ const SceneTime = styled.div`
     content: "";
     height: 1px;
     flex: 1;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      ${({ theme }) => theme.colors.line2}
-    );
+    background: linear-gradient(90deg, transparent, ${({ theme }) => theme.colors.line2});
   }
 
   &::before {
@@ -327,11 +311,7 @@ const SceneTime = styled.div`
 
   &::after {
     margin-left: 6px;
-    background: linear-gradient(
-      90deg,
-      ${({ theme }) => theme.colors.line2},
-      transparent
-    );
+    background: linear-gradient(90deg, ${({ theme }) => theme.colors.line2}, transparent);
   }
 `
 
@@ -477,23 +457,17 @@ const BonusTag = styled.span<{ $tint: string }>`
   line-height: 1.5;
 `
 
-const SIGNAL_COLOR: Record<RoleSignal, string> = {
-  up: "#6f8f6a",
-  same: "#c9a44c",
-  bench: "#bf8a4c",
-}
-
 const RoleSignalTag = styled.span<{ $signal: RoleSignal }>`
   display: inline-flex;
   align-items: center;
   gap: 4px;
   margin-left: 8px;
   padding: 1px 7px;
-  border: 1px solid ${({ $signal }) => SIGNAL_COLOR[$signal]};
+  border: 1px solid ${({ $signal }) => ROLE_SIGNAL[$signal].color};
   border-radius: 999px;
   font-size: 11px;
   letter-spacing: 0.06em;
-  color: ${({ $signal }) => SIGNAL_COLOR[$signal]};
+  color: ${({ $signal }) => ROLE_SIGNAL[$signal].color};
   vertical-align: middle;
 `
 
