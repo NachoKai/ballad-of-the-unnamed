@@ -7,7 +7,7 @@
     "weight": 5,
     "narrative": {
       "en": "Word arrives that the great dragon of the {slot:locationName} has been slain by a wandering knight. The skies are quieter now.",
-      "es": "Llega la noticia de que el gran dragón de {slot:locationName} ha sido muerto por un caballero errante. Los cielos están más tranquilos ahora."
+      "es": "Llega la noticia de que el gran dragón de {slot:locationName} ha sido muerto por un campeón errante. Los cielos están más tranquilos ahora."
     },
     "worldEventHeadline": {
       "en": "Dragon Slain in {slot:locationName}",

@@ -284,7 +284,7 @@
         },
         "narrative": {
           "en": "You vault a cart, spring off a barrel, and land on them before they reach the docks. The crowd roars. The pouch is returned with interest.",
-          "es": "Saltás un carro, te impulsás en un barril y caés sobre elles antes de que lleguen al puerto. La multitud ruge. La bolsa es devuelta con intereses."
+          "es": "Saltás un carro, te impulsás en un barril y caés sobre ellos antes de que lleguen al puerto. La multitud ruge. La bolsa es devuelta con intereses."
         }
       },
       "success": {
@@ -653,7 +653,7 @@
     "primaryStat": "strength",
     "narrative": {
       "en": "The Ironhold forge blazes hot. Two anvils. One champion. The Guild Master raises his hammer — and the contest begins.",
-      "es": "La forja de Fuertehierro arde. Dos yunques. Una campeona. El Maestro del Gremio alza su martillo — y la contienda comienza."
+      "es": "La forja de Fuertehierro arde. Dos yunques. Una campeona. El Maestre del Gremio alza su martillo — y la contienda comienza."
     },
     "cards": [
       {
@@ -718,7 +718,7 @@
         },
         "narrative": {
           "en": "Your blade holds a keener edge than any the Guild has seen in a decade. The Master declares you Ironborn in name and spirit.",
-          "es": "Tu hoja tiene un filo más agudo que cualquier cosa que el Gremio haya visto en una década. El Maestro te declara Hijo del Hierro de nombre y espíritu."
+          "es": "Tu hoja tiene un filo más agudo que cualquier cosa que el Gremio haya visto en una década. El Maestre te declara Hijo del Hierro de nombre y espíritu."
         }
       },
       "success": {
@@ -731,7 +731,7 @@
         },
         "narrative": {
           "en": "A clean, solid blade. The Guild Master grunts approval. You earn a fair purse and a nod from the forge.",
-          "es": "Una hoja limpia y sólida. El Maestro del Gremio gruñe su aprobación. Ganás una bolsa justa y un gesto de la forja."
+          "es": "Una hoja limpia y sólida. El Maestre del Gremio gruñe su aprobación. Ganás una bolsa justa y un gesto de la forja."
         }
       },
       "partial": {
@@ -790,7 +790,7 @@
         "icon": "wind",
         "label": {
           "en": "Read the wind carefully",
-          "es": "Leer el viento con cuidado"
+          "es": "Leer el viento con cautela"
         }
       },
       {

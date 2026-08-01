@@ -26,7 +26,7 @@
         },
         "narrative": {
           "en": "You sleep like the dead and wake at noon, fed and whole. The road can wait a day.",
-          "es": "Dormís como un tronco y despertás al mediodía, alimentade y entero. El camino puede esperar un día."
+          "es": "Dormís como un tronco y despertás al mediodía, alimentado y entero. El camino puede esperar un día."
         }
       },
       {
@@ -44,7 +44,7 @@
         },
         "narrative": {
           "en": "Hay makes a poor mattress, but the horses keep you warm. You wake stiff but rested.",
-          "es": "El heno hace un colchón pobre, pero les caballos te dan calor. Despertás tieso pero descansade."
+          "es": "El heno hace un colchón pobre, pero los caballos te dan calor. Despertás tieso pero descansado."
         }
       },
       {
@@ -77,14 +77,14 @@
     "location": "road",
     "narrative": {
       "en": "You make camp at a sheltered bend of the road. A {npcRole} tending their own small fire waves you over. 'Share the flame, stranger. A night shared is a night half as cold.'",
-      "es": "Acampás en un recodo resguardado del camino. Une {npcRole} cuidando su propio fuego te hace señas. 'Compartí la llama, extrañe. Una noche compartida es una noche a mitad de frío.'"
+      "es": "Acampás en un recodo resguardado del camino. Un {npcRole} cuidando su propio fuego te hace señas. 'Compartí la llama, extraño. Una noche compartida es una noche a mitad de frío.'"
     },
     "choices": [
       {
         "id": "share_tales",
         "label": {
           "en": "Sit, share stories, and sleep warm",
-          "es": "Sentarte, compartir historias y dormir abrigade"
+          "es": "Sentarte, compartir historias y dormir abrigado"
         },
         "tag": "Supportive",
         "rarity": "uncommon",
@@ -94,7 +94,7 @@
         },
         "narrative": {
           "en": "Tales trade until the fire sinks to coals. You wake rested, and the stranger is gone — but the story stays with you.",
-          "es": "Las historias se intercambian hasta que el fuego se apaga en brasas. Despertás descansade, y le extrañe se fue — pero la historia se queda con vos."
+          "es": "Las historias se intercambian hasta que el fuego se apaga en brasas. Despertás descansado, y el forastero se fue — pero la historia se queda con vos."
         }
       },
       {
@@ -129,7 +129,7 @@
         "injuryRiskDelta": 0.06,
         "narrative": {
           "en": "The starlit road has its own music. You make ground while others sleep — and the night keeps your secret.",
-          "es": "El camino estrellado tiene su propia música. Ganás terreno mientras otres duermen — y la noche guarda tu secreto."
+          "es": "El camino estrellado tiene su propia música. Ganás terreno mientras otros duermen — y la noche guarda tu secreto."
         }
       }
     ]
@@ -160,7 +160,7 @@
         },
         "narrative": {
           "en": "The warm water draws the poison of fatigue from your bones. You emerge reborn, skin tingling, ready for anything.",
-          "es": "El agua tibia extrae el veneno del cansancio de tus huesos. Salís renacide, con la piel hormigueando, liste para cualquier cosa."
+          "es": "El agua tibia extrae el veneno del cansancio de tus huesos. Salís renacido, con la piel hormigueando, listo para cualquier cosa."
         }
       },
       {
@@ -190,7 +190,7 @@
     "location": "road",
     "narrative": {
       "en": "A village in the shadow of {locationName} is celebrating the harvest. Long tables line the square, and a {npcRole} beckons you to an empty seat. 'Eat, traveler. A full belly fears no ghost.'",
-      "es": "Un pueblo a la sombra de {locationName} celebra la cosecha. Largas mesas bordean la plaza, y une {npcRole} te hace señas desde un asiento vacío. 'Comé, viajere. Una panza llena no teme a los fantasmas.'"
+      "es": "Un pueblo a la sombra de {locationName} celebra la cosecha. Largas mesas bordean la plaza, y un {npcRole} te hace señas desde un asiento vacío. 'Comé, viajero. Una panza llena no teme a los fantasmas.'"
     },
     "choices": [
       {
@@ -216,7 +216,7 @@
         "id": "help_serve",
         "label": {
           "en": "Help the cooks and earn their gratitude",
-          "es": "Ayudar a les cocineres y ganarte su gratitud"
+          "es": "Ayudar a los cocineros y ganarte su gratitud"
         },
         "tag": "Supportive",
         "rarity": "common",
@@ -228,7 +228,7 @@
         "reputationFaction": "thornwood",
         "narrative": {
           "en": "You carry platters and chop herbs till your hands are flour-white. The elder slips a coin into your palm and a promise into your ear.",
-          "es": "Cargás bandejas y cortás hierbas hasta tener las manos blancas de harina. L'anciane desliza una moneda en tu palma y una promesa en tu oído."
+          "es": "Cargás bandejas y cortás hierbas hasta tener las manos blancas de harina. El anciano desliza una moneda en tu palma y una promesa en tu oído."
         }
       }
     ]
@@ -241,7 +241,7 @@
     "location": "road",
     "narrative": {
       "en": "A small shrine of the Luminari stands by the roadside, its door propped open. An acolyte bows. 'The light welcomes all who need rest. Stay, and let the vigil keep while you sleep.'",
-      "es": "Un pequeño santuario de los Luminari se alza junto al camino, con su puerta entornada. Une acólite se inclina. 'La luz acoge a todes quienes necesitan descanso. Quedate, y dejá que la vigilia siga mientras dormís.'"
+      "es": "Un pequeño santuario de los Luminari se alza junto al camino, con su puerta entornada. Un acólito se inclina. 'La luz acoge a todos quienes necesitan descanso. Quedate, y dejá que la vigilia siga mientras dormís.'"
     },
     "choices": [
       {
@@ -262,7 +262,7 @@
         },
         "narrative": {
           "en": "You sleep beneath a softly glowing icon and wake feeling watched over. Something light clings to your step.",
-          "es": "Dormís bajo un icono que brilla suavemente y despertás sintiéndote cuidada. Algo luminoso se pega a tus pasos."
+          "es": "Dormís bajo un icono que brilla suavemente y despertás sintiéndote cuidado. Algo luminoso se pega a tus pasos."
         }
       },
       {
@@ -293,14 +293,14 @@
     "location": "road",
     "narrative": {
       "en": "A hermit crouches by {locationName}, tending a pot that smells of roots and herbs. 'You've the look of a body that's been running on empty. Sit. My pot is patient.'",
-      "es": "Une ermitañe se agacha junto a {locationName}, cuidando una olla que huele a raíces y hierbas. 'Tenés cara de alguien que anda a puro resto. Sentate. Mi olla tiene paciencia.'"
+      "es": "Un ermitaño se agacha junto a {locationName}, cuidando una olla que huele a raíces y hierbas. 'Tenés cara de alguien que anda a puro resto. Sentate. Mi olla tiene paciencia.'"
     },
     "choices": [
       {
         "id": "eat_stew",
         "label": {
           "en": "Accept the hermit's stew",
-          "es": "Aceptar el guiso de l'ermitañe"
+          "es": "Aceptar el guiso del ermitaño"
         },
         "tag": "Humble",
         "rarity": "uncommon",
@@ -310,7 +310,7 @@
         },
         "narrative": {
           "en": "The stew is bitter and miraculous. By the last spoonful your hands are steady again. The hermit only smiles and waves you on.",
-          "es": "El guiso es amargo y milagroso. Con la última cucharada, tus manos vuelven a estar firmes. L'ermitañe solo sonríe y te despide con la mano."
+          "es": "El guiso es amargo y milagroso. Con la última cucharada, tus manos vuelven a estar firmes. El ermitaño solo sonríe y te despide con la mano."
         }
       },
       {
@@ -330,7 +330,7 @@
         },
         "narrative": {
           "en": "You talk till the stars wheel overhead. The hermit teaches you to see the road the way the old herbs do — as medicine for the tired.",
-          "es": "Hablan hasta que las estrellas giran sobre sus cabezas. L'ermitañe te enseña a ver el camino como lo ven las viejas hierbas — como medicina para les cansades."
+          "es": "Hablan hasta que las estrellas giran sobre sus cabezas. El ermitaño te enseña a ver el camino como lo ven las viejas hierbas — como medicina para los cansados."
         }
       }
     ]
@@ -363,7 +363,7 @@
         "reputationFaction": "thornwood",
         "narrative": {
           "en": "The glade pours itself into you. When you open your eyes, hours have passed and the world is freshly painted. The Wardens would approve of one who lets the land heal them.",
-          "es": "El claro se derrama en vos. Cuando abrís los ojos, pasaron horas y el mundo está recién pintado. Les Guardianes aprobarían a quien deja que la tierra lo sane."
+          "es": "El claro se derrama en vos. Cuando abrís los ojos, pasaron horas y el mundo está recién pintado. Los Guardianes aprobarían a quien deja que la tierra lo sane."
         }
       },
       {
@@ -393,7 +393,7 @@
     "location": "road",
     "narrative": {
       "en": "A storm rolls in as you climb the pass. Ahead, a smoke-wisp rises from a hunter's cabin, its shutters tight against the wind. The door is unlocked — hunters leave hospitality for the road.",
-      "es": "Una tormenta se desata mientras subís el paso. Adelante, un hilo de humo asciende de la cabaña de une cazadore, con las contraventanas bien cerradas contra el viento. La puerta está sin llave — les cazadores dejan hospitalidad para el camino."
+      "es": "Una tormenta se desata mientras subís el paso. Adelante, un hilo de humo asciende de la cabaña de un montero, con las contraventanas bien cerradas contra el viento. La puerta está sin llave — los monteros dejan hospitalidad para el camino."
     },
     "choices": [
       {
@@ -432,7 +432,7 @@
         },
         "narrative": {
           "en": "You lean into the wind and claw up the pass. Soaked and half-frozen, you crest the ridge — and the storm behind you feels smaller.",
-          "es": "Te inclinás contra el viento y trepás el paso a zarpazos. Empapade y medio congelade, coronás la cima — y la tormenta detrás tuyo parece más pequeña."
+          "es": "Te inclinás contra el viento y trepás el paso a zarpazos. Empapado y medio congelado, coronás la cima — y la tormenta detrás tuyo parece más pequeña."
         }
       }
     ]

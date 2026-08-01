@@ -1,6 +1,7 @@
 import type { CharacterState, Locale } from "@shared/types"
 import { STAT_KEYS } from "@shared/types"
 import { styled } from "styled-components"
+import { genderize } from "@shared/genderize"
 import { gt as translateFor, t as translate } from "../i18n/strings"
 import { STAT_ABBR } from "../constants"
 import { FactionFlag } from "./FactionFlag"
@@ -65,7 +66,9 @@ export function Hud({ character: c, locale, onShopOpen }: Props) {
       <TopRow>
         <Name>
           {c.name} <Faint>· {className}</Faint>
-          {c.archetype && <ArchetypeTag>{t(`archetype_${c.archetype}`)}</ArchetypeTag>}
+          {c.archetype && (
+            <ArchetypeTag>{genderize(t(`archetype_${c.archetype}`), c.gender)}</ArchetypeTag>
+          )}
           {c.currentClanId && (
             <ClanTag>
               <FactionFlag factionId={c.currentClanId} size={14} />

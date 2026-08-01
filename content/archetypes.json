@@ -20,11 +20,11 @@
       "icon": "shield",
       "name": {
         "en": "Guardian",
-        "es": "Guardiane"
+        "es": "Guardian"
       },
       "flavor": {
         "en": "You stand between others and harm. Unmoving, unbroken.",
-        "es": "Te parás entre les demás y el daño. Inmóvil, inquebrantable."
+        "es": "Te parás entre los demás y el daño. Inmóvil, inquebrantable."
       },
       "statDeltas": {
         "constitution": 8
@@ -50,7 +50,7 @@
       "icon": "crown",
       "name": {
         "en": "Knight",
-        "es": "Caballere"
+        "es": "Caballero"
       },
       "flavor": {
         "en": "Honor is a weapon as sharp as any steel.",
@@ -65,7 +65,7 @@
       "icon": "brain",
       "name": {
         "en": "Tactician",
-        "es": "Táctique"
+        "es": "Táctico"
       },
       "flavor": {
         "en": "The battlefield is a game of moves and countermoves.",
@@ -97,7 +97,7 @@
       "icon": "sparkles",
       "name": {
         "en": "Enchanter",
-        "es": "Encantadore"
+        "es": "Encantador"
       },
       "flavor": {
         "en": "A whisper in the right ear moves kingdoms.",
@@ -132,7 +132,7 @@
       },
       "flavor": {
         "en": "You see what others cannot — the threads of fate.",
-        "es": "Ves lo que otres no pueden — los hilos del destino."
+        "es": "Ves lo que otros no pueden — los hilos del destino."
       },
       "statDeltas": {
         "intelligence": 6,
@@ -162,7 +162,7 @@
       "icon": "swords",
       "name": {
         "en": "Assassin",
-        "es": "Asesine"
+        "es": "Asesino"
       },
       "flavor": {
         "en": "One strike. One life. No witnesses.",
@@ -177,7 +177,7 @@
       "icon": "hand",
       "name": {
         "en": "Thief",
-        "es": "Ladrone"
+        "es": "Ladrón"
       },
       "flavor": {
         "en": "Their purse is lighter, and you are already gone.",
@@ -209,7 +209,7 @@
       "icon": "eye-off",
       "name": {
         "en": "Infiltrator",
-        "es": "Infiltradore"
+        "es": "Infiltrador"
       },
       "flavor": {
         "en": "Every locked door is just an invitation.",
@@ -241,11 +241,11 @@
       "icon": "target",
       "name": {
         "en": "Hunter",
-        "es": "Cazadore"
+        "es": "Cazador"
       },
       "flavor": {
         "en": "Patient. Silent. The hunt is all that matters.",
-        "es": "Paciente. Silenciose. La caza es lo único que importa."
+        "es": "Paciente. Silencioso. La caza es lo único que importa."
       },
       "statDeltas": {
         "dexterity": 8
@@ -256,7 +256,7 @@
       "icon": "heart-handshake",
       "name": {
         "en": "Beastmaster",
-        "es": "Maestroe de Bestias"
+        "es": "Maestro de Bestias"
       },
       "flavor": {
         "en": "Beasts do not fear you. They follow.",
@@ -271,7 +271,7 @@
       "icon": "footprints",
       "name": {
         "en": "Scout",
-        "es": "Exploradore"
+        "es": "Explorador"
       },
       "flavor": {
         "en": "The road remembers every step you take.",
@@ -287,7 +287,7 @@
       "icon": "crosshair",
       "name": {
         "en": "Sniper",
-        "es": "Francotiradore"
+        "es": "Francotirador"
       },
       "flavor": {
         "en": "Distance is not safety. It is precision.",
@@ -303,11 +303,11 @@
       "icon": "layers",
       "name": {
         "en": "Trapper",
-        "es": "Trampere"
+        "es": "Trampero"
       },
       "flavor": {
         "en": "Let your enemy come to you. The ground is your ally.",
-        "es": "Dejá que tu enemigue venga a vos. El suelo es tu aliado."
+        "es": "Dejá que tu enemigo venga a vos. El suelo es tu aliado."
       },
       "statDeltas": {
         "intelligence": 8
@@ -335,7 +335,7 @@
       "icon": "heart-pulse",
       "name": {
         "en": "Healer",
-        "es": "Sanadore"
+        "es": "Sanador"
       },
       "flavor": {
         "en": "Where there is life, there is hope. You carry both.",
@@ -350,7 +350,7 @@
       "icon": "shield",
       "name": {
         "en": "Paladin",
-        "es": "Paladine"
+        "es": "Paladín"
       },
       "flavor": {
         "en": "Your oath is your code. Unbroken, unbending.",
@@ -365,7 +365,7 @@
       "icon": "brain",
       "name": {
         "en": "Inquisitor",
-        "es": "Inquisidore"
+        "es": "Inquisidor"
       },
       "flavor": {
         "en": "Truth is a weapon. You wield it without mercy.",
@@ -413,7 +413,7 @@
       "icon": "message-circle",
       "name": {
         "en": "Comedian",
-        "es": "Cómique"
+        "es": "Cómico"
       },
       "flavor": {
         "en": "Laughter disarms what steel cannot touch.",
@@ -459,7 +459,7 @@
       "icon": "brain",
       "name": {
         "en": "Loremaster",
-        "es": "Maestre de Letras"
+        "es": "Maestro de Letras"
       },
       "flavor": {
         "en": "Knowledge is the oldest magic. You collect it all.",

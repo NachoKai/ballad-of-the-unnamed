@@ -136,14 +136,6 @@ export function CreationScreen({ locale, onStart, onStartWithArchetype }: Props)
           >
             {t(locale, "genderFemale")}
           </GenderPill>
-          <GenderPill
-            type="button"
-            $active={gender === "nonbinary"}
-            onClick={() => setGender("nonbinary")}
-            aria-pressed={gender === "nonbinary"}
-          >
-            {t(locale, "genderNonbinary")}
-          </GenderPill>
         </GenderOptions>
       </CreationBlock>
 
@@ -381,7 +373,7 @@ const ModePill = styled.button<{ $active: boolean }>`
 
 const GenderOptions = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 10px;
 
   @media (max-width: 680px) {

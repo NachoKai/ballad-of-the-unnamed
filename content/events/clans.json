@@ -50,7 +50,7 @@
         },
         "narrative": {
           "en": "Gold changes hands. Blood does not. The lead hunter spits, takes the purse, and calls the others off. The feud cools to a simmer.",
-          "es": "El oro cambia de manos. La sangre no. La cazadora principal escupe, toma la bolsa y hace retirar a les demás. La enemistad baja a fuego lento."
+          "es": "El oro cambia de manos. La sangre no. La cazadora principal escupe, toma la bolsa y hace retirar a los demás. La enemistad baja a fuego lento."
         }
       },
       {
@@ -102,7 +102,7 @@
         "staminaDelta": 25,
         "narrative": {
           "en": "The hunters pass through and find nothing. Your gold bought you time and a clear road. The hunt goes quiet.",
-          "es": "Les cazadores pasan y no encuentran nada. Tu oro te compró tiempo y un camino despejado. La cacería se calla."
+          "es": "Los cazadores pasan y no encuentran nada. Tu oro te compró tiempo y un camino despejado. La cacería se calla."
         }
       },
       {
@@ -178,7 +178,7 @@
         },
         "narrative": {
           "en": "You sign your name beneath the charter and a smith hammers your first Guild ring. The iron welcomes its newest arm.",
-          "es": "Firmás tu nombre bajo el estatuto y une herrera forja tu primer anillo del Gremio. El hierro da la bienvenida a su brazo más nuevo."
+          "es": "Firmás tu nombre bajo el estatuto y un herrero forja tu primer anillo del Gremio. El hierro da la bienvenida a su brazo más nuevo."
         }
       },
       {
@@ -211,7 +211,7 @@
     "location": "road",
     "narrative": {
       "en": "A border clan demands a toll for crossing their lands, and the guards are unimpressed by a lone traveler with no banner to claim. They name a price, then a challenge.",
-      "es": "Un clan fronterizo exige un peaje por cruzar sus tierras, y los guardias no se impresionan con une viajere solitaire sin estandarte que reclamar. Ponen un precio, y luego un desafío."
+      "es": "Un clan fronterizo exige un peaje por cruzar sus tierras, y los guardias no se impresionan con un viajero solitario sin estandarte que reclamar. Ponen un precio, y luego un desafío."
     },
     "choices": [
       {
@@ -228,7 +228,7 @@
         },
         "narrative": {
           "en": "Coin settles the matter. You pass unbothered, and the guards forget your face by nightfall — just as you like it.",
-          "es": "La moneda resuelve el asunto. Pasás sin molestias, y les guardias olvidan tu cara al caer la noche — tal como te gusta."
+          "es": "La moneda resuelve el asunto. Pasás sin molestias, y los guardias olvidan tu cara al caer la noche — tal como te gusta."
         }
       },
       {
@@ -250,7 +250,7 @@
         },
         "narrative": {
           "en": "You take their best fighter to the ground in full view of the gate. The toll is waived, and they toast the nameless blade who crossed them. Solo has its uses.",
-          "es": "Derribás a su mejor luchadore frente a la puerta. Te perdonan el peaje, y brindan por la hoja sin nombre que los cruzó. Estar solo tiene sus usos."
+          "es": "Derribás a su mejor luchador frente a la puerta. Te perdonan el peaje, y brindan por la hoja sin nombre que los cruzó. Estar solo tiene sus usos."
         }
       },
       {
@@ -280,7 +280,7 @@
     "location": "greywater",
     "narrative": {
       "en": "A smuggler of the Blacktide Corsairs slides a pouch of gold across the bar. 'Walk away from Greywater's oaths, and this is yours — plus a berth on my ship.' The tavern waits, breath held.",
-      "es": "Une contrabandista de los Corsarios de Marea Negra desliza una bolsa de oro sobre la barra. 'Dejá los juramentos de Villa Aguagrís, y esto es tuyo — más un camarote en mi barco.' La taberna aguanta la respiración."
+      "es": "Un contrabandista de los Corsarios de Marea Negra desliza una bolsa de oro sobre la barra. 'Dejá los juramentos de Villa Aguagrís, y esto es tuyo — más un camarote en mi barco.' La taberna aguanta la respiración."
     },
     "choices": [
       {
@@ -299,7 +299,7 @@
         "reputationFaction": "greywater",
         "narrative": {
           "en": "You push the pouch back and name the bribe to the town elders. Greywater's trust in you hardens to iron.",
-          "es": "Devolvés la bolsa y mencionás el soborno ante les ancianes del pueblo. La confianza de Villa Aguagrís se vuelve de hierro."
+          "es": "Devolvés la bolsa y mencionás el soborno ante los ancianos del pueblo. La confianza de Villa Aguagrís se vuelve de hierro."
         }
       },
       {
@@ -381,7 +381,7 @@
         "reputationFaction": "crownguard",
         "narrative": {
           "en": "You keep the wagons rolling and the soldiers fed. No songs are sung of the rear guard — but the army eats, and the Crown counts it.",
-          "es": "Mantenés los carromatos rodando y a les soldades alimentades. No se cantan canciones de la retaguardia — pero el ejército come, y la Corona lo cuenta."
+          "es": "Mantenés los carromatos rodando y a los soldados alimentados. No se cantan canciones de la retaguardia — pero el ejército come, y la Corona lo cuenta."
         }
       }
     ]
@@ -395,14 +395,14 @@
     "location": "thornwood",
     "narrative": {
       "en": "The Elder of the Thornwood Wardens summons you to the grove. 'Your path bends away from the oaks, ranger. If you wish to walk free of the Wardens, we will not hold the gate against you — only ask that you part as a friend.'",
-      "es": "El Anciano de les Guardianes de Espinar te convoca al bosquecillo. 'Tu camino se desvía de los robles, montaraz. Si querés caminar libre de les Guardianes, no te cerraremos la puerta — solo pedimos que partas como amige.'"
+      "es": "El Anciano de los Guardianes de Espinar te convoca al bosquecillo. 'Tu camino se desvía de los robles, montaraz. Si querés caminar libre de los Guardianes, no te cerraremos la puerta — solo pedimos que partas como amigo.'"
     },
     "choices": [
       {
         "id": "leave_in_peace",
         "label": {
           "en": "Part ways with the Wardens, honor intact",
-          "es": "Separarte de les Guardianes, con el honor intacto"
+          "es": "Separarte de los Guardianes, con el honor intacto"
         },
         "tag": "Stoic",
         "rarity": "uncommon",
@@ -418,14 +418,14 @@
         },
         "narrative": {
           "en": "You walk out of the grove with the Wardens' blessing and a sapling in your pack as a parting gift. The forest stays a friend, not a leash.",
-          "es": "Salís del bosquecillo con la bendición de les Guardianes y un retoño en la mochila como regalo de despedida. El bosque sigue siendo une amigue, no una correa."
+          "es": "Salís del bosquecillo con la bendición de los Guardianes y un retoño en la mochila como regalo de despedida. El bosque sigue siendo un amigo, no una correa."
         }
       },
       {
         "id": "renew_oath",
         "label": {
           "en": "Renew your oath to the Wardens",
-          "es": "Renovar tu juramento a les Guardianes"
+          "es": "Renovar tu juramento a los Guardianes"
         },
         "tag": "Supportive",
         "rarity": "common",
@@ -451,14 +451,14 @@
     "location": "court",
     "narrative": {
       "en": "Two emissaries wait at your door: one of the Arcanum with a ledger of arcane secrets, one of the Crimson Veil with a chest of gold. Each offers you a future away from the Guild. Each watches the other.",
-      "es": "Dos emisaries esperan en tu puerta: une del Arcanum con un libro de secretos arcanos, une del Velo Carmesí con un cofre de oro. Cade une te ofrece un futuro lejos del Gremio. Y se vigilan entre sí."
+      "es": "Dos emisarios esperan en tu puerta: uno del Arcanum con un libro de secretos arcanos, uno del Velo Carmesí con un cofre de oro. Cada uno te ofrece un futuro lejos del Gremio. Y se vigilan entre sí."
     },
     "choices": [
       {
         "id": "stay",
         "label": {
           "en": "Dismiss both — the Guild raised you",
-          "es": "Despedir a ambes — el Gremio te crió"
+          "es": "Despedir a ambos — el Gremio te crió"
         },
         "tag": "Leader",
         "rarity": "rare",
@@ -473,7 +473,7 @@
         },
         "narrative": {
           "en": "Both emissaries withdraw, each muttering about wasted journeys. The Guild master's hammer falls on your side of the ledger — and his respect with it.",
-          "es": "Ambes emisaries se retiran, murmurando sobre viajes desperdiciados. El martillo del maestro del Gremio cae a tu lado del libro — y su respeto con él."
+          "es": "Ambos emisarios se retiran, murmurando sobre viajes desperdiciados. El martillo del maestre del Gremio cae a tu lado del libro — y su respeto con él."
         }
       },
       {
@@ -511,7 +511,7 @@
     "location": "road",
     "narrative": {
       "en": "A weathered village elder approaches the fire where you camp. 'We have no gold and no guild. But we have a field, a name, and a need. Stay a season and defend us — or claim us as kin, and we will call you our sword.'",
-      "es": "Une anciane del pueblo se acerca al fuego donde acampás. 'No tenemos oro ni gremio. Pero tenemos un campo, un nombre y una necesidad. Quedate una temporada y defendenos — o reclamanos como familia, y te llamaremos nuestra espada.'"
+      "es": "Un anciano curtido del pueblo se acerca al fuego donde acampás. 'No tenemos oro ni gremio. Pero tenemos un campo, un nombre y una necesidad. Quedate una temporada y defendenos — o reclamanos como familia, y te llamaremos nuestra espada.'"
     },
     "choices": [
       {
@@ -536,7 +536,7 @@
         },
         "narrative": {
           "en": "You swear to the village and the old ways of the Rust Priests it keeps. It is a small banner — but it is yours, and they keep your cup full.",
-          "es": "Jurás por el pueblo y las viejas costumbres de les Sacerdotes del Óxido que conserva. Es un estandarte pequeño — pero es tuyo, y te mantienen la copa llena."
+          "es": "Jurás por el pueblo y las viejas costumbres de los Sacerdotes del Óxido que conserva. Es un estandarte pequeño — pero es tuyo, y te mantienen la copa llena."
         }
       },
       {
@@ -555,7 +555,7 @@
         },
         "narrative": {
           "en": "You leave word that you'll return if the wolves howl. The elder nods — hope is a poor shield, but it is all some villages have.",
-          "es": "Dejás dicho que volverás si los lobos aúllan. L'anciane asiente — la esperanza es un escudo pobre, pero es lo único que tienen algunos pueblos."
+          "es": "Dejás dicho que volverás si los lobos aúllan. El anciano asiente — la esperanza es un escudo pobre, pero es lo único que tienen algunos pueblos."
         }
       }
     ]

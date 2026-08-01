@@ -1,5 +1,5 @@
 import type { Gender, Locale } from "@shared/types"
-import { genderize } from "@shared/genderize"
+import { genderizeChrome } from "@shared/genderize"
 
 // UI chrome strings (labels, buttons). Content strings live in /content as
 // LocaleMaps and are resolved server-side. Same EN/ES parity discipline here so
@@ -14,7 +14,6 @@ const en: StringMap = {
   chooseGender: "How will the bards sing of you?",
   genderMale: "He",
   genderFemale: "She",
-  genderNonbinary: "They",
   chooseClass: "Choose your path",
   namePlaceholder: "e.g. Kaelen",
   standard: "Standard",
@@ -247,7 +246,6 @@ const es: StringMap = {
   chooseGender: "¿Cómo te cantarán los bardos?",
   genderMale: "Él",
   genderFemale: "Ella",
-  genderNonbinary: "Elle",
   chooseClass: "Elige tu camino",
   namePlaceholder: "p. ej. Kaelen",
   standard: "Estándar",
@@ -382,35 +380,35 @@ const es: StringMap = {
   noAchievements: "No se obtuvieron logros en la última vida.",
 
   archetype_berserker: "Berserker",
-  archetype_guardian: "Guardiana",
+  archetype_guardian: "Guardiano",
   archetype_duelist: "Duelista",
-  archetype_knight: "Caballera",
-  archetype_tactician: "Táctica",
+  archetype_knight: "Caballero",
+  archetype_tactician: "Táctico",
   archetype_pyromancer: "Piromante",
-  archetype_enchanter: "Encantadora",
+  archetype_enchanter: "Encantador",
   archetype_necromancer: "Nigromante",
   archetype_diviner: "Vidente",
   archetype_elementalist: "Elementalista",
-  archetype_assassin: "Asesina",
+  archetype_assassin: "Asesino",
   archetype_thief: "Ladrón",
   archetype_shadowblade: "Hoja de Sombras",
-  archetype_infiltrator: "Infiltradora",
+  archetype_infiltrator: "Infiltrador",
   archetype_face: "Rostro",
-  archetype_hunter: "Cazadora",
-  archetype_beastmaster: "Maestra de Bestias",
-  archetype_scout: "Exploradora",
-  archetype_sniper: "Francotiradora",
-  archetype_trapper: "Trampera",
+  archetype_hunter: "Cazador",
+  archetype_beastmaster: "Maestro de Bestias",
+  archetype_scout: "Explorador",
+  archetype_sniper: "Francotirador",
+  archetype_trapper: "Trampero",
   archetype_battlepriest: "Sacerdote de Batalla",
-  archetype_healer: "Sanadora",
-  archetype_paladin: "Paladina",
-  archetype_inquisitor: "Inquisidora",
+  archetype_healer: "Sanador",
+  archetype_paladin: "Paladín",
+  archetype_inquisitor: "Inquisidor",
   archetype_oracle: "Oráculo",
   archetype_skald: "Escaldo",
-  archetype_comedian: "Cómica",
+  archetype_comedian: "Cómico",
   archetype_warleader: "Líder de Guerra",
   archetype_spy: "Espía",
-  archetype_loremaster: "Maestre de Letras",
+  archetype_loremaster: "Maestro de Letras",
 
   faction_greywater: "Villa Aguagrís",
   faction_ironhold: "Gremio de Fuertehierro",
@@ -491,5 +489,5 @@ export function t(locale: Locale, key: string): string {
 export function gt(locale: Locale, gender: Gender | null | undefined, key: string): string {
   const value = t(locale, key)
   if (locale !== "es") return value
-  return genderize(value, gender)
+  return genderizeChrome(value, gender)
 }

@@ -89,7 +89,9 @@
       },
       "partial": {
         "injuryRiskDelta": 0.1,
-        "countersReset": ["duel_streak"],
+        "countersReset": [
+          "duel_streak"
+        ],
         "narrative": {
           "en": "You trade blows and scrape a win, but you'll feel it tomorrow.",
           "es": "Intercambian golpes y arañás la victoria, pero lo vas a sentir mañana."
@@ -99,7 +101,9 @@
         "injuryRiskDelta": 0.3,
         "reputationDelta": -3,
         "reputationFaction": "ironhold",
-        "countersReset": ["duel_streak"],
+        "countersReset": [
+          "duel_streak"
+        ],
         "narrative": {
           "en": "They see it coming. Steel bites, and you go down in the dust.",
           "es": "Lo ven venir. El acero muerde, y caés en el polvo."
@@ -194,7 +198,9 @@
       },
       "partial": {
         "goldDelta": 20,
-        "countersReset": ["negotiation_streak"],
+        "countersReset": [
+          "negotiation_streak"
+        ],
         "narrative": {
           "en": "You avoid a fight but take a worse deal than you wanted.",
           "es": "Evitás una pelea pero aceptás un trato peor del que querías."
@@ -204,7 +210,9 @@
         "reputationDelta": -2,
         "reputationFaction": "greywater",
         "injuryRiskDelta": 0.08,
-        "countersReset": ["negotiation_streak"],
+        "countersReset": [
+          "negotiation_streak"
+        ],
         "narrative": {
           "en": "You misjudge the room. Tempers flare and the deal collapses.",
           "es": "Malinterpretás el ambiente. Los ánimos se encienden y el trato se derrumba."
@@ -302,7 +310,9 @@
       },
       "partial": {
         "injuryRiskDelta": 0.15,
-        "countersReset": ["duel_streak"],
+        "countersReset": [
+          "duel_streak"
+        ],
         "narrative": {
           "en": "You hold your own but take a stool to the ribs. You're still standing when it's over — barely.",
           "es": "Te mantenés pero te comés un taburete en las costillas. Todavía estás de pie cuando termina — apenas."
@@ -312,7 +322,9 @@
         "healthDelta": -12,
         "injuryRiskDelta": 0.25,
         "reputationDelta": -1,
-        "countersReset": ["duel_streak"],
+        "countersReset": [
+          "duel_streak"
+        ],
         "narrative": {
           "en": "A sucker punch sends you into a barrel. You go down hard and wake up to the barkeep charging you for the damage.",
           "es": "Un golpe traicionero te manda contra un barril. Caés fuerte y despertás con el tabernero cobrándote los daños."
@@ -408,13 +420,15 @@
         },
         "narrative": {
           "en": "Your sigil holds while theirs flickers out. A clean win by arcane attrition.",
-          "es": "Tu sigilo se mantiene mientras el de elles parpadea y se apaga. Una victoria limpia por desgaste arcano."
+          "es": "Tu sigilo se mantiene mientras el de ellos parpadea y se apaga. Una victoria limpia por desgaste arcano."
         }
       },
       "partial": {
         "healthDelta": -5,
         "injuryRiskDelta": 0.08,
-        "countersReset": ["duel_streak"],
+        "countersReset": [
+          "duel_streak"
+        ],
         "narrative": {
           "en": "Your spell fizzles but you deflect the rebound. A draw that leaves both of you singed and suspicious.",
           "es": "Tu hechizo falla pero desviás el rebote. Un empate que deja a ambos chamuscados y sospechosos."
@@ -425,7 +439,9 @@
         "injuryRiskDelta": 0.2,
         "reputationDelta": -2,
         "reputationFaction": "arcanum",
-        "countersReset": ["duel_streak"],
+        "countersReset": [
+          "duel_streak"
+        ],
         "narrative": {
           "en": "Your weave collapses. Magic lashes back, throwing you across the room. The Arcanum will remember this embarrassment.",
           "es": "Tu tejido colapsa. La magia azota de vuelta y te lanza al otro lado de la sala. El Arcanum recordará esta vergüenza."
@@ -525,7 +541,9 @@
         "healthDelta": -6,
         "goldDelta": -20,
         "injuryRiskDelta": 0.12,
-        "countersReset": ["duel_streak"],
+        "countersReset": [
+          "duel_streak"
+        ],
         "narrative": {
           "en": "You fight them off but take a knife across the arm. They grab a few coins and vanish. Could've been worse.",
           "es": "Los ahuyentás pero recibís un cuchillazo en el brazo. Agarran unas monedas y desaparecen. Podría haber sido peor."
@@ -535,7 +553,9 @@
         "healthDelta": -15,
         "goldDelta": -80,
         "injuryRiskDelta": 0.3,
-        "countersReset": ["duel_streak"],
+        "countersReset": [
+          "duel_streak"
+        ],
         "narrative": {
           "en": "Too many. Too fast. You go down under a flurry of boots and blades. They take everything.",
           "es": "Demasiados. Demasiado rápido. Caés bajo una lluvia de botas y cuchillas. Se llevan todo."
@@ -637,7 +657,9 @@
       },
       "partial": {
         "injuryRiskDelta": 0.1,
-        "countersReset": ["duel_streak"],
+        "countersReset": [
+          "duel_streak"
+        ],
         "narrative": {
           "en": "A grueling exchange of touches ends in a draw called by the judges. Neither of you yields, and the mist has all but burned away.",
           "es": "Un intercambio agotador de toques termina en empate declarado por los jueces. Ninguno cede, y la niebla ya casi se ha quemado."
@@ -647,7 +669,9 @@
         "injuryRiskDelta": 0.25,
         "reputationDelta": -2,
         "reputationFaction": "crownguard",
-        "countersReset": ["duel_streak"],
+        "countersReset": [
+          "duel_streak"
+        ],
         "narrative": {
           "en": "You overcommit on the disengage and eat a clean touch to the shoulder. The master's salute is polite, but the crowd's murmur isn't.",
           "es": "Te sobreexigís en el desenganche y recibís un toque limpio en el hombro. El saludo de la maestra es cortés, pero el murmullo de la multitud no lo es."
@@ -748,7 +772,9 @@
         "healthDelta": -6,
         "injuryRiskDelta": 0.12,
         "goldDelta": 30,
-        "countersReset": ["duel_streak"],
+        "countersReset": [
+          "duel_streak"
+        ],
         "narrative": {
           "en": "You take more than you give, but you stay on your feet long enough to claim a draw. The house tosses you a few coins and a towel.",
           "es": "Recibís más de lo que das, pero te mantenés en pie el tiempo suficiente para reclamar un empate. La casa te tira unas monedas y una toalla."
@@ -759,7 +785,9 @@
         "goldDelta": -30,
         "injuryRiskDelta": 0.25,
         "reputationDelta": -1,
-        "countersReset": ["duel_streak"],
+        "countersReset": [
+          "duel_streak"
+        ],
         "narrative": {
           "en": "The haymaker lands flush. You wake up in the sawdust to the crowd's laughter and a healer who charges double for pit wounds.",
           "es": "El golpe demoledor aterriza de lleno. Despertás en el aserrín con la risa de la multitud y una curandera que cobra el doble por heridas de foso."
@@ -857,7 +885,9 @@
       },
       "partial": {
         "goldDelta": 25,
-        "countersReset": ["negotiation_streak"],
+        "countersReset": [
+          "negotiation_streak"
+        ],
         "narrative": {
           "en": "You get most of what you wanted, but the master talks you into a worse rate than you'd planned. Still, a deal is a deal.",
           "es": "Conseguís la mayor parte de lo que querías, pero la maestra te convence de una tarifa peor de la planeada. Aún así, trato es trato."
@@ -867,7 +897,9 @@
         "goldDelta": -40,
         "reputationDelta": -2,
         "reputationFaction": "thornwood",
-        "countersReset": ["negotiation_streak"],
+        "countersReset": [
+          "negotiation_streak"
+        ],
         "narrative": {
           "en": "You push too hard and the master folds their arms for good. The caravan rolls out without you, and the deal rolls with it.",
           "es": "Empujás demasiado y la maestra cruza los brazos para siempre. La caravana parte sin vos, y el trato se va con ella."
@@ -971,7 +1003,9 @@
       "partial": {
         "injuryRiskDelta": 0.1,
         "fameDelta": 1,
-        "countersReset": ["duel_streak"],
+        "countersReset": [
+          "duel_streak"
+        ],
         "narrative": {
           "en": "You hold your ground but can't break through. The judges call it a draw. You live to fight another round.",
           "es": "Mantenés el terreno pero no lográs abrirte paso. Los jueces declaran empate. Vivís para pelear otra ronda."
@@ -983,7 +1017,9 @@
         "fameDelta": -2,
         "reputationDelta": -2,
         "reputationFaction": "crownguard",
-        "countersReset": ["duel_streak"],
+        "countersReset": [
+          "duel_streak"
+        ],
         "narrative": {
           "en": "You miss the parry. The knight's blade connects with a crack. You go down in the dirt as the crowd sighs. A long walk back to the tents.",
           "es": "Fallás la parada. La hoja de la caballera conecta con un chasquido. Caés en el polvo mientras la multitud suspira. Una larga caminata de vuelta a las carpas."

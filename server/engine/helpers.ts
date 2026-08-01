@@ -26,7 +26,7 @@ export function fillSlots(
 ): string {
   // Gender-inflect player-referential Spanish words BEFORE slots are filled so
   // NPC/group text pulled from slot pools is never regendered with the player.
-  // Runs without a stored gender (old saves) stay on the authored neutral forms.
+  // Runs without a stored gender (old saves) default to masculine.
   const gendered = character && locale === "es" ? genderize(text, character.gender) : text
   // Supports both {poolName} and {slot:poolName} placeholder styles.
   return gendered.replace(/\{(?:slot:)?([a-zA-Z_]+)\}/g, (_m, pool: string) => {

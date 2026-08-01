@@ -39,7 +39,7 @@ function makeChar(overrides: Partial<CharacterState> = {}): CharacterState {
   return {
     id: "test",
     name: "Test",
-    gender: "nonbinary",
+    gender: "male",
     class: "warrior",
     archetype: null,
     epithet: null,
@@ -204,16 +204,15 @@ describe("gender inflection", () => {
     })
     const servedMale = serveEvent(event, male, "es", reg, new Rng(7), false)
     expect(servedMale.narrative).toContain("Compartí la llama, extraño.")
-    const neutral = createCharacter({
+    const unset = createCharacter({
       id: "gn",
       name: "X",
-      gender: "nonbinary",
       classId: "warrior",
       locale: "es",
       registry: reg,
     })
-    const servedNeutral = serveEvent(event, neutral, "es", reg, new Rng(7), false)
-    expect(servedNeutral.narrative).toContain("Compartí la llama, extrañe.")
+    const servedUnset = serveEvent(event, unset, "es", reg, new Rng(7), false)
+    expect(servedUnset.narrative).toContain("Compartí la llama, extraño.")
   })
 
   it("resolveChoice inflects outcome narratives for the player's gender", () => {
@@ -231,7 +230,7 @@ describe("gender inflection", () => {
     expect(out.narrative).toContain("alimentada y entera")
   })
 
-  it("leaves NPC-referential neutral forms neutral in served Spanish", () => {
+  it("keeps NPC-referential masculine forms masculine in served Spanish", () => {
     const event = reg.events.find((e) => e.id === "clan_induction_trial")
     if (!event) throw new Error("missing clan_induction_trial fixture")
     const c = createCharacter({
@@ -242,10 +241,21 @@ describe("gender inflection", () => {
       locale: "es",
       registry: reg,
     })
-    // "une herrera" is an NPC, so it must stay neutral regardless of player gender.
+    // "un herrero" is an NPC, so it stays masculine regardless of player gender.
     const out = resolveChoice(c, event, "join", reg, new Rng(5))
-    expect(out.narrative).not.toContain("un herrero")
-    expect(out.narrative).toContain("une herrera")
+    expect(out.narrative).toContain("un herrero")
+    expect(out.narrative).not.toContain("una herrera")
+    const female = createCharacter({
+      id: "gccf",
+      name: "X",
+      gender: "female",
+      classId: "warrior",
+      locale: "es",
+      registry: reg,
+    })
+    const outFemale = resolveChoice(female, event, "join", reg, new Rng(5))
+    expect(outFemale.narrative).toContain("un herrero")
+    expect(outFemale.narrative).not.toContain("una herrera")
   })
 })
 

@@ -2,9 +2,9 @@
 
 export type Locale = "en" | "es"
 
-// How the character is addressed in gendered languages (Spanish). Neutral "e"
-// forms are the authored default; male/female inflect content at render time.
-export type Gender = "male" | "female" | "nonbinary"
+// How the character is addressed in gendered languages (Spanish). Content is
+// authored once; male is the default inflection, female inflects at render time.
+export type Gender = "male" | "female"
 
 // Every player-facing string in content is authored as a locale map so Spanish
 // can be added later without touching game logic. See i18n section of the spec.
