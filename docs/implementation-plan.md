@@ -566,6 +566,324 @@ const TIERS = ["standard", "daily", "legendary"] as const
 
 ---
 
+# Part II — Ideas from Puntero (`docs/example-puntero.md`)
+
+> **Source**: the Puntero political-career walkthrough. Same loop shape as ours (numbered decisions, a rival, yearly seasons) — so most of its systems already exist in some form here. This part maps what it does to what we have, then steals what's actually new. Everything below must keep determinism: any new random draw goes through the per-run seeded `Rng` (§RNG & determinism), never `Math.random()`.
+
+## Already covered — no work needed
+
+| Puntero system | Ballad equivalent (exists) |
+| -------------- | -------------------------- |
+| Last-move recap ("ÚLTIMO MOVIMIENTO") | `SceneEcho` / `turnNarrative` in `GameScreen.tsx` |
+| Rival score widget ("TU CARRERA VS") | `RivalBadge` in `Hud.tsx` + `advanceRival()` |
+| Starting reputation pick ("TU PRIMERA REPUTACIÓN") | `ArchetypeStep` (3-card draw) |
+| Season recap card w/ grade + headline | `generateSeasonSummary()` (headline, grade, world events) |
+| Energy meter ("ENERGÍA") | `stamina` + `deductStamina()` |
+| Media / average stat | `powerLevel` |
+| Epilogue rival block | `RivalComparison` in `epilogue.ts` |
+| Money that grows each turn | Per-season clan `stipend` (members only — the universal per-turn trickle is **new**, Step 19) |
+
+---
+
+## Step 11: Stat-Gated Choices
+
+**Goal**: Some choices demand a minimum stat, shown as a requirement chip on the card (Puntero's "Imagen 30" / "Gestión 33"). Below the threshold the choice renders locked; meeting it unlocks a new path. This gives stats identity beyond numbers — a high-charisma character genuinely *sees different options*.
+
+### Files to change
+
+| File                     | Change                                                                                   |
+| ------------------------ | ---------------------------------------------------------------------------------------- |
+| `shared/types.ts`        | Add `requiresStat` to `ChoiceContent` and `ServedChoice`                                 |
+| `server/engine/engine.ts`| Filter/lock choices in `buildServedEvent()`; reject locked picks in `resolveChoice()`    |
+| `content/events/*.json`  | Add `requiresStat` to a few existing choices so the mechanic is actually in content      |
+| `src/components/GameScreen.tsx` | Render requirement chip + locked state on choice cards                            |
+| `src/i18n/strings.ts`    | "Requires" label (en/es)                                                                |
+
+### Type additions
+
+```ts
+// ChoiceContent
+requiresStat?: { stat: StatKey; min: number }
+
+// ServedChoice (client-visible)
+requiresStat?: { stat: StatKey; min: number }
+statMet?: boolean
+```
+
+### Engine behavior
+
+In `buildServedEvent()`: for each choice, set `statMet = c[choice.requiresStat.stat] >= choice.requiresStat.min`. Keep unmet choices **visible but locked** (dimmed, not selectable) rather than hiding them — Puntero shows the requirement on every card, and a locked card tells the player "this path exists, you're just not there yet." For determinism the choice list stays stable; only `statMet` changes.
+
+In `resolveChoice()`: if the chosen `choiceId` maps to a choice whose `requiresStat` is unmet, return a validation error — never trust the client.
+
+### Example content
+
+```json
+{
+  "id": "intimidate_guard",
+  "requiresStat": { "stat": "strength", "min": 25 },
+  "statDeltas": { "fame": 2 }
+}
+```
+
+### Verification
+
+1. Author a choice with `requiresStat: { charisma: 40 }`; play a low-charisma character — card shows "Requires Charisma 40" and is locked
+2. Raise charisma past 40 (trainer, events) — same event now offers the unlocked choice
+3. Attempt to POST a locked `choiceId` directly via the API — server rejects it
+
+---
+
+## Step 12: Choice Before→After Previews
+
+**Goal**: On every choice card show the projected effect as "current → after (+delta)" (Puntero's "Imagen 30 → 33 (+3)"), so the player sees exactly what each pick does to their sheet before committing.
+
+### Files to change
+
+| File                     | Change                                                                    |
+| ------------------------ | ------------------------------------------------------------------------- |
+| `src/components/GameScreen.tsx` | Compute projected values from `character` + `statDeltas`/`tradeoffDeltas` |
+| `src/components/StatTag.tsx` | Extend to render `12 → 15 (+3)` form when current values are passed      |
+
+### Implementation
+
+Client-side only — the client already holds `CharacterState`, so no engine change:
+
+```tsx
+// For each stat delta, resolve against current character value
+// statDeltas: { strength: 3 } with c.strength = 12  →  "STR 12 → 15 (+3)"
+// tradeoffDeltas: { constitution: -2 } with c.constitution = 14 → "CON 14 → 12 (−2)"
+```
+
+Render the delta row inside each `ChoiceCard` (next to the existing `BonusTag`s), with gains in the standard gold tint and costs in blood tint. Tooltip on hover explains the change. Only show stats that actually change — don't list the whole sheet.
+
+**Scope note**: `ServedChoice` carries `statDeltas` / `tradeoffDeltas` / `fameDelta` / `reputationDelta` / `goldDelta` but **not** `staminaDelta` / `healthDelta` (those exist only on `ChoiceContent`). Previews therefore cover the served deltas only — stamina/health changes would be silently invisible unless you also add those fields to `ServedChoice`. Decide which and note it here.
+
+### Verification
+
+1. Play any event with stat deltas — each changed stat shows "current → after (+delta)"
+2. Volatile cards show both gains and costs as before→after pairs
+3. Values match the engine after the turn resolves (spot-check a few)
+
+---
+
+## Step 13: Liability Meter ("Expediente")
+
+**Goal**: A new meter that *accumulates* — shady choices, scandals, and failed coercion add to it, and it rarely drains. A high liability opens grim options and closes clean ones, and feeds the epilogue. Puntero's "Expediente" ("what the justice system knows about you") is exactly this; ours is a liability/notoriety meter in fantasy dress (rumors, warrants, witnesses).
+
+### Files to change
+
+| File                       | Change                                                                                |
+| -------------------------- | ------------------------------------------------------------------------------------- |
+| `shared/types.ts`          | Add `liability` to `CharacterState`; `liabilityDelta` to `ChoiceContent`; `requiresLiability` to `EventContent` |
+| `shared/config.ts`         | `liabilityMax`, thresholds that open/close content                                    |
+| `server/engine/engine.ts`  | Apply `liabilityDelta` in `resolveChoice()`; clamp 0..max                             |
+| `server/engine/helpers.ts` | Gate events on `requiresLiability` in `isEligible()`                                  |
+| `src/components/Hud.tsx`   | Add liability meter pill (blood-tinted when high)                                     |
+| `content/events/*.json`    | Author choices with `liabilityDelta`; events with `requiresLiability`                 |
+| `content/achievements.json`| Add clean-run and corrupted-run achievements                                          |
+
+### Balance approach
+
+- Start at 0; gains from events (blackmail choices, grave outcomes, failed rolls), slow natural decay (config, e.g. −1 per season) so it's not a death spiral.
+- `requiresLiability: { min: N }` gates a small pool of "dark path" events ("A hooded figure knows what you did").
+- Achievements: finish a run with `liability === 0` ("A Clean Conscience") and with liability ≥ threshold ("Known in the Underworld"). Note `AchievementCondition` has no liability type today — either add a `liability_gte` / `liability_lte` condition, or track liability as a counter key so the existing `counter_gte` condition works with no engine change. Pick one and say so in the step.
+
+### Verification
+
+1. Pick a shady choice — liability rises in the HUD and persists across turns
+2. Below-threshold events never fire for a clean character; a dirty one sees them
+3. Clean-run achievement unlocks on a 0-liability retirement
+
+---
+
+## Step 14: Rival Focus Label
+
+**Goal**: The rival isn't just a score — each season they're "about" something (Puntero: Escándalo / Comunidad / Pasillos / Seguridad / Tecnología / Conflicto / Solidaridad). The focus shows in the HUD and flavors `rivalUpdate`; it can bias their score growth.
+
+### Files to change
+
+| File                       | Change                                                              |
+| -------------------------- | ------------------------------------------------------------------- |
+| `shared/config.ts`         | Add `RIVAL_FOCUSES` pool (en/es labels)                             |
+| `shared/types.ts`          | Add `focusId` to `RivalState`                                       |
+| `server/engine/engine.ts`  | `generateRival()` picks a start focus; `advanceRival()` rotates it via the seeded rng |
+| `server/routes/game.ts`    | Include focus in `rivalUpdate` text                                 |
+| `src/components/Hud.tsx`   | Show focus chip inside `RivalBadge`                                 |
+| `src/i18n/strings.ts`      | Localize focus labels                                               |
+
+### Example focus pool (fantasy flavor)
+
+```ts
+export const RIVAL_FOCUSES = [
+  { id: "conquest", label: { en: "Conquest", es: "Conquista" } },
+  { id: "treasure", label: { en: "Treasure", es: "Tesoro" } },
+  { id: "court", label: { en: "Court Intrigue", es: "Intriga de Corte" } },
+  { id: "war", label: { en: "Open War", es: "Guerra Abierta" } },
+  { id: "lore", label: { en: "Lost Lore", es: "Saber Perdido" } },
+  { id: "crown", label: { en: "The Crown", es: "La Corona" } },
+]
+```
+
+Optional depth: a focus grants the rival a small score bonus on seasons where it matches their faction specialty (e.g. a war-clan rival pushing "Open War" grows faster).
+
+### Verification
+
+1. Create a character — rival has a focus label in the HUD
+2. Play through a season boundary — focus rotates (seeded, deterministic per daily seed)
+3. `rivalUpdate` on the season summary mentions the current focus
+
+---
+
+## Step 15: Minigame Trap Cards (Urn Mechanic)
+
+**Goal**: Puntero's "ELEGÍ UNA URNA" — three closed urns, you open one, and one was a trap ("ANULADA −4"). Generalize: a minigame can mark one or more cards as traps. Picking a trap forces the fail tier regardless of the hidden variable — risk made visible, outcome hidden.
+
+### Files to change
+
+| File                                | Change                                                               |
+| ----------------------------------- | -------------------------------------------------------------------- |
+| `shared/types.ts`                   | Add `trap?: boolean` to `MinigameCard`; add `trapCardId` to `MinigameResolution` (optional) |
+| `server/engine/engine.ts`           | In `resolveMinigame()`: if picked card has `trap: true`, resolve as `fail` tier before the hidden-variable roll |
+| `content/minigames/*.json`          | Add at least one trap-card minigame (e.g. `trap_chest`, `haunted_urn`) |
+| `src/components/GameScreen.tsx`     | Card visual hint for traps (subtle skull/mark) and suspense beat before reveal |
+
+### Engine note
+
+```ts
+// Illustrative — inside resolveMinigame(c, event, cardId, reg, rng), before rolling the hidden variable:
+const card = event.cards?.find((c) => c.id === cardId)
+if (card?.trap) {
+  return /* resolve the "fail" outcome tier for this event */
+}
+```
+
+Trap placement must be authored (fixed per event), not rolled per player — deterministic and reviewable. Keep the trap *hinted* but not labeled (iconography only), so it stays a decision.
+
+### Verification
+
+1. Play the trap minigame — picking the trapped card always lands the fail tier
+2. Non-trap cards resolve via the normal hidden-variable path (win still possible)
+3. Daily runs stay deterministic: same card set, same outcomes for the same seed
+
+---
+
+## Step 16: Season-End Capstone + Rival Debate (content)
+
+**Goal**: Puntero closes each year with a set-piece — an election ("ELEGÍ UNA URNA") or a debate vs the rival ("DEBATE CARA A CARA", verdict after: "MALA −4"). Add a season-end capstone beat and a debate minigame, authored as content on top of Step 15 + the existing tag-synergy mechanism (`wantedTags` / `punishedTags` on `ChoiceContent`, already used by the Negotiation Gambit-style events in `content/events/personality.json`).
+
+### Files to change
+
+| File                        | Change                                                                                    |
+| --------------------------- | ----------------------------------------------------------------------------------------- |
+| `content/minigames/elections.json` | **New** — "Election of the Year" capstone minigames (urn mechanic, uses Step 15 traps) |
+| `content/minigames/debates.json`   | **New** — "Debate face to face": 3 responses, hidden verdict, quality after            |
+| `server/engine/engine.ts`  | Serve a capstone minigame on the turn *before* the season summary; include result in the summary |
+| `shared/types.ts`          | Optional `isCapstone` flag on `ServedEvent` so the client renders the showdown frame     |
+| `src/components/GameScreen.tsx` | Capstone frame + suspense "scrutinizing…" beat (reuse existing minigame reveal)        |
+
+### Debate design (reuses what exists)
+
+- The rival makes a claim; three responses map to personality tags (e.g. `Humble` / `Strategic` / `Aggressive`).
+- Hidden variable = the crowd's mood; verdict quality surfaced *after* picking ("MALA −4" / "BUENA +3"), driven by `wantedTags`-style scoring — no new systems, just authored content + the existing minigame resolution.
+- Outcome moves the season's `seasonGrade` and the rival comparison.
+
+### Verification
+
+1. At the season boundary, the capstone fires before the summary and its result appears in the summary
+2. The debate picks resolve with a verdict beat and tag-consistent rewards
+3. Daily seed determinism holds across both new minigame types
+
+---
+
+## Step 17: New-Player Tutorial (skip-able)
+
+**Goal**: Puntero opens with a numbered manual ("01 BIENVENIDO… 06 TU HISTORIA EMPIEZA AHORA") and an "OMITIR TUTORIAL" skip. Ours has no onboarding — new players face the full HUD cold. Add a short skip-able tutorial shown before the first run.
+
+### Files to change
+
+| File                        | Change                                                                     |
+| --------------------------- | -------------------------------------------------------------------------- |
+| `content/tutorial.json`     | **New** — pages: Welcome / Everything is a Choice / Stats / Meters / Rival / Your Story (en+es) |
+| `src/components/TutorialScreen.tsx` | **New** — page pager with Next / Skip / Start buttons                 |
+| `src/App.tsx`               | Show tutorial when no run exists and `chronicle_tutorial_seen` flag is unset; wire re-open link |
+| `src/i18n/strings.ts`       | "Skip tutorial", "Next", page nav strings                               |
+
+### Details
+
+- Content-driven pages (`{ id, title: LocaleMap, body: LocaleMap, icon }`) so it's editable without code.
+- Skip persists a localStorage flag (`chronicle_tutorial_seen`) — consistent with the existing `chronicle_*` client keys; a "How to play" link on the creation screen reopens it.
+- Keep it to 5-6 pages, one idea each, mirroring Puntero's structure.
+
+### Verification
+
+1. Fresh visitor sees the tutorial before creation; "Skip" jumps straight in and doesn't re-show
+2. "How to play" reopens the manual from creation
+3. Locale switch renders the tutorial fully in en/es
+
+---
+
+## Step 18: Career Titles & Path HUD
+
+**Goal**: Puntero's title evolves with your career ("MILITANTE ESTUDIANTIL" → "REFERENTE DESDE EL LLANO") and the HUD shows "RUTA AL PODER" — where you are on the path to the top. Give our character a mid-run career title derived from arc + power level, and show the arc path in the HUD.
+
+### Files to change
+
+| File                     | Change                                                                                 |
+| ------------------------ | -------------------------------------------------------------------------------------- |
+| `src/components/Hud.tsx` | Derive + render a career title chip; render the arc path (current arc lit, future arcs dimmed) |
+| `src/i18n/strings.ts`    | Title table per arc × power tier (en/es); arc path labels                              |
+| `src/lib/careerTitle.ts` | **New** helper: `careerTitle(arc, powerLevel)` → localized title                        |
+
+### Title table (example)
+
+```ts
+// adventurer arc, 3 power tiers
+{ en: "Wanderer", es: "Errante" }
+{ en: "Adventurer", es: "Aventurero" }
+{ en: "Rising Star", es: "Estrella en Ascenso" }
+// kingdom_hero arc …
+{ en: "Knight of the Realm", es: "Caballero del Reino" }
+// legend arc …
+{ en: "Living Legend", es: "Leyenda Viva" }
+```
+
+Titles are derived client-side from `c.currentArc` (already on `CharacterState`; `Hud.tsx` already reads it for the arc pill) + `powerLevel` buckets — pure UI, no persistence, no engine change. The path row shows `Adventurer → Mercenary → Kingdom Hero → Legend → Old Hero` with the current one highlighted.
+
+### Verification
+
+1. HUD shows a career title that changes as power level crosses tiers
+2. Arc path renders with the current arc lit and future arcs dimmed
+3. Title + path localize in both languages
+
+---
+
+## Step 19: Quick Wins (Random Creation + Passive Gold)
+
+**Goal**: Two small Puntero touches: an "AL AZAR" random creation button and a trickle of gold each turn (Puntero's capital grows $0→$3→$6). Low effort, high polish.
+
+### Files to change
+
+| File                         | Change                                                                      |
+| ---------------------------- | --------------------------------------------------------------------------- |
+| `src/components/CreationScreen.tsx` | Add "🎲 Random" button that randomizes name/class/origin/gender client-side |
+| `shared/config.ts`           | Add `goldPerTurn: 3`                                                         |
+| `server/engine/engine.ts`    | In `resolveChoice()`, apply `goldPerTurn` each turn (before/after deltas)    |
+| `src/i18n/strings.ts`        | "Random" label                                                              |
+
+### Details
+
+- Random button: pick a name from a small fantasy name pool (client-side constant), a random loaded class, random origin, random gender, then proceed through the normal archetype draw. No new server surface.
+- `goldPerTurn`: a flat income so a character who never lands gold-delta events still accumulates capital (keeps the shop reachable). Applied deterministically on every turn resolution.
+
+### Verification
+
+1. "🎲 Random" produces a valid, startable character in one click
+2. Gold increases by `goldPerTurn` every turn regardless of event choice
+3. Daily runs remain deterministic (flat income, no rng involved)
+
+---
+
 ## Implementation Order
 
 ```
@@ -579,6 +897,15 @@ Step 7: New Minigame Types                → 2-3 hours (content + engine)
 Step 8: Graduated Achievements            → 1 hour (content only)
 Step 9: Cross-Run Trophy Hall             → 3-4 hours (full stack)
 Step 10: Elite Leaderboard Split          → 2-3 hours (backend + frontend)
+Step 11: Stat-Gated Choices               → 2-3 hours (engine + content + UI)
+Step 12: Choice Before→After Previews     → 1 hour (pure UI)
+Step 13: Liability Meter (Expediente)     → 2-3 hours (engine + content + UI)
+Step 14: Rival Focus Label                → 1 hour (config + engine + UI)
+Step 15: Minigame Trap Cards              → 1-2 hours (engine + content)
+Step 16: Season-End Capstone + Debates    → 2-3 hours (engine + content + UI)
+Step 17: New-Player Tutorial              → 1-2 hours (content + UI)
+Step 18: Career Titles & Path HUD         → 1 hour (pure UI)
+Step 19: Quick Wins (Random + Gold)       → 1 hour (UI + small engine)
 ```
 
-Steps 4-6 and 8 are pure content additions (JSON files). They can be done in any order or in parallel. Steps 1-3 touch engine/UI code and should be done before minigame/content work if possible.
+Steps 4-6, 8 and the content portions of 11/13/15/16/17 are JSON additions and can be done in any order or in parallel. Steps 11 and 13 touch engine eligibility/resolution and should land before authored content depends on them. Step 12 and 18 are near-pure UI and safe to parallelize; Step 14 touches `generateRival()` / `advanceRival()` (engine) and `routes/game.ts`, so treat it as engine-adjacent. All new rng use in 14-16 must go through the per-run seeded `Rng` to preserve daily-mode determinism.

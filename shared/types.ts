@@ -121,9 +121,12 @@ export interface ChoiceContent {
   tag?: PersonalityTag
   rarity: Rarity
   outcome?: "good" | "risky" | "neutral" | "bad"
-  // §24 legibility: explicit warning surfaced on the choice card before the
+  // Legibility: explicit warning surfaced on the choice card before the
   // player commits (the negotiation greed dial's risk, stated up front).
   riskLabel?: LocaleMap
+  // Stat gating: the choice stays visible but locked unless the character's
+  // stat meets the minimum. Server rejects locked picks regardless of client.
+  requiresStat?: { stat: StatKey; min: number }
   statDeltas?: StatDeltas
   tradeoffDeltas?: StatDeltas // negative, only on volatile / some rare
   goldDelta?: number
@@ -398,10 +401,14 @@ export interface ServedChoice {
   factionId?: string
   // Per-season stipend offered by a faction (clan offer cards).
   stipend?: number
-  // §20 minutes-signal on a clan-join offer card (up/same/bench).
+  // Minutes-signal on a clan-join offer card (up/same/bench).
   roleSignal?: RoleSignal
-  // §24 legibility: explicit risk warning surfaced on the choice card.
+  // Legibility: explicit risk warning surfaced on the choice card.
   riskLabel?: string
+  // Stat gating surfaced to the client: the requirement and whether the
+  // current character meets it (locked choices render dimmed + disabled).
+  requiresStat?: { stat: StatKey; min: number }
+  statMet?: boolean
 }
 
 export interface ServedEvent {

@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Hourglass, Swords } from "lucide-react"
+import { AlertTriangle, Hourglass, Lock, Swords } from "lucide-react"
 import { styled } from "styled-components"
 import type { CharacterState, ServedEvent, Rarity, RoleSignal } from "@shared/types"
 import type { Locale } from "@shared/types"
@@ -15,7 +15,7 @@ import { ElectricBorder } from "./ui/ElectricBorder"
 import { SpecularBorder } from "./ui/SpecularBorder"
 import { Tooltip } from "./ui/Tooltip"
 import { capitalize } from "../lib/capitalize"
-import { RARITY_CHAOS, ROLE_SIGNAL } from "../constants"
+import { RARITY_CHAOS, ROLE_SIGNAL, STAT_ABBR } from "../constants"
 import { rarityRank } from "@shared/config"
 import { theme } from "../theme"
 
@@ -62,13 +62,18 @@ export function GameScreen({
 
   // Shared card body used both in the choice grid and the bottom "continue" button.
   function renderChoiceBody(c: (typeof event.choices)[number], compact: boolean) {
+    // Stat gating: unmet requirements render the card locked (dimmed +
+    // disabled); the server rejects the pick anyway if it slips through.
+    const locked = c.statMet === false
     return (
       <ChoiceCard
         type="button"
         $rarity={c.rarity}
         $selected={selected === c.id}
+        $locked={locked}
         onClick={() => pick(c.id)}
-        disabled={busy}
+        disabled={busy || locked}
+        title={locked ? t(locale, "lockedChoice") : undefined}
       >
         {!compact && <RarityPip $rarity={c.rarity} aria-hidden="true" />}
         <ChoiceLabel>
@@ -89,8 +94,16 @@ export function GameScreen({
         )}
         {c.riskLabel && (
           <RiskTag>
-            ⚠ {t(locale, "riskTag")}: {c.riskLabel}
+            <AlertTriangle size={13} strokeWidth={2.5} aria-hidden="true" />
+            {t(locale, "riskTag")}: {c.riskLabel}
           </RiskTag>
+        )}
+        {c.requiresStat && (
+          <RequirementTag $met={!locked}>
+            {locked && <Lock size={11} strokeWidth={2.5} aria-hidden="true" />}
+            {t(locale, "requiresStat")} {t(locale, STAT_ABBR[c.requiresStat.stat])}{" "}
+            {c.requiresStat.min}
+          </RequirementTag>
         )}
         {(c.statDeltas || c.tradeoffDeltas || c.fameDelta || c.reputationDelta || c.goldDelta) && (
           <ChoiceDeltas>
@@ -378,7 +391,11 @@ const ChoiceCardWrap = styled(ElectricBorder)`
   }
 `
 
-const ChoiceCard = styled.button<{ $rarity: Rarity; $selected: boolean }>`
+const ChoiceCard = styled.button<{
+  $rarity: Rarity
+  $selected: boolean
+  $locked?: boolean
+}>`
   position: relative;
   text-align: left;
   width: 100%;
@@ -398,9 +415,17 @@ const ChoiceCard = styled.button<{ $rarity: Rarity; $selected: boolean }>`
   }
 
   &:disabled {
-    opacity: 0.5;
-    cursor: wait;
+    opacity: ${({ $locked }) => ($locked ? 0.45 : 0.5)};
+    cursor: ${({ $locked }) => ($locked ? "not-allowed" : "wait")};
   }
+
+  ${({ $locked, theme }) =>
+    $locked &&
+    `
+    border-color: ${theme.colors.line2};
+    border-left-color: ${theme.colors.muted2};
+    filter: grayscale(0.6);
+  `}
 `
 
 const RarityPip = styled.span<{ $rarity: Rarity }>`
@@ -472,6 +497,9 @@ const RoleSignalTag = styled.span<{ $signal: RoleSignal }>`
 `
 
 const RiskTag = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 6px;
   margin-top: 8px;
   padding: 5px 10px;
   border: 1px solid ${({ theme }) => theme.colors.bloodBright};
@@ -480,6 +508,30 @@ const RiskTag = styled.div`
   color: ${({ theme }) => theme.colors.bloodBright};
   font-size: 12px;
   letter-spacing: 0.03em;
+
+  svg {
+    flex-shrink: 0;
+  }
+`
+
+const RequirementTag = styled.span<{ $met: boolean }>`
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 8px;
+  margin-left: 7px;
+  padding: 2px 9px;
+  border: 1px solid ${({ $met, theme }) => ($met ? theme.colors.gold : theme.colors.bloodBright)};
+  border-radius: 4px;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: ${({ $met, theme }) => ($met ? theme.colors.gold : theme.colors.bloodBright)};
+  background: ${({ $met }) => ($met ? "rgba(201, 164, 76, 0.08)" : "rgba(191, 30, 30, 0.08)")};
+
+  svg {
+    flex-shrink: 0;
+  }
 `
 
 const SummaryBanner = styled.div`

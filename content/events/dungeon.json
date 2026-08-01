@@ -17,6 +17,10 @@
         },
         "tag": "Strategic",
         "rarity": "uncommon",
+        "requiresStat": {
+          "stat": "dexterity",
+          "min": 12
+        },
         "statDeltas": {
           "dexterity": 3
         },
@@ -119,6 +123,10 @@
         },
         "tag": "Confident",
         "rarity": "rare",
+        "requiresStat": {
+          "stat": "strength",
+          "min": 14
+        },
         "statDeltas": {
           "strength": 2,
           "dexterity": 1

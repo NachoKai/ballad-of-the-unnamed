@@ -110,6 +110,10 @@
         },
         "tag": "Aggressive",
         "rarity": "rare",
+        "requiresStat": {
+          "stat": "strength",
+          "min": 12
+        },
         "wantedTags": {
           "Aggressive": 0.25,
           "Cocky": 0.1
@@ -219,6 +223,10 @@
         },
         "tag": "Strategic",
         "rarity": "rare",
+        "requiresStat": {
+          "stat": "intelligence",
+          "min": 14
+        },
         "wantedTags": {
           "Strategic": 0.25,
           "Leader": 0.1

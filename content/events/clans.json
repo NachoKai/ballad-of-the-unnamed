@@ -239,6 +239,10 @@
         },
         "tag": "Confident",
         "rarity": "rare",
+        "requiresStat": {
+          "stat": "dexterity",
+          "min": 14
+        },
         "statDeltas": {
           "dexterity": 2,
           "strength": 1

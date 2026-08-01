@@ -270,6 +270,8 @@ const en: StringMap = {
   roleSignalSame: "Right-sized for the clan — an even footing",
   roleSignalBench: "Below the clan's level — you may start on the bench",
   riskTag: "Risk",
+  requiresStat: "Requires",
+  lockedChoice: "This path is beyond you — for now.",
 }
 
 const es: StringMap = {
@@ -541,6 +543,8 @@ const es: StringMap = {
   roleSignalSame: "A la medida del clan — un terreno parejo",
   roleSignalBench: "Por debajo del nivel del clan — puede que empieces en el banco",
   riskTag: "Riesgo",
+  requiresStat: "Requiere",
+  lockedChoice: "Este camino te queda grande — por ahora.",
 }
 
 const TABLES: Record<Locale, StringMap> = { en, es }

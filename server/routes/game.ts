@@ -437,7 +437,11 @@ gameRouter.post("/choose", async (req: Request, res: Response) => {
   } catch (err) {
     const msg = (err as Error).message
     console.log("[v0] /choose error", msg)
-    if (msg.startsWith("unknown choice") || msg.startsWith("unknown card")) {
+    if (
+      msg.startsWith("unknown choice") ||
+      msg.startsWith("unknown card") ||
+      msg.startsWith("locked choice")
+    ) {
       return res.status(400).json({ error: "invalid_choice" })
     }
     return res.status(500).json({ error: "server_error", detail: msg })

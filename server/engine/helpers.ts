@@ -361,6 +361,10 @@ export function serveEvent(
       riskLabel: ch.riskLabel
         ? fillSlots(localize(ch.riskLabel, locale), locale, registry, rng, c)
         : undefined,
+      // Stat gating: the served choice carries the requirement plus whether
+      // the current character meets it, so the client can render locked state.
+      requiresStat: ch.requiresStat,
+      statMet: ch.requiresStat ? c[ch.requiresStat.stat] >= ch.requiresStat.min : undefined,
     }))
     // Sort so rarer, more interesting choices read last (feels like a reveal).
     choices.sort((a, b) => rarityRank(a.rarity) - rarityRank(b.rarity))

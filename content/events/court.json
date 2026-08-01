@@ -37,6 +37,10 @@
         },
         "tag": "Cocky",
         "rarity": "rare",
+        "requiresStat": {
+          "stat": "charisma",
+          "min": 14
+        },
         "statDeltas": {
           "charisma": 4
         },

@@ -124,6 +124,16 @@ export function loadContent(): ContentRegistry {
         validateLocaleMap(ch.label, `event ${ev.id} choice ${ch.id} label`)
         validateLocaleMap(ch.narrative, `event ${ev.id} choice ${ch.id} narrative`)
       }
+      // Stat gating: an event whose choices are ALL stat-gated would
+      // soft-lock the run (no selectable option, resolveChoice throws). Every
+      // event with a gated choice must keep at least one ungated fallback.
+      const gated = ev.choices.filter((ch) => ch.requiresStat).length
+      if (gated > 0) {
+        assert(
+          gated < ev.choices.length,
+          `event ${ev.id} gates all choices; keep at least one choice without requiresStat`,
+        )
+      }
       events.push(ev)
     }
   }

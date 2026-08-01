@@ -454,6 +454,84 @@ describe("resolveChoice", () => {
 })
 
 // ---------------------------------------------------------------------------
+// §11 Stat-gated choices
+// ---------------------------------------------------------------------------
+describe("stat-gated choices", () => {
+  const gatedEvent: EventContent = {
+    id: "gated",
+    minAge: 0,
+    maxAge: 99,
+    weight: 1,
+    narrative: { en: "", es: "" },
+    choices: [
+      {
+        id: "gate",
+        rarity: "common",
+        label: { en: "", es: "" },
+        narrative: { en: "", es: "" },
+        requiresStat: { stat: "strength", min: 12 },
+      },
+    ],
+  }
+
+  it("serveEvent marks statMet true when the character meets the requirement", () => {
+    const c = makeChar({ strength: 15 })
+    const served = serveEvent(gatedEvent, c, "en", reg, new Rng(1), false)
+    expect(served.choices[0].requiresStat).toEqual({ stat: "strength", min: 12 })
+    expect(served.choices[0].statMet).toBe(true)
+  })
+
+  it("serveEvent marks statMet false when the character falls short", () => {
+    const c = makeChar({ strength: 5 })
+    const served = serveEvent(gatedEvent, c, "en", reg, new Rng(1), false)
+    expect(served.choices[0].statMet).toBe(false)
+  })
+
+  it("choices without a requirement are never flagged locked", () => {
+    const c = makeChar({ strength: 5 })
+    const freeEvent: EventContent = {
+      id: "free",
+      minAge: 0,
+      maxAge: 99,
+      weight: 1,
+      narrative: { en: "", es: "" },
+      choices: [
+        { id: "any", rarity: "common", label: { en: "", es: "" }, narrative: { en: "", es: "" } },
+      ],
+    }
+    const served = serveEvent(freeEvent, c, "en", reg, new Rng(1), false)
+    expect(served.choices[0].requiresStat).toBeUndefined()
+    expect(served.choices[0].statMet).toBeUndefined()
+  })
+
+  it("resolveChoice accepts a choice whose requirement is met", () => {
+    const c = makeChar({ strength: 15, turn: 0 })
+    const out = resolveChoice(c, gatedEvent, "gate", reg, new Rng(1))
+    expect(c.turn).toBe(1)
+    expect(out.ended).toBe(false)
+  })
+
+  it("resolveChoice rejects a locked choice server-side", () => {
+    const c = makeChar({ strength: 5 })
+    expect(() => resolveChoice(c, gatedEvent, "gate", reg, new Rng(1))).toThrow(/locked choice/)
+    expect(c.turn).toBe(0) // rejected before any state mutates
+  })
+
+  it("authored tavern_stranger aggressive choice is gated on strength", () => {
+    const ev = reg.events.find((e) => e.id === "tavern_stranger")
+    if (!ev || !ev.choices) throw new Error("missing tavern_stranger fixture")
+    const aggressive = ev.choices.find((ch) => ch.id === "aggressive")
+    expect(aggressive?.requiresStat).toEqual({ stat: "strength", min: 12 })
+    const weak = makeChar({ strength: 5 })
+    const served = serveEvent(ev, weak, "en", reg, new Rng(1), false)
+    expect(served.choices.find((ch) => ch.id === "aggressive")?.statMet).toBe(false)
+    const strong = makeChar({ strength: 20 })
+    const servedStrong = serveEvent(ev, strong, "en", reg, new Rng(1), false)
+    expect(servedStrong.choices.find((ch) => ch.id === "aggressive")?.statMet).toBe(true)
+  })
+})
+
+// ---------------------------------------------------------------------------
 // resolveMinigame
 // ---------------------------------------------------------------------------
 describe("resolveMinigame", () => {
@@ -619,23 +697,17 @@ describe("counter achievements", () => {
     ["clutch_artist", "clutch_duels", 1],
   ]
 
-  it.each(COUNTER_ACH)(
-    "unlocks %s when counter %s reaches %d",
-    (achId, key, value) => {
-      const c = makeChar({ counters: { [key]: value } })
-      const result = evaluateAchievements(c, reg)
-      expect(result.map((a) => a.id)).toContain(achId)
-      expect(c.achievements).toContain(achId)
-    },
-  )
+  it.each(COUNTER_ACH)("unlocks %s when counter %s reaches %d", (achId, key, value) => {
+    const c = makeChar({ counters: { [key]: value } })
+    const result = evaluateAchievements(c, reg)
+    expect(result.map((a) => a.id)).toContain(achId)
+    expect(c.achievements).toContain(achId)
+  })
 
-  it.each(COUNTER_ACH)(
-    "does not unlock %s below the threshold",
-    (achId, key, value) => {
-      const c = makeChar({ counters: { [key]: Math.max(0, value - 1) } })
-      expect(evaluateAchievements(c, reg).map((a) => a.id)).not.toContain(achId)
-    },
-  )
+  it.each(COUNTER_ACH)("does not unlock %s below the threshold", (achId, key, value) => {
+    const c = makeChar({ counters: { [key]: Math.max(0, value - 1) } })
+    expect(evaluateAchievements(c, reg).map((a) => a.id)).not.toContain(achId)
+  })
 
   it("every authored counter is actually incremented by content or engine", () => {
     // Collect every counter key the content bank bumps via countersDelta.
@@ -1999,7 +2071,8 @@ describe("relationship achievements", () => {
 function playTurn(c: CharacterState, rng: Rng, pick?: (ids: string[]) => string): boolean {
   const { event, served } = buildServedEvent(c, reg, rng)
   const isMinigame = event.type === "minigame" || Boolean(event.cards)
-  const ids = served.choices.map((ch) => ch.id)
+  // A simulated player can't pick a stat-locked choice — filter them out.
+  const ids = served.choices.filter((ch) => ch.statMet !== false).map((ch) => ch.id)
   const id = pick ? pick(ids) : ids[0]
   const outcome = isMinigame
     ? resolveMinigame(c, event, id, reg, rng)

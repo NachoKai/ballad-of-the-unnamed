@@ -17,6 +17,10 @@
         },
         "tag": "Confident",
         "rarity": "uncommon",
+        "requiresStat": {
+          "stat": "strength",
+          "min": 12
+        },
         "statDeltas": {
           "strength": 2,
           "constitution": 1
@@ -148,6 +152,10 @@
         },
         "tag": "Aggressive",
         "rarity": "uncommon",
+        "requiresStat": {
+          "stat": "strength",
+          "min": 12
+        },
         "statDeltas": {
           "strength": 2
         },
@@ -220,6 +228,10 @@
         },
         "tag": "Cocky",
         "rarity": "volatile",
+        "requiresStat": {
+          "stat": "dexterity",
+          "min": 12
+        },
         "statDeltas": {
           "dexterity": 5
         },
@@ -276,6 +288,10 @@
         },
         "tag": "Aggressive",
         "rarity": "rare",
+        "requiresStat": {
+          "stat": "strength",
+          "min": 14
+        },
         "statDeltas": {
           "strength": 3
         },

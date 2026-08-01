@@ -55,6 +55,10 @@
         },
         "tag": "Confident",
         "rarity": "rare",
+        "requiresStat": {
+          "stat": "constitution",
+          "min": 12
+        },
         "staminaDelta": -10,
         "statDeltas": {
           "dexterity": 2
@@ -422,6 +426,10 @@
         },
         "tag": "Aggressive",
         "rarity": "volatile",
+        "requiresStat": {
+          "stat": "constitution",
+          "min": 14
+        },
         "staminaDelta": -15,
         "statDeltas": {
           "strength": 3

@@ -1113,6 +1113,11 @@ export function resolveChoice(
 ): ResolveOutput {
   const choice = (event.choices ?? []).find((ch) => ch.id === choiceId)
   if (!choice) throw new Error(`unknown choice ${choiceId} for event ${event.id}`)
+  // Stat gating: never trust the client — a locked choice is rejected
+  // server-side even if the client somehow submits it.
+  if (choice.requiresStat && c[choice.requiresStat.stat] < choice.requiresStat.min) {
+    throw new Error(`locked choice ${choiceId} for event ${event.id}`)
+  }
 
   c.turn += 1
   recordRarity(c, choice.rarity)

@@ -18,7 +18,9 @@
         },
         "tag": "Humble",
         "rarity": "common",
-        "statDeltas": { "charisma": 1 },
+        "statDeltas": {
+          "charisma": 1
+        },
         "reputationDelta": 2,
         "reputationFaction": "greywater",
         "narrative": {
@@ -28,10 +30,16 @@
       },
       {
         "id": "strategic",
-        "label": { "en": "Read them before you speak", "es": "Leerlos antes de hablar" },
+        "label": {
+          "en": "Read them before you speak",
+          "es": "Leerlos antes de hablar"
+        },
         "tag": "Strategic",
         "rarity": "uncommon",
-        "statDeltas": { "intelligence": 2, "charisma": 1 },
+        "statDeltas": {
+          "intelligence": 2,
+          "charisma": 1
+        },
         "narrative": {
           "en": "You catch the tell in their stance and steer the talk your way.",
           "es": "Detectás el gesto que los delata y llevás la charla a tu terreno."
@@ -39,11 +47,23 @@
       },
       {
         "id": "aggressive",
-        "label": { "en": "Draw your weapon", "es": "Desenvainar el arma" },
+        "label": {
+          "en": "Draw your weapon",
+          "es": "Desenvainar el arma"
+        },
         "tag": "Aggressive",
         "rarity": "volatile",
-        "statDeltas": { "strength": 6 },
-        "tradeoffDeltas": { "charisma": -3, "constitution": -2 },
+        "requiresStat": {
+          "stat": "strength",
+          "min": 12
+        },
+        "statDeltas": {
+          "strength": 6
+        },
+        "tradeoffDeltas": {
+          "charisma": -3,
+          "constitution": -2
+        },
         "goldDelta": -10,
         "injuryRiskDelta": 0.1,
         "narrative": {
@@ -65,10 +85,15 @@
     "choices": [
       {
         "id": "walk",
-        "label": { "en": "Walk away, keep your coin", "es": "Irte y guardar tu moneda" },
+        "label": {
+          "en": "Walk away, keep your coin",
+          "es": "Irte y guardar tu moneda"
+        },
         "tag": "Professional",
         "rarity": "common",
-        "statDeltas": { "intelligence": 1 },
+        "statDeltas": {
+          "intelligence": 1
+        },
         "narrative": {
           "en": "A quiet win: you leave with everything you came in with.",
           "es": "Una victoria silenciosa: te vas con todo lo que trajiste."
@@ -76,10 +101,15 @@
       },
       {
         "id": "cheat",
-        "label": { "en": "Palm a loaded die", "es": "Cambiar un dado cargado" },
+        "label": {
+          "en": "Palm a loaded die",
+          "es": "Cambiar un dado cargado"
+        },
         "tag": "Cocky",
         "rarity": "rare",
-        "statDeltas": { "dexterity": 3 },
+        "statDeltas": {
+          "dexterity": 3
+        },
         "goldDelta": 80,
         "injuryRiskDelta": 0.08,
         "narrative": {
@@ -101,12 +131,20 @@
     "choices": [
       {
         "id": "accept",
-        "label": { "en": "Take the job", "es": "Aceptar el trabajo" },
+        "label": {
+          "en": "Take the job",
+          "es": "Aceptar el trabajo"
+        },
         "tag": "Confident",
         "rarity": "uncommon",
-        "statDeltas": { "strength": 1, "dexterity": 1 },
+        "statDeltas": {
+          "strength": 1,
+          "dexterity": 1
+        },
         "goldDelta": 60,
-        "countersDelta": { "quests_completed": 1 },
+        "countersDelta": {
+          "quests_completed": 1
+        },
         "reputationDelta": 4,
         "reputationFaction": "ironhold",
         "narrative": {
@@ -116,10 +154,15 @@
       },
       {
         "id": "decline",
-        "label": { "en": "Not tonight", "es": "Esta noche no" },
+        "label": {
+          "en": "Not tonight",
+          "es": "Esta noche no"
+        },
         "tag": "Stoic",
         "rarity": "common",
-        "statDeltas": { "constitution": 1 },
+        "statDeltas": {
+          "constitution": 1
+        },
         "narrative": {
           "en": "You finish your drink in peace. The offer drifts to someone else.",
           "es": "Terminás tu trago en paz. La oferta va a parar a otro."
@@ -139,10 +182,15 @@
     "choices": [
       {
         "id": "funny",
-        "label": { "en": "Tell it for the laughs", "es": "Contarlo para hacer reír" },
+        "label": {
+          "en": "Tell it for the laughs",
+          "es": "Contarlo para hacer reír"
+        },
         "tag": "Funny",
         "rarity": "common",
-        "statDeltas": { "charisma": 1 },
+        "statDeltas": {
+          "charisma": 1
+        },
         "fameDelta": 2,
         "narrative": {
           "en": "The room roars. You are, briefly, everyone's favorite.",
@@ -157,7 +205,9 @@
         },
         "tag": "Leader",
         "rarity": "rare",
-        "statDeltas": { "charisma": 4 },
+        "statDeltas": {
+          "charisma": 4
+        },
         "reputationDelta": 5,
         "reputationFaction": "greywater",
         "narrative": {
