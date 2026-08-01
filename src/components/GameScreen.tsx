@@ -11,6 +11,7 @@ import { LinkBtn } from "./ui/Button"
 import { TextPretty } from "./ui/Text"
 import { rise } from "./ui/Animation"
 import { ElectricBorder } from "./ui/ElectricBorder"
+import { SpecularBorder } from "./ui/SpecularBorder"
 import { Tooltip } from "./ui/Tooltip"
 import { capitalize } from "../lib/capitalize"
 import { RARITY_CHAOS } from "../constants"
@@ -69,21 +70,30 @@ export function GameScreen({
         )}
 
         {isSeasonSummary && event.seasonHeadline && (
-          <SummaryBanner>
-            <SummaryGrade
-              $grade={
-                (event.seasonGrade ?? 5) >= 7
-                  ? "good"
-                  : (event.seasonGrade ?? 5) >= 4
-                    ? "ok"
-                    : "bad"
-              }
-            >
-              {(event.seasonGrade ?? 0).toFixed(1)}
-            </SummaryGrade>
-            <SummaryHeadline>{event.seasonHeadline}</SummaryHeadline>
-            <SummarySub>{t(locale, "seasonSummary")}</SummarySub>
-          </SummaryBanner>
+          <SpecularBorder
+            radius={8}
+            lineColor={theme.colors.goldBright}
+            baseColor={theme.colors.gold}
+            thickness={1.4}
+            intensity={1.1}
+            style={{ marginBottom: 18 }}
+          >
+            <SummaryBanner>
+              <SummaryGrade
+                $grade={
+                  (event.seasonGrade ?? 5) >= 7
+                    ? "good"
+                    : (event.seasonGrade ?? 5) >= 4
+                      ? "ok"
+                      : "bad"
+                }
+              >
+                {(event.seasonGrade ?? 0).toFixed(1)}
+              </SummaryGrade>
+              <SummaryHeadline>{event.seasonHeadline}</SummaryHeadline>
+              <SummarySub>{t(locale, "seasonSummary")}</SummarySub>
+            </SummaryBanner>
+          </SpecularBorder>
         )}
 
         <SceneNarrative>{capitalize(event.narrative)}</SceneNarrative>
@@ -274,8 +284,8 @@ const RetireBanner = styled.div`
 
 const ChoiceGrid = styled.div`
   display: grid;
-  gap: 16px;
-  margin-top: 22px;
+  gap: 24px;
+  margin-top: 24px;
   margin-bottom: 18px;
 `
 
@@ -372,8 +382,6 @@ const SummaryBanner = styled.div`
   align-items: center;
   gap: 6px;
   padding: 20px;
-  margin-bottom: 18px;
-  border: 1px solid ${({ theme }) => theme.colors.gold};
   border-radius: ${({ theme }) => theme.radii.sm};
   background: rgba(201, 164, 76, 0.06);
 `
