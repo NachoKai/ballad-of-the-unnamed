@@ -22,6 +22,7 @@ import { CollectionScreen } from "./components/CollectionScreen"
 import { ShopModal } from "./components/ShopModal"
 import { Toasts, useAchievementToasts } from "./components/Toasts"
 import { LinkBtn } from "./components/ui/Button"
+import { ShinyText } from "./components/ui/ShinyText"
 /* import { LightRays } from "./components/ui/LightRays" */
 
 type Screen = "creation" | "game" | "ending" | "leaderboard" | "achievements" | "collection"
@@ -210,7 +211,7 @@ export default function App() {
             onClick={() => (screen === "game" ? undefined : setScreen("creation"))}
           >
             <BrandRune aria-hidden="true">{"\u16B1"}</BrandRune>
-            {t(locale, "appTitle")}
+            <ShinyText>{t(locale, "appTitle")}</ShinyText>
           </Brand>
           <TopActions>
             {screen !== "leaderboard" && screen !== "game" && (
