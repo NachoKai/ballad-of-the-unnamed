@@ -99,6 +99,9 @@ export interface RivalState {
   name: string
   class: string
   factionId: string | null
+  // What the rival is "about" this season (see RIVAL_FOCUSES in config).
+  // Optional so old persisted runs without a focus still load cleanly.
+  focusId?: string
   powerLevel: number
   age: number
   location: string

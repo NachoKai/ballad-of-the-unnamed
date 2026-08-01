@@ -141,6 +141,18 @@ export function Hud({ character: c, locale, onShopOpen }: Props) {
         ))}
       </AttributeRow>
 
+      {c.rival && (
+        <RivalRow>
+          <Tooltip content={t("tooltip_rival")}>
+            <RivalBadge>
+              <Swords size={12} /> {c.rival.name} {t("vs")} <b>{playerScore}</b>—
+              <b>{c.rival.score}</b>
+            </RivalBadge>
+          </Tooltip>
+          {c.rival.focusId && <FocusChip>{t(`rivalFocus_${c.rival.focusId}`)}</FocusChip>}
+        </RivalRow>
+      )}
+
       <StatusRow>
           {primaryRep && (
             <Tooltip content={t("tooltip_reputation")}>
@@ -163,14 +175,6 @@ export function Hud({ character: c, locale, onShopOpen }: Props) {
                   .map((tag) => translateFor(locale, c.gender, `personality_tag_${tag}`))
                   .join(" · ")}
               </TagPill>
-            </Tooltip>
-          )}
-          {c.rival && (
-            <Tooltip content={t("tooltip_rival")}>
-              <RivalBadge>
-                <Swords size={12} /> {c.rival.name} {t("vs")} <b>{playerScore}</b>—
-                <b>{c.rival.score}</b>
-              </RivalBadge>
             </Tooltip>
           )}
           {c.huntedBy && (
@@ -467,6 +471,30 @@ const RivalBadge = styled.span`
     font-weight: 600;
     color: ${({ theme }) => theme.colors.parchment};
   }
+`
+
+const RivalRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+  padding: 10px 18px;
+  border-top: 1px solid ${({ theme }) => theme.colors.line};
+  background: linear-gradient(90deg, rgba(191, 30, 30, 0.07), transparent 55%);
+`
+
+const FocusChip = styled.span`
+  display: inline-flex;
+  align-items: center;
+  margin-left: auto;
+  padding: 1px 9px;
+  border: 1px solid ${({ theme }) => theme.colors.line2};
+  border-radius: 999px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.colors.muted};
+  white-space: nowrap;
 `
 
 const HuntedBadge = styled.span`

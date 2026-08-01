@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest"
 import { Rng, hashSeed } from "../../shared/rng.js"
-import { computeScore, GAME_CONFIG, arcForAge } from "../../shared/config.js"
+import { computeScore, GAME_CONFIG, arcForAge, RIVAL_FOCUSES } from "../../shared/config.js"
 import {
   advanceRival,
   buildServedEvent,
@@ -1220,6 +1220,50 @@ describe("season summary", () => {
     expect(result.served.seasonGrade).toBeDefined()
   })
 
+  it("season summary rivalUpdate mentions the rival's current focus", () => {
+    const c = makeChar({
+      turn: GAME_CONFIG.seasonLength,
+      rival: {
+        name: "Roderick",
+        class: "wizard",
+        factionId: null,
+        focusId: "war",
+        powerLevel: 20,
+        age: 16,
+        location: "capital",
+        achievementsCount: 0,
+        score: 10,
+        lastAdvancedTurn: 0,
+      },
+    })
+    const result = buildServedEvent(c, reg, new Rng(42))
+    // advanceRival ran inside the season summary, so the focus may have rotated —
+    // either way the served text must name whatever focus is now current.
+    const focus = RIVAL_FOCUSES.find((f) => f.id === c.rival!.focusId)
+    expect(result.served.rivalUpdate).toContain(focus!.label.en)
+  })
+
+  it("legacy rivals converge to a focus on their first season advance", () => {
+    const c = makeChar({
+      turn: GAME_CONFIG.seasonLength,
+      rival: {
+        name: "Roderick",
+        class: "wizard",
+        factionId: null,
+        powerLevel: 20,
+        age: 16,
+        location: "capital",
+        achievementsCount: 0,
+        score: 10,
+        lastAdvancedTurn: 0,
+      },
+    })
+    // focusId is undefined → advanceRival must always assign one, whatever the seed.
+    const result = buildServedEvent(c, reg, new Rng(1))
+    expect(RIVAL_FOCUSES.some((f) => f.id === c.rival!.focusId)).toBe(true)
+    expect(result.served.rivalUpdate).toBeTruthy()
+  })
+
   it("resolveSeasonSummary increments seasonCount and cleans inventory", () => {
     const c = makeChar({
       turn: 5,
@@ -1598,6 +1642,76 @@ describe("Rival", () => {
     expect(rival.name).toBeTruthy()
     expect(rival.class).not.toBe(c.class)
     expect(rival.age).toBe(c.age)
+  })
+
+  it("generateRival assigns a start focus from the pool", () => {
+    const c = makeChar({ class: "warrior" })
+    const rival = generateRival(c, reg, new Rng(7))
+    expect(RIVAL_FOCUSES.some((f) => f.id === rival.focusId)).toBe(true)
+  })
+
+  it("advanceRival rotates the focus deterministically per seed", () => {
+    const mk = () =>
+      makeChar({
+        rival: {
+          name: "Roderick",
+          class: "wizard",
+          factionId: null,
+          focusId: "war",
+          powerLevel: 20,
+          age: 16,
+          location: "capital",
+          achievementsCount: 0,
+          score: 0,
+          lastAdvancedTurn: 0,
+        },
+      })
+    const a = mk()
+    const b = mk()
+    advanceRival(a, new Rng(99))
+    advanceRival(b, new Rng(99))
+    expect(a.rival!.focusId).toBe(b.rival!.focusId)
+    expect(RIVAL_FOCUSES.some((f) => f.id === a.rival!.focusId)).toBe(true)
+  })
+
+  it("advanceRival focus scoreBonus biases score growth deterministically", () => {
+    const c = makeChar({
+      rival: {
+        name: "Roderick",
+        class: "wizard",
+        factionId: null,
+        focusId: "war", // scoreBonus 2
+        powerLevel: 20,
+        age: 16,
+        location: "capital",
+        achievementsCount: 0,
+        score: 0,
+        lastAdvancedTurn: 0,
+      },
+    })
+    const d = makeChar({
+      rival: {
+        name: "Roderick",
+        class: "wizard",
+        factionId: null,
+        focusId: "lore", // scoreBonus 0
+        powerLevel: 20,
+        age: 16,
+        location: "capital",
+        achievementsCount: 0,
+        score: 0,
+        lastAdvancedTurn: 0,
+      },
+    })
+    // Same rng draws for both; the only difference is the focus bonus. Both
+    // consume identical rng sequences (same seed), so the score gap is exactly
+    // the bonus gap of whatever focus each ends on — rotated or not.
+    const rngA = new Rng(5)
+    const rngB = new Rng(5)
+    advanceRival(c, rngA)
+    advanceRival(d, rngB)
+    const bonus = RIVAL_FOCUSES.find((f) => f.id === c.rival!.focusId)!.scoreBonus - RIVAL_FOCUSES.find((f) => f.id === d.rival!.focusId)!.scoreBonus
+    expect(c.rival!.score - d.rival!.score).toBe(bonus)
   })
 
   it("advanceRival increases rival stats at season boundary", () => {

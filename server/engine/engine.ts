@@ -18,7 +18,13 @@ import type {
 } from "../../shared/types.js"
 import { STAT_KEYS } from "../../shared/types.js"
 import { Rng } from "../../shared/rng.js"
-import { CLAN_SPECIALTIES, GAME_CONFIG, arcForAge, RIVAL_NAMES } from "../../shared/config.js"
+import {
+  CLAN_SPECIALTIES,
+  GAME_CONFIG,
+  arcForAge,
+  RIVAL_FOCUSES,
+  RIVAL_NAMES,
+} from "../../shared/config.js"
 import type { ContentRegistry } from "../content/registry.js"
 import {
   adjustAffinity,
@@ -35,7 +41,7 @@ import {
   isBenched,
   isFatigued,
   isEligible,
-  localizeLocation,
+  buildRivalUpdate,
   joinClan,
   leaveClanAmicably,
   localize,
@@ -182,6 +188,8 @@ export function generateRival(c: CharacterState, registry: ContentRegistry, rng:
     name,
     class: rivalClass,
     factionId: faction,
+    // The rival starts with a seasonal focus picked via the seeded rng.
+    focusId: rng.pick(RIVAL_FOCUSES).id,
     powerLevel: c.powerLevel - rng.int(0, 5),
     age: c.age,
     location: "distant lands",
@@ -296,13 +304,23 @@ export function generateClanOffer(
 // ---------------------------------------------------------------------------
 
 export function advanceRival(c: CharacterState, rng: Rng): void {
-  if (!c.rival) return
-  c.rival.age = c.age
-  c.rival.powerLevel += rng.int(-1, 3)
-  c.rival.powerLevel = Math.max(0, c.rival.powerLevel)
-  c.rival.achievementsCount += rng.bool(0.15) ? 1 : 0
-  c.rival.score += rng.int(0, 5)
-  c.rival.lastAdvancedTurn = c.turn
+  const rival = c.rival
+  if (!rival) return
+  rival.age = c.age
+  rival.powerLevel += rng.int(-1, 3)
+  rival.powerLevel = Math.max(0, rival.powerLevel)
+  rival.achievementsCount += rng.bool(0.15) ? 1 : 0
+  // Rotate the seasonal focus via the seeded rng (deterministic per daily seed):
+  // most seasons the rival stays on the same crusade, sometimes it shifts.
+  // Legacy rivals without a focus always converge to one on their first advance.
+  const focusPool = RIVAL_FOCUSES.filter((f) => f.id !== rival.focusId)
+  if (!rival.focusId || rng.bool(0.4)) {
+    rival.focusId = rng.pick(focusPool.length > 0 ? focusPool : RIVAL_FOCUSES).id
+  }
+  // The focus biases score growth (config-tuned, deterministic — no extra draws).
+  const focusBonus = RIVAL_FOCUSES.find((f) => f.id === rival.focusId)?.scoreBonus ?? 0
+  rival.score += rng.int(0, 5) + focusBonus
+  rival.lastAdvancedTurn = c.turn
   // Random flavor updates.
   const locations = [
     "the northern reaches",
@@ -311,7 +329,7 @@ export function advanceRival(c: CharacterState, rng: Rng): void {
     "distant shores",
     "the court",
   ]
-  c.rival.location = rng.pick(locations)
+  rival.location = rng.pick(locations)
 }
 
 // Pick the event/minigame for the upcoming turn. Deterministic via the run rng.
@@ -856,16 +874,8 @@ export function buildServedEvent(
       served.stipendEarned = seasonStipendFor(c, c.currentClanId, registry)
     }
 
-    // Rival update.
-    if (c.rival) {
-      const rv = c.rival
-      const rvClassName = registry.classesById.get(rv.class)?.name
-      const rvClass = rvClassName ? localize(rvClassName, c.locale) : rv.class
-      served.rivalUpdate =
-        c.locale === "en"
-          ? `${rv.name} (${rvClass}) is active in ${localizeLocation(rv.location, c.locale)}. Power: ${rv.powerLevel}, score: ${rv.score}`
-          : `${rv.name} (${rvClass}) está activo en ${localizeLocation(rv.location, c.locale)}. Poder: ${rv.powerLevel}, puntos: ${rv.score}`
-    }
+    // Rival update: name, class, location, seasonal focus, power/score.
+    served.rivalUpdate = buildRivalUpdate(c, registry, c.locale)
 
     return { event: ev, served, finaleStage: undefined }
   }

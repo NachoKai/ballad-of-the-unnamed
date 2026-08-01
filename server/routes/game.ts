@@ -18,7 +18,7 @@ import {
   generateRichEpilogueData,
   computeLegacyScore,
 } from "../engine/epilogue.js"
-import { localize, localizeLocation, peakReputation } from "../engine/helpers.js"
+import { buildRivalUpdate, localize, peakReputation } from "../engine/helpers.js"
 import {
   createRun,
   getRun,
@@ -206,13 +206,7 @@ gameRouter.get("/state", async (req: Request, res: Response) => {
               : "Una Temporada de Dificultades"
 
       if (run.character.rival) {
-        const rv = run.character.rival
-        const rvClassName = registry.classesById.get(rv.class)?.name
-        const rvClass = rvClassName ? localize(rvClassName, locale) : rv.class
-        served.rivalUpdate =
-          locale === "en"
-            ? `${rv.name} (${rvClass}) is active in ${localizeLocation(rv.location, locale)}. Power: ${rv.powerLevel}, score: ${rv.score}`
-            : `${rv.name} (${rvClass}) está activo en ${localizeLocation(rv.location, locale)}. Poder: ${rv.powerLevel}, puntos: ${rv.score}`
+        served.rivalUpdate = buildRivalUpdate(run.character, registry, locale)
       }
     }
   }

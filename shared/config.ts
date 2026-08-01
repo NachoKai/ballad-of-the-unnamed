@@ -141,6 +141,25 @@ export function affinityTierId(value: number): string {
   return id
 }
 
+// The rival's seasonal focus — what they're "about" this season (Puntero's
+// Escándalo / Comunidad / Pasillos...). Shown in the HUD, flavors the season-
+// summary rivalUpdate, and lightly biases how fast their score grows.
+// `scoreBonus` is deterministic (no rng), so daily runs stay reproducible.
+// NOTE: keep the en/es labels here in sync with `rivalFocus_*` in
+// src/i18n/strings.ts (the HUD chip localizes via that table).
+export const RIVAL_FOCUSES: {
+  id: string
+  label: { en: string; es: string }
+  scoreBonus: number
+}[] = [
+  { id: "conquest", label: { en: "Conquest", es: "Conquista" }, scoreBonus: 1 },
+  { id: "treasure", label: { en: "Treasure", es: "Tesoro" }, scoreBonus: 1 },
+  { id: "court", label: { en: "Court Intrigue", es: "Intriga de Corte" }, scoreBonus: 0 },
+  { id: "war", label: { en: "Open War", es: "Guerra Abierta" }, scoreBonus: 2 },
+  { id: "lore", label: { en: "Lost Lore", es: "Saber Perdido" }, scoreBonus: 0 },
+  { id: "crown", label: { en: "The Crown", es: "La Corona" }, scoreBonus: 1 },
+]
+
 // Rival name pool for archrival generation.
 export const RIVAL_NAMES: string[] = [
   "Roderick",

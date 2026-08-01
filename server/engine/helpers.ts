@@ -13,7 +13,13 @@ import type {
 import { STAT_KEYS } from "../../shared/types.js"
 import type { Rng } from "../../shared/rng.js"
 import type { ContentRegistry } from "../content/registry.js"
-import { reputationTierId, affinityTierId, GAME_CONFIG, rarityRank } from "../../shared/config.js"
+import {
+  affinityTierId,
+  GAME_CONFIG,
+  rarityRank,
+  reputationTierId,
+  RIVAL_FOCUSES,
+} from "../../shared/config.js"
 import { genderize } from "../../shared/genderize.js"
 
 // Fill {slot:pool} placeholders in a narrative string deterministically.
@@ -467,6 +473,39 @@ export function applyAgeDecline(c: CharacterState): void {
       if (c[k] > 0) c[k] -= 1
     }
   }
+}
+
+// ---- Rival seasonal focus ----
+
+// Localized label for a rival's seasonal focus id (see RIVAL_FOCUSES in
+// config). Empty string for unknown/legacy ids so callers can omit the clause.
+export function rivalFocusLabel(focusId: string | undefined, locale: Locale): string {
+  const focus = RIVAL_FOCUSES.find((f) => f.id === focusId)
+  if (!focus) return ""
+  return localize(focus.label, locale)
+}
+
+// The season-summary rival update line: who, where, their seasonal focus, and
+// power/score. Shared by the engine serve path and the /state resume route so
+// the text never drifts between a live serve and a page reload.
+export function buildRivalUpdate(
+  c: CharacterState,
+  registry: ContentRegistry,
+  locale: Locale,
+): string {
+  const rv = c.rival
+  if (!rv) return ""
+  const rvClassName = registry.classesById.get(rv.class)?.name
+  const rvClass = rvClassName ? localize(rvClassName, locale) : rv.class
+  const focus = rivalFocusLabel(rv.focusId, locale)
+  const focusClause = focus
+    ? locale === "en"
+      ? `, chasing ${focus}`
+      : `, persiguiendo ${focus}`
+    : ""
+  return locale === "en"
+    ? `${rv.name} (${rvClass}) is active in ${localizeLocation(rv.location, locale)}${focusClause}. Power: ${rv.powerLevel}, score: ${rv.score}`
+    : `${rv.name} (${rvClass}) está activo en ${localizeLocation(rv.location, locale)}${focusClause}. Poder: ${rv.powerLevel}, puntos: ${rv.score}`
 }
 
 const LOCALE_LOCATION: Record<string, string> = {
