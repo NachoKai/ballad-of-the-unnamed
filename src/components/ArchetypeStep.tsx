@@ -61,7 +61,7 @@ const BackRow = styled.div`
 const Heading = styled.h2`
   text-align: center;
   font-family: ${({ theme }) => theme.fonts.display};
-  font-size: 22px;
+  font-size: 23px;
   color: ${({ theme }) => theme.colors.goldBright};
   margin-bottom: 20px;
 `
@@ -112,13 +112,13 @@ const IconWrap = styled.div`
 const Name = styled.h3`
   color: ${({ theme }) => theme.colors.goldBright};
   font-family: ${({ theme }) => theme.fonts.display};
-  font-size: 19px;
+  font-size: 20px;
   margin-bottom: 6px;
 `
 
 const Flavor = styled.p`
   color: ${({ theme }) => theme.colors.parchmentDim};
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1.5;
   margin-bottom: 14px;
   min-height: 42px;
@@ -139,7 +139,7 @@ const StatChip = styled.span`
   border: 1px solid ${({ theme }) => theme.colors.line};
   border-radius: 999px;
   padding: 2px 9px;
-  font-size: 12px;
+  font-size: 13px;
   color: ${({ theme }) => theme.colors.muted};
 
   b {

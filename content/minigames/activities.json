@@ -97,11 +97,12 @@
       "fail": {
         "reputationDelta": -3,
         "reputationFaction": "arcanum",
+        "liabilityDelta": 12,
         "injuryRiskDelta": 0.3,
         "countersReset": ["heist_streak"],
         "narrative": {
-          "en": "The vault seals behind you. Magic binds your limbs as the Arcanum's wardens close in. This will cost you.",
-          "es": "La bóveda se sella detrás de vos. La magia atrapa tus miembros mientras los guardianes del Arcanum se acercan. Esto te va a costar."
+          "en": "The vault seals behind you. Magic binds your limbs as the Arcanum's wardens close in. They know your face now — this will cost you, and not just in gold.",
+          "es": "La bóveda se sella detrás de vos. La magia atrapa tus miembros mientras los guardianes del Arcanum se acercan. Ahora conocen tu cara — esto te va a costar, y no solo en oro."
         }
       }
     }

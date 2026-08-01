@@ -28,14 +28,14 @@ export const GAME_CONFIG = {
   destinyCardYears: 10,
 
   // Tournament arc frequency: a playable tournament arc (intro → N fixtures →
-  // honor beat) is rng-gated to fire roughly once every N in-game years (§22).
+  // honor beat) is rng-gated to fire roughly once every N in-game years.
   tournamentCadenceYears: 6,
 
-  // §20 bench mechanic: turns a character sits "on the bench" after over-
+  // Bench mechanic: turns a character sits "on the bench" after over-
   // reaching into a clan far above their level (stat gains reduced meanwhile).
   benchDurationTurns: 6,
 
-  // §24 negotiation dial: base success chance, charisma contribution, and the
+  // Negotiation dial: base success chance, charisma contribution, and the
   // improved terms on a successful "press for more gold" roll.
   negotiationBaseChance: 0.55,
   negotiationCharismaCoeff: 0.02,
@@ -58,6 +58,14 @@ export const GAME_CONFIG = {
   forcedRecoveryTurns: 3,
   // Stamina restored by a forced recovery turn.
   forcedRecoveryRestore: 40,
+
+  // Liability ("Expediente"): what the realm knows of your darker deeds.
+  // Starts at 0; shady choices accrue it, a little decays each season so it
+  // isn't a death spiral. Above the notorious threshold the HUD tints blood-
+  // red and the underworld starts seeking you out (requiresLiability events).
+  liabilityMax: 100,
+  liabilityDecayPerSeason: 1,
+  liabilityNotoriousThreshold: 50,
 
   // Top 0.1% of all-time runs get promoted to "legendary" tier.
   legendaryThresholdPercentile: 0.999,

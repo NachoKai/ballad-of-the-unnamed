@@ -111,10 +111,73 @@
           "dexterity": 3
         },
         "goldDelta": 80,
+        "liabilityDelta": 12,
         "injuryRiskDelta": 0.08,
         "narrative": {
-          "en": "Gold slides your way. Nobody saw it. Probably.",
-          "es": "El oro se desliza hacia vos. Nadie lo vio. Probablemente."
+          "en": "Gold slides your way. Nobody saw it. Probably — but the house has a long memory for loaded dice.",
+          "es": "El oro se desliza hacia vos. Nadie lo vio. Probablemente — pero la casa tiene memoria larga para los dados cargados."
+        }
+      }
+    ]
+  },
+  {
+    "id": "tavern_blackmailer",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "requiresLiability": {
+      "min": 20
+    },
+    "narrative": {
+      "en": "A hooded figure slides onto the bench across from you in {locationName}. 'I know what you did,' they murmur, tapping a coin on the table. 'The question is what it's worth to you that I keep quiet.'",
+      "es": "Una figura encapuchada se desliza al banco frente a vos en {locationName}. 'Sé lo que hiciste', murmura, golpeando una moneda sobre la mesa. 'La cuestión es cuánto vale para vos que me calle.'"
+    },
+    "choices": [
+      {
+        "id": "pay",
+        "label": {
+          "en": "Pay them off — quietly",
+          "es": "Comprar su silencio — en voz baja"
+        },
+        "tag": "Strategic",
+        "rarity": "uncommon",
+        "goldDelta": -120,
+        "liabilityDelta": -8,
+        "narrative": {
+          "en": "The coins vanish into their sleeve. 'A pleasure doing business.' The shadow melts back into the crowd — for now.",
+          "es": "Las monedas desaparecen en su manga. 'Un placer hacer negocios.' La sombra se funde en la multitud — por ahora."
+        }
+      },
+      {
+        "id": "defy",
+        "label": {
+          "en": "Refuse — let them spread their tales",
+          "es": "Negarte — que cuenten sus cuentos"
+        },
+        "tag": "Confident",
+        "rarity": "rare",
+        "liabilityDelta": 10,
+        "fameDelta": -4,
+        "injuryRiskDelta": 0.05,
+        "narrative": {
+          "en": "You stare them down until they leave. The tale spreads, twisted — half the tavern believes it, half laughs. Either way, your name gets dirtier.",
+          "es": "Los enfrentás con la mirada hasta que se van. El cuento se esparce, torcido — media taberna lo cree, la otra se ríe. De cualquier modo, tu nombre se ensucia."
+        }
+      },
+      {
+        "id": "silence",
+        "label": {
+          "en": "Ensure they never speak of it again",
+          "es": "Asegurarte de que nunca vuelvan a hablar"
+        },
+        "tag": "Aggressive",
+        "rarity": "volatile",
+        "liabilityDelta": 15,
+        "goldDelta": 200,
+        "injuryRiskDelta": 0.2,
+        "narrative": {
+          "en": "A dark alley, a muffled sound, an emptied purse. It is done — but the deed has weight, and the shadows saw more than you think.",
+          "es": "Un callejón oscuro, un sonido ahogado, una bolsa vaciada. Está hecho — pero el acto pesa, y las sombras vieron más de lo que creés."
         }
       }
     ]

@@ -634,7 +634,7 @@ In `resolveChoice()`: if the chosen `choiceId` maps to a choice whose `requiresS
 
 ---
 
-## Step 12: Choice Before→After Previews
+## Step 12: Choice Before→After Previews (I dont like this one, dont implement it)
 
 **Goal**: On every choice card show the projected effect as "current → after (+delta)" (Puntero's "Imagen 30 → 33 (+3)"), so the player sees exactly what each pick does to their sheet before committing.
 
@@ -898,7 +898,7 @@ Step 8: Graduated Achievements            → 1 hour (content only)
 Step 9: Cross-Run Trophy Hall             → 3-4 hours (full stack)
 Step 10: Elite Leaderboard Split          → 2-3 hours (backend + frontend)
 Step 11: Stat-Gated Choices               → 2-3 hours (engine + content + UI)
-Step 12: Choice Before→After Previews     → 1 hour (pure UI)
+Step 12: Choice Before→After Previews     → 1 hour (pure UI)  (I dont like this one, dont implement it)
 Step 13: Liability Meter (Expediente)     → 2-3 hours (engine + content + UI)
 Step 14: Rival Focus Label                → 1 hour (config + engine + UI)
 Step 15: Minigame Trap Cards              → 1-2 hours (engine + content)

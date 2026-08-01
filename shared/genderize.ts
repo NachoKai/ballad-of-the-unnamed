@@ -36,7 +36,7 @@ const MASCULINE_TO_GENDERED: Record<string, string> = {
   explorador: "exploradora",
   extraño: "extraña",
   francotirador: "francotiradora",
-  guardiano: "guardiana",
+  guardian: "guardiana",
   infiltrador: "infiltradora",
   inquisidor: "inquisidora",
   ladrón: "ladrona",

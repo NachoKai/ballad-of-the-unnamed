@@ -100,7 +100,7 @@ gameRouter.post("/new", async (req: Request, res: Response) => {
     const locale = localeOf(req)
     const gender: Gender =
       req.body?.gender === "male" || req.body?.gender === "female" ? req.body.gender : "male"
-    // §20 origin dial: humble (poor start, underdog pool) or established.
+    // origin dial: humble (poor start, underdog pool) or established.
     const origin = req.body?.origin === "established" ? "established" : "humble"
 
     if (!registry.classesById.has(classId)) {
@@ -375,10 +375,12 @@ gameRouter.post("/choose", async (req: Request, res: Response) => {
 
       c.epithet = epithetData.title
 
-      // Final achievement pass now that score is known.
+      // Final achievement pass now that score is known. runEnded gates
+      // end-of-life achievements (e.g. A Clean Conscience).
       const finalAch = evaluateAchievements(run.character, registry, {
         endingType: outcome.endingType,
         scoreSoFar: score,
+        runEnded: true,
       })
       newAchievements.push(...finalAch)
 

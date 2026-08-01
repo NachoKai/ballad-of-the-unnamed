@@ -91,7 +91,7 @@ export function loadContent(): ContentRegistry {
     validateLocaleMap(name, `tier ${id}`)
   }
 
-  // §19/§21: region names (bilingual), keyed by region id.
+  //  region names (bilingual), keyed by region id.
   const regions = readJson<Record<string, LocaleMap>>("regions.json")
   for (const [id, name] of Object.entries(regions)) {
     validateLocaleMap(name, `region ${id}`)

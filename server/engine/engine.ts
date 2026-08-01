@@ -22,6 +22,7 @@ import { CLAN_SPECIALTIES, GAME_CONFIG, arcForAge, RIVAL_NAMES } from "../../sha
 import type { ContentRegistry } from "../content/registry.js"
 import {
   adjustAffinity,
+  adjustLiability,
   adjustReputation,
   applyAgeDecline,
   applyClanBetrayal,
@@ -75,10 +76,10 @@ export function createCharacter(input: {
       throw new Error(`unknown archetype ${input.archetypeId} for class ${input.classId}`)
   }
 
-  // §20 origin dial: pacing/identity only, no stat math.
+  //origin dial: pacing/identity only, no stat math.
   const origin: Origin = input.origin ?? "humble"
   const goldMult = origin === "humble" ? 0.5 : 1
-  // §19 identity axis: home faction + region are set once and never change.
+  // identity axis: home faction + region are set once and never change.
   const homeFactionId = cls.startingFaction ?? "ironhold"
   const homeRegion = regionOf(homeFactionId, registry)
   const startingGold = Math.round((cls.startingGold ?? 20) * goldMult)
@@ -108,6 +109,8 @@ export function createCharacter(input: {
     health: GAME_CONFIG.startingHealth,
     fame: 0,
     gold: startingGold,
+    //  liability: every life begins with a clean record.
+    liability: 0,
     marketValue: startingGold * 2,
     marketValuePeak: startingGold * 2,
     momentum: "normal",
@@ -281,7 +284,7 @@ export function generateClanOffer(
       stipend,
       perkLabel: `+${signingGold}g signing, +${stipend}g/season`,
       icon: "🏛️",
-      // §20: telegraph the bench risk on the offer itself, before the player picks.
+      // telegraph the bench risk on the offer itself, before the player picks.
       roleSignal: roleSignalFor(c, f.id, registry),
     })
   }
@@ -446,7 +449,7 @@ export function retirementOfferEvent(): EventContent {
 }
 
 // ---------------------------------------------------------------------------
-// §24 negotiation follow-up
+// negotiation follow-up
 // ---------------------------------------------------------------------------
 
 // Served after the player picks a clan offer but before the join finalizes.
@@ -504,7 +507,7 @@ export function negotiationFollowUpEvent(
 }
 
 // ---------------------------------------------------------------------------
-// §22 whole-arc tournaments
+// whole-arc tournaments
 // ---------------------------------------------------------------------------
 
 const TOURNAMENT_NAMES: Record<string, { en: string; es: string }> = {
@@ -519,7 +522,7 @@ function tournamentName(nameKey: string, locale: Locale): string {
 }
 
 // A tournament arc can start roughly once per tournamentCadenceYears, rng-gated
-// like destiny cards (§22). Uses the season guard so it can't double-fire.
+// like destiny cards. Uses the season guard so it can't double-fire.
 function wouldBeTournamentTurn(c: CharacterState): boolean {
   if (c.turn === 0 || c.age < 16) return false
   if ((c.lastTournamentSeason ?? -1) >= c.seasonCount) return false
@@ -652,7 +655,7 @@ export function tournamentFixtureEvent(c: CharacterState): EventContent {
   }
 }
 
-// Honor beat served after the last fixture resolves (§22 → §23).
+// Honor beat served after the last fixture resolves.
 export function tournamentOutcomeEvent(c: CharacterState, registry: ContentRegistry): EventContent {
   const res = c.pendingTournamentResult
   const won = res?.won ?? false
@@ -785,7 +788,7 @@ export function buildServedEvent(
       finaleStage: stage,
     }
   }
-  // §24 negotiation follow-up: the player picked a clan offer last turn and
+  // negotiation follow-up: the player picked a clan offer last turn and
   // must now accept or press for more gold (risking the whole deal).
   if (c.pendingJoinOffer) {
     const ev = negotiationFollowUpEvent(c, registry)
@@ -795,7 +798,7 @@ export function buildServedEvent(
       finaleStage: undefined,
     }
   }
-  // §22 honor beat served after the last tournament fixture resolves.
+  // honor beat served after the last tournament fixture resolves.
   if (c.pendingTournamentResult) {
     const ev = tournamentOutcomeEvent(c, registry)
     return {
@@ -804,7 +807,7 @@ export function buildServedEvent(
       finaleStage: undefined,
     }
   }
-  // §22 an in-progress tournament continues before any other beat.
+  // an in-progress tournament continues before any other beat.
   if (c.pendingTournament) {
     const ev = tournamentFixtureEvent(c)
     return {
@@ -975,7 +978,7 @@ export function buildServedEvent(
       finaleStage: undefined,
     }
   }
-  // §22 whole-arc tournament intro: rng-gated to fire roughly once per cadence.
+  // whole-arc tournament intro: rng-gated to fire roughly once per cadence.
   if (wouldBeTournamentTurn(c) && rng.bool(0.5)) {
     c.lastTournamentSeason = c.seasonCount
     const nameKey = rng.pick(Object.keys(TOURNAMENT_NAMES))
@@ -1000,6 +1003,10 @@ export function buildServedEvent(
 export function resolveSeasonSummary(c: CharacterState, registry: ContentRegistry): void {
   c.seasonCount += 1
   c.turn += 1
+  //  liability: the underworld's memory fades slowly, a season at a time.
+  if (GAME_CONFIG.liabilityDecayPerSeason > 0) {
+    adjustLiability(c, -GAME_CONFIG.liabilityDecayPerSeason)
+  }
   // Faction stipend: a faction pays its members each season.
   if (c.currentClanId) {
     c.gold += seasonStipendFor(c, c.currentClanId, registry)
@@ -1037,7 +1044,7 @@ function applyStatDeltas(c: CharacterState, deltas?: StatDeltas, multiplier = 1)
   if (!deltas) return 0
   let net = 0
   const fatigue = isFatigued(c) ? 0.5 : 1
-  // §20 bench penalty: over-reaching into a big clan means reduced stat gains
+  // bench penalty: over-reaching into a big clan means reduced stat gains
   // until the power level catches up (isBenched reads benchedUntilTurn).
   const bench = isBenched(c) ? 0.8 : 1
   for (const k of STAT_KEYS) {
@@ -1211,7 +1218,7 @@ export function resolveChoice(
 
   // Clan joining through a choice.
   if (choice.joinClanId) {
-    // §24 negotiation dial: picking a clan offer defers the actual join so the
+    // negotiation dial: picking a clan offer defers the actual join so the
     // player can press for more gold (risking the deal) on a follow-up choice.
     if (event.id === "__clan_offer__" || event.id === "__clan_poach__") {
       c.pendingJoinOffer = {
@@ -1237,7 +1244,7 @@ export function resolveChoice(
     leaveClanAmicably(c, c.turn)
   }
 
-  // §24 negotiation follow-up resolution: accept, or press for more gold (the
+  // negotiation follow-up resolution: accept, or press for more gold (the
   // greed dial — success improves terms, failure withdraws the whole offer).
   let negotiationNarrative: string | null = null
   if (event.id === "__clan_offer_negotiate__") {
@@ -1285,14 +1292,14 @@ export function resolveChoice(
     }
   }
 
-  // §22 tournament intro: choose the resolution mode once for the whole arc.
+  // tournament intro: choose the resolution mode once for the whole arc.
   if (event.id === "__tournament_intro__") {
     const nameKey = (c.flags["pendingTournamentNameKey"] as string) ?? "grand_melee"
     const mode = choice.id === "mode_skill" ? "skill" : "luck"
     c.pendingTournament = { mode, fixturesLeft: 3, won: 0, nameKey }
   }
 
-  // §22 tournament honor beat: rewards ride on the choice deltas; clear the
+  // tournament honor beat: rewards ride on the choice deltas; clear the
   // stashed result so the next buildServedEvent serves a normal beat.
   if (event.id === "__tournament_outcome__") {
     c.pendingTournamentResult = null
@@ -1308,6 +1315,8 @@ export function resolveChoice(
   if (choice.reputationDelta) {
     adjustReputation(c, choice.reputationFaction ?? defaultFaction(c), choice.reputationDelta)
   }
+  //  liability: shady choices stain the record (clamped by adjustLiability).
+  if (choice.liabilityDelta) adjustLiability(c, choice.liabilityDelta)
 
   // Counters for scoring / achievements.
   const wonBattle =
@@ -1421,6 +1430,8 @@ export function resolveMinigame(
   if (outcome.reputationDelta) {
     adjustReputation(c, outcome.reputationFaction ?? defaultFaction(c), outcome.reputationDelta)
   }
+  //  liability: a failed roll or grave outcome can stain the record.
+  if (outcome.liabilityDelta) adjustLiability(c, outcome.liabilityDelta)
   if (outcome.countersDelta) {
     for (const [k, v] of Object.entries(outcome.countersDelta)) bumpCounter(c, k, v)
   }
@@ -1435,7 +1446,7 @@ export function resolveMinigame(
     bumpCounter(c, "battles_won")
   }
 
-  // §22 in-progress tournament: advance the bracket; when the last fixture
+  // in-progress tournament: advance the bracket; when the last fixture
   // resolves, stash the result so buildServedEvent serves the honor beat.
   if (isTournamentFixture && c.pendingTournament) {
     c.pendingTournament.fixturesLeft -= 1

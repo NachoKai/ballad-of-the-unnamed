@@ -49,7 +49,7 @@ export type Arc = "child" | "adventurer" | "mercenary" | "kingdom_hero" | "legen
 
 // Origin dial at creation: a pacing/identity choice (no stat math). Humble
 // starts poor with an underdog event pool; established starts with full gold
-// and a reputation head-start. See §20.
+// and a reputation head-start.
 export type Origin = "humble" | "established"
 
 // The minutes-signal on a clan offer: does joining this faction put you on the
@@ -127,6 +127,9 @@ export interface ChoiceContent {
   // Stat gating: the choice stays visible but locked unless the character's
   // stat meets the minimum. Server rejects locked picks regardless of client.
   requiresStat?: { stat: StatKey; min: number }
+  // Liability: shady choices and grave outcomes add to the "Expediente" —
+  // what the realm knows of your darker deeds. Clamped 0..liabilityMax.
+  liabilityDelta?: number
   statDeltas?: StatDeltas
   tradeoffDeltas?: StatDeltas // negative, only on volatile / some rare
   goldDelta?: number
@@ -178,6 +181,8 @@ export interface MinigameOutcome {
   reputationDelta?: number
   reputationFaction?: string
   injuryRiskDelta?: number
+  // Liability: a failed roll or grave outcome can stain the record.
+  liabilityDelta?: number
   countersDelta?: Record<string, number>
   countersReset?: string[]
   narrative: LocaleMap
@@ -220,6 +225,9 @@ export interface EventContent {
   requiresOrigin?: string
   excludesIfClanId?: string
   involvesRival?: boolean
+  // Liability gate: dark-path events only appear once the character's
+  // liability ("Expediente") reaches the minimum.
+  requiresLiability?: { min: number }
   weight: number
   location?: string
   narrative: LocaleMap
@@ -258,11 +266,17 @@ export type AchievementCondition =
   | { type: "relationship_affinity_lte"; value: number }
   | { type: "ending"; value: string }
   | { type: "status"; value: string }
-  // §23: the current clan's faction must be prestigious enough (league gate).
+  // the current clan's faction must be prestigious enough (league gate).
   | { type: "faction_wealth_gte"; value: number }
-  // §20: the run's origin dial and reputation at the (fixed) home faction.
+  // the run's origin dial and reputation at the (fixed) home faction.
   | { type: "origin"; value: Origin }
   | { type: "home_rep_gte"; value: number }
+  // liability ("Expediente") thresholds — clean vs. known in the underworld.
+  | { type: "liability_gte"; value: number }
+  | { type: "liability_lte"; value: number }
+  // only true on the final achievement pass (run ended) — gates
+  // end-of-life achievements like a clean-conscience finish.
+  | { type: "run_ended" }
   // Compound gate: all nested conditions must pass.
   | { type: "and"; conditions: AchievementCondition[] }
 
@@ -293,7 +307,7 @@ export interface FactionContent {
   // per-season stipend members receive — richer factions pay more.
   wealth: number
   // Region the faction calls home (see content/regions.json). Drives the
-  // Abroad/Home identity and region-gated event variants (§19, §21).
+  // Abroad/Home identity and region-gated event variants.
   region: string
 }
 
@@ -312,13 +326,13 @@ export interface CharacterState {
   epithet: string | null
   age: number
   currentArc: Arc
-  // §19 identity axis: home faction + region are fixed forever at creation and
+  // identity axis: home faction + region are fixed forever at creation and
   // never change no matter which clan the character joins. `currentRegion`
   // tracks where they currently ply their trade (home region when solo).
   homeFactionId: string
   homeRegion: string
   currentRegion: string
-  // §20 origin dial: humble (poor start, underdog pool) vs established.
+  // origin dial: humble (poor start, underdog pool) vs established.
   origin: Origin
   strength: number
   dexterity: number
@@ -329,6 +343,9 @@ export interface CharacterState {
   health: number
   fame: number
   gold: number
+  // Liability ("Expediente"): starts at 0; shady choices accrue it, slow
+  // natural decay per season. High liability gates the underworld's attention.
+  liability: number
   marketValue: number
   marketValuePeak: number
   momentum: Momentum
@@ -353,7 +370,7 @@ export interface CharacterState {
   lastEventId?: string | null
   // Consecutive turns spent at 0 stamina (forced recovery trigger).
   staminaZeroStreak?: number
-  // §20 bench mechanic: while this turn is in the future, the character is
+  // bench mechanic: while this turn is in the future, the character is
   // "riding the bench" at an over-reaching clan and stat gains are reduced.
   benchedUntilTurn?: number | null
   // Season (seasonCount) in which the last clan offer appeared. Clan offers
@@ -362,20 +379,20 @@ export interface CharacterState {
   lastClanOfferSeason?: number | null
   pendingFinaleType?: EndingType
   finaleStage2Choice?: { endingType: EndingType; risky: boolean }
-  // §24 negotiation dial: set when the player picks a clan offer, cleared once
+  // negotiation dial: set when the player picks a clan offer, cleared once
   // the follow-up accept/negotiate choice resolves. Defers the actual join so
   // pressing for more gold can collapse the deal.
   pendingJoinOffer?: { clanId: string; signingGold: number; stipend: number } | null
-  // §22 whole-arc tournament state. `mode` is chosen once at the arc's top.
+  // whole-arc tournament state. `mode` is chosen once at the arc's top.
   pendingTournament?: {
     mode: "luck" | "skill"
     fixturesLeft: number
     won: number
     nameKey: string
   } | null
-  // §22 result stashed when the last fixture resolves; served as the honor beat.
+  // result stashed when the last fixture resolves; served as the honor beat.
   pendingTournamentResult?: { won: boolean; nameKey: string } | null
-  // §22 season in which the last tournament arc started (at most once per cadence).
+  // season in which the last tournament arc started (at most once per cadence).
   lastTournamentSeason?: number | null
 }
 
@@ -409,6 +426,8 @@ export interface ServedChoice {
   // current character meets it (locked choices render dimmed + disabled).
   requiresStat?: { stat: StatKey; min: number }
   statMet?: boolean
+  // Liability delta surfaced so the card can warn of a stained record.
+  liabilityDelta?: number
 }
 
 export interface ServedEvent {
@@ -437,7 +456,7 @@ export interface ServedClanOffer {
   stipend: number
   perkLabel: string
   icon: string
-  // §20 minutes-signal: up/same/bench based on powerLevel vs faction wealth.
+  // Bench mechanic: up/same/bench based on powerLevel vs faction wealth.
   roleSignal?: RoleSignal
 }
 

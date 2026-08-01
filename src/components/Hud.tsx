@@ -1,9 +1,9 @@
-import { Globe, Home, Store, Swords, TriangleAlert } from "lucide-react"
+import { Globe, Home, Skull, Store, Swords, TriangleAlert } from "lucide-react"
 import type { CharacterState, Locale } from "@shared/types"
 import { STAT_KEYS } from "@shared/types"
 import { styled } from "styled-components"
 import { genderize } from "@shared/genderize"
-import { reputationTierId } from "@shared/config"
+import { GAME_CONFIG, reputationTierId } from "@shared/config"
 import { gt as translateFor, t as translate } from "../i18n/strings"
 import { STAT_ABBR } from "../constants"
 import { personalitySummary } from "../lib/personality"
@@ -106,14 +106,22 @@ export function Hud({ character: c, locale, onShopOpen }: Props) {
             {t("power")} <b>{c.powerLevel}</b>
           </Meter>
         </Tooltip>
+        <Tooltip content={t("tooltip_liability")}>
+          <LiabilityMeter
+            $high={(c.liability ?? 0) >= GAME_CONFIG.liabilityNotoriousThreshold}
+            $stained={(c.liability ?? 0) > 0}
+          >
+            {(c.liability ?? 0) >= GAME_CONFIG.liabilityNotoriousThreshold && (
+              <Skull size={12} aria-hidden="true" />
+            )}
+            {t("liability")} <b>{c.liability ?? 0}</b>
+          </LiabilityMeter>
+        </Tooltip>
         <Tooltip content={t("tooltip_mv")}>
           <Meter>
             MV <b>{c.marketValue}</b>
           </Meter>
         </Tooltip>
-        <MomentumTip content={t("tooltip_momentum")} align="end">
-          <MomentumBadge $variant={c.momentum}>{t(momentumKey)}</MomentumBadge>
-        </MomentumTip>
       </MetersRow>
 
       <AttributeRow>
@@ -129,8 +137,7 @@ export function Hud({ character: c, locale, onShopOpen }: Props) {
         ))}
       </AttributeRow>
 
-      {(primaryRep || topTags.length > 0 || c.rival || c.huntedBy) && (
-        <StatusRow>
+      <StatusRow>
           {primaryRep && (
             <Tooltip content={t("tooltip_reputation")}>
               <RepPill>
@@ -146,11 +153,13 @@ export function Hud({ character: c, locale, onShopOpen }: Props) {
             </Tooltip>
           )}
           {topTags.length > 0 && (
-            <TagPill>
-              {topTags
-                .map((tag) => translateFor(locale, c.gender, `personality_tag_${tag}`))
-                .join(" · ")}
-            </TagPill>
+            <Tooltip content={t("tooltip_personality")}>
+              <TagPill>
+                {topTags
+                  .map((tag) => translateFor(locale, c.gender, `personality_tag_${tag}`))
+                  .join(" · ")}
+              </TagPill>
+            </Tooltip>
           )}
           {c.rival && (
             <Tooltip content={t("tooltip_rival")}>
@@ -167,8 +176,10 @@ export function Hud({ character: c, locale, onShopOpen }: Props) {
               </HuntedBadge>
             </Tooltip>
           )}
+          <MomentumTip content={t("tooltip_momentum")} align="end">
+            <MomentumBadge $variant={c.momentum}>{t(momentumKey)}</MomentumBadge>
+          </MomentumTip>
         </StatusRow>
-      )}
     </HudWrap>
   )
 }
@@ -189,7 +200,7 @@ const ArchetypeTag = styled.span`
   padding: 1px 8px;
   border: 1px solid ${({ theme }) => theme.colors.line2};
   border-radius: 999px;
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: ${({ theme }) => theme.colors.muted};
@@ -215,7 +226,7 @@ const Name = styled.span`
   flex: 1;
   min-width: 0;
   font-family: ${({ theme }) => theme.fonts.display};
-  font-size: 20px;
+  font-size: 21px;
   color: ${({ theme }) => theme.colors.goldBright};
 `
 
@@ -227,16 +238,43 @@ const Meter = styled.span<{ $low?: boolean }>`
   background: ${({ theme }) => theme.colors.ink3};
   border: 1px solid ${({ $low, theme }) => ($low ? theme.colors.bloodBright : theme.colors.line)};
   border-radius: 999px;
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: 0.03em;
   color: ${({ $low, theme }) => ($low ? theme.colors.bloodBright : theme.colors.muted)};
   text-transform: uppercase;
 
   b {
-    font-size: 14px;
+    font-size: 15px;
     font-variant-numeric: tabular-nums;
     color: ${({ $low, theme }) => ($low ? theme.colors.bloodBright : theme.colors.parchment)};
     text-transform: none;
+  }
+`
+
+const LiabilityMeter = styled.span<{ $high?: boolean; $stained?: boolean }>`
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 11px;
+  background: ${({ $high, theme }) => ($high ? "rgba(191, 30, 30, 0.14)" : theme.colors.ink3)};
+  border: 1px solid ${({ $high, theme }) => ($high ? theme.colors.bloodBright : theme.colors.line)};
+  border-radius: 999px;
+  font-size: 13px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: ${({ $high, $stained, theme }) =>
+    $high ? theme.colors.bloodBright : $stained ? "#c9803c" : theme.colors.muted};
+  box-shadow: ${({ $high }) => ($high ? `0 0 12px rgba(191, 30, 30, 0.25)` : "none")};
+
+  b {
+    font-size: 15px;
+    font-variant-numeric: tabular-nums;
+    color: ${({ $high, theme }) => ($high ? theme.colors.bloodBright : theme.colors.parchment)};
+    text-transform: none;
+  }
+
+  svg {
+    flex-shrink: 0;
   }
 `
 
@@ -244,7 +282,7 @@ const MomentumBadge = styled.span<{ $variant: string }>`
   padding: 4px 12px;
   border: 1px solid ${({ theme }) => theme.colors.line2};
   border-radius: 999px;
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: ${({ $variant, theme }) =>
@@ -270,11 +308,11 @@ const StatPill = styled.span`
   border: 1px solid ${({ theme }) => theme.colors.line};
   border-radius: 999px;
   padding: 3px 10px;
-  font-size: 13px;
+  font-size: 14px;
   color: ${({ theme }) => theme.colors.parchment};
 
   b {
-    font-size: 15px;
+    font-size: 16px;
     font-variant-numeric: tabular-nums;
     color: ${({ theme }) => theme.colors.parchment};
     font-weight: 600;
@@ -285,7 +323,7 @@ const ArcPill = styled(StatPill)`
   border-color: ${({ theme }) => theme.colors.gold};
   color: ${({ theme }) => theme.colors.goldBright};
   text-transform: uppercase;
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.1em;
 `
 
@@ -297,7 +335,7 @@ const ShopBtn = styled.button`
   border: 1px solid ${({ theme }) => theme.colors.line};
   border-radius: 999px;
   padding: 5px 14px;
-  font-size: 13px;
+  font-size: 14px;
   color: ${({ theme }) => theme.colors.gold};
   cursor: pointer;
   transition: all 0.12s;
@@ -318,7 +356,7 @@ const InvBadge = styled.span`
   border-radius: 999px;
   background: ${({ theme }) => theme.colors.gold};
   color: ${({ theme }) => theme.colors.ink};
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
 `
 
@@ -330,7 +368,7 @@ const ClanTag = styled.span`
   padding: 2px 8px;
   border: 1px solid ${({ theme }) => theme.colors.sage};
   border-radius: 999px;
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: ${({ theme }) => theme.colors.sage};
@@ -345,7 +383,7 @@ const HomeTag = styled.span`
   padding: 2px 8px;
   border: 1px solid ${({ theme }) => theme.colors.gold};
   border-radius: 999px;
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: ${({ theme }) => theme.colors.gold};
@@ -360,7 +398,7 @@ const AbroadTag = styled.span`
   padding: 2px 8px;
   border: 1px solid ${({ theme }) => theme.colors.line2};
   border-radius: 999px;
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: ${({ theme }) => theme.colors.muted};
@@ -374,12 +412,12 @@ const RivalBadge = styled.span`
   padding: 3px 10px;
   border: 1px solid ${({ theme }) => theme.colors.bloodBright};
   border-radius: 999px;
-  font-size: 12px;
+  font-size: 13px;
   color: ${({ theme }) => theme.colors.bloodBright};
   letter-spacing: 0.04em;
 
   b {
-    font-size: 14px;
+    font-size: 15px;
     font-variant-numeric: tabular-nums;
     font-weight: 600;
     color: ${({ theme }) => theme.colors.parchment};
@@ -394,7 +432,7 @@ const HuntedBadge = styled.span`
   background: rgba(191, 30, 30, 0.12);
   border: 1px solid ${({ theme }) => theme.colors.bloodBright};
   border-radius: 999px;
-  font-size: 11px;
+  font-size: 12px;
   color: ${({ theme }) => theme.colors.bloodBright};
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -407,7 +445,7 @@ const RepPill = styled.span`
   padding: 3px 10px;
   border: 1px solid ${({ theme }) => theme.colors.gold};
   border-radius: 999px;
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.06em;
   color: ${({ theme }) => theme.colors.gold};
   text-transform: uppercase;
@@ -420,7 +458,7 @@ const TagPill = styled.span`
   padding: 3px 10px;
   border: 1px solid ${({ theme }) => theme.colors.sage};
   border-radius: 999px;
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.04em;
   color: ${({ theme }) => theme.colors.sage};
 `

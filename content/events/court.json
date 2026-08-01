@@ -214,9 +214,77 @@
           "constitution": -2
         },
         "goldDelta": 180,
+        "liabilityDelta": 10,
         "narrative": {
           "en": "You bleed both houses for coin. Brilliant, exhausting, and never quite safe again.",
           "es": "Sacás oro de ambas casas. Brillante, agotador, y nunca del todo seguro otra vez."
+        }
+      }
+    ]
+  },
+  {
+    "id": "court_witness",
+    "minAge": 20,
+    "maxAge": 99,
+    "weight": 5,
+    "requiresLiability": {
+      "min": 40
+    },
+    "narrative": {
+      "en": "A courtier you do not recognize catches your arm in a quiet corridor. 'I was there the night of the fire at {locationName},' she says softly. 'I saw your face. The council need not know — but I have debts.'",
+      "es": "Un cortesano al que no reconocés te toma del brazo en un corredor vacío. 'Estuve la noche del incendio en {locationName}', dice en voz baja. 'Vi tu cara. El consejo no tiene por qué saberlo — pero tengo deudas.'"
+    },
+    "choices": [
+      {
+        "id": "settle",
+        "label": {
+          "en": "Settle her debts, quietly",
+          "es": "Pagar sus deudas, en silencio"
+        },
+        "tag": "Professional",
+        "rarity": "uncommon",
+        "goldDelta": -200,
+        "liabilityDelta": -12,
+        "reputationDelta": 3,
+        "reputationFaction": "crownguard",
+        "narrative": {
+          "en": "Gold changes hands. She nods once, and the secret stays buried — at least where the council can see.",
+          "es": "El oro cambia de manos. Asiente una vez, y el secreto queda enterrado — al menos donde el consejo puede ver."
+        }
+      },
+      {
+        "id": "threaten",
+        "label": {
+          "en": "Threaten her with worse",
+          "es": "Amenazarla con algo peor"
+        },
+        "tag": "Cocky",
+        "rarity": "rare",
+        "requiresStat": {
+          "stat": "charisma",
+          "min": 15
+        },
+        "liabilityDelta": 8,
+        "narrative": {
+          "en": "You lean close and paint a very quiet picture of what happens to courtiers who remember too much. She pales and looks away. The debt is hers now.",
+          "es": "Te acercás y pintás un cuadro muy silencioso de lo que les pasa a los cortesanos que recuerdan demasiado. Palidece y desvía la mirada. Ahora la deuda es suya."
+        }
+      },
+      {
+        "id": "confess",
+        "label": {
+          "en": "Speak first — own it before the council",
+          "es": "Hablar primero — confesarlo ante el consejo"
+        },
+        "tag": "Humble",
+        "rarity": "volatile",
+        "liabilityDelta": -30,
+        "fameDelta": -15,
+        "reputationDelta": 10,
+        "reputationFaction": "crownguard",
+        "narrative": {
+          "en": "You walk into the council chamber and lay the whole ugly tale bare. The halls ring with your name for a season — some praise the honesty, others smell blood.",
+          "es": "Entrás a la cámara del consejo y exponés toda la historia fea. Los salones resuenan con tu nombre durante una temporada — unos alaban la honestidad, otros huelen la sangre."
         }
       }
     ]

@@ -239,6 +239,7 @@
         },
         "goldDelta": 500,
         "fameDelta": -10,
+        "liabilityDelta": 18,
         "narrative": {
           "en": "The fall looks accidental. The purse is heavy. But the whispers about the outlander who sold a match follow you like a shadow.",
           "es": "La caída parece accidental. La bolsa pesa. Pero los rumores sobre el forastero que vendió un combate te siguen como una sombra."
@@ -256,6 +257,7 @@
           "intelligence": 3
         },
         "goldDelta": 150,
+        "liabilityDelta": 6,
         "narrative": {
           "en": "You play the greedy fool, take the advance, then win the bout anyway. The stranger's face, from the stands, is worth every coin of the advance.",
           "es": "Haceś el papel del necio ambicioso, tomás el adelanto y luego ganás el combate igual. La cara del desconocido, desde la tribuna, vale cada moneda del adelanto."

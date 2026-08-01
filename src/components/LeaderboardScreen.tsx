@@ -175,7 +175,7 @@ const BoardHeader = styled.header`
   margin: 18px 0 10px;
 
   h1 {
-    font-size: clamp(26px, 4vw, 38px);
+    font-size: clamp(27px, 4vw, 39px);
     color: ${({ theme }) => theme.colors.goldBright};
   }
 `
@@ -193,7 +193,7 @@ const TabBtn = styled.button<{ $active: boolean }>`
   padding: 9px 18px;
   color: ${({ $active, theme }) => ($active ? theme.colors.ink : theme.colors.muted)};
   font-family: ${({ theme }) => theme.fonts.display};
-  font-size: 14px;
+  font-size: 15px;
   letter-spacing: 0.04em;
   font-weight: ${({ $active }) => ($active ? 600 : 400)};
 `
@@ -212,7 +212,7 @@ const CatBtn = styled.button<{ $active: boolean }>`
   border-radius: ${({ theme }) => theme.radii.sm};
   color: ${({ $active, theme }) => ($active ? theme.colors.gold : theme.colors.muted)};
   font-family: ${({ theme }) => theme.fonts.display};
-  font-size: 13px;
+  font-size: 14px;
   letter-spacing: 0.04em;
   font-weight: ${({ $active }) => ($active ? 600 : 400)};
 `
@@ -238,7 +238,7 @@ const BoardRow = styled.div`
   }
 
   > span {
-    font-size: 16px;
+    font-size: 17px;
     color: ${({ theme }) => theme.colors.parchmentDim};
     overflow: hidden;
     text-overflow: ellipsis;
@@ -255,7 +255,7 @@ const BoardRowHead = styled(BoardRow)`
 
   > span {
     font-family: ${({ theme }) => theme.fonts.display};
-    font-size: 12px;
+    font-size: 13px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: ${({ theme }) => theme.colors.gold};
@@ -284,14 +284,14 @@ const CellName = styled.span`
 `
 
 const EpithetLabel = styled.span`
-  font-size: 11px;
+  font-size: 12px;
   color: ${({ theme }) => theme.colors.gold};
   letter-spacing: 0.06em;
   font-weight: 400;
 `
 
 const EndingTag = styled.span<{ $ending: EndingType }>`
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: ${({ $ending }) => ENDING_COLOR[$ending]};

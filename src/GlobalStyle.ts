@@ -36,7 +36,7 @@ export const GlobalStyle = createGlobalStyle`
       ${({ theme }) => theme.colors.ink};
     color: ${({ theme }) => theme.colors.parchment};
     font-family: ${({ theme }) => theme.fonts.body};
-    font-size: 18px;
+    font-size: 19px;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
   }
@@ -60,7 +60,7 @@ export const GlobalStyle = createGlobalStyle`
 
   @media (max-width: 680px) {
     body {
-      font-size: 17px;
+      font-size: 18px;
     }
   }
 `

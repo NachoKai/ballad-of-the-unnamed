@@ -105,10 +105,23 @@ export function GameScreen({
             {c.requiresStat.min}
           </RequirementTag>
         )}
-        {(c.statDeltas || c.tradeoffDeltas || c.fameDelta || c.reputationDelta || c.goldDelta) && (
+        {(c.statDeltas ||
+          c.tradeoffDeltas ||
+          c.fameDelta ||
+          c.reputationDelta ||
+          c.goldDelta ||
+          c.liabilityDelta) && (
           <ChoiceDeltas>
             {c.statDeltas && <StatTag locale={locale} deltas={c.statDeltas} />}
             {c.tradeoffDeltas && <StatTag locale={locale} deltas={c.tradeoffDeltas} tradeoff />}
+            {c.liabilityDelta && c.liabilityDelta !== 0 && (
+              <Tooltip content={t(locale, "tooltip_liability")}>
+                <BonusTag $tint="liability">
+                  {t(locale, "liability")}{" "}
+                  {c.liabilityDelta > 0 ? `+${c.liabilityDelta}` : c.liabilityDelta}
+                </BonusTag>
+              </Tooltip>
+            )}
             {c.fameDelta && c.fameDelta !== 0 && (
               <Tooltip content={t(locale, "tooltip_fame")}>
                 <BonusTag $tint="fame">
@@ -332,13 +345,13 @@ const TimeText = styled.span`
   display: inline-flex;
   align-items: baseline;
   gap: 7px;
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: ${({ theme }) => theme.colors.muted};
 
   b {
-    font-size: 14px;
+    font-size: 15px;
     font-variant-numeric: tabular-nums;
     color: ${({ theme }) => theme.colors.parchment};
   }
@@ -351,7 +364,7 @@ const TimeSep = styled.span`
 const SceneEcho = styled.p`
   color: ${({ theme }) => theme.colors.sage};
   font-style: italic;
-  font-size: 16px;
+  font-size: 17px;
   padding: 10px 14px;
   border-left: 2px solid ${({ theme }) => theme.colors.sage};
   background: rgba(111, 143, 106, 0.06);
@@ -361,7 +374,7 @@ const SceneEcho = styled.p`
 `
 
 const SceneNarrative = styled(TextPretty)`
-  font-size: 21px;
+  font-size: 22px;
   line-height: 1.65;
   color: ${({ theme }) => theme.colors.parchment};
 `
@@ -405,7 +418,7 @@ const ChoiceCard = styled.button<{
   border-radius: ${({ theme }) => theme.radii.sm};
   padding: 15px 18px;
   color: ${({ theme }) => theme.colors.parchment};
-  font-size: 18px;
+  font-size: 19px;
   transition:
     border-color 0.15s,
     background 0.15s;
@@ -447,7 +460,7 @@ const ChoiceLabel = styled(TextPretty)`
 const ChoiceRarity = styled.span<{ $rarity: Rarity }>`
   display: inline-block;
   margin-top: 6px;
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: ${({ $rarity, theme }) =>
@@ -470,10 +483,11 @@ const BONUS_COLOR: Record<string, string> = {
   fame: "#c9803c",
   rep: "#6f8f6a",
   gold: "#e6c84a",
+  liability: "#bf1e1e",
 }
 
 const BonusTag = styled.span<{ $tint: string }>`
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   padding: 2px 8px;
   border-radius: 4px;
@@ -490,7 +504,7 @@ const RoleSignalTag = styled.span<{ $signal: RoleSignal }>`
   padding: 1px 7px;
   border: 1px solid ${({ $signal }) => ROLE_SIGNAL[$signal].color};
   border-radius: 999px;
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.06em;
   color: ${({ $signal }) => ROLE_SIGNAL[$signal].color};
   vertical-align: middle;
@@ -506,7 +520,7 @@ const RiskTag = styled.div`
   border-radius: 4px;
   background: rgba(191, 30, 30, 0.08);
   color: ${({ theme }) => theme.colors.bloodBright};
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: 0.03em;
 
   svg {
@@ -523,7 +537,7 @@ const RequirementTag = styled.span<{ $met: boolean }>`
   padding: 2px 9px;
   border: 1px solid ${({ $met, theme }) => ($met ? theme.colors.gold : theme.colors.bloodBright)};
   border-radius: 4px;
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: ${({ $met, theme }) => ($met ? theme.colors.gold : theme.colors.bloodBright)};
@@ -545,7 +559,7 @@ const SummaryBanner = styled.div`
 `
 
 const SummaryGrade = styled.span<{ $grade: string }>`
-  font-size: 42px;
+  font-size: 43px;
   font-weight: 700;
   font-family: ${({ theme }) => theme.fonts.display};
   color: ${({ $grade, theme }) =>
@@ -558,7 +572,7 @@ const SummaryGrade = styled.span<{ $grade: string }>`
 `
 
 const SummaryHeadline = styled.span`
-  font-size: 22px;
+  font-size: 23px;
   font-weight: 700;
   color: ${({ theme }) => theme.colors.parchment};
   text-transform: uppercase;
@@ -567,7 +581,7 @@ const SummaryHeadline = styled.span`
 `
 
 const SummarySub = styled.span`
-  font-size: 13px;
+  font-size: 14px;
   color: ${({ theme }) => theme.colors.muted};
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -592,14 +606,14 @@ const SeasonStat = styled.div`
   flex: 1;
 
   span {
-    font-size: 11px;
+    font-size: 12px;
     color: ${({ theme }) => theme.colors.muted};
     text-transform: uppercase;
     letter-spacing: 0.08em;
   }
 
   b {
-    font-size: 20px;
+    font-size: 21px;
     color: ${({ theme }) => theme.colors.parchment};
     font-variant-numeric: tabular-nums;
   }
@@ -613,7 +627,7 @@ const AbandonBtn = styled(LinkBtn)`
   margin-top: 20px;
   text-align: center;
   color: ${({ theme }) => theme.colors.muted2};
-  font-size: 14px;
+  font-size: 15px;
 
   &:hover {
     color: ${({ theme }) => theme.colors.bloodBright};
@@ -632,7 +646,7 @@ const WorldEventsBlock = styled.div`
 `
 
 const WorldEventsTitle = styled.span`
-  font-size: 11px;
+  font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: ${({ theme }) => theme.colors.sage};
@@ -645,14 +659,14 @@ const WorldEventCard = styled.div`
 `
 
 const WorldEventHeadline = styled.div`
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   color: ${({ theme }) => theme.colors.parchment};
   margin-bottom: 4px;
 `
 
 const WorldEventNarrative = styled.div`
-  font-size: 13px;
+  font-size: 14px;
   color: ${({ theme }) => theme.colors.muted};
   line-height: 1.5;
 `
@@ -667,6 +681,6 @@ const RivalUpdateBlock = styled.div`
   border-radius: ${({ theme }) => theme.radii.sm};
   background: rgba(191, 30, 30, 0.06);
   color: ${({ theme }) => theme.colors.bloodBright};
-  font-size: 13px;
+  font-size: 14px;
   letter-spacing: 0.04em;
 `

@@ -36,7 +36,7 @@ pnpm format           # prettier --write .
 - `shared/` — imported via `@shared/*`: `types.ts` (all shared types), `config.ts` (GAME_CONFIG balance knobs + `computeScore`), `rng.ts` (deterministic Rng), `i18n.ts` (`t`/`interpolate`), `genderize.ts`
 - `src/` — React 19 client (Vite root): `api.ts` (all client↔server calls), `components/` (screens + `ui/` primitives), `i18n/strings.ts`
 - `content/` — game data JSON: classes, archetypes, `events/`, `minigames/`, factions, regions, shop, achievements, slots
-- `docs/` — `fantasy-cyoa-rpg-spec.md` is the authoritative spec; code comments cite `§N` sections
+- `docs/` — `fantasy-cyoa-rpg-spec.md` is the authoritative spec
 
 ## Key Conventions
 

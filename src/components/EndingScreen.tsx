@@ -304,19 +304,19 @@ const EndingCard = styled.div`
 `
 
 const EndingCrest = styled.div`
-  font-size: 56px;
+  font-size: 57px;
   color: ${({ theme }) => theme.colors.gold};
   line-height: 1;
 `
 
 const EndingTitle = styled(TextBalance)`
-  font-size: clamp(26px, 4vw, 38px);
+  font-size: clamp(27px, 4vw, 39px);
   color: ${({ theme }) => theme.colors.goldBright};
   margin-top: 6px;
 `
 
 const EndingName = styled.p`
-  font-size: clamp(26px, 4vw, 38px);
+  font-size: clamp(27px, 4vw, 39px);
   color: ${({ theme }) => theme.colors.goldBright};
   margin-top: 6px;
   display: flex;
@@ -327,7 +327,7 @@ const EndingName = styled.p`
 `
 
 const EpithetTag = styled.span`
-  font-size: 18px;
+  font-size: 19px;
   background: rgba(201, 164, 76, 0.15);
   border: 1px solid rgba(201, 164, 76, 0.3);
   border-radius: ${({ theme }) => theme.radii.sm};
@@ -338,7 +338,7 @@ const EpithetTag = styled.span`
 `
 
 const EpithetSub = styled.p`
-  font-size: 16px;
+  font-size: 17px;
   color: ${({ theme }) => theme.colors.muted};
   font-style: italic;
   margin-top: 2px;
@@ -347,7 +347,7 @@ const EpithetSub = styled.p`
 const Epilogue = styled(TextPretty)`
   margin: 22px auto 6px;
   max-width: 60ch;
-  font-size: 20px;
+  font-size: 21px;
   line-height: 1.7;
   color: ${({ theme }) => theme.colors.parchment};
   font-style: italic;
@@ -364,7 +364,7 @@ const ScoreBanner = styled.div`
 `
 
 const ScoreLabel = styled.span`
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: ${({ theme }) => theme.colors.muted};
@@ -372,14 +372,14 @@ const ScoreLabel = styled.span`
 
 const ScoreValue = styled.span`
   font-family: ${({ theme }) => theme.fonts.display};
-  font-size: 40px;
+  font-size: 41px;
   font-weight: 700;
   color: ${({ theme }) => theme.colors.goldBright};
   font-variant-numeric: tabular-nums;
 `
 
 const ScoreDetail = styled.span`
-  font-size: 13px;
+  font-size: 14px;
   color: ${({ theme }) => theme.colors.muted};
   margin-top: 4px;
 `
@@ -402,7 +402,7 @@ const StatCell = styled.div`
   background: ${({ theme }) => theme.colors.ink2};
 
   dd {
-    font-size: 22px;
+    font-size: 23px;
     font-variant-numeric: tabular-nums;
     color: ${({ theme }) => theme.colors.parchment};
     font-weight: 600;
@@ -410,7 +410,7 @@ const StatCell = styled.div`
   }
 
   dt {
-    font-size: 12px;
+    font-size: 13px;
     color: ${({ theme }) => theme.colors.muted};
     letter-spacing: 0.04em;
   }
@@ -422,7 +422,7 @@ const Section = styled.div`
 `
 
 const SectionTitle = styled.h3`
-  font-size: 13px;
+  font-size: 14px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: ${({ theme }) => theme.colors.gold};
@@ -457,20 +457,20 @@ const FactionFlagWrap = styled.div`
 `
 
 const FactionName = styled.span`
-  font-size: 13px;
+  font-size: 14px;
   color: ${({ theme }) => theme.colors.parchment};
   font-weight: 600;
 `
 
 const FactionTier = styled.span`
-  font-size: 11px;
+  font-size: 12px;
   color: ${({ theme }) => theme.colors.gold};
   letter-spacing: 0.06em;
   text-transform: uppercase;
 `
 
 const FactionValue = styled.span`
-  font-size: 18px;
+  font-size: 19px;
   color: ${({ theme }) => theme.colors.muted};
   font-variant-numeric: tabular-nums;
 `
@@ -490,7 +490,7 @@ const RivalRow = styled.div`
 `
 
 const RivalLabel = styled.span`
-  font-size: 13px;
+  font-size: 14px;
   color: ${({ theme }) => theme.colors.muted};
 `
 
@@ -501,20 +501,20 @@ const RivalValue = styled.span`
 `
 
 const RivalStat = styled.span<{ $win: boolean }>`
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
   color: ${({ $win, theme }) => ($win ? theme.colors.goldBright : theme.colors.muted)};
 `
 
 const RivalVs = styled.span`
-  font-size: 12px;
+  font-size: 13px;
   color: ${({ theme }) => theme.colors.muted};
 `
 
 const RivalOutcome = styled.p`
   margin-top: 8px;
-  font-size: 14px;
+  font-size: 15px;
   font-style: italic;
   color: ${({ theme }) => theme.colors.parchmentDim};
   text-align: center;
@@ -534,7 +534,7 @@ const DistinctionChip = styled.div`
   border: 1px solid rgba(201, 164, 76, 0.25);
   border-radius: ${({ theme }) => theme.radii.sm};
   background: rgba(201, 164, 76, 0.06);
-  font-size: 13px;
+  font-size: 14px;
   color: ${({ theme }) => theme.colors.parchmentDim};
 `
 
@@ -558,14 +558,14 @@ const LostEncountersCard = styled.div`
   border-radius: ${({ theme }) => theme.radii.sm};
   background: rgba(200, 90, 90, 0.06);
   color: ${({ theme }) => theme.colors.bloodBright};
-  font-size: 14px;
+  font-size: 15px;
 `
 
 const EndingAchievements = styled.div`
   margin: 22px 0 6px;
 
   h2 {
-    font-size: 14px;
+    font-size: 15px;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: ${({ theme }) => theme.colors.gold};
@@ -601,13 +601,13 @@ const AchChip = styled.li`
 
   strong {
     font-family: ${({ theme }) => theme.fonts.display};
-    font-size: 14px;
+    font-size: 15px;
     color: ${({ theme }) => theme.colors.goldBright};
   }
 
   em {
     font-style: normal;
-    font-size: 13px;
+    font-size: 14px;
     color: ${({ theme }) => theme.colors.parchmentDim};
     margin-top: 2px;
   }

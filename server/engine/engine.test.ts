@@ -67,6 +67,7 @@ function makeChar(overrides: Partial<CharacterState> = {}): CharacterState {
     health: 100,
     fame: 0,
     gold: 100,
+    liability: 0,
     marketValue: 200,
     marketValuePeak: 200,
     momentum: "normal",
@@ -110,7 +111,7 @@ describe("createCharacter", () => {
     expect(c.constitution).toBe(7)
     expect(c.intelligence).toBe(3)
     expect(c.charisma).toBe(4)
-    // §20 humble origin: starting gold halved, no starting renown.
+    // humble origin: starting gold halved, no starting renown.
     expect(c.gold).toBe(60)
     expect(c.status).toBe("alive")
     expect(c.reputations).toHaveLength(1)
@@ -454,7 +455,7 @@ describe("resolveChoice", () => {
 })
 
 // ---------------------------------------------------------------------------
-// §11 Stat-gated choices
+// Stat-gated choices
 // ---------------------------------------------------------------------------
 describe("stat-gated choices", () => {
   const gatedEvent: EventContent = {
@@ -562,6 +563,193 @@ describe("resolveMinigame", () => {
     const out = resolveMinigame(c, event, "strike", reg, rng)
     expect(out.narrative).toBeTruthy()
     expect(typeof out.ended).toBe("boolean")
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Liability meter ("Expediente")
+// ---------------------------------------------------------------------------
+describe("liability (Expediente)", () => {
+  it("createCharacter starts with a clean record", () => {
+    const c = createCharacter({
+      id: "l0",
+      name: "X",
+      classId: "warrior",
+      locale: "en",
+      registry: reg,
+    })
+    expect(c.liability).toBe(0)
+  })
+
+  it("resolveChoice applies liabilityDelta and clamps at liabilityMax", () => {
+    const c = makeChar({ liability: 95 })
+    const event: EventContent = {
+      id: "liab_up",
+      minAge: 0,
+      maxAge: 99,
+      weight: 1,
+      narrative: { en: "", es: "" },
+      choices: [
+        {
+          id: "shady",
+          rarity: "rare",
+          label: { en: "", es: "" },
+          narrative: { en: "", es: "" },
+          liabilityDelta: 20,
+        },
+      ],
+    }
+    resolveChoice(c, event, "shady", reg, new Rng(1))
+    expect(c.liability).toBe(GAME_CONFIG.liabilityMax)
+  })
+
+  it("liabilityDelta can reduce liability but never below zero", () => {
+    const c = makeChar({ liability: 5 })
+    const event: EventContent = {
+      id: "liab_down",
+      minAge: 0,
+      maxAge: 99,
+      weight: 1,
+      narrative: { en: "", es: "" },
+      choices: [
+        {
+          id: "clean",
+          rarity: "common",
+          label: { en: "", es: "" },
+          narrative: { en: "", es: "" },
+          liabilityDelta: -20,
+        },
+      ],
+    }
+    resolveChoice(c, event, "clean", reg, new Rng(1))
+    expect(c.liability).toBe(0)
+  })
+
+  it("isEligible gates events on requiresLiability", () => {
+    const clean = makeChar({ liability: 0 })
+    const dirty = makeChar({ liability: 40 })
+    const ev: EventContent = {
+      id: "dark_path",
+      minAge: 0,
+      maxAge: 99,
+      weight: 1,
+      requiresLiability: { min: 30 },
+      narrative: { en: "", es: "" },
+      choices: [
+        { id: "ok", rarity: "common", label: { en: "", es: "" }, narrative: { en: "", es: "" } },
+      ],
+    }
+    expect(isEligible(ev, clean)).toBe(false)
+    expect(isEligible(ev, dirty)).toBe(true)
+  })
+
+  it("resolveSeasonSummary decays liability a little each season", () => {
+    const c = makeChar({ liability: 10, turn: 5, seasonCount: 0 })
+    resolveSeasonSummary(c, reg)
+    expect(c.liability).toBe(10 - GAME_CONFIG.liabilityDecayPerSeason)
+  })
+
+  it("serveEvent surfaces liabilityDelta on the served choice", () => {
+    const c = makeChar({ liability: 0 })
+    const ev: EventContent = {
+      id: "serve_liab",
+      minAge: 0,
+      maxAge: 99,
+      weight: 1,
+      narrative: { en: "", es: "" },
+      choices: [
+        {
+          id: "shady",
+          rarity: "rare",
+          label: { en: "", es: "" },
+          narrative: { en: "", es: "" },
+          liabilityDelta: 12,
+        },
+      ],
+    }
+    const served = serveEvent(ev, c, "en", reg, new Rng(1), false)
+    expect(served.choices[0].liabilityDelta).toBe(12)
+  })
+
+  it("evaluateAchievements honors liability_gte / liability_lte / run_ended", () => {
+    const underworld: AchievementContent = {
+      id: "underworld_test",
+      icon: "skull",
+      rarity: "epic",
+      name: { en: "", es: "" },
+      description: { en: "", es: "" },
+      condition: { type: "liability_gte", value: 50 },
+    }
+    const dirty = makeChar({ liability: 60 })
+    expect(
+      evaluateAchievements(dirty, { ...reg, achievements: [underworld] } as ContentRegistry).map(
+        (a) => a.id,
+      ),
+    ).toContain("underworld_test")
+
+    const cleanAch: AchievementContent = {
+      id: "clean_test",
+      icon: "heart",
+      rarity: "rare",
+      name: { en: "", es: "" },
+      description: { en: "", es: "" },
+      condition: {
+        type: "and",
+        conditions: [{ type: "run_ended" }, { type: "liability_lte", value: 0 }],
+      },
+    }
+    const clean = makeChar({ liability: 0 })
+    // Mid-run pass: runEnded is absent → not unlocked yet.
+    expect(
+      evaluateAchievements(clean, { ...reg, achievements: [cleanAch] } as ContentRegistry).map(
+        (a) => a.id,
+      ),
+    ).not.toContain("clean_test")
+    // Final pass: runEnded true → unlocks.
+    const final = evaluateAchievements(
+      clean,
+      { ...reg, achievements: [cleanAch] } as ContentRegistry,
+      { runEnded: true },
+    )
+    expect(final.map((a) => a.id)).toContain("clean_test")
+  })
+
+  it("resolveMinigame applies outcome.liabilityDelta on any tier", () => {
+    const c = makeChar({ liability: 0 })
+    const event: EventContent = {
+      id: "mg_liab",
+      type: "minigame",
+      minAge: 0,
+      maxAge: 99,
+      weight: 1,
+      primaryStat: "strength",
+      narrative: { en: "", es: "" },
+      cards: [{ id: "strike", icon: "sword", label: { en: "Strike", es: "" } }],
+      resolution: { type: "weighted_hidden_match", baseWinChance: 0.02, statInfluence: {} },
+      outcomes: {
+        critical: { liabilityDelta: 7, narrative: { en: "c", es: "" } },
+        success: { liabilityDelta: 7, narrative: { en: "s", es: "" } },
+        partial: { liabilityDelta: 7, narrative: { en: "p", es: "" } },
+        fail: { liabilityDelta: 7, narrative: { en: "f", es: "" } },
+      },
+    }
+    resolveMinigame(c, event, "strike", reg, new Rng(123))
+    expect(c.liability).toBe(7)
+  })
+
+  it("authored shady choices carry liabilityDelta and dark events are gated", () => {
+    const gamble = reg.events.find((e) => e.id === "tavern_gamble")
+    expect(gamble?.choices?.find((ch) => ch.id === "cheat")?.liabilityDelta).toBe(12)
+    const bm = reg.events.find((e) => e.id === "tavern_blackmailer")
+    expect(bm?.requiresLiability).toEqual({ min: 20 })
+    expect(isEligible(bm!, makeChar({ liability: 0 }))).toBe(false)
+    expect(isEligible(bm!, makeChar({ liability: 25 }))).toBe(true)
+    // A clean character never sees the underworld's notice.
+    const witness = reg.events.find((e) => e.id === "court_witness")
+    expect(witness?.requiresLiability).toEqual({ min: 40 })
+    // A failed heist stains the record (outcome-level liability).
+    const heist = reg.minigames.find((m) => m.id === "heist_lockpick")
+    expect(heist?.outcomes?.fail.liabilityDelta).toBe(12)
   })
 })
 
@@ -1915,7 +2103,7 @@ describe("clan offer amounts", () => {
         if (!joinChoice) continue
         const displayed = joinChoice.goldDelta ?? 0
         expect(displayed).toBeGreaterThan(0)
-        // §24: picking an offer defers the join to the negotiation follow-up.
+        // picking an offer defers the join to the negotiation follow-up.
         resolveChoice(c, event, joinChoice.id, reg, rng)
         expect(c.pendingJoinOffer?.signingGold).toBe(displayed)
         const followUp = negotiationFollowUpEvent(c, reg)
@@ -2108,7 +2296,7 @@ function fingerprint(c: CharacterState): string {
   })
 }
 
-describe("Phase 7 · origin & identity (§20)", () => {
+describe(" origin & identity", () => {
   it("established origin starts with full gold and home standing", () => {
     const c = createCharacter({
       id: "c",
@@ -2139,7 +2327,7 @@ describe("Phase 7 · origin & identity (§20)", () => {
   })
 })
 
-describe("Phase 7 · bench mechanic (§20)", () => {
+describe(" bench mechanic", () => {
   it("joining a big clan above your level benches you and counts the bench_joined counter", () => {
     const c = makeChar({ currentClanId: null, powerLevel: 20, turn: 10 })
     // golden_lotus wealth=9 → threshold wealth*12 = 108 > 20 → bench.
@@ -2187,7 +2375,7 @@ describe("Phase 7 · bench mechanic (§20)", () => {
   })
 })
 
-describe("Phase 7 · role signals on offers (§20)", () => {
+describe(" role signals on offers", () => {
   it("roleSignalFor reports bench/up/same correctly", () => {
     // golden_lotus wealth=9 → bench below 108, up at/above 162.
     const weak = makeChar({ powerLevel: 10 })
@@ -2209,7 +2397,7 @@ describe("Phase 7 · role signals on offers (§20)", () => {
   })
 })
 
-describe("Phase 7 · foreign & region gating (§19/§21)", () => {
+describe(" foreign & region gating", () => {
   it("requiresForeign events only serve while abroad", () => {
     const home = makeChar({ currentRegion: "vale", homeRegion: "vale" })
     const abroad = makeChar({ currentRegion: "capital", homeRegion: "vale" })
@@ -2238,7 +2426,7 @@ describe("Phase 7 · foreign & region gating (§19/§21)", () => {
   })
 })
 
-describe("Phase 7 · negotiation dial (§24)", () => {
+describe(" negotiation dial ", () => {
   function pendingOffer(c: CharacterState) {
     c.pendingJoinOffer = { clanId: "blacktide", signingGold: 500, stipend: 100 }
   }
@@ -2297,7 +2485,7 @@ describe("Phase 7 · negotiation dial (§24)", () => {
   })
 })
 
-describe("Phase 7 · whole-arc tournaments (§22)", () => {
+describe(" whole-arc tournaments ", () => {
   it("intro → 3 fixtures → honor beat resolves through the minigame path", () => {
     const c = makeChar({ age: 18, turn: 12, currentClanId: null, powerLevel: 60 })
     const rng = new Rng(hashSeed("tournament"))
@@ -2353,7 +2541,7 @@ describe("Phase 7 · whole-arc tournaments (§22)", () => {
   })
 })
 
-describe("Phase 7 · global honors (§23/§7.5)", () => {
+describe(" global honors ", () => {
   function makeAch(id: string, condition: AchievementContent["condition"]): ContentRegistry {
     return {
       ...reg,
@@ -2423,7 +2611,7 @@ describe("Phase 7 · global honors (§23/§7.5)", () => {
   })
 })
 
-describe("Phase 7 · class-partitioned epithets (§25)", () => {
+describe(" class-partitioned epithets ", () => {
   it("loyal career names the home faction as the banner", () => {
     const c = makeChar({
       class: "warrior",
@@ -2486,10 +2674,10 @@ describe("Phase 7 · class-partitioned epithets (§25)", () => {
 })
 
 // ---------------------------------------------------------------------------
-// Phase 7 §7.8: determinism — same daily seed ⇒ identical sequence of turns,
+//  determinism — same daily seed ⇒ identical sequence of turns,
 // including the new seeded systems (negotiation + tournaments). No Math.random.
 // ---------------------------------------------------------------------------
-describe("Phase 7 · daily-seed determinism (§26/§7.8)", () => {
+describe(" daily-seed determinism", () => {
   it("two runs from the same seed produce identical states across a season", () => {
     const a = createCharacter({
       id: "a",

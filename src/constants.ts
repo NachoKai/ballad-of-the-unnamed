@@ -18,7 +18,7 @@ export const RARITY_CHAOS: Record<Rarity, number> = {
   volatile: 0.25,
 }
 
-// §20 role-signal shown on clan-join offer cards before the player commits.
+// Role-signal shown on clan-join offer cards before the player commits.
 // labelKey is the suffix of the `roleSignal*` i18n keys in src/i18n/strings.ts
 // (must stay in sync with those keys), icon is the badge emoji, color the tag tint.
 export const ROLE_SIGNAL: Record<RoleSignal, { icon: string; labelKey: string; color: string }> = {

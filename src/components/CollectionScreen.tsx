@@ -227,7 +227,7 @@ const Header = styled.div`
 
   h1 {
     font-family: ${({ theme }) => theme.fonts.display};
-    font-size: 26px;
+    font-size: 27px;
     color: ${({ theme }) => theme.colors.goldBright};
   }
 `
@@ -252,13 +252,13 @@ const StatCard = styled(Panel)`
 
 const StatValue = styled.div`
   font-family: ${({ theme }) => theme.fonts.display};
-  font-size: 28px;
+  font-size: 29px;
   font-weight: 700;
   color: ${({ theme }) => theme.colors.goldBright};
 `
 
 const StatLabel = styled.div`
-  font-size: 13px;
+  font-size: 14px;
   color: ${({ theme }) => theme.colors.muted};
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -271,7 +271,7 @@ const Section = styled.div`
 
 const SectionTitle = styled.h2`
   font-family: ${({ theme }) => theme.fonts.display};
-  font-size: 18px;
+  font-size: 19px;
   color: ${({ theme }) => theme.colors.gold};
   margin-bottom: 12px;
 `
@@ -290,7 +290,7 @@ const Tag = styled.span`
   background: ${({ theme }) => theme.colors.ink3};
   border: 1px solid ${({ theme }) => theme.colors.line};
   border-radius: 999px;
-  font-size: 13px;
+  font-size: 14px;
   color: ${({ theme }) => theme.colors.parchment};
 `
 
@@ -304,7 +304,7 @@ const ProgressRow = styled.div`
 const ProgressLabel = styled.span`
   width: 130px;
   flex-shrink: 0;
-  font-size: 13px;
+  font-size: 14px;
   color: ${({ theme }) => theme.colors.muted};
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -332,6 +332,6 @@ const ProgressCount = styled.span`
   flex-shrink: 0;
   text-align: right;
   font-family: ${({ theme }) => theme.fonts.display};
-  font-size: 14px;
+  font-size: 15px;
   color: ${({ theme }) => theme.colors.goldBright};
 `

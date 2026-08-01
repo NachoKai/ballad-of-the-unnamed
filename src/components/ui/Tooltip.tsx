@@ -55,7 +55,7 @@ const TipBody = styled.span<{ $side: TooltipSide; $align: TooltipAlign }>`
   border-radius: ${({ theme }) => theme.radii.sm};
   box-shadow: ${({ theme }) => theme.shadow};
   font-family: ${({ theme }) => theme.fonts.body};
-  font-size: 13px;
+  font-size: 14px;
   font-style: normal;
   font-weight: 400;
   letter-spacing: normal;

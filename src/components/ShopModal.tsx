@@ -145,14 +145,14 @@ const Header = styled.div`
 
 const Title = styled.h2`
   font-family: ${({ theme }) => theme.fonts.display};
-  font-size: 22px;
+  font-size: 23px;
   color: ${({ theme }) => theme.colors.goldBright};
   margin: 0;
 `
 
 const GoldDisplay = styled.span`
   margin-left: auto;
-  font-size: 18px;
+  font-size: 19px;
   color: ${({ theme }) => theme.colors.gold};
   font-variant-numeric: tabular-nums;
 `
@@ -161,7 +161,7 @@ const CloseBtn = styled.button`
   background: none;
   border: none;
   padding: 0 6px;
-  font-size: 26px;
+  font-size: 27px;
   color: ${({ theme }) => theme.colors.muted};
   cursor: pointer;
   line-height: 1;
@@ -178,7 +178,7 @@ const TabBtn = styled.button<{ $active: boolean }>`
   background: ${({ $active, theme }) => ($active ? theme.colors.panel : "transparent")};
   border: none;
   padding: 12px;
-  font-size: 14px;
+  font-size: 15px;
   color: ${({ $active, theme }) => ($active ? theme.colors.parchment : theme.colors.muted)};
   letter-spacing: 0.06em;
   cursor: pointer;
@@ -189,7 +189,7 @@ const TabBtn = styled.button<{ $active: boolean }>`
 const ErrorMsg = styled.p`
   margin: 10px 16px 0;
   color: ${({ theme }) => theme.colors.bloodBright};
-  font-size: 13px;
+  font-size: 14px;
 `
 
 const ItemGrid = styled.div`
@@ -216,7 +216,7 @@ const ItemCard = styled.div`
 `
 
 const ItemIcon = styled.div`
-  font-size: 28px;
+  font-size: 29px;
   min-width: 40px;
   text-align: center;
 `
@@ -227,19 +227,19 @@ const ItemInfo = styled.div`
 `
 
 const ItemName = styled.div`
-  font-size: 16px;
+  font-size: 17px;
   color: ${({ theme }) => theme.colors.parchment};
   font-weight: 600;
 `
 
 const ItemFlavor = styled.div`
-  font-size: 13px;
+  font-size: 14px;
   color: ${({ theme }) => theme.colors.muted};
   margin-top: 2px;
 `
 
 const ItemCost = styled.div`
-  font-size: 15px;
+  font-size: 16px;
   color: ${({ theme }) => theme.colors.gold};
   margin-top: 4px;
   font-variant-numeric: tabular-nums;
@@ -251,7 +251,7 @@ const BuySection = styled.div`
 `
 
 const BuyBtn = styled(BtnPrimary)`
-  font-size: 13px;
+  font-size: 14px;
   padding: 6px 14px;
   min-width: 64px;
 `
@@ -261,7 +261,7 @@ const OwnedBadge = styled.span`
   padding: 4px 10px;
   border: 1px solid ${({ theme }) => theme.colors.sage};
   border-radius: 999px;
-  font-size: 11px;
+  font-size: 12px;
   color: ${({ theme }) => theme.colors.sage};
   letter-spacing: 0.06em;
 `

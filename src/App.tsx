@@ -345,7 +345,7 @@ const BootScreen = styled.div`
 `
 
 const BootRune = styled.div`
-  font-size: 48px;
+  font-size: 49px;
   color: ${({ theme }) => theme.colors.gold};
   animation: ${pulse} 1.8s ease-in-out infinite;
 `
@@ -383,7 +383,7 @@ const Brand = styled.button`
   border: none;
   padding: 0;
   font-family: ${({ theme }) => theme.fonts.display};
-  font-size: 22px;
+  font-size: 21px;
   font-weight: 700;
   letter-spacing: 0.04em;
   color: ${({ theme }) => theme.colors.goldBright};
@@ -391,7 +391,7 @@ const Brand = styled.button`
 
 const BrandRune = styled.span`
   color: ${({ theme }) => theme.colors.gold};
-  font-size: 20px;
+  font-size: 21px;
   opacity: 0.85;
 `
 
@@ -413,7 +413,7 @@ const LocaleBtn = styled.button<{ $active: boolean }>`
   border: none;
   padding: 6px 12px;
   color: ${({ $active, theme }) => ($active ? theme.colors.ink : theme.colors.muted)};
-  font-size: 13px;
+  font-size: 12px;
   letter-spacing: 0.08em;
   transition:
     background 0.15s,

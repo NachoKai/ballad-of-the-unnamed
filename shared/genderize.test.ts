@@ -59,7 +59,7 @@ describe("genderize", () => {
 
   it("inflects archetype titles to feminine", () => {
     expect(genderize("Caballero", "female")).toBe("Caballera")
-    expect(genderize("Guardiano", "female")).toBe("Guardiana")
+    expect(genderize("Guardian", "female")).toBe("Guardiana")
     expect(genderize("Táctico", "female")).toBe("Táctica")
     expect(genderize("Encantador", "female")).toBe("Encantadora")
     expect(genderize("Asesino", "female")).toBe("Asesina")

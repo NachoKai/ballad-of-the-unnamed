@@ -129,5 +129,5 @@ Content lives as JSON in `content/` and is validated at server startup — a mis
 
 ## Documentation
 
-- [`docs/fantasy-cyoa-rpg-spec.md`](./docs/fantasy-cyoa-rpg-spec.md) — the authoritative game design spec; code comments reference its `§N` sections.
+- [`docs/fantasy-cyoa-rpg-spec.md`](./docs/fantasy-cyoa-rpg-spec.md) — the authoritative game design spec.
 - [`docs/implementation-plan.md`](./docs/implementation-plan.md) and [`docs/improvement-plan.md`](./docs/improvement-plan.md) — roadmap & tuning notes.

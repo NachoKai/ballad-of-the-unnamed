@@ -1212,6 +1212,48 @@
         "en": "End a duel in a single perfect strike.",
         "es": "Termina un duelo con un solo golpe perfecto."
       }
+    },
+    {
+      "id": "clean_conscience",
+      "icon": "heart",
+      "rarity": "rare",
+      "condition": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "run_ended"
+          },
+          {
+            "type": "liability_lte",
+            "value": 0
+          }
+        ]
+      },
+      "name": {
+        "en": "A Clean Conscience",
+        "es": "Conciencia Limpia"
+      },
+      "description": {
+        "en": "Finish a life with no stain on your name.",
+        "es": "Termina una vida sin una mancha en tu nombre."
+      }
+    },
+    {
+      "id": "known_in_underworld",
+      "icon": "skull",
+      "rarity": "epic",
+      "condition": {
+        "type": "liability_gte",
+        "value": 50
+      },
+      "name": {
+        "en": "Known in the Underworld",
+        "es": "Conocido en el Bajo Mundo"
+      },
+      "description": {
+        "en": "Amass 50 liability in a single life.",
+        "es": "Acumula 50 de expediente en una sola vida."
+      }
     }
   ]
 }

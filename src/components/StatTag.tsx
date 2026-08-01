@@ -51,7 +51,7 @@ const tagBase = styled.span`
   gap: 2px;
   padding: 2px 8px;
   border-radius: 999px;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.04em;
   line-height: 1.4;

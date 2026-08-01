@@ -11,9 +11,9 @@ import type {
   RivalComparison,
 } from "../../shared/types.js"
 import { localize, peakReputation } from "./helpers.js"
-import { reputationTierId } from "../../shared/config.js"
+import { GAME_CONFIG, reputationTierId } from "../../shared/config.js"
 
-// §25 class-partitioned legend identities. The position/class defines what kind
+// class-partitioned legend identities. The position/class defines what kind
 // of idol you end up being; pools are keyed by behavior archetype and are
 // disjoint per class — a rogue can be "the Phantom" but never "the Bastion".
 type BehaviorArchetype = "legendary" | "mercenary" | "traitor" | "loyal"
@@ -106,14 +106,14 @@ export function generateEpithet(
   const homeFaction = registry.factionsById.get(c.homeFactionId)
   const homeFactionName = homeFaction ? localize(homeFaction.name, locale) : c.homeFactionId
 
-  // §7.1: the subtitle names the HOME faction (fixed identity), even when the
+  // the subtitle names the HOME faction (fixed identity), even when the
   // character spent the run abroad or ended dominant elsewhere.
   const subtitle =
     locale === "en"
       ? `${tier.charAt(0).toUpperCase() + tier.slice(1)} of ${homeFactionName}`
       : `${tier.charAt(0).toUpperCase() + tier.slice(1)} de ${homeFactionName}`
 
-  // Loyal identity explicitly carries the home banner (§25 example).
+  // Loyal identity explicitly carries the home banner.
   if (archetype === "loyal") {
     return {
       title:
@@ -184,7 +184,7 @@ export function generateDistinctions(
       label: labels[k] ?? { en: k, es: k },
       count: c.counters[k] ?? 0,
     }))
-  // §7.5: global individual honors surface as their own distinction rows.
+  // global individual honors surface as their own distinction rows.
   if (c.achievements.includes("champion_of_the_age")) {
     base.push({
       id: "champion_of_the_age",
@@ -279,6 +279,20 @@ export function generateEpilogue(
           : `pocos recordarán el nombre, y eso también es una forma de paz.`,
   }
 
+  // liability epilogue block: a stained record follows the legend.
+  const liabilityBlock: Record<Locale, string> = { en: "", es: "" }
+  if ((c.liability ?? 0) >= GAME_CONFIG.liabilityNotoriousThreshold) {
+    liabilityBlock.en =
+      "\n\nAnd the shadows remember. The underworld knows your name — and it has uses for it."
+    liabilityBlock.es =
+      "\n\nY las sombras lo recuerdan. El hampa conoce tu nombre — y tiene usos para él."
+  } else if ((c.liability ?? 0) === 0) {
+    liabilityBlock.en =
+      "\nYour name is clean. Whatever was done in the dark stayed there, and the realm remembers only the deeds that were sung."
+    liabilityBlock.es =
+      "\nTu nombre está limpio. Lo que se hizo en la oscuridad quedó allí, y el reino recuerda solo las hazañas que se cantaron."
+  }
+
   // Rival epilogue block.
   const rivalBlock: Record<Locale, string> = { en: "", es: "" }
   if (c.rival) {
@@ -337,5 +351,5 @@ export function generateEpilogue(
     },
   }
 
-  return templates[endingType][locale] ?? templates[endingType].en
+  return (templates[endingType][locale] ?? templates[endingType].en) + liabilityBlock[locale]
 }

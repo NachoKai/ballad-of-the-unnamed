@@ -251,7 +251,7 @@ const CreationHero = styled.header`
   margin: 18px 0 26px;
 
   h1 {
-    font-size: clamp(30px, 5vw, 46px);
+    font-size: clamp(31px, 5vw, 47px);
     color: ${({ theme }) => theme.colors.goldBright};
   }
 `
@@ -259,7 +259,7 @@ const CreationHero = styled.header`
 const Subtitle = styled(TextPretty)`
   color: ${({ theme }) => theme.colors.muted};
   font-style: italic;
-  font-size: 18px;
+  font-size: 19px;
   margin-top: 8px;
 `
 
@@ -270,7 +270,7 @@ const CreationBlock = styled.section`
 const BlockLabel = styled.label`
   display: block;
   font-family: ${({ theme }) => theme.fonts.display};
-  font-size: 14px;
+  font-size: 15px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: ${({ theme }) => theme.colors.gold};
@@ -285,7 +285,7 @@ const NameInput = styled.input`
   padding: 14px 16px;
   color: ${({ theme }) => theme.colors.parchment};
   font-family: ${({ theme }) => theme.fonts.body};
-  font-size: 20px;
+  font-size: 21px;
 
   &::placeholder {
     color: ${({ theme }) => theme.colors.muted2};
@@ -332,7 +332,7 @@ const ClassCard = styled.button<{ $selected: boolean }>`
 
   h3 {
     color: ${({ theme }) => theme.colors.goldBright};
-    font-size: 21px;
+    font-size: 22px;
     margin-bottom: 6px;
   }
 `
@@ -352,7 +352,7 @@ const ClassIcon = styled.div`
 
 const ClassDesc = styled(TextPretty)`
   color: ${({ theme }) => theme.colors.parchmentDim};
-  font-size: 16px;
+  font-size: 17px;
   min-height: 48px;
 `
 
@@ -371,13 +371,13 @@ const StatChip = styled.span`
   border: 1px solid ${({ theme }) => theme.colors.line};
   border-radius: 999px;
   padding: 3px 10px;
-  font-size: 13px;
+  font-size: 14px;
   color: ${({ theme }) => theme.colors.parchment};
 
   em {
     font-style: normal;
     color: ${({ theme }) => theme.colors.muted};
-    font-size: 11px;
+    font-size: 12px;
     letter-spacing: 0.06em;
   }
 `
@@ -404,7 +404,7 @@ const ModePill = styled.button<{ $active: boolean }>`
   border-radius: ${({ theme }) => theme.radii.lg};
   padding: 16px;
   color: ${({ $active, theme }) => ($active ? theme.colors.parchment : theme.colors.parchmentDim)};
-  font-size: 16px;
+  font-size: 17px;
   transition:
     border-color 0.15s,
     box-shadow 0.15s;
@@ -415,13 +415,13 @@ const ModePill = styled.button<{ $active: boolean }>`
     display: block;
     font-family: ${({ theme }) => theme.fonts.display};
     color: ${({ $active, theme }) => ($active ? theme.colors.goldBright : theme.colors.parchment)};
-    font-size: 17px;
+    font-size: 18px;
     margin-bottom: 4px;
   }
 
   span {
     color: ${({ theme }) => theme.colors.muted};
-    font-size: 15px;
+    font-size: 16px;
   }
 
   &:hover {
@@ -446,7 +446,7 @@ const GenderPill = styled.button<{ $active: boolean }>`
   padding: 12px 14px;
   color: ${({ $active, theme }) => ($active ? theme.colors.goldBright : theme.colors.parchmentDim)};
   font-family: ${({ theme }) => theme.fonts.display};
-  font-size: 15px;
+  font-size: 16px;
   letter-spacing: 0.04em;
   transition:
     border-color 0.15s,
@@ -461,7 +461,7 @@ const GenderPill = styled.button<{ $active: boolean }>`
 
 const FormError = styled.p`
   color: ${({ theme }) => theme.colors.bloodBright};
-  font-size: 15px;
+  font-size: 16px;
   margin-top: 8px;
 `
 
@@ -469,6 +469,6 @@ const BeginBtn = styled(BtnPrimary)`
   margin-top: 26px;
   width: 100%;
   padding: 16px;
-  font-size: 18px;
+  font-size: 19px;
   text-transform: uppercase;
 `

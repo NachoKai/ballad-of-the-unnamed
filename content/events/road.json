@@ -240,6 +240,7 @@
           "charisma": -2
         },
         "goldDelta": 120,
+        "liabilityDelta": 8,
         "narrative": {
           "en": "You pocket the coins. Something old and patient marks your face.",
           "es": "Te guardás las monedas. Algo viejo y paciente te graba el rostro."
@@ -298,10 +299,73 @@
         "goldDelta": 200,
         "reputationDelta": -12,
         "reputationFaction": "ironhold",
+        "liabilityDelta": 15,
         "injuryRiskDelta": 0.1,
         "narrative": {
           "en": "Heavy purse, heavier reputation. Ironhold will not forget this.",
           "es": "Bolsa pesada, reputación más pesada. Fuertehierro no olvidará esto."
+        }
+      }
+    ]
+  },
+  {
+    "id": "road_shadow_stalker",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "requiresLiability": {
+      "min": 30
+    },
+    "narrative": {
+      "en": "A figure has been following you for three days. At dusk they finally close the gap on the road to {locationName}. 'You carry a weight,' they say. 'I can carry it for you — for a price.'",
+      "es": "Una figura te sigue desde hace tres días. Al caer la tarde finalmente acorta la distancia en el camino a {locationName}. 'Cargás un peso', dice. 'Puedo cargarlo por vos — por un precio.'"
+    },
+    "choices": [
+      {
+        "id": "hire",
+        "label": {
+          "en": "Hire them to bury the trail",
+          "es": "Contratarlos para borrar el rastro"
+        },
+        "tag": "Strategic",
+        "rarity": "uncommon",
+        "goldDelta": -150,
+        "liabilityDelta": -10,
+        "narrative": {
+          "en": "Coins change hands in the dusk. When dawn comes, the trail is cold and the figure is gone. The weight feels lighter — for now.",
+          "es": "Las monedas cambian de manos al anochecer. Cuando llega el alba, el rastro está frío y la figura se fue. El peso se siente más liviano — por ahora."
+        }
+      },
+      {
+        "id": "face",
+        "label": {
+          "en": "Confront them — say the past stays buried",
+          "es": "Enfrentarlos — decir que el pasado queda enterrado"
+        },
+        "tag": "Confident",
+        "rarity": "rare",
+        "liabilityDelta": 6,
+        "fameDelta": 4,
+        "injuryRiskDelta": 0.1,
+        "narrative": {
+          "en": "You hold their gaze until they blink first. 'Bold,' they admit, and step aside. But the rumor of the encounter travels faster than you do.",
+          "es": "Mantenés su mirada hasta que parpadean primero. 'Audaz', admiten, y se hacen a un lado. Pero el rumor del encuentro viaja más rápido que vos."
+        }
+      },
+      {
+        "id": "trust",
+        "label": {
+          "en": "Tell them everything — the whole burden",
+          "es": "Contarles todo — la carga entera"
+        },
+        "tag": "Humble",
+        "rarity": "volatile",
+        "liabilityDelta": -20,
+        "fameDelta": -8,
+        "staminaDelta": 15,
+        "narrative": {
+          "en": "You unburden yourself to a stranger on a dark road. They listen to every word, then nod. 'The truth is a lighter load — but it travels.' By morning, half the region has heard your story.",
+          "es": "Le contás todo a un desconocido en un camino oscuro. Escuchan cada palabra y luego asienten. 'La verdad es una carga más liviana — pero viaja.' Para la mañana, media región ha oído tu historia."
         }
       }
     ]

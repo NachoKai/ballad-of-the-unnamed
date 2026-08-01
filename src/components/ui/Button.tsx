@@ -16,7 +16,7 @@ export const BtnPrimary = styled.button<{ $block?: boolean }>`
   color: ${({ theme }) => theme.colors.ink};
   font-family: ${({ theme }) => theme.fonts.display};
   font-weight: 600;
-  font-size: 16px;
+  font-size: 17px;
   letter-spacing: 0.04em;
   box-shadow: 0 6px 20px rgba(201, 164, 76, 0.2);
   transition:
@@ -46,7 +46,7 @@ export const BtnGhost = styled.button`
   padding: 12px 22px;
   color: ${({ theme }) => theme.colors.parchmentDim};
   font-family: ${({ theme }) => theme.fonts.display};
-  font-size: 15px;
+  font-size: 16px;
   letter-spacing: 0.03em;
   transition:
     border-color 0.15s,
@@ -64,7 +64,7 @@ export const LinkBtn = styled.button`
   border-radius: ${({ theme }) => theme.radii.sm};
   padding: 6px 12px;
   color: ${({ theme }) => theme.colors.parchmentDim};
-  font-size: 15px;
+  font-size: 16px;
   letter-spacing: 0.03em;
   transition:
     color 0.15s,

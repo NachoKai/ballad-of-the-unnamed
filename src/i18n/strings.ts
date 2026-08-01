@@ -249,6 +249,7 @@ const en: StringMap = {
   tooltip_momentum: "Momentum. Rising when fortune smiles, falling when it does not.",
   tooltip_arc: "The chapter of your life you currently walk.",
   tooltip_archetype: "Your specialty — it shapes the choices fate offers you.",
+  tooltip_personality: "The traits the world sees in you, shaped by the choices you make.",
   tooltip_reputation: "Your renown with a faction. Higher renown unlocks greater favor.",
   tooltip_rival: "A rival shares your path. Outpace them for glory.",
   tooltip_shop: "Spend your gold on gear, retinue, and luxuries.",
@@ -272,6 +273,9 @@ const en: StringMap = {
   riskTag: "Risk",
   requiresStat: "Requires",
   lockedChoice: "This path is beyond you — for now.",
+  liability: "Liability",
+  tooltip_liability:
+    "What the realm knows of your darker deeds. A high liability opens grim paths — and closes clean ones.",
 }
 
 const es: StringMap = {
@@ -416,7 +420,7 @@ const es: StringMap = {
   noAchievements: "No se obtuvieron logros en la última vida.",
 
   archetype_berserker: "Berserker",
-  archetype_guardian: "Guardiano",
+  archetype_guardian: "Guardian",
   archetype_duelist: "Duelista",
   archetype_knight: "Caballero",
   archetype_tactician: "Táctico",
@@ -519,6 +523,7 @@ const es: StringMap = {
   tooltip_momentum: "Impulso. Crece cuando la fortuna sonríe, cae cuando no lo hace.",
   tooltip_arc: "El capítulo de tu vida que estás viviendo.",
   tooltip_archetype: "Tu especialidad: moldea las elecciones que el destino te ofrece.",
+  tooltip_personality: "Los rasgos que el mundo ve en ti, forjados por las decisiones que tomas.",
   tooltip_reputation: "Tu renombre ante una facción. Un mayor renombre desbloquea mayores favores.",
   tooltip_rival: "Un rival comparte tu camino. Supéralo para lograr gloria.",
   tooltip_shop: "Gasta tu oro en equipo, séquito y lujos.",
@@ -545,6 +550,9 @@ const es: StringMap = {
   riskTag: "Riesgo",
   requiresStat: "Requiere",
   lockedChoice: "Este camino te queda grande — por ahora.",
+  liability: "Expediente",
+  tooltip_liability:
+    "Lo que el reino sabe de tus actos más oscuros. Un expediente alto abre caminos sombríos — y cierra los limpios.",
 }
 
 const TABLES: Record<Locale, StringMap> = { en, es }

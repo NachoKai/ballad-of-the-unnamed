@@ -6,6 +6,9 @@ import { peakReputation, primaryReputation } from "./helpers.js"
 interface EvalContext {
   scoreSoFar?: number
   endingType?: EndingType
+  // true only on the final achievement pass once the run has ended
+  // (gates end-of-life achievements like a clean-conscience finish).
+  runEnded?: boolean
 }
 
 function reputationAt(c: CharacterState, faction: string): number {
@@ -13,7 +16,7 @@ function reputationAt(c: CharacterState, faction: string): number {
 }
 
 // Current clan's faction wealth. Clan ids double as faction ids, so the
-// current affiliation maps straight into the faction table (§23 league gate).
+// current affiliation maps straight into the faction table (league gate).
 function currentFactionWealth(c: CharacterState, registry: ContentRegistry): number {
   if (!c.currentClanId) return 0
   return registry.factionsById.get(c.currentClanId)?.wealth ?? 0
@@ -61,6 +64,12 @@ function conditionMet(
       return c.origin === cond.value
     case "home_rep_gte":
       return reputationAt(c, c.homeFactionId) >= cond.value
+    case "liability_gte":
+      return (c.liability ?? 0) >= cond.value
+    case "liability_lte":
+      return (c.liability ?? 0) <= cond.value
+    case "run_ended":
+      return Boolean(ctx.runEnded)
     case "and":
       return cond.conditions.every((sub) =>
         conditionMet({ ...a, condition: sub }, c, ctx, registry),

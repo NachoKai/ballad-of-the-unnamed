@@ -56,7 +56,7 @@ const Header = styled.header`
   margin: 18px 0 10px;
 
   h1 {
-    font-size: clamp(26px, 4vw, 38px);
+    font-size: clamp(27px, 4vw, 39px);
     color: ${({ theme }) => theme.colors.goldBright};
   }
 `
@@ -111,7 +111,7 @@ const Info = styled.div`
 
 const Name = styled.span`
   font-family: ${({ theme }) => theme.fonts.display};
-  font-size: 14px;
+  font-size: 15px;
   color: ${({ theme }) => theme.colors.parchment};
   font-weight: 600;
   overflow: hidden;
@@ -120,7 +120,7 @@ const Name = styled.span`
 `
 
 const Desc = styled.span`
-  font-size: 12px;
+  font-size: 13px;
   color: ${({ theme }) => theme.colors.muted};
   overflow: hidden;
   text-overflow: ellipsis;
@@ -128,7 +128,7 @@ const Desc = styled.span`
 `
 
 const RarityBadge = styled.span<{ $rarity: string }>`
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   padding: 3px 8px;

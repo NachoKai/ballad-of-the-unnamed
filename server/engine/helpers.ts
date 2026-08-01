@@ -62,6 +62,15 @@ export function recomputeDerived(c: CharacterState): void {
   c.fame = Math.max(0, c.fame)
   c.gold = Math.max(0, c.gold)
   c.powerLevel = computePowerLevel(c)
+  // liability: normalize (also repairs stale saves that predate the field).
+  adjustLiability(c, 0)
+}
+
+// liability ("Expediente"): what the realm knows of your darker deeds.
+// Gains come from shady choices and grave outcomes; slow decay per season
+// keeps it from being a death spiral. Clamped 0..liabilityMax.
+export function adjustLiability(c: CharacterState, delta: number): void {
+  c.liability = Math.max(0, Math.min(GAME_CONFIG.liabilityMax, (c.liability ?? 0) + delta))
 }
 
 export function primaryReputation(c: CharacterState): number {
@@ -165,7 +174,7 @@ export function applyClanBetrayal(c: CharacterState, newClanId: string, turn: nu
   c.huntedUntilTurn = turn + GAME_CONFIG.huntedDurationTurns
 
   c.currentClanId = null
-  // Identity (§19): leaving a foreign clan returns you to your home region.
+  // Identity: leaving a foreign clan returns you to your home region.
   c.currentRegion = c.homeRegion
 }
 
@@ -174,7 +183,7 @@ export function regionOf(factionId: string, registry: ContentRegistry): string {
   return registry.factionsById.get(factionId)?.region ?? "vale"
 }
 
-// §20: whether the character is currently "riding the bench" at an over-
+// whether the character is currently "riding the bench" at an over-
 // reaching clan (stat gains reduced while this holds).
 export function isBenched(c: CharacterState): boolean {
   return c.benchedUntilTurn != null && c.turn < c.benchedUntilTurn
@@ -198,12 +207,12 @@ export function joinClan(
   })
   // Start reputation at 0 in the new faction.
   adjustReputation(c, clanId, 0)
-  // Geography (§19): moving to a clan updates the current region; identity
+  // Geography: moving to a clan updates the current region; identity
   // (homeFactionId/homeRegion) is untouched.
   if (registry) {
     c.currentRegion = regionOf(clanId, registry)
   }
-  // §20 over-reaching bench: joining a big clan below its level leaves you on
+  // over-reaching bench: joining a big clan below its level leaves you on
   // the bench. Tracked as a counter so the "Bench to Banner" achievement can
   // verify the rise-from-below story actually happened.
   const wealth = registry?.factionsById.get(clanId)?.wealth ?? 3
@@ -222,7 +231,7 @@ export function leaveClanAmicably(c: CharacterState, turn: number): void {
     membership.leftReason = "retired"
   }
   c.currentClanId = null
-  // Identity (§19): solo adventurers are back in their home region.
+  // Identity: solo adventurers are back in their home region.
   c.currentRegion = c.homeRegion
 }
 
@@ -231,7 +240,7 @@ export function clearExpiredHunted(c: CharacterState): void {
     c.huntedBy = null
     c.huntedUntilTurn = null
   }
-  // §20: the bench stint ends once the character's turn passes the deadline.
+  // the bench stint ends once the character's turn passes the deadline.
   if (c.benchedUntilTurn != null && c.turn >= c.benchedUntilTurn) {
     c.benchedUntilTurn = null
   }
@@ -280,7 +289,7 @@ export function isEligible(ev: EventContent, c: CharacterState): boolean {
   if (ev.requiresHuntedBy) {
     if (!c.huntedBy) return false
   }
-  // §19 geography axis: "outsider" events only while away from home, and the
+  // geography axis: "outsider" events only while away from home, and the
   // home-region pool only while there. Identity (homeRegion) is never touched.
   if (ev.requiresForeign) {
     if (c.currentRegion === c.homeRegion) return false
@@ -288,15 +297,20 @@ export function isEligible(ev: EventContent, c: CharacterState): boolean {
   if (ev.requiresHomeRegion) {
     if (c.currentRegion !== c.homeRegion) return false
   }
-  // §21 region-gated event variants: same archetype, current-region dressing.
+  // region-gated event variants: same archetype, current-region dressing.
   if (ev.requiresRegion) {
     if (c.currentRegion !== ev.requiresRegion) return false
   }
-  // §20 origin-gated pools (underdog / privileged flavor).
+  // origin-gated pools (underdog / privileged flavor).
   if (ev.requiresOrigin) {
     if (c.origin !== ev.requiresOrigin) return false
   }
   if (ev.involvesRival && !c.rival) return false
+  // liability gate: dark-path events only show once your deeds have
+  // accumulated enough to draw the underworld's attention.
+  if (ev.requiresLiability) {
+    if ((c.liability ?? 0) < ev.requiresLiability.min) return false
+  }
   return true
 }
 
@@ -310,7 +324,7 @@ export function effectiveWeight(ev: EventContent, c: CharacterState): number {
 
 // ---- Serving events to the client (strip hidden fields) ----
 
-// §20 minutes-signal for a clan-join offer: bench (below its level), same
+// minutes-signal for a clan-join offer: bench (below its level), same
 // (right-sized), up (arriving above the level you'd be slotted into).
 export function roleSignalFor(
   c: CharacterState,
@@ -365,6 +379,8 @@ export function serveEvent(
       // the current character meets it, so the client can render locked state.
       requiresStat: ch.requiresStat,
       statMet: ch.requiresStat ? c[ch.requiresStat.stat] >= ch.requiresStat.min : undefined,
+      // liability: warn the player when a pick stains the record.
+      liabilityDelta: ch.liabilityDelta,
     }))
     // Sort so rarer, more interesting choices read last (feels like a reveal).
     choices.sort((a, b) => rarityRank(a.rarity) - rarityRank(b.rarity))

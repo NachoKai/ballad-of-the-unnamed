@@ -101,18 +101,18 @@ const Toast = styled.div`
 `
 
 const ToastIcon = styled.span`
-  font-size: 26px;
+  font-size: 27px;
   color: ${({ theme }) => theme.colors.goldBright};
 `
 
 const ToastTitle = styled.div`
   font-family: ${({ theme }) => theme.fonts.display};
-  font-size: 15px;
+  font-size: 16px;
   color: ${({ theme }) => theme.colors.goldBright};
 `
 
 const ToastDesc = styled.div`
-  font-size: 14px;
+  font-size: 15px;
   color: ${({ theme }) => theme.colors.parchmentDim};
   line-height: 1.4;
 `
