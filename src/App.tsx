@@ -363,8 +363,11 @@ const TopBar = styled.div`
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 20px 0 18px;
+  padding: 20px 8px 18px;
   margin-bottom: 12px;
+  background: rgba(20, 17, 13, 0.82);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border-bottom: 1px solid ${({ theme }) => theme.colors.line};
   position: sticky;
   top: 0;

@@ -232,6 +232,7 @@ export interface EventContent {
 
 export interface ClassContent {
   id: string
+  icon: string
   name: LocaleMap
   description: LocaleMap
   base: Record<StatKey, number>

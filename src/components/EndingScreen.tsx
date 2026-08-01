@@ -1,5 +1,6 @@
 import { Castle, Landmark, Skull, Swords, Trophy, Crosshair } from "lucide-react"
 import { styled } from "styled-components"
+import { theme } from "../theme"
 import type {
   AchievementContent,
   CharacterState,
@@ -11,6 +12,7 @@ import { gt, t } from "../i18n/strings"
 import { AchIcon } from "./AchIcon"
 import { FactionFlag } from "./FactionFlag"
 import { BtnPrimary, BtnGhost } from "./ui/Button"
+import { SpecularBorder } from "./ui/SpecularBorder"
 import { TextBalance, TextPretty } from "./ui/Text"
 import { rise } from "./ui/Animation"
 
@@ -201,15 +203,24 @@ export function EndingScreen({
 
         <Epilogue>{epilogue}</Epilogue>
 
-        <ScoreBanner>
-          <ScoreLabel>{t(locale, "finalScore")}</ScoreLabel>
-          <ScoreValue>{score.toLocaleString()}</ScoreValue>
-          {richEpilogueData && (
-            <ScoreDetail>
-              {t(locale, "legacyScore")}: {richEpilogueData.legacyScore.toLocaleString()}
-            </ScoreDetail>
-          )}
-        </ScoreBanner>
+        <SpecularBorder
+          radius={12}
+          lineColor={theme.colors.goldBright}
+          baseColor={theme.colors.gold}
+          thickness={1.3}
+          intensity={1.1}
+          style={{ display: "inline-flex", margin: "24px auto" }}
+        >
+          <ScoreBanner>
+            <ScoreLabel>{t(locale, "finalScore")}</ScoreLabel>
+            <ScoreValue>{score.toLocaleString()}</ScoreValue>
+            {richEpilogueData && (
+              <ScoreDetail>
+                {t(locale, "legacyScore")}: {richEpilogueData.legacyScore.toLocaleString()}
+              </ScoreDetail>
+            )}
+          </ScoreBanner>
+        </SpecularBorder>
 
         <EndingStats>
           {stats.map((s) => (
@@ -342,8 +353,7 @@ const Epilogue = styled(TextPretty)`
 `
 
 const ScoreBanner = styled.div`
-  margin: 24px auto;
-  display: inline-flex;
+  display: flex;
   flex-direction: column;
   align-items: center;
   padding: 14px 40px;

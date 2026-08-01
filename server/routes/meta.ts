@@ -24,6 +24,7 @@ metaRouter.get("/classes", (req: Request, res: Response) => {
   const locale = localeOf(req)
   const classes = registry.classes.map((c) => ({
     id: c.id,
+    icon: c.icon,
     name: localize(c.name, locale),
     description: localize(c.description, locale),
     base: c.base,

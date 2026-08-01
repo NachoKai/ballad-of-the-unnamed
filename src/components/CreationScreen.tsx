@@ -4,6 +4,7 @@ import type { Gender, Locale, Origin, RunType } from "@shared/types"
 import { api, type ArchetypeView, type ClassInfo } from "../api"
 import { t } from "../i18n/strings"
 import { STAT_ABBR } from "../constants"
+import { AchIcon } from "./AchIcon"
 import { ArchetypeStep } from "./ArchetypeStep"
 import { BtnPrimary } from "./ui/Button"
 import { TextPretty } from "./ui/Text"
@@ -169,6 +170,9 @@ export function CreationScreen({ locale, onStart, onStartWithArchetype }: Props)
               onClick={() => setClassId(c.id)}
               aria-pressed={classId === c.id}
             >
+              <ClassIcon>
+                <AchIcon name={c.icon} size={26} />
+              </ClassIcon>
               <h3>{c.name}</h3>
               <ClassDesc>{c.description}</ClassDesc>
               <StatRow>
@@ -331,6 +335,19 @@ const ClassCard = styled.button<{ $selected: boolean }>`
     font-size: 21px;
     margin-bottom: 6px;
   }
+`
+
+const ClassIcon = styled.div`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: ${({ theme }) => theme.radii.sm};
+  background: ${({ theme }) => theme.colors.ink3};
+  border: 1px solid ${({ theme }) => theme.colors.line};
+  color: ${({ theme }) => theme.colors.gold};
+  margin-bottom: 10px;
 `
 
 const ClassDesc = styled(TextPretty)`

@@ -1,6 +1,7 @@
 [
   {
     "id": "warrior",
+    "icon": "swords",
     "name": {
       "en": "Warrior",
       "es": "Guerrero"
@@ -21,6 +22,7 @@
   },
   {
     "id": "wizard",
+    "icon": "wand",
     "name": {
       "en": "Wizard",
       "es": "Mago"
@@ -41,6 +43,7 @@
   },
   {
     "id": "rogue",
+    "icon": "key-round",
     "name": {
       "en": "Rogue",
       "es": "Pícaro"
@@ -61,6 +64,7 @@
   },
   {
     "id": "ranger",
+    "icon": "target",
     "name": {
       "en": "Ranger",
       "es": "Montaraz"
@@ -81,6 +85,7 @@
   },
   {
     "id": "cleric",
+    "icon": "heart-pulse",
     "name": {
       "en": "Cleric",
       "es": "Clérigo"
@@ -101,6 +106,7 @@
   },
   {
     "id": "bard",
+    "icon": "scroll-text",
     "name": {
       "en": "Bard",
       "es": "Bardo"

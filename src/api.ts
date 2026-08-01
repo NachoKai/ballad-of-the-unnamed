@@ -21,6 +21,7 @@ export interface AchievementView {
 
 export interface ClassInfo {
   id: string
+  icon: string
   name: string
   description: string
   base: Record<string, number>
