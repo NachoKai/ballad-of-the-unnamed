@@ -191,7 +191,6 @@ export default function App() {
   if (resuming) {
     return (
       <>
-        <LightRays />
         <BootScreen>
           <BootRune aria-hidden="true">{"\u16B1"}</BootRune>
           <p>{t(locale, "loading")}</p>
@@ -202,7 +201,6 @@ export default function App() {
 
   return (
     <>
-      <LightRays />
       <AppShell>
         <TopBar>
           <Brand
