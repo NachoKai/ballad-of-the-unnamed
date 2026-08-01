@@ -284,7 +284,7 @@ const CellName = styled.span`
 `
 
 const EpithetLabel = styled.span`
-  font-size: 12px;
+  font-size: 13px;
   color: ${({ theme }) => theme.colors.gold};
   letter-spacing: 0.06em;
   font-weight: 400;

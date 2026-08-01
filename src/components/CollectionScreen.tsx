@@ -290,7 +290,7 @@ const Tag = styled.span`
   background: ${({ theme }) => theme.colors.ink3};
   border: 1px solid ${({ theme }) => theme.colors.line};
   border-radius: 999px;
-  font-size: 14px;
+  font-size: 13px;
   color: ${({ theme }) => theme.colors.parchment};
 `
 

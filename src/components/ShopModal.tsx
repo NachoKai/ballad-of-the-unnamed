@@ -261,7 +261,7 @@ const OwnedBadge = styled.span`
   padding: 4px 10px;
   border: 1px solid ${({ theme }) => theme.colors.sage};
   border-radius: 999px;
-  font-size: 12px;
+  font-size: 13px;
   color: ${({ theme }) => theme.colors.sage};
   letter-spacing: 0.06em;
 `

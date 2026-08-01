@@ -463,7 +463,7 @@ const FactionName = styled.span`
 `
 
 const FactionTier = styled.span`
-  font-size: 12px;
+  font-size: 13px;
   color: ${({ theme }) => theme.colors.gold};
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -534,7 +534,7 @@ const DistinctionChip = styled.div`
   border: 1px solid rgba(201, 164, 76, 0.25);
   border-radius: ${({ theme }) => theme.radii.sm};
   background: rgba(201, 164, 76, 0.06);
-  font-size: 14px;
+  font-size: 13px;
   color: ${({ theme }) => theme.colors.parchmentDim};
 `
 

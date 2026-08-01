@@ -9,7 +9,6 @@ import { STAT_ABBR } from "../constants"
 import { personalitySummary } from "../lib/personality"
 import { FactionFlag } from "./FactionFlag"
 import { Panel } from "./ui/Panel"
-import { Faint } from "./ui/Text"
 import { Tooltip } from "./ui/Tooltip"
 
 interface Props {
@@ -40,9 +39,15 @@ export function Hud({ character: c, locale, onShopOpen }: Props) {
 
   return (
     <HudWrap>
+      <NameBanner>
+        <NameText>
+          <b>{c.name}</b>
+          <NameSep aria-hidden="true">·</NameSep>
+          <span>{className}</span>
+        </NameText>
+      </NameBanner>
+
       <TopRow>
-        <Name>
-          {c.name} <Faint>· {className}</Faint>
           {c.archetype && (
             <Tooltip content={t("tooltip_archetype")} side="bottom">
               <ArchetypeTag>{genderize(t(`archetype_${c.archetype}`), c.gender)}</ArchetypeTag>
@@ -63,16 +68,15 @@ export function Hud({ character: c, locale, onShopOpen }: Props) {
               <Home size={12} /> {t("homeTag")}
             </HomeTag>
           )}
-        </Name>
-        {onShopOpen && (
-          <ShopTip content={t("tooltip_shop")} align="end">
-            <ShopBtn type="button" onClick={onShopOpen}>
-              <Store size={14} aria-hidden="true" />
-              {t("shop")}
-              {inventoryCount > 0 && <InvBadge>{inventoryCount}</InvBadge>}
-            </ShopBtn>
-          </ShopTip>
-        )}
+          {onShopOpen && (
+            <ShopTip content={t("tooltip_shop")} align="end">
+              <ShopBtn type="button" onClick={onShopOpen}>
+                <Store size={14} aria-hidden="true" />
+                {t("shop")}
+                {inventoryCount > 0 && <InvBadge>{inventoryCount}</InvBadge>}
+              </ShopBtn>
+            </ShopTip>
+          )}
       </TopRow>
 
       <MetersRow>
@@ -200,7 +204,7 @@ const ArchetypeTag = styled.span`
   padding: 1px 8px;
   border: 1px solid ${({ theme }) => theme.colors.line2};
   border-radius: 999px;
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: ${({ theme }) => theme.colors.muted};
@@ -211,7 +215,54 @@ const TopRow = styled.div`
   display: flex;
   align-items: center;
   gap: 10px 14px;
-  padding: 16px 18px;
+  padding: 12px 18px 16px;
+`
+
+const NameBanner = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 18px 0;
+
+  &::before,
+  &::after {
+    content: "";
+    height: 1px;
+    flex: 1;
+    background: linear-gradient(90deg, transparent, ${({ theme }) => theme.colors.line2});
+  }
+
+  &::before {
+    margin-right: 8px;
+  }
+
+  &::after {
+    margin-left: 8px;
+    background: linear-gradient(90deg, ${({ theme }) => theme.colors.line2}, transparent);
+  }
+`
+
+const NameText = styled.span`
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  white-space: nowrap;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.colors.muted};
+
+  b {
+    font-family: ${({ theme }) => theme.fonts.display};
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: ${({ theme }) => theme.colors.parchment};
+  }
+`
+
+const NameSep = styled.span`
+  color: ${({ theme }) => theme.colors.gold};
 `
 
 const MetersRow = styled.div`
@@ -222,13 +273,7 @@ const MetersRow = styled.div`
   padding: 14px 18px;
 `
 
-const Name = styled.span`
-  flex: 1;
-  min-width: 0;
-  font-family: ${({ theme }) => theme.fonts.display};
-  font-size: 21px;
-  color: ${({ theme }) => theme.colors.goldBright};
-`
+
 
 const Meter = styled.span<{ $low?: boolean }>`
   display: inline-flex;
@@ -282,7 +327,7 @@ const MomentumBadge = styled.span<{ $variant: string }>`
   padding: 4px 12px;
   border: 1px solid ${({ theme }) => theme.colors.line2};
   border-radius: 999px;
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: ${({ $variant, theme }) =>
@@ -308,11 +353,11 @@ const StatPill = styled.span`
   border: 1px solid ${({ theme }) => theme.colors.line};
   border-radius: 999px;
   padding: 3px 10px;
-  font-size: 14px;
+  font-size: 13px;
   color: ${({ theme }) => theme.colors.parchment};
 
   b {
-    font-size: 16px;
+    font-size: 15px;
     font-variant-numeric: tabular-nums;
     color: ${({ theme }) => theme.colors.parchment};
     font-weight: 600;
@@ -323,7 +368,7 @@ const ArcPill = styled(StatPill)`
   border-color: ${({ theme }) => theme.colors.gold};
   color: ${({ theme }) => theme.colors.goldBright};
   text-transform: uppercase;
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: 0.1em;
 `
 
@@ -335,7 +380,7 @@ const ShopBtn = styled.button`
   border: 1px solid ${({ theme }) => theme.colors.line};
   border-radius: 999px;
   padding: 5px 14px;
-  font-size: 14px;
+  font-size: 13px;
   color: ${({ theme }) => theme.colors.gold};
   cursor: pointer;
   transition: all 0.12s;
@@ -356,7 +401,7 @@ const InvBadge = styled.span`
   border-radius: 999px;
   background: ${({ theme }) => theme.colors.gold};
   color: ${({ theme }) => theme.colors.ink};
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
 `
 
@@ -368,7 +413,7 @@ const ClanTag = styled.span`
   padding: 2px 8px;
   border: 1px solid ${({ theme }) => theme.colors.sage};
   border-radius: 999px;
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: ${({ theme }) => theme.colors.sage};
@@ -383,7 +428,7 @@ const HomeTag = styled.span`
   padding: 2px 8px;
   border: 1px solid ${({ theme }) => theme.colors.gold};
   border-radius: 999px;
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: ${({ theme }) => theme.colors.gold};
@@ -398,7 +443,7 @@ const AbroadTag = styled.span`
   padding: 2px 8px;
   border: 1px solid ${({ theme }) => theme.colors.line2};
   border-radius: 999px;
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: ${({ theme }) => theme.colors.muted};
@@ -432,7 +477,7 @@ const HuntedBadge = styled.span`
   background: rgba(191, 30, 30, 0.12);
   border: 1px solid ${({ theme }) => theme.colors.bloodBright};
   border-radius: 999px;
-  font-size: 12px;
+  font-size: 13px;
   color: ${({ theme }) => theme.colors.bloodBright};
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -445,7 +490,7 @@ const RepPill = styled.span`
   padding: 3px 10px;
   border: 1px solid ${({ theme }) => theme.colors.gold};
   border-radius: 999px;
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: 0.06em;
   color: ${({ theme }) => theme.colors.gold};
   text-transform: uppercase;
@@ -458,7 +503,7 @@ const TagPill = styled.span`
   padding: 3px 10px;
   border: 1px solid ${({ theme }) => theme.colors.sage};
   border-radius: 999px;
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: 0.04em;
   color: ${({ theme }) => theme.colors.sage};
 `

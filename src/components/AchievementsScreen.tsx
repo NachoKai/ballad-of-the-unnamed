@@ -128,7 +128,7 @@ const Desc = styled.span`
 `
 
 const RarityBadge = styled.span<{ $rarity: string }>`
-  font-size: 11px;
+  font-size: 13px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   padding: 3px 8px;

@@ -371,7 +371,7 @@ const StatChip = styled.span`
   border: 1px solid ${({ theme }) => theme.colors.line};
   border-radius: 999px;
   padding: 3px 10px;
-  font-size: 14px;
+  font-size: 13px;
   color: ${({ theme }) => theme.colors.parchment};
 
   em {

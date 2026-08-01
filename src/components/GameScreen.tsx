@@ -460,7 +460,7 @@ const ChoiceLabel = styled(TextPretty)`
 const ChoiceRarity = styled.span<{ $rarity: Rarity }>`
   display: inline-block;
   margin-top: 6px;
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: ${({ $rarity, theme }) =>
@@ -504,7 +504,7 @@ const RoleSignalTag = styled.span<{ $signal: RoleSignal }>`
   padding: 1px 7px;
   border: 1px solid ${({ $signal }) => ROLE_SIGNAL[$signal].color};
   border-radius: 999px;
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: 0.06em;
   color: ${({ $signal }) => ROLE_SIGNAL[$signal].color};
   vertical-align: middle;
@@ -537,7 +537,7 @@ const RequirementTag = styled.span<{ $met: boolean }>`
   padding: 2px 9px;
   border: 1px solid ${({ $met, theme }) => ($met ? theme.colors.gold : theme.colors.bloodBright)};
   border-radius: 4px;
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: ${({ $met, theme }) => ($met ? theme.colors.gold : theme.colors.bloodBright)};
@@ -606,7 +606,7 @@ const SeasonStat = styled.div`
   flex: 1;
 
   span {
-    font-size: 12px;
+    font-size: 13px;
     color: ${({ theme }) => theme.colors.muted};
     text-transform: uppercase;
     letter-spacing: 0.08em;
