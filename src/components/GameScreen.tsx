@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { Swords } from "lucide-react"
 import { styled } from "styled-components"
 import type { CharacterState, ServedEvent, Rarity, RoleSignal } from "@shared/types"
 import type { Locale } from "@shared/types"
@@ -68,6 +69,79 @@ export function GameScreen({
   // Sort choices by rarity so the "safe" option is first and rare/volatile pop last.
   const choices = [...event.choices].sort((a, b) => rarityRank(a.rarity) - rarityRank(b.rarity))
   const isSeasonSummary = event.isSeasonSummary
+  const continueChoice = isSeasonSummary ? choices.find((c) => c.id === "continue") : undefined
+  const playableChoices = continueChoice ? choices.filter((c) => c.id !== "continue") : choices
+
+  // Shared card body used both in the choice grid and the bottom "continue" button.
+  function renderChoiceBody(c: (typeof event.choices)[number], compact: boolean) {
+    return (
+      <ChoiceCard
+        type="button"
+        $rarity={c.rarity}
+        $selected={selected === c.id}
+        onClick={() => pick(c.id)}
+        disabled={busy}
+      >
+        {!compact && <RarityPip $rarity={c.rarity} aria-hidden="true" />}
+        <ChoiceLabel>
+          {c.factionId ? (
+            <FactionFlag factionId={c.factionId} size={20} />
+          ) : c.icon ? (
+            <AchIcon name={c.icon} size={20} />
+          ) : null}
+          {c.label}
+          {c.roleSignal && (
+            <Tooltip content={t(locale, `roleSignal${ROLE_SIGNAL_LABEL[c.roleSignal]}`)}>
+              <RoleSignalTag $signal={c.roleSignal}>{ROLE_SIGNAL_ICON[c.roleSignal]}</RoleSignalTag>
+            </Tooltip>
+          )}
+        </ChoiceLabel>
+        {!compact && (
+          <ChoiceRarity $rarity={c.rarity}>{t(locale, `rarity_${c.rarity}` as never)}</ChoiceRarity>
+        )}
+        {c.riskLabel && (
+          <RiskTag>
+            ⚠ {t(locale, "riskTag")}: {c.riskLabel}
+          </RiskTag>
+        )}
+        {(c.statDeltas || c.tradeoffDeltas || c.fameDelta || c.reputationDelta || c.goldDelta) && (
+          <ChoiceDeltas>
+            {c.statDeltas && <StatTag locale={locale} deltas={c.statDeltas} />}
+            {c.tradeoffDeltas && <StatTag locale={locale} deltas={c.tradeoffDeltas} tradeoff />}
+            {c.fameDelta && c.fameDelta !== 0 && (
+              <Tooltip content={t(locale, "tooltip_fame")}>
+                <BonusTag $tint="fame">
+                  {t(locale, "fame")} {c.fameDelta > 0 ? `+${c.fameDelta}` : c.fameDelta}
+                </BonusTag>
+              </Tooltip>
+            )}
+            {c.reputationDelta && c.reputationDelta !== 0 && (
+              <Tooltip content={t(locale, "tooltip_reputation")}>
+                <BonusTag $tint="rep">
+                  {t(locale, "reputation")}{" "}
+                  {c.reputationDelta > 0 ? `+${c.reputationDelta}` : c.reputationDelta}
+                </BonusTag>
+              </Tooltip>
+            )}
+            {c.goldDelta && c.goldDelta !== 0 && (
+              <Tooltip content={t(locale, "tooltip_gold")}>
+                <BonusTag $tint="gold">
+                  {t(locale, "gold")} {c.goldDelta > 0 ? `+${c.goldDelta}` : c.goldDelta}
+                </BonusTag>
+              </Tooltip>
+            )}
+            {c.stipend && c.stipend !== 0 && (
+              <Tooltip content={t(locale, "tooltip_gold")}>
+                <BonusTag $tint="gold">
+                  +{c.stipend} {t(locale, "stipendPerSeason")}
+                </BonusTag>
+              </Tooltip>
+            )}
+          </ChoiceDeltas>
+        )}
+      </ChoiceCard>
+    )
+  }
 
   return (
     <GameLayout>
@@ -110,90 +184,14 @@ export function GameScreen({
         <SceneNarrative>{capitalize(event.narrative)}</SceneNarrative>
 
         <ChoiceGrid role="group" aria-label={t(locale, "chooseAction")}>
-          {choices.map((c) => (
+          {playableChoices.map((c) => (
             <ChoiceCardWrap
               key={c.id}
               color={theme.colors.rarity[c.rarity]}
               chaos={RARITY_CHAOS[c.rarity]}
               borderRadius={8}
             >
-              <ChoiceCard
-                type="button"
-                $rarity={c.rarity}
-                $selected={selected === c.id}
-                onClick={() => pick(c.id)}
-                disabled={busy}
-              >
-                {isSeasonSummary && c.id === "continue" ? null : (
-                  <RarityPip $rarity={c.rarity} aria-hidden="true" />
-                )}
-                <ChoiceLabel>
-                  {c.factionId ? (
-                    <FactionFlag factionId={c.factionId} size={20} />
-                  ) : c.icon ? (
-                    <AchIcon name={c.icon} size={20} />
-                  ) : null}
-                  {c.label}
-                  {c.roleSignal && (
-                    <Tooltip content={t(locale, `roleSignal${ROLE_SIGNAL_LABEL[c.roleSignal]}`)}>
-                      <RoleSignalTag $signal={c.roleSignal}>
-                        {ROLE_SIGNAL_ICON[c.roleSignal]}
-                      </RoleSignalTag>
-                    </Tooltip>
-                  )}
-                </ChoiceLabel>
-                {isSeasonSummary && c.id === "continue" ? null : (
-                  <ChoiceRarity $rarity={c.rarity}>
-                    {t(locale, `rarity_${c.rarity}` as never)}
-                  </ChoiceRarity>
-                )}
-                {c.riskLabel && (
-                  <RiskTag>
-                    ⚠ {t(locale, "riskTag")}: {c.riskLabel}
-                  </RiskTag>
-                )}
-                {(c.statDeltas ||
-                  c.tradeoffDeltas ||
-                  c.fameDelta ||
-                  c.reputationDelta ||
-                  c.goldDelta) && (
-                  <ChoiceDeltas>
-                    {c.statDeltas && <StatTag locale={locale} deltas={c.statDeltas} />}
-                    {c.tradeoffDeltas && (
-                      <StatTag locale={locale} deltas={c.tradeoffDeltas} tradeoff />
-                    )}
-                    {c.fameDelta && c.fameDelta !== 0 && (
-                      <Tooltip content={t(locale, "tooltip_fame")}>
-                        <BonusTag $tint="fame">
-                          {t(locale, "fame")} {c.fameDelta > 0 ? `+${c.fameDelta}` : c.fameDelta}
-                        </BonusTag>
-                      </Tooltip>
-                    )}
-                    {c.reputationDelta && c.reputationDelta !== 0 && (
-                      <Tooltip content={t(locale, "tooltip_reputation")}>
-                        <BonusTag $tint="rep">
-                          {t(locale, "reputation")}{" "}
-                          {c.reputationDelta > 0 ? `+${c.reputationDelta}` : c.reputationDelta}
-                        </BonusTag>
-                      </Tooltip>
-                    )}
-                    {c.goldDelta && c.goldDelta !== 0 && (
-                      <Tooltip content={t(locale, "tooltip_gold")}>
-                        <BonusTag $tint="gold">
-                          {t(locale, "gold")} {c.goldDelta > 0 ? `+${c.goldDelta}` : c.goldDelta}
-                        </BonusTag>
-                      </Tooltip>
-                    )}
-                    {c.stipend && c.stipend !== 0 && (
-                      <Tooltip content={t(locale, "tooltip_gold")}>
-                        <BonusTag $tint="gold">
-                          +{c.stipend} {t(locale, "stipendPerSeason")}
-                        </BonusTag>
-                      </Tooltip>
-                    )}
-                  </ChoiceDeltas>
-                )}
-              </ChoiceCard>
+              {renderChoiceBody(c, false)}
             </ChoiceCardWrap>
           ))}
         </ChoiceGrid>
@@ -212,7 +210,11 @@ export function GameScreen({
               </WorldEventsBlock>
             )}
 
-            {event.rivalUpdate && <RivalUpdateBlock>⚔️ {event.rivalUpdate}</RivalUpdateBlock>}
+            {event.rivalUpdate && (
+              <RivalUpdateBlock>
+                <Swords size={14} /> {event.rivalUpdate}
+              </RivalUpdateBlock>
+            )}
 
             <SeasonStatRow>
               <SeasonStat>
@@ -243,6 +245,18 @@ export function GameScreen({
               )}
             </SeasonStatRow>
           </>
+        )}
+
+        {continueChoice && (
+          <ContinueBlock>
+            <ChoiceCardWrap
+              color={theme.colors.rarity[continueChoice.rarity]}
+              chaos={RARITY_CHAOS[continueChoice.rarity]}
+              borderRadius={8}
+            >
+              {renderChoiceBody(continueChoice, true)}
+            </ChoiceCardWrap>
+          </ContinueBlock>
         )}
 
         <Tooltip content={t(locale, "tooltip_abandon")} align="end">
@@ -501,6 +515,10 @@ const SeasonStat = styled.div`
   }
 `
 
+const ContinueBlock = styled.div`
+  margin: 24px 0 18px;
+`
+
 const AbandonBtn = styled(LinkBtn)`
   margin-top: 20px;
   text-align: center;
@@ -550,6 +568,9 @@ const WorldEventNarrative = styled.div`
 `
 
 const RivalUpdateBlock = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 6px;
   padding: 10px 14px;
   margin-bottom: 16px;
   border: 1px solid ${({ theme }) => theme.colors.bloodBright};
