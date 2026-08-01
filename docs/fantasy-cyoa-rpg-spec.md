@@ -21,8 +21,8 @@ Reference model: the attached "El Ídolo" (futbol career sim). Same shape, fanta
 No, not for game logic. Recommended split:
 
 - **Deterministic core (no AI):** stats, gold, RNG, event selection, achievement checks, ranking math, turn/age progression. This must be fully reproducible and testable without any network call.
-- **Optional AI layer (Claude API, server-side, off the critical path):** generates *prose variation* on top of authored templates — e.g. rephrasing a flavor-text template with the character's name/class/history baked in, or writing the final life-summary narrative from a structured JSON recap. If the API call fails or is disabled, fall back to the authored template string. Never let an LLM call decide stat changes, gold amounts, win/loss, or achievement unlocks — those must come from code so the game stays balanced and cheatable-testable.
-- Ship v1 with AI *off* (pure template bank). Add the AI narration layer as a toggleable enhancement once the deterministic game is solid.
+- **Optional AI layer (Claude API, server-side, off the critical path):** generates _prose variation_ on top of authored templates — e.g. rephrasing a flavor-text template with the character's name/class/history baked in, or writing the final life-summary narrative from a structured JSON recap. If the API call fails or is disabled, fall back to the authored template string. Never let an LLM call decide stat changes, gold amounts, win/loss, or achievement unlocks — those must come from code so the game stays balanced and cheatable-testable.
+- Ship v1 with AI _off_ (pure template bank). Add the AI narration layer as a toggleable enhancement once the deterministic game is solid.
 
 ## Data model
 
@@ -69,6 +69,7 @@ Every dialogue-flavored choice tags the player's reply with one of:
 `Humble, Cocky, Confident, Professional, Aggressive, Funny, Supportive, Strategic, Stoic, Leader`
 
 Each event that uses this system defines:
+
 - which tag(s) it "wants" (bonus outcome)
 - which tag(s) it "punishes" (bad outcome)
 - neutral tags = neutral/minor outcome
@@ -142,7 +143,7 @@ Raw gold or raw years-lived as the top sort metric both reward the wrong thing �
 3. **Age at end** — real signal, but capped so pure passive survival can't out-rank an active shorter life.
 4. **Final power level** — build quality.
 5. **Reputation peak** — social/fame signal.
-6. **Net worth** — gold *plus* the value of owned retinue/luxury items, not raw held gold. Smallest weight: it's mostly a means (spent on the shop), not an accomplishment.
+6. **Net worth** — gold _plus_ the value of owned retinue/luxury items, not raw held gold. Smallest weight: it's mostly a means (spent on the shop), not an accomplishment.
 7. **Legacy score** — from the post-mortem Legacy pass (statues, students, settlements saved, artifacts left behind). Rewards a run that built something lasting, distinct from raw combat/survival metrics.
 8. **Ending type bonus** — death is not a penalty in this game; a heroic last stand and a clean retirement should both score well, an anticlimactic random-mishap death should not.
 
@@ -364,12 +365,12 @@ Every choice ("card") on an event carries a `rarity`. Rarity controls both how o
 
 **Rarity tiers**
 
-| Rarity | Weight (how often offered) | Typical effect |
-|---|---|---|
-| Common | high | +1 to one stat, no downside |
-| Uncommon | medium | +2 to +3 to one stat, no downside |
-| Rare | low | +3 to +5 to one stat, no downside |
-| Volatile | lowest | +5 to +8 to one stat, **but** −2 to −4 on one or two other stats |
+| Rarity   | Weight (how often offered) | Typical effect                                                   |
+| -------- | -------------------------- | ---------------------------------------------------------------- |
+| Common   | high                       | +1 to one stat, no downside                                      |
+| Uncommon | medium                     | +2 to +3 to one stat, no downside                                |
+| Rare     | low                        | +3 to +5 to one stat, no downside                                |
+| Volatile | lowest                     | +5 to +8 to one stat, **but** −2 to −4 on one or two other stats |
 
 Volatile cards are the ones that "give more than Rare" — they're the highest-ceiling option but always cost something elsewhere. They are not simply "Rare but bigger"; they're a distinct build-defining choice (e.g. a glass-cannon Strength card that drains Constitution and Charisma). Never let Volatile be strictly better than Rare with no cost — the tradeoff must always net out to a real loss on at least one other stat.
 
@@ -440,7 +441,7 @@ Render this as its own epilogue block (a life-summary paragraph, not just a stat
 
 ## RNG & determinism
 
-The daily-mode promise ("same event rolls for everyone that day," Ranking criteria & score formula) only holds if *every* random draw in a run comes from one seeded source — not just the top-level event pick. As specced so far it doesn't: slot-filling (Content storage & scale strategy), mini-game hidden variables (Mini-games), and injury rolls (above) are all separate randomness introduced in later sections, none of them wired to the daily seed.
+The daily-mode promise ("same event rolls for everyone that day," Ranking criteria & score formula) only holds if _every_ random draw in a run comes from one seeded source — not just the top-level event pick. As specced so far it doesn't: slot-filling (Content storage & scale strategy), mini-game hidden variables (Mini-games), and injury rolls (above) are all separate randomness introduced in later sections, none of them wired to the daily seed.
 
 - Seed one PRNG per run (small deterministic generator, e.g. mulberry32) — `daily_seed` for daily-mode runs (same seed reused across every player that day), a fresh random seed for standard runs.
 - Thread that single generator instance through every random draw in the turn-resolution pipeline: event selection weight roll, slot-fill pool picks, choice-rarity offer generation, mini-game hidden-variable roll, injury-risk rolls, clan-offer generation.
@@ -452,14 +453,14 @@ The spec so far treats every turn as a homogeneous event→choice cycle. That's 
 
 **Chapters** — `characters.current_arc` (schema above), age-gated, each unlocking a **different event pool**, not just harder versions of the same one:
 
-| Arc | Age range | Character |
-|---|---|---|
-| Child | 0-15 | pre-adventure, sets up starting flags/relationships |
-| Adventurer | 16-25 | Starting archetype roll happens here; low-stakes local events, first clan offers |
-| Mercenary | 26-39 | Clan/betrayal mechanics, Volatile cards more common, first Destiny-card window |
-| Kingdom Hero | 40-59 | High-fame clan offers, "the Far Reaches" foreign-kingdom offers unlock (fame-gated, reuses Clans' `isForeign` tag), political/noble-reputation content becomes available |
-| Legend | 60-79 | Retirement becomes available (Health, injury & death conditions), Legacy-building content (mentoring, founding things) |
-| Old Hero | 80+ | Rare survivors only; mostly Legacy/farewell content, the scripted retirement finale becomes likely |
+| Arc          | Age range | Character                                                                                                                                                                |
+| ------------ | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Child        | 0-15      | pre-adventure, sets up starting flags/relationships                                                                                                                      |
+| Adventurer   | 16-25     | Starting archetype roll happens here; low-stakes local events, first clan offers                                                                                         |
+| Mercenary    | 26-39     | Clan/betrayal mechanics, Volatile cards more common, first Destiny-card window                                                                                           |
+| Kingdom Hero | 40-59     | High-fame clan offers, "the Far Reaches" foreign-kingdom offers unlock (fame-gated, reuses Clans' `isForeign` tag), political/noble-reputation content becomes available |
+| Legend       | 60-79     | Retirement becomes available (Health, injury & death conditions), Legacy-building content (mentoring, founding things)                                                   |
+| Old Hero     | 80+       | Rare survivors only; mostly Legacy/farewell content, the scripted retirement finale becomes likely                                                                       |
 
 This resolves the earlier open question about turn-vs-age pacing: age increments once per **season** (a fixed number of turns, e.g. 5), not once per turn.
 
@@ -510,20 +511,20 @@ Periodic special beats where the player picks one of several cards and a hidden 
 **Generic framework**
 
 - Event presents 3-6 cards (icon + label), each representing a target/tactic/argument.
-- Server also rolls a hidden opposing variable (defender's guess, ward type, ambusher's position, NPC's mood) *before* showing the result — never influenced by which card the player picked, to keep it fair.
+- Server also rolls a hidden opposing variable (defender's guess, ward type, ambusher's position, NPC's mood) _before_ showing the result — never influenced by which card the player picked, to keep it fair.
 - Win chance = `baseWinChance + (relevant stat × small coefficient, capped)` — stat matters, but variance stays real so it's never a solved/deterministic pick.
 - Outcome tiers: Critical success / Success / Partial / Fail — matches the tone of existing systems (reputation tiers, shop item tiers). Partial outcomes should exist, not just binary win/lose (e.g. lockpick jams the alarm but still opens; negotiation gets a worse deal but avoids a fight).
 - Resolve server-side, return result + narrative + deltas. Client never computes or claims the outcome.
 
 **Fantasy adaptations**
 
-| Mini-game | Cards shown | Hidden variable | Primary stat |
-|---|---|---|---|
-| Duel — Final Blow | Strike zones (high-left, high-right, low/disarm, feint-center) | Opponent's guard read | Strength + Dexterity |
-| Arcane Clash | Spell school (Fire, Frost, Arcane, Nature) | Opponent's ward type | Intelligence |
-| Lockpick / Trap Disarm | Pin/wire sequence options | Trap's actual mechanism | Dexterity |
-| Negotiation Gambit | Argument type (reuses the personality tag set: Humble, Cocky, Strategic, etc.) | NPC's hidden disposition | Charisma |
-| Ambush Escape | Escape route (left alley, rooftop, bluff-and-fight, call for help) | Ambusher's blocked route | Dexterity + Constitution |
+| Mini-game              | Cards shown                                                                    | Hidden variable          | Primary stat             |
+| ---------------------- | ------------------------------------------------------------------------------ | ------------------------ | ------------------------ |
+| Duel — Final Blow      | Strike zones (high-left, high-right, low/disarm, feint-center)                 | Opponent's guard read    | Strength + Dexterity     |
+| Arcane Clash           | Spell school (Fire, Frost, Arcane, Nature)                                     | Opponent's ward type     | Intelligence             |
+| Lockpick / Trap Disarm | Pin/wire sequence options                                                      | Trap's actual mechanism  | Dexterity                |
+| Negotiation Gambit     | Argument type (reuses the personality tag set: Humble, Cocky, Strategic, etc.) | NPC's hidden disposition | Charisma                 |
+| Ambush Escape          | Escape route (left alley, rooftop, bluff-and-fight, call for help)             | Ambusher's blocked route | Dexterity + Constitution |
 
 Negotiation Gambit deliberately reuses the existing personality-tag system rather than inventing new cards — same tags, same tracking, one more place they matter.
 
@@ -535,10 +536,26 @@ Negotiation Gambit deliberately reuses the existing personality-tag system rathe
   "type": "minigame",
   "subtype": "duel_strike",
   "cards": [
-    { "id": "high_left", "icon": "⚔️", "label": { "en": "Strike high-left", "es": "Golpe arriba a la izquierda" } },
-    { "id": "high_right", "icon": "⚔️", "label": { "en": "Strike high-right", "es": "Golpe arriba a la derecha" } },
-    { "id": "low_disarm", "icon": "🗡️", "label": { "en": "Aim low, disarm", "es": "Bajo, para desarmar" } },
-    { "id": "feint_center", "icon": "🌀", "label": { "en": "Feint to center", "es": "Amague al medio" } }
+    {
+      "id": "high_left",
+      "icon": "⚔️",
+      "label": { "en": "Strike high-left", "es": "Golpe arriba a la izquierda" }
+    },
+    {
+      "id": "high_right",
+      "icon": "⚔️",
+      "label": { "en": "Strike high-right", "es": "Golpe arriba a la derecha" }
+    },
+    {
+      "id": "low_disarm",
+      "icon": "🗡️",
+      "label": { "en": "Aim low, disarm", "es": "Bajo, para desarmar" }
+    },
+    {
+      "id": "feint_center",
+      "icon": "🌀",
+      "label": { "en": "Feint to center", "es": "Amague al medio" }
+    }
   ],
   "resolution": {
     "type": "weighted_hidden_match",
@@ -616,17 +633,18 @@ CREATE TABLE clan_memberships (
 );
 ```
 
-**Offer flow**: a `clan_offer` event type presents 2-4 clan cards (name, specialty, signing gold, perk) the same shape as the reference doc's job-offer screens ("Bombazo" cards). Offer frequency and gold size scale with Fame — low-fame characters get minor local clans, high-fame characters get rival clans actively poaching them. Solo characters get offers too; existing clan members get *rival* offers (the betrayal path).
+**Offer flow**: a `clan_offer` event type presents 2-4 clan cards (name, specialty, signing gold, perk) the same shape as the reference doc's job-offer screens ("Bombazo" cards). Offer frequency and gold size scale with Fame — low-fame characters get minor local clans, high-fame characters get rival clans actively poaching them. Solo characters get offers too; existing clan members get _rival_ offers (the betrayal path).
 
 **Joining (from solo)**: create `clan_memberships` row, set `current_clan_id`, apply signing bonus gold, initialize reputation at 0 in that faction ("Uno más", matching the tier system already in the achievements list).
 
 **Leaving amicably**: contract-end event (fixed duration, or player-initiated at a natural break point) — closes membership with `left_reason='retired'`, reputation at that clan is preserved/frozen (can still hit "One Clan Man" / statue achievements later if they resocialize, design call for the agent), no penalty.
 
 **Betraying (switching mid-contract for a better offer)**:
+
 1. Close old membership, `left_reason='betrayed'`.
 2. Crash reputation at old clan (e.g. hard floor or steep drop, not just a small dip — betrayal should read as irreversible).
 3. Flag character `hunted_by = old_clan_id` for N turns — gate a small pool of "old clan sends someone after you" ambush/confrontation events into the content bank during that window (Strength/Dexterity/Charisma choices to escape/fight/talk down), tag `requiresHuntedBy`.
-4. New clan membership opens at a *higher* starting rank/reputation than a cold join, reflecting that the new clan sought you out (design call: e.g. start at "Known" instead of "Stranger").
+4. New clan membership opens at a _higher_ starting rank/reputation than a cold join, reflecting that the new clan sought you out (design call: e.g. start at "Known" instead of "Stranger").
 5. Unlock "Turncoat" achievement (already in the achievements list) if the new clan is the flagged `rival_clan_id` of the old one — that's the maximum-heel version of this move.
 
 **Solo path stays viable**: no clan perks, but no obligations, no betrayal risk, no hunted events — ties into "Wanderer"/"Lone path" style achievements (finish with zero clan memberships, or the opposite: 5+ clans and no lasting loyalty, already listed as "Mercenario").
@@ -669,34 +687,34 @@ Three categories — Retinue and Luxury as already spec'd, plus a Consumables ti
 
 **Retinue — functional, gameplay effects, permanent once bought**
 
-| Icon | Item | Cost | Effect |
-|---|---|---|---|
-| 🍲 | Camp Cook | 8,000g | Less fatigue, steadier stats all season |
-| 🩹 | Battle Healer | 11,000g | Lower injury risk |
-| 🔮 | Camp Seer | 9,000g | Bad momentum streaks end sooner |
-| 🗡️ | Weapon Master | 14,000g | Stat decline from age hits later |
-| 📜 | Guild Herald | 12,000g | Better contract/quest offers and rewards |
+| Icon | Item          | Cost   | Effect                                   |
+| ---- | ------------- | ------ | ---------------------------------------- |
+| 🍲   | Camp Cook     | 2,000g | Less fatigue, steadier stats all season  |
+| 🩹   | Battle Healer | 2,600g | Lower injury risk                        |
+| 🔮   | Camp Seer     | 2,200g | Bad momentum streaks end sooner          |
+| 🗡️   | Weapon Master | 3,000g | Stat decline from age hits later         |
+| 📜   | Guild Herald  | 2,800g | Better contract/quest offers and rewards |
 
 **Consumables — temporary, 1-2 seasons, repurchasable**
 
-| Icon | Item | Cost | Duration | Effect |
-|---|---|---|---|---|
-| 🥾 | Enchanted boots | 1,800g | 1 season | More battle wins this season |
-| 🩹 | Season healer's contract | 2,500g | 2 seasons | Stamina + lower injury risk |
-| ⚡ | Alchemical draught | 1,400g | 1 season | More stamina/appearances |
-| 🎯 | Scout's dossier | 1,400g | 1 season | More quests completed |
-| 🍀 | Lucky charm | 2,100g | 1 season | Luck boost in title/rank pushes |
+| Icon | Item                     | Cost | Duration  | Effect                          |
+| ---- | ------------------------ | ---- | --------- | ------------------------------- |
+| 🥾   | Enchanted boots          | 600g | 1 season  | More battle wins this season    |
+| 🩹   | Season healer's contract | 800g | 2 seasons | Stamina + lower injury risk     |
+| ⚡   | Alchemical draught       | 500g | 1 season  | More stamina/appearances        |
+| 🎯   | Scout's dossier          | 500g | 1 season  | More quests completed           |
+| 🍀   | Lucky charm              | 700g | 1 season  | Luck boost in title/rank pushes |
 
 **Luxury — cosmetic only, no stat effect**
 
-| Icon | Item | Cost |
-|---|---|---|
-| 🐎 | Warhorse | 500g |
-| 🏡 | Cottage | 1,500g |
-| 🏰 | Manor with training grounds | 6,000g |
-| 🗼 | Fortified tower | 12,000g |
-| 🦅 | Personal griffon | 28,000g |
-| 🏝️ | Floating pocket realm | 48,000g |
+| Icon | Item                        | Cost    |
+| ---- | --------------------------- | ------- |
+| 🐎   | Warhorse                    | 400g    |
+| 🏡   | Cottage                     | 1,200g  |
+| 🏰   | Manor with training grounds | 3,000g  |
+| 🗼   | Fortified tower             | 5,000g  |
+| 🦅   | Personal griffon            | 8,000g  |
+| 🏝️   | Floating pocket realm       | 12,000g |
 
 Rule: luxury spend never touches stats — gold sink for flavor/bragging rights/achievements only. Retinue and Consumable effects apply as passive modifiers on top of the deterministic stat math (Turn loop), never as a separate RNG source. Consumables need an `expiresAtTurn` (or season count) on the `inventory` row and a cleanup check at season boundary.
 
@@ -706,7 +724,7 @@ The shop should read as career progression, not a flat catalog available from tu
 
 - **Adventurer/Mercenary arcs**: Warhorse, Cottage, Camp Cook, Battle Healer — humble, early-career items.
 - **Kingdom Hero arc**: Manor, Fortified tower, Guild Herald, foreign-kingdom-flavored consumables.
-- **Legend arc**: Personal griffon, Floating pocket realm, a "Court Wizard" retinue slot, a "Private army" luxury tier — the grandest items simply aren't purchasable earlier, so reaching them *feels* like arrival rather than just having saved enough gold.
+- **Legend arc**: Personal griffon, Floating pocket realm, a "Court Wizard" retinue slot, a "Private army" luxury tier — the grandest items simply aren't purchasable earlier, so reaching them _feels_ like arrival rather than just having saved enough gold.
 
 ### Shop item schema
 
@@ -767,7 +785,7 @@ Apply the same `{ en, es }` shape to: event narrative, choice labels, shop item 
 
 **Parity tooling**: a build-time script that walks every content JSON file and fails the build if any entry is missing an `en` or `es` key. Don't let missing translations ship silently as blank strings or English fallback without flagging it.
 
-**Persisted data stays language-neutral**: `stat_deltas`, `event_id`, `choice_id`, `rarity`, gold amounts — all ids/numbers, no baked text. Store the *reference*, not the resolved sentence.
+**Persisted data stays language-neutral**: `stat_deltas`, `event_id`, `choice_id`, `rarity`, gold amounts — all ids/numbers, no baked text. Store the _reference_, not the resolved sentence.
 
 **`turn_log.narrative`**: change from a resolved string to a recap reference (`event_id` + `choice_id` + interpolation vars, e.g. character name/class) — resolve to display text at render time in whatever locale the viewer has selected. This is what makes a leaderboard entry viewable in either language regardless of what locale the original player used. Add a `locale` column only if you want to record which locale the player actually played in (useful for analytics), but rendering should not depend on it.
 
@@ -779,13 +797,14 @@ Apply the same `{ en, es }` shape to: event narrative, choice labels, shop item 
 
 ## Storage strategy: why a database, not localStorage
 
-Ephemeral runs (15-30 min, then reset) is a *retention* property, not a reason to skip a database.
+Ephemeral runs (15-30 min, then reset) is a _retention_ property, not a reason to skip a database.
 
 **Why not localStorage as source of truth**: breaks the server-authoritative turn resolution already decided above (client-editable state can't be trusted), doesn't survive a different device/browser, and there's no such thing as a shared leaderboard in per-browser storage.
 
 **Write volume reality check**: one DB write per player choice (a click every few seconds to a minute) is normal request/response load, not a tick-based firehose — libSQL/Turso handles this fine at scale without a caching layer in v1.
 
 **What "ephemeral" actually buys you — retention policy, not storage choice**:
+
 - Active run: normal rows in `characters` + `turn_log`, refetched by run token on page load (reload-resilience comes from this, not from localStorage).
 - Finished run: write one `leaderboard_entries` row (small, permanent).
 - Scheduled cleanup job purges `turn_log` detail rows after a window (e.g. 30-90 days, or immediately post-finish if turn-by-turn replay isn't a feature) — keep only the tiny `leaderboard_entries` row forever.

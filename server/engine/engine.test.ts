@@ -993,7 +993,7 @@ describe("shop & inventory", () => {
     c.inventory.push({ itemId: item!.id, qty: 1, expiresAtTurn: null })
     expect(c.inventory).toHaveLength(1)
     expect(c.inventory[0].itemId).toBe("camp_cook")
-    expect(c.gold).toBe(20000 - 8000)
+    expect(c.gold).toBe(20000 - item!.cost)
   })
 
   it("shop items are loaded in registry", () => {

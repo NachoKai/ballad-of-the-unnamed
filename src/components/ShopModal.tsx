@@ -3,7 +3,6 @@ import { styled } from "styled-components"
 import type { Locale } from "@shared/types"
 import { t } from "../i18n/strings"
 import { api, type ShopResponse } from "../api"
-import { AchIcon } from "./AchIcon"
 import { BtnPrimary } from "./ui/Button"
 import { rise } from "./ui/Animation"
 
@@ -86,9 +85,7 @@ export function ShopModal({ locale, runId, onClose, onPurchased }: Props) {
             const canAfford = data && data.gold >= item.cost
             return (
               <ItemCard key={item.id}>
-                <ItemIcon>
-                  <AchIcon name={item.icon} size={28} />
-                </ItemIcon>
+                <ItemIcon aria-hidden="true">{item.icon}</ItemIcon>
                 <ItemInfo>
                   <ItemName>{item.name}</ItemName>
                   <ItemFlavor>{item.flavor}</ItemFlavor>
