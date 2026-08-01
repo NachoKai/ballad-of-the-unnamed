@@ -27,6 +27,21 @@ export const GAME_CONFIG = {
   // Destiny card frequency: roughly once every N years.
   destinyCardYears: 10,
 
+  // Tournament arc frequency: a playable tournament arc (intro → N fixtures →
+  // honor beat) is rng-gated to fire roughly once every N in-game years (§22).
+  tournamentCadenceYears: 6,
+
+  // §20 bench mechanic: turns a character sits "on the bench" after over-
+  // reaching into a clan far above their level (stat gains reduced meanwhile).
+  benchDurationTurns: 6,
+
+  // §24 negotiation dial: base success chance, charisma contribution, and the
+  // improved terms on a successful "press for more gold" roll.
+  negotiationBaseChance: 0.55,
+  negotiationCharismaCoeff: 0.02,
+  negotiationGoldMultiplier: 1.5,
+  negotiationStipendMultiplier: 1.3,
+
   // Clan hunting: turns a betrayed clan hunts the character.
   huntedDurationTurns: 8,
 

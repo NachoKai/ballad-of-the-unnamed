@@ -109,6 +109,8 @@ gameRouter.post("/new", async (req: Request, res: Response) => {
     const locale = localeOf(req)
     const gender: Gender =
       req.body?.gender === "male" || req.body?.gender === "female" ? req.body.gender : "male"
+    // §20 origin dial: humble (poor start, underdog pool) or established.
+    const origin = req.body?.origin === "established" ? "established" : "humble"
 
     if (!registry.classesById.has(classId)) {
       return res.status(400).json({ error: "invalid_class" })
@@ -123,6 +125,7 @@ gameRouter.post("/new", async (req: Request, res: Response) => {
       gender,
       classId,
       archetypeId,
+      origin,
       locale,
       registry,
     })

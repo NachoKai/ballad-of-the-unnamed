@@ -259,6 +259,17 @@ const en: StringMap = {
   tooltip_stat_constitution: "Constitution — endurance and resilience.",
   tooltip_stat_intelligence: "Intelligence — learning, lore, and wit.",
   tooltip_stat_charisma: "Charisma — presence, persuasion, and command.",
+  chooseOrigin: "How do you begin?",
+  originHumble: "Humble",
+  originHumbleHint: "A poor start. Less gold, no renown — but the underdog road is yours.",
+  originEstablished: "Established",
+  originEstablishedHint: "A known name and a filled purse. Begin with standing at home.",
+  homeTag: "Home",
+  abroadTag: "Abroad",
+  roleSignalUp: "Arriving above the clan's level — expect a leading role",
+  roleSignalSame: "Right-sized for the clan — an even footing",
+  roleSignalBench: "Below the clan's level — you may start on the bench",
+  riskTag: "Risk",
 }
 
 const es: StringMap = {
@@ -517,6 +528,19 @@ const es: StringMap = {
   tooltip_stat_constitution: "Constitución: resistencia y fortaleza.",
   tooltip_stat_intelligence: "Inteligencia: saber, erudición e ingenio.",
   tooltip_stat_charisma: "Carisma: presencia, persuasión y mando.",
+  chooseOrigin: "¿Cómo comienzas?",
+  originHumble: "Humilde",
+  originHumbleHint:
+    "Un comienzo pobre. Menos oro, sin renombre — pero el camino del desvalido es tuyo.",
+  originEstablished: "Consagrado",
+  originEstablishedHint:
+    "Un nombre conocido y una bolsa llena. Comienza con prestigio en tu tierra.",
+  homeTag: "Casa",
+  abroadTag: "Exterior",
+  roleSignalUp: "Llegás por encima del nivel del clan — se espera un papel protagónico",
+  roleSignalSame: "A la medida del clan — un terreno parejo",
+  roleSignalBench: "Por debajo del nivel del clan — puede que empieces en el banco",
+  riskTag: "Riesgo",
 }
 
 const TABLES: Record<Locale, StringMap> = { en, es }

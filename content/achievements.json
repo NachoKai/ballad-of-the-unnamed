@@ -912,6 +912,108 @@
         "en": "Become a Myth with any faction.",
         "es": "Vuélvete un Mito con cualquier facción."
       }
+    },
+    {
+      "id": "underdog",
+      "icon": "heart",
+      "rarity": "epic",
+      "condition": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "origin",
+            "value": "humble"
+          },
+          {
+            "type": "home_rep_gte",
+            "value": 90
+          }
+        ]
+      },
+      "name": {
+        "en": "Underdog",
+        "es": "Cenicienta"
+      },
+      "description": {
+        "en": "From a humble start, become Legend at your home faction.",
+        "es": "Desde un origen humilde, vuélvete Leyenda en tu facción de origen."
+      }
+    },
+    {
+      "id": "bench_to_banner",
+      "icon": "flag",
+      "rarity": "rare",
+      "condition": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "counter_gte",
+            "key": "bench_joined",
+            "value": 1
+          },
+          {
+            "type": "reputation_gte",
+            "value": 78
+          }
+        ]
+      },
+      "name": {
+        "en": "Bench to Banner",
+        "es": "Del Banco a la Bandera"
+      },
+      "description": {
+        "en": "Ride the bench at an over-reaching clan and still reach Renowned.",
+        "es": "Enfrenta la suplencia en un clan ambicioso y aun así vuélvete Renombrado."
+      }
+    },
+    {
+      "id": "champion_of_the_age",
+      "icon": "crown",
+      "rarity": "legendary",
+      "condition": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "faction_wealth_gte",
+            "value": 7
+          },
+          {
+            "type": "fame_gte",
+            "value": 80
+          },
+          {
+            "type": "counter_gte",
+            "key": "tournaments_won",
+            "value": 1
+          }
+        ]
+      },
+      "name": {
+        "en": "Champion of the Age",
+        "es": "Campeón de la Era"
+      },
+      "description": {
+        "en": "Win a tournament while holding 80 fame in a realm-leading faction.",
+        "es": "Gana un torneo con 80 de fama en una facción líder del reino."
+      }
+    },
+    {
+      "id": "deed_of_the_year",
+      "icon": "star",
+      "rarity": "rare",
+      "condition": {
+        "type": "counter_gte",
+        "key": "deeds_of_the_year",
+        "value": 2
+      },
+      "name": {
+        "en": "Deed of the Year",
+        "es": "Hazaña del Año"
+      },
+      "description": {
+        "en": "Seize two single moments of legend.",
+        "es": "Aprovecha dos momentos únicos de leyenda."
+      }
     }
   ]
 }

@@ -6,6 +6,7 @@ import type {
   EndingType,
   Gender,
   Locale,
+  Origin,
   RichEpilogueData,
   RunType,
   ServedEvent,
@@ -94,8 +95,14 @@ export default function App() {
     localStorage.setItem(LOCALE_KEY, next)
   }
 
-  async function startRun(name: string, gender: Gender, classId: string, runType: RunType) {
-    const res = await api.newRun({ name, gender, classId, runType, locale })
+  async function startRun(
+    name: string,
+    gender: Gender,
+    classId: string,
+    runType: RunType,
+    origin: Origin,
+  ) {
+    const res = await api.newRun({ name, gender, classId, origin, runType, locale })
     setRunId(res.runId)
     localStorage.setItem(RUN_KEY, res.runId)
     setCharacter(res.character)
@@ -111,8 +118,17 @@ export default function App() {
     classId: string,
     archetypeId: string,
     runType: RunType,
+    origin: Origin,
   ) {
-    const res = await api.newRun({ name, gender, classId, archetypeId, runType, locale })
+    const res = await api.newRun({
+      name,
+      gender,
+      classId,
+      archetypeId,
+      origin,
+      runType,
+      locale,
+    })
     setRunId(res.runId)
     localStorage.setItem(RUN_KEY, res.runId)
     setCharacter(res.character)

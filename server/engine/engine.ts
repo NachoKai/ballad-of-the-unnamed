@@ -8,6 +8,7 @@ import type {
   Gender,
   Locale,
   MinigameOutcome,
+  Origin,
   OutcomeTier,
   Rarity,
   RivalState,
@@ -30,6 +31,7 @@ import {
   ensureRelationship,
   fillSlots,
   getActiveModifier,
+  isBenched,
   isFatigued,
   isEligible,
   localizeLocation,
@@ -38,6 +40,8 @@ import {
   localize,
   primaryReputation,
   recomputeDerived,
+  regionOf,
+  roleSignalFor,
   serveEvent,
   setFlag,
   updateMarketValue,
@@ -55,6 +59,7 @@ export function createCharacter(input: {
   gender?: Gender
   classId: string
   archetypeId?: string | null
+  origin?: Origin
   locale: Locale
   registry: ContentRegistry
 }): CharacterState {
@@ -70,6 +75,14 @@ export function createCharacter(input: {
       throw new Error(`unknown archetype ${input.archetypeId} for class ${input.classId}`)
   }
 
+  // §20 origin dial: pacing/identity only, no stat math.
+  const origin: Origin = input.origin ?? "humble"
+  const goldMult = origin === "humble" ? 0.5 : 1
+  // §19 identity axis: home faction + region are set once and never change.
+  const homeFactionId = cls.startingFaction ?? "ironhold"
+  const homeRegion = regionOf(homeFactionId, registry)
+  const startingGold = Math.round((cls.startingGold ?? 20) * goldMult)
+
   const base: CharacterState = {
     id: input.id,
     name: input.name,
@@ -79,6 +92,10 @@ export function createCharacter(input: {
     epithet: null,
     age: GAME_CONFIG.startingAge,
     currentArc: arcForAge(GAME_CONFIG.startingAge),
+    homeFactionId,
+    homeRegion,
+    currentRegion: homeRegion,
+    origin,
     strength: cls.base.strength + (archetype?.statDeltas.strength ?? 0),
     dexterity: cls.base.dexterity + (archetype?.statDeltas.dexterity ?? 0),
     constitution: cls.base.constitution + (archetype?.statDeltas.constitution ?? 0),
@@ -90,17 +107,24 @@ export function createCharacter(input: {
     stamina: GAME_CONFIG.startingStamina,
     health: GAME_CONFIG.startingHealth,
     fame: 0,
-    gold: cls.startingGold ?? 20,
-    marketValue: (cls.startingGold ?? 20) * 2,
-    marketValuePeak: (cls.startingGold ?? 20) * 2,
+    gold: startingGold,
+    marketValue: startingGold * 2,
+    marketValuePeak: startingGold * 2,
     momentum: "normal",
     status: "alive",
     locale: input.locale,
     turn: 0,
     powerLevel: 0,
     counters: {},
+    // Humble origin starts with no local standing; established has a head start.
     reputations: cls.startingFaction
-      ? [{ faction: cls.startingFaction, value: 10, peakValue: 10 }]
+      ? [
+          {
+            faction: cls.startingFaction,
+            value: origin === "humble" ? 0 : 10,
+            peakValue: origin === "humble" ? 0 : 10,
+          },
+        ]
       : [],
     personality: {},
     achievements: [],
@@ -114,6 +138,11 @@ export function createCharacter(input: {
     flags: {},
     lastEventId: null,
     lastClanOfferSeason: null,
+    benchedUntilTurn: null,
+    pendingJoinOffer: null,
+    pendingTournament: null,
+    pendingTournamentResult: null,
+    lastTournamentSeason: null,
     finaleStage2Choice: undefined,
   }
   recomputeDerived(base)
@@ -252,6 +281,8 @@ export function generateClanOffer(
       stipend,
       perkLabel: `+${signingGold}g signing, +${stipend}g/season`,
       icon: "🏛️",
+      // §20: telegraph the bench risk on the offer itself, before the player picks.
+      roleSignal: roleSignalFor(c, f.id, registry),
     })
   }
   return { offers }
@@ -414,6 +445,279 @@ export function retirementOfferEvent(): EventContent {
   }
 }
 
+// ---------------------------------------------------------------------------
+// §24 negotiation follow-up
+// ---------------------------------------------------------------------------
+
+// Served after the player picks a clan offer but before the join finalizes.
+// The risk of "pressing for more gold" is stated on the option itself.
+export function negotiationFollowUpEvent(
+  c: CharacterState,
+  registry: ContentRegistry,
+): EventContent {
+  const offer = c.pendingJoinOffer
+  const faction = offer ? registry.factionsById.get(offer.clanId) : undefined
+  const factionName = faction ? localize(faction.name, c.locale) : ""
+  const offersLine =
+    c.locale === "en"
+      ? `${offer?.signingGold ?? 0}g signing, ${offer?.stipend ?? 0}g/season`
+      : `${offer?.signingGold ?? 0} de oro de contratación, ${offer?.stipend ?? 0} de oro/temporada`
+  return {
+    id: "__clan_offer_negotiate__",
+    minAge: 0,
+    maxAge: 999,
+    weight: 1,
+    location: "court",
+    narrative: {
+      en: `The ${factionName} emissary awaits your answer. The parchment on the table reads: ${offersLine}. Your hand hovers over the quill.`,
+      es: `El emisario de ${factionName} espera tu respuesta. El pergamino sobre la mesa dice: ${offersLine}. Tu mano se cierne sobre la pluma.`,
+    },
+    choices: [
+      {
+        id: "accept_join",
+        rarity: "common" as Rarity,
+        label: { en: "Sign as offered", es: "Firmar tal como está" },
+        narrative: {
+          en: "You sign without haggling. A clean contract, a clean start.",
+          es: "Firmas sin regatear. Un contrato limpio, un comienzo limpio.",
+        },
+      },
+      {
+        id: "negotiate_join",
+        rarity: "rare" as Rarity,
+        outcome: "risky",
+        riskLabel: {
+          en: "The emissary may withdraw the offer outright",
+          es: "El emisario puede retirar la oferta por completo",
+        },
+        label: {
+          en: "Press for more gold — the deal may collapse",
+          es: "Exigir más oro — la oferta puede caerse",
+        },
+        narrative: {
+          en: "You press for better terms.",
+          es: "Exiges mejores condiciones.",
+        },
+      },
+    ],
+  }
+}
+
+// ---------------------------------------------------------------------------
+// §22 whole-arc tournaments
+// ---------------------------------------------------------------------------
+
+const TOURNAMENT_NAMES: Record<string, { en: string; es: string }> = {
+  grand_melee: { en: "the Grand Melee", es: "la Gran Justa" },
+  high_duel: { en: "the High Duel", es: "el Duelo Mayor" },
+  tournament_of_arms: { en: "the Tournament of Arms", es: "el Torneo de Armas" },
+  champions_games: { en: "the Champions' Games", es: "los Juegos de los Campeones" },
+}
+
+function tournamentName(nameKey: string, locale: Locale): string {
+  return TOURNAMENT_NAMES[nameKey]?.[locale] ?? TOURNAMENT_NAMES[nameKey]?.en ?? nameKey
+}
+
+// A tournament arc can start roughly once per tournamentCadenceYears, rng-gated
+// like destiny cards (§22). Uses the season guard so it can't double-fire.
+function wouldBeTournamentTurn(c: CharacterState): boolean {
+  if (c.turn === 0 || c.age < 16) return false
+  if ((c.lastTournamentSeason ?? -1) >= c.seasonCount) return false
+  const yearsPlayed = Math.floor(c.turn / GAME_CONFIG.turnsPerYear)
+  return yearsPlayed > 0 && yearsPlayed % GAME_CONFIG.tournamentCadenceYears === 0
+}
+
+export function tournamentIntroEvent(c: CharacterState, nameKey: string): EventContent {
+  const name = tournamentName(nameKey, c.locale)
+  return {
+    id: "__tournament_intro__",
+    minAge: 0,
+    maxAge: 999,
+    weight: 1,
+    location: "court",
+    narrative: {
+      en: `Heralds ride into the square: ${name} begins at the next new moon. Champions from every clan will enter — and you are invited. One choice decides how you will face it: trust to luck, or trust to your own skill.`,
+      es: `Los heraldos cabalgan hasta la plaza: ${name} comienza en la próxima luna nueva. Campeones de todos los clanes participarán — y estás invitado. Una sola decisión define cómo lo afrontarás: fiarte de la suerte, o fiarte de tu propia habilidad.`,
+    },
+    choices: [
+      {
+        id: "mode_luck",
+        rarity: "common" as Rarity,
+        label: {
+          en: "Trust to luck (each bout is a gamble)",
+          es: "Fiarme de la suerte (cada combate es una apuesta)",
+        },
+        narrative: {
+          en: "You let fate decide the bouts. All the better to blame the dice.",
+          es: "Dejas que el destino decida los combates. Mejor así, para culpar a los dados.",
+        },
+      },
+      {
+        id: "mode_skill",
+        rarity: "rare" as Rarity,
+        label: {
+          en: "Trust to skill (memory & reflexes decide)",
+          es: "Fiarme de la habilidad (la memoria y los reflejos deciden)",
+        },
+        narrative: {
+          en: "You study every opponent. No luck will be needed.",
+          es: "Estudias a cada rival. No hará falta suerte.",
+        },
+      },
+    ],
+  }
+}
+
+// One fixture of an in-progress tournament. Luck mode → grid_gamble; skill mode
+// → memory_match (stat-affected). Resolved through the standard resolveMinigame.
+export function tournamentFixtureEvent(c: CharacterState): EventContent {
+  const t = c.pendingTournament
+  if (!t) return tournamentIntroEvent(c, "grand_melee")
+  const name = tournamentName(t.nameKey, c.locale)
+  const bout = 4 - t.fixturesLeft
+  const mode = t.mode
+  const luck = mode === "luck"
+  return {
+    id: "__tournament_fixture__",
+    type: "minigame" as const,
+    subtype: luck ? "grid_gamble" : "memory_match",
+    minAge: 0,
+    maxAge: 999,
+    weight: 1,
+    location: "court",
+    primaryStat: luck ? "charisma" : "intelligence",
+    narrative: {
+      en: `${name} — bout ${bout} of 3. The crowd roars as the herald calls your name across the arena.`,
+      es: `${name} — combate ${bout} de 3. La multitud ruge cuando el heraldo grita tu nombre por la arena.`,
+    },
+    cards: [
+      {
+        id: "measured",
+        icon: "shield",
+        label: { en: "Measured play", es: "Juego mesurado" },
+      },
+      {
+        id: "aggressive",
+        icon: "swords",
+        label: { en: "Aggressive play", es: "Juego agresivo" },
+      },
+      {
+        id: "flashy",
+        icon: "sparkles",
+        label: { en: "Flashy flourish", es: "Gesto vistoso" },
+      },
+    ],
+    resolution: {
+      type: luck ? "grid_gamble" : "memory_match",
+      baseWinChance: 0.4,
+      statInfluence: luck ? {} : { intelligence: 0.01 },
+      statThreshold: luck ? undefined : 10,
+      bonusLives: luck ? 0 : 1,
+      cardModifiers: {
+        measured: { winChanceDelta: 0.05, critChanceDelta: -0.05 },
+        aggressive: { winChanceDelta: 0, critChanceDelta: 0.1 },
+        flashy: { winChanceDelta: -0.1, critChanceDelta: 0.2 },
+      },
+    },
+    outcomes: {
+      critical: {
+        fameDelta: 8,
+        narrative: {
+          en: "You dominate the bout. The crowd chants your name as you take the round.",
+          es: "Dominás el combate. La multitud canta tu nombre mientras te llevás la ronda.",
+        },
+      },
+      success: {
+        fameDelta: 4,
+        narrative: {
+          en: "A clean win. You salute the fallen opponent and advance.",
+          es: "Una victoria limpia. Saludás al rival caído y avanzás.",
+        },
+      },
+      partial: {
+        fameDelta: 1,
+        narrative: {
+          en: "A draw. Neither side gives ground — you live to fight the next bout.",
+          es: "Empate. Ningún bando cede terreno — vivís para el próximo combate.",
+        },
+      },
+      fail: {
+        fameDelta: -1,
+        narrative: {
+          en: "The bout goes against you. The crowd's roar turns to a sigh.",
+          es: "El combate se te va en contra. El rugido de la multitud se vuelve suspiro.",
+        },
+      },
+    },
+  }
+}
+
+// Honor beat served after the last fixture resolves (§22 → §23).
+export function tournamentOutcomeEvent(c: CharacterState, registry: ContentRegistry): EventContent {
+  const res = c.pendingTournamentResult
+  const won = res?.won ?? false
+  const name = tournamentName(res?.nameKey ?? "grand_melee", c.locale)
+  const clanId = c.currentClanId ?? c.homeFactionId
+  const clanName = registry.factionsById.get(clanId)
+    ? localize(registry.factionsById.get(clanId)!.name, c.locale)
+    : c.locale === "en"
+      ? "the freelancers"
+      : "los independientes"
+  if (won) {
+    return {
+      id: "__tournament_outcome__",
+      minAge: 0,
+      maxAge: 999,
+      weight: 1,
+      location: "court",
+      narrative: {
+        en: `The final bell rings. You are the champion of ${name}! ${clanName} erupts — your name will be sung for a season.`,
+        es: `Suena la campana final. Sos el campeón de ${name}! ${clanName} estalla — cantarán tu nombre durante toda una temporada.`,
+      },
+      choices: [
+        {
+          id: "continue",
+          rarity: "rare" as Rarity,
+          label: { en: "Bask in the glory", es: "Disfrutar de la gloria" },
+          countersDelta: { tournaments_won: 1 },
+          fameDelta: 20,
+          goldDelta: 300,
+          reputationDelta: 15,
+          reputationFaction: clanId,
+          factionId: clanId,
+          narrative: {
+            en: "Cups raised, laurels won. You carry the trophy back to the hall.",
+            es: "Copas alzadas, laureles ganados. Llevás el trofeo de vuelta a la sala.",
+          },
+        },
+      ],
+    }
+  }
+  return {
+    id: "__tournament_outcome__",
+    minAge: 0,
+    maxAge: 999,
+    weight: 1,
+    location: "court",
+    narrative: {
+      en: `The run ends at ${name} — you fall one bout short of the laurels. ${clanName} still finds a kind word for you.`,
+      es: `La carrera termina en ${name} — caés a un combate de los laureles. ${clanName} aún encuentra una palabra amable para vos.`,
+    },
+    choices: [
+      {
+        id: "continue",
+        rarity: "common" as Rarity,
+        label: { en: "Nurse the bruises", es: "Curar los golpes" },
+        fameDelta: 3,
+        narrative: {
+          en: "A scar, a story, and the promise of the next tournament.",
+          es: "Una cicatriz, una historia, y la promesa del próximo torneo.",
+        },
+      },
+    ],
+  }
+}
+
 export function buildServedEvent(
   c: CharacterState,
   registry: ContentRegistry,
@@ -479,6 +783,34 @@ export function buildServedEvent(
       event: ev,
       served: serveEvent(ev, c, c.locale, registry, rng, false),
       finaleStage: stage,
+    }
+  }
+  // §24 negotiation follow-up: the player picked a clan offer last turn and
+  // must now accept or press for more gold (risking the whole deal).
+  if (c.pendingJoinOffer) {
+    const ev = negotiationFollowUpEvent(c, registry)
+    return {
+      event: ev,
+      served: serveEvent(ev, c, c.locale, registry, rng, false),
+      finaleStage: undefined,
+    }
+  }
+  // §22 honor beat served after the last tournament fixture resolves.
+  if (c.pendingTournamentResult) {
+    const ev = tournamentOutcomeEvent(c, registry)
+    return {
+      event: ev,
+      served: serveEvent(ev, c, c.locale, registry, rng, false),
+      finaleStage: undefined,
+    }
+  }
+  // §22 an in-progress tournament continues before any other beat.
+  if (c.pendingTournament) {
+    const ev = tournamentFixtureEvent(c)
+    return {
+      event: ev,
+      served: serveEvent(ev, c, c.locale, registry, rng, false),
+      finaleStage: undefined,
     }
   }
   // Season boundary: after every seasonLength turns, serve the season summary.
@@ -643,6 +975,18 @@ export function buildServedEvent(
       finaleStage: undefined,
     }
   }
+  // §22 whole-arc tournament intro: rng-gated to fire roughly once per cadence.
+  if (wouldBeTournamentTurn(c) && rng.bool(0.5)) {
+    c.lastTournamentSeason = c.seasonCount
+    const nameKey = rng.pick(Object.keys(TOURNAMENT_NAMES))
+    setFlag(c, "pendingTournamentNameKey", nameKey)
+    const ev = tournamentIntroEvent(c, nameKey)
+    return {
+      event: ev,
+      served: serveEvent(ev, c, c.locale, registry, rng, false),
+      finaleStage: undefined,
+    }
+  }
   const ev = selectEvent(c, registry, rng)
   return {
     event: ev,
@@ -693,10 +1037,13 @@ function applyStatDeltas(c: CharacterState, deltas?: StatDeltas, multiplier = 1)
   if (!deltas) return 0
   let net = 0
   const fatigue = isFatigued(c) ? 0.5 : 1
+  // §20 bench penalty: over-reaching into a big clan means reduced stat gains
+  // until the power level catches up (isBenched reads benchedUntilTurn).
+  const bench = isBenched(c) ? 0.8 : 1
   for (const k of STAT_KEYS) {
     if (deltas[k]) {
       const raw = deltas[k] as number
-      const adjusted = raw > 0 ? Math.round(raw * fatigue * multiplier) : raw
+      const adjusted = raw > 0 ? Math.round(raw * fatigue * multiplier * bench) : raw
       c[k] += adjusted
       net += adjusted
     }
@@ -859,19 +1206,91 @@ export function resolveChoice(
 
   // Clan joining through a choice.
   if (choice.joinClanId) {
-    // If currently in a clan, this is a betrayal.
-    if (c.currentClanId) {
-      applyClanBetrayal(c, choice.joinClanId, c.turn)
+    // §24 negotiation dial: picking a clan offer defers the actual join so the
+    // player can press for more gold (risking the deal) on a follow-up choice.
+    if (event.id === "__clan_offer__" || event.id === "__clan_poach__") {
+      c.pendingJoinOffer = {
+        clanId: choice.joinClanId,
+        signingGold: choice.goldDelta ?? signingGoldFor(c, choice.joinClanId, registry),
+        stipend: choice.stipend ?? 0,
+      }
+    } else {
+      // Authored events that grant membership join immediately.
+      // If currently in a clan, this is a betrayal.
+      if (c.currentClanId) {
+        applyClanBetrayal(c, choice.joinClanId, c.turn)
+      }
+      // Use the offered amount (goldDelta on the offer card) when present so the
+      // gold actually granted matches what the player saw; otherwise compute one.
+      const signingGold = choice.goldDelta ?? signingGoldFor(c, choice.joinClanId, registry)
+      joinClan(c, choice.joinClanId, c.turn, signingGold, registry)
     }
-    // Use the offered amount (goldDelta on the offer card) when present so the
-    // gold actually granted matches what the player saw; otherwise compute one.
-    const signingGold = choice.goldDelta ?? signingGoldFor(c, choice.joinClanId, registry)
-    joinClan(c, choice.joinClanId, c.turn, signingGold)
   }
 
   // Leaving a clan amicably.
   if (choice.leaveReason) {
     leaveClanAmicably(c, c.turn)
+  }
+
+  // §24 negotiation follow-up resolution: accept, or press for more gold (the
+  // greed dial — success improves terms, failure withdraws the whole offer).
+  let negotiationNarrative: string | null = null
+  if (event.id === "__clan_offer_negotiate__") {
+    const offer = c.pendingJoinOffer
+    if (offer) {
+      c.pendingJoinOffer = null
+      const clanId = offer.clanId
+      const faction = registry.factionsById.get(clanId)
+      const factionName = faction ? localize(faction.name, c.locale) : clanId
+      if (choice.id === "negotiate_join") {
+        const chance =
+          GAME_CONFIG.negotiationBaseChance +
+          c.charisma * GAME_CONFIG.negotiationCharismaCoeff +
+          getActiveModifier(c, "offerQualityModifier")
+        if (rng.bool(Math.min(0.95, Math.max(0.05, chance)))) {
+          const boostedGold = Math.round(offer.signingGold * GAME_CONFIG.negotiationGoldMultiplier)
+          const boostedStipend = Math.round(
+            offer.stipend * GAME_CONFIG.negotiationStipendMultiplier,
+          )
+          if (c.currentClanId) applyClanBetrayal(c, clanId, c.turn)
+          joinClan(c, clanId, c.turn, boostedGold, registry)
+          bumpCounter(c, "negotiations_won")
+          negotiationNarrative =
+            c.locale === "en"
+              ? `The emissary blinks, then smiles. New terms are written: ${boostedGold}g signing, ${boostedStipend}g/season. You sign your name.`
+              : `El emisario parpadea y luego sonríe. Se redactan nuevos términos: ${boostedGold} de oro de contratación, ${boostedStipend} de oro/temporada. Firmás tu nombre.`
+        } else {
+          // Offer withdrawn — "word gets out" (the reference's deal-collapse).
+          adjustReputation(c, clanId, -5)
+          bumpCounter(c, "negotiation_failures")
+          negotiationNarrative =
+            c.locale === "en"
+              ? `The emissary's face hardens. The parchment is rolled shut. "The offer was generous. We do not beg." Word spreads quickly among the factions.`
+              : `El rostro del emisario se endurece. El pergamino se enrolla. "La oferta era generosa. Nosotros no rogamos." La palabra corre rápido entre las facciones.`
+        }
+      } else {
+        // accept_join
+        if (c.currentClanId) applyClanBetrayal(c, clanId, c.turn)
+        joinClan(c, clanId, c.turn, offer.signingGold, registry)
+        negotiationNarrative =
+          c.locale === "en"
+            ? `You sign. The ink is barely dry before ${factionName}'s colors are yours.`
+            : `Firmás. La tinta apenas se seca cuando los colores de ${factionName} son tuyos.`
+      }
+    }
+  }
+
+  // §22 tournament intro: choose the resolution mode once for the whole arc.
+  if (event.id === "__tournament_intro__") {
+    const nameKey = (c.flags["pendingTournamentNameKey"] as string) ?? "grand_melee"
+    const mode = choice.id === "mode_skill" ? "skill" : "luck"
+    c.pendingTournament = { mode, fixturesLeft: 3, won: 0, nameKey }
+  }
+
+  // §22 tournament honor beat: rewards ride on the choice deltas; clear the
+  // stashed result so the next buildServedEvent serves a normal beat.
+  if (event.id === "__tournament_outcome__") {
+    c.pendingTournamentResult = null
   }
 
   const net = applyStatDeltas(c, choice.statDeltas, tagSynergy)
@@ -913,7 +1332,9 @@ export function resolveChoice(
     }
   }
 
-  const narrative = fillSlots(localize(choice.narrative, c.locale), c.locale, registry, rng, c)
+  const narrative =
+    negotiationNarrative ??
+    fillSlots(localize(choice.narrative, c.locale), c.locale, registry, rng, c)
 
   return {
     narrative,
@@ -1003,9 +1424,24 @@ export function resolveMinigame(
   }
   bumpCounter(c, `event_${event.id}`)
 
+  const isTournamentFixture = event.id === "__tournament_fixture__"
   const wonBattle = tier === "critical" || tier === "success"
-  if (wonBattle && !outcome.countersDelta?.battles_won) {
+  if (wonBattle && !isTournamentFixture && !outcome.countersDelta?.battles_won) {
     bumpCounter(c, "battles_won")
+  }
+
+  // §22 in-progress tournament: advance the bracket; when the last fixture
+  // resolves, stash the result so buildServedEvent serves the honor beat.
+  if (isTournamentFixture && c.pendingTournament) {
+    c.pendingTournament.fixturesLeft -= 1
+    if (wonBattle) c.pendingTournament.won += 1
+    if (c.pendingTournament.fixturesLeft <= 0) {
+      c.pendingTournamentResult = {
+        won: c.pendingTournament.won >= 2,
+        nameKey: c.pendingTournament.nameKey,
+      }
+      c.pendingTournament = null
+    }
   }
 
   updateMomentum(c, net)

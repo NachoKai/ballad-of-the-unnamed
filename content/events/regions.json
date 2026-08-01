@@ -1,0 +1,350 @@
+[
+  {
+    "id": "region_vale_harvest",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 7,
+    "requiresRegion": "vale",
+    "narrative": {
+      "en": "It is {slot:regionVariant} in the Vale. Wreaths of wheat crown the gates, and a champion's bout will crown the night. Your name is on the list.",
+      "es": "Es {slot:regionVariant} en el Valle. Guirnaldas de trigo coronan las puertas, y un combate de campeones coronará la noche. Tu nombre está en la lista."
+    },
+    "choices": [
+      {
+        "id": "compete",
+        "label": {
+          "en": "Enter the harvest bout",
+          "es": "Entrar al combate de la cosecha"
+        },
+        "tag": "Aggressive",
+        "rarity": "rare",
+        "statDeltas": {
+          "strength": 2
+        },
+        "fameDelta": 6,
+        "injuryRiskDelta": 0.08,
+        "countersDelta": {
+          "deeds_of_the_year": 1
+        },
+        "narrative": {
+          "en": "You fell the grain-wreathed champion in three exchanges. The Vale will sing of it for a season — and the wreath now hangs over your door.",
+          "es": "Derribás al campeón de guirnaldas en tres intercambios. El Valle lo cantará por una temporada — y ahora la corona cuelga sobre tu puerta."
+        }
+      },
+      {
+        "id": "judge",
+        "label": {
+          "en": "Serve as guest judge of honor",
+          "es": "Actuar como juez de honor invitado"
+        },
+        "tag": "Professional",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "charisma": 2
+        },
+        "reputationDelta": 4,
+        "reputationFaction": "ironhold",
+        "goldDelta": 80,
+        "narrative": {
+          "en": "Your verdicts are fair and your company is golden. The Vale's farmers remember the outsider who judged with a steady hand.",
+          "es": "Tus veredictos son justos y tu compañía es dorada. Los granjeros del Valle recuerdan al forastero que juzgó con mano firme."
+        }
+      },
+      {
+        "id": "feast",
+        "label": {
+          "en": "Skip the ceremony, feast with the crowd",
+          "es": "Saltarte la ceremonia, festejar con la multitud"
+        },
+        "tag": "Funny",
+        "rarity": "common",
+        "statDeltas": {
+          "constitution": 1
+        },
+        "staminaDelta": 15,
+        "narrative": {
+          "en": "You drink, dance, and trade tall tales until the bonfires sink low. The people of the Vale toast the stranger who treats them as equals.",
+          "es": "Bebés, bailás e intercambiás historias increíbles hasta que las fogatas se apagan. La gente del Valle brinda por el forastero que los trata como iguales."
+        }
+      }
+    ]
+  },
+  {
+    "id": "region_coast_regatta",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 7,
+    "requiresRegion": "coast",
+    "narrative": {
+      "en": "The Coastlands' ships lower their sails for {slot:regionVariant}. Along the docks, an old sea-captain challenges any blade-worthy soul to a duel on the prow of his flagship.",
+      "es": "Los barcos de las Tierras de la Costa arrian velas por {slot:regionVariant}. En los muelles, un viejo capitán desafía a cualquier alma digna a un duelo en la proa de su buque insignia."
+    },
+    "choices": [
+      {
+        "id": "duel",
+        "label": {
+          "en": "Accept the prow duel",
+          "es": "Aceptar el duelo en la proa"
+        },
+        "tag": "Confident",
+        "rarity": "rare",
+        "statDeltas": {
+          "dexterity": 3
+        },
+        "fameDelta": 7,
+        "injuryRiskDelta": 0.1,
+        "countersDelta": {
+          "deeds_of_the_year": 1
+        },
+        "narrative": {
+          "en": "Salt spray and steel — you best the captain at the prow as the docks erupt. Sailors will argue over the tale for years.",
+          "es": "Rocío salado y acero — vencés al capitán en la proa mientras los muelles estallan. Los marineros discutirán la historia durante años."
+        }
+      },
+      {
+        "id": "crew",
+        "label": {
+          "en": "Join the crews hauling the great lines",
+          "es": "Unirte a las tripulaciones que jalan las grandes cuerdas"
+        },
+        "tag": "Humble",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "strength": 2,
+          "constitution": 1
+        },
+        "reputationDelta": 3,
+        "reputationFaction": "blacktide",
+        "narrative": {
+          "en": "You pull until your arms sing. The harbor folk respect a fighter who isn't above honest work, and they say so in every tavern.",
+          "es": "Tirás hasta que tus brazos cantan. La gente del puerto respeta a un luchador que no se rebaja ante el trabajo honesto, y lo dicen en cada taberna."
+        }
+      },
+      {
+        "id": "wager",
+        "label": {
+          "en": "Watch from the docks and wager on the crews",
+          "es": "Mirar desde los muelles y apostar por las tripulaciones"
+        },
+        "tag": "Strategic",
+        "rarity": "common",
+        "statDeltas": {
+          "intelligence": 1
+        },
+        "goldDelta": 120,
+        "narrative": {
+          "en": "You read the wind, the lines, and the crews, and your purse fattens accordingly. The sea keeps its own score.",
+          "es": "Leés el viento, las cuerdas y las tripulaciones, y tu bolsa engorda en consecuencia. El mar lleva su propia cuenta."
+        }
+      }
+    ]
+  },
+  {
+    "id": "region_highlands_siege",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 7,
+    "requiresRegion": "highlands",
+    "narrative": {
+      "en": "Snow seals the passes during {slot:regionVariant}, and the highland clans call a truce — but the trial of arms still runs. A winter torch duel will settle this year's grudges.",
+      "es": "La nieve sella los pasos durante {slot:regionVariant}, y los clanes de las Tierras Altas declaran una tregua — pero el juicio de armas sigue. Un duelo de antorchas de invierno zanjará las rencillas de este año."
+    },
+    "choices": [
+      {
+        "id": "torch_duel",
+        "label": {
+          "en": "Walk the torch duel",
+          "es": "Caminar el duelo de antorchas"
+        },
+        "tag": "Stoic",
+        "rarity": "rare",
+        "statDeltas": {
+          "constitution": 3
+        },
+        "fameDelta": 7,
+        "injuryRiskDelta": 0.12,
+        "countersDelta": {
+          "deeds_of_the_year": 1
+        },
+        "narrative": {
+          "en": "Flame and ice — you endure where others falter, and the grudges of the season are buried in the snow at your feet.",
+          "es": "Fuego y hielo — resistís donde otros flaquean, y las rencillas de la temporada quedan enterradas en la nieve a tus pies."
+        }
+      },
+      {
+        "id": "arbitrate",
+        "label": {
+          "en": "Mediate the clan grudges instead",
+          "es": "Mediar en las rencillas de los clanes"
+        },
+        "tag": "Supportive",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "charisma": 3
+        },
+        "reputationDelta": 5,
+        "reputationFaction": "ironhold",
+        "narrative": {
+          "en": "You speak with a voice older than the snow, and the clans shake hands for the first time in years. The highlands will not forget who brought the thaw.",
+          "es": "Hablás con una voz más vieja que la nieve, y los clanes se dan la mano por primera vez en años. Las Tierras Altas no olvidarán quién trajo el deshielo."
+        }
+      },
+      {
+        "id": "shelter",
+        "label": {
+          "en": "Take shelter in the long-hall and tell stories",
+          "es": "Refugiarte en la sala larga y contar historias"
+        },
+        "tag": "Funny",
+        "rarity": "common",
+        "statDeltas": {
+          "intelligence": 1
+        },
+        "staminaDelta": 18,
+        "narrative": {
+          "en": "Around the hearth, you earn your keep with tales until the blizzard passes. Strangers become friends by firelight.",
+          "es": "Junto al hogar, te ganas tu lugar con cuentos hasta que pasa la tormenta. Los extraños se vuelven amigos a la luz del fuego."
+        }
+      }
+    ]
+  },
+  {
+    "id": "region_capital_gala",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 7,
+    "requiresRegion": "capital",
+    "narrative": {
+      "en": "The capital's streets are dressed in silk for {slot:regionVariant}. Nobles crowd the galleries, and a masked grand bout will decide who holds the season's favor.",
+      "es": "Las calles de la capital se visten de seda por {slot:regionVariant}. Los nobles llenan las galerías, y un gran combate de máscaras decidirá quién se lleva el favor de la temporada."
+    },
+    "choices": [
+      {
+        "id": "masked_bout",
+        "label": {
+          "en": "Enter the masked grand bout",
+          "es": "Entrar al gran combate de máscaras"
+        },
+        "tag": "Confident",
+        "rarity": "rare",
+        "statDeltas": {
+          "dexterity": 2,
+          "charisma": 1
+        },
+        "fameDelta": 8,
+        "injuryRiskDelta": 0.08,
+        "countersDelta": {
+          "deeds_of_the_year": 1
+        },
+        "narrative": {
+          "en": "You unmask the favorite in front of the entire court. The season's favor is yours — and every noble now knows your name.",
+          "es": "Desenmascarás al favorito frente a toda la corte. El favor de la temporada es tuyo — y todo noble ahora sabe tu nombre."
+        }
+      },
+      {
+        "id": "court_favor",
+        "label": {
+          "en": "Work the galleries and win a patron",
+          "es": "Trabajar las galerías y ganar un mecenas"
+        },
+        "tag": "Professional",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "charisma": 3
+        },
+        "goldDelta": 200,
+        "reputationDelta": 4,
+        "reputationFaction": "golden_lotus",
+        "narrative": {
+          "en": "By the night's end a silk-gloved hand rests on your arm and a purse finds your belt. The capital runs on favor, and you have some now.",
+          "es": "Al caer la noche, una mano enguantada de seda reposa en tu brazo y una bolsa encuentra tu cinturón. La capital se mueve por favores, y ahora tenés algunos."
+        }
+      },
+      {
+        "id": "observe",
+        "label": {
+          "en": "Watch from the shadows and learn the court",
+          "es": "Observar desde las sombras y aprender la corte"
+        },
+        "tag": "Strategic",
+        "rarity": "common",
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "narrative": {
+          "en": "You file away every alliance, every betrayal, every whispered name. Knowledge in the capital is coin with no mint.",
+          "es": "Archivás cada alianza, cada traición, cada nombre susurrado. En la capital, el conocimiento es moneda sin ceca."
+        }
+      }
+    ]
+  },
+  {
+    "id": "region_isles_moonlit",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 7,
+    "requiresRegion": "isles",
+    "narrative": {
+      "en": "The isles hold {slot:regionVariant} under a full moon. The challenge: a dance-fight on the moonlit strand, judged by the oldest elders and cheered by the youngest.",
+      "es": "Las islas celebran {slot:regionVariant} bajo la luna llena. El desafío: una danza de combate en la orilla iluminada por la luna, juzgada por los ancianos y vitoreada por los más jóvenes."
+    },
+    "choices": [
+      {
+        "id": "dance_fight",
+        "label": {
+          "en": "Join the moonlit dance-fight",
+          "es": "Unirte a la danza de combate bajo la luna"
+        },
+        "tag": "Funny",
+        "rarity": "rare",
+        "statDeltas": {
+          "dexterity": 3
+        },
+        "fameDelta": 7,
+        "injuryRiskDelta": 0.06,
+        "countersDelta": {
+          "deeds_of_the_year": 1
+        },
+        "narrative": {
+          "en": "You match rhythm to steel and the elders rise to their feet. The isles will speak of the foreigner who danced and won under the moon.",
+          "es": "Unís el ritmo al acero y los ancianos se ponen de pie. Las islas hablarán del forastero que bailó y ganó bajo la luna."
+        }
+      },
+      {
+        "id": "story",
+        "label": {
+          "en": "Offer a tale of your homeland to the elders",
+          "es": "Ofrecer un relato de tu tierra a los ancianos"
+        },
+        "tag": "Supportive",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "charisma": 2
+        },
+        "reputationDelta": 4,
+        "reputationFaction": "silver_mask",
+        "narrative": {
+          "en": "Your tale carries the old cadence, and the elders nod as if recognizing an old friend. A seat at the hearth fire is yours now.",
+          "es": "Tu relato lleva la cadencia antigua, y los ancianos asienten como reconociendo a un viejo amigo. Ahora tenés un lugar junto al fuego del hogar."
+        }
+      },
+      {
+        "id": "swim",
+        "label": {
+          "en": "Slip away and swim in the moonlit cove",
+          "es": "Escabullirte y nadar en la cala iluminada por la luna"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": {
+          "constitution": 2
+        },
+        "staminaDelta": 10,
+        "narrative": {
+          "en": "The cold water clears your head better than any ceremony. Some victories are private, and the sea keeps them well.",
+          "es": "El agua fría te despeja la cabeza mejor que cualquier ceremonia. Algunas victorias son privadas, y el mar las guarda bien."
+        }
+      }
+    ]
+  }
+]

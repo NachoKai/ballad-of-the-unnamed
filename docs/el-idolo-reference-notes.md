@@ -5,13 +5,13 @@ Raw catalog of every mechanic, screen, and design pattern found in the two "El �
 ## 1. Character creation flow
 
 - Two creation paths shown: **random** ("🎲 Al azar" button — instant random build) or **manual**: pick nationality → league's country → league → club, then name + jersey number (tap the jersey to change number), then position (Delantero "9" vs Enganche "10", each with a one-line flavor description of what that position lives/dies by).
-- Explicit tagline sets player expectations upfront: *"En un grande peleás todo desde el banco; en un chico sos titular y la gente te adora"* (big club = fight for bench minutes; small club = starter, beloved) — the game tells you the tradeoff before you choose, not after.
+- Explicit tagline sets player expectations upfront: _"En un grande peleás todo desde el banco; en un chico sos titular y la gente te adora"_ (big club = fight for bench minutes; small club = starter, beloved) — the game tells you the tradeoff before you choose, not after.
 - After class/position is picked, a **3-card archetype roll** happens ("¿Qué clase de delantero sos? El dado trajo tres destinos. Elegí uno: te define para siempre" — "the dice brought three destinies, pick one: it defines you forever"). Each archetype = one flat +8 to a single stat, no downside, permanent, no respec. Examples: Killer del área (+8 Definición), Flecha (+8 Velocidad), Tanque (+8 Potencia).
 - Creation screen also surfaces: the "Carrera del Día" daily-challenge teaser (shows today's forced starting club/position for everyone), and a "Tus últimas carreras" personal run-history list (device-local).
 
 ## 2. Core stats & meters
 
-- **Media** (0-99): average of the 4 core attributes. **Explicitly does NOT rise from performance** — the game states this outright: *"OJO: NO sube por hacer goles... meter 30 goles te da idolatría y contratos, no media"* (scoring goals gives you reputation and contracts, not stat growth). Media only moves via preseason cards, random events, and age-decline. This is a deliberate separation: **career stats (goals/assists/matches) are a downstream reputation/currency signal, never a stat-growth input.**
+- **Media** (0-99): average of the 4 core attributes. **Explicitly does NOT rise from performance** — the game states this outright: _"OJO: NO sube por hacer goles... meter 30 goles te da idolatría y contratos, no media"_ (scoring goals gives you reputation and contracts, not stat growth). Media only moves via preseason cards, random events, and age-decline. This is a deliberate separation: **career stats (goals/assists/matches) are a downstream reputation/currency signal, never a stat-growth input.**
 - **4 core attributes**, each with a named secondary effect beyond raw Media contribution:
   - Definición (Pegada) — scores routine goals; also **feeds minigame hints** ("te da la pista en los minijuegos para definir las finales").
   - Velocidad — glass cannon: more goals, more injury risk.
@@ -28,7 +28,8 @@ Raw catalog of every mechanic, screen, and design pattern found in the two "El �
 ## 3. Season / chapter structure ("Potrero Deportivo" recap cards)
 
 Every season ends on a recap card with a fixed anatomy:
-- Dynamic all-caps **headline** picked from the season's single biggest event: *"BARRO, RUTA Y APRENDIZAJE"*, *"UNA MÁQUINA DE GOL"*, *"EL RIVAL LE PASÓ EL TRAPO"*, *"LA COPA AMÉRICA, POR TV"* (missed the big tournament — explicitly framed as bittersweet: *"Que duela sirve"*, "the sting is useful"), *"ILUSIÓN ROTA"*, *"SE ROMPIÓ TODO"* (season-ending injury), *"¡CAMPEONES!"*, *"¡GLORIA ETERNA!"*.
+
+- Dynamic all-caps **headline** picked from the season's single biggest event: _"BARRO, RUTA Y APRENDIZAJE"_, _"UNA MÁQUINA DE GOL"_, _"EL RIVAL LE PASÓ EL TRAPO"_, _"LA COPA AMÉRICA, POR TV"_ (missed the big tournament — explicitly framed as bittersweet: _"Que duela sirve"_, "the sting is useful"), _"ILUSIÓN ROTA"_, _"SE ROMPIÓ TODO"_ (season-ending injury), _"¡CAMPEONES!"_, _"¡GLORIA ETERNA!"_.
 - **"Nota de la temporada"** — a season report-card grade (e.g. 6.4, 8.0, 9.9), separate from Media — a qualitative "how good was this stretch" score.
 - Bullet recap: goals/assists/matches, league finish, continental cup result, **rival comparison update** (this season's head-to-head + cumulative career tally + note on rival's current club), callback to the season's random event, next season's continental competition preview.
 - Single "Continuar" button closes the card.
@@ -37,16 +38,17 @@ Every season ends on a recap card with a fixed anatomy:
 
 - Rival is one specific named NPC ("Gastón Medina") with his own club, assigned at creation, persists the whole career.
 - **Persistent HUD widget** every screen: "⚔️ G+A vs Medina" (combined goals+assists) with a running comparison.
-- Every season recap explicitly states the rival's stats that season and whether *"te ganó la temporada"* — **season-level head-to-head is tracked separately from the cumulative career tally.**
+- Every season recap explicitly states the rival's stats that season and whether _"te ganó la temporada"_ — **season-level head-to-head is tracked separately from the cumulative career tally.**
 - Rival's club is stated on every recap ("Hoy juega en Gimnasia de Mendoza") even though the player has no control over it — implies the rival is quietly simulated/advancing off-screen.
 - Epilogue gives a dedicated final side-by-side comparison block across multiple metrics at once (goals · assists · titles), not just the single combined number: "Vos: 365⚽·167🎯·6🏆 — Gastón Medina: 248⚽·136🎯·1🏆." Achievement "El Duelo Eterno" = finish ahead on the combined metric.
 
 ## 5. Preseason stat-card system (confirms slot-filling technique)
 
-Every season: *"El dado trajo tres mejoras. Elegí una"* — 3 random cards, rarity-tagged:
+Every season: _"El dado trajo tres mejoras. Elegí una"_ — 3 random cards, rarity-tagged:
+
 - **Common**: flat +3 to one stat.
 - **Rara**: bigger boost, sometimes a clean +4/+5 to one stat, sometimes two positive stats combined ("+4 Liderazgo +1 Potencia"), sometimes an explicit tradeoff ("+5 Liderazgo −2 Velocidad", "+4 Potencia +1 Definición −2 Velocidad"). Rarity does not always imply a downside — both pure-bonus and tradeoff cards carry the "Rara" tag.
-- **Dorada** (seen once): the biggest boost, mostly loaded onto a *secondary* stat with a token bump to a primary ("+1 Potencia +8 Resistencia").
+- **Dorada** (seen once): the biggest boost, mostly loaded onto a _secondary_ stat with a token bump to a primary ("+1 Potencia +8 Resistencia").
 - **Card flavor text is templated from two composable parts**: a training-action ("Piques cortos", "Trabajo de gimnasio", "Cambio de ritmo", "La arenga", "Cuerpo blindado"...) recombined with a context modifier ("bajo la lluvia", "con el profe encima", "en la playa", "a puertas cerradas", "en la altura", "de madrugada", "sin que te vea nadie", "con la Reserva", "en el potrero del barrio"...). **This confirms the slot-filling technique already planned for the fantasy spec is exactly what this game does** — a handful of action templates × a handful of context modifiers produces dozens of distinct-feeling card names from very little authored content.
 
 ## 6. Event categories (distinct tagged types, not all uniform)
@@ -54,8 +56,8 @@ Every season: *"El dado trajo tres mejoras. Elegí una"* — 3 random cards, rar
 Four+ distinct labeled categories, each with its own header/icon:
 
 - **"Pasan cosas"** (Things happen) — routine narrative beats. Not all of these are real decisions — some are pure flavor with a single "continue" button and a small stat/fame nudge (dog runs onto the pitch; viral nutmeg clip; birth of a child). Real ones offer two options with different cost/benefit (boarding-house social life vs early sleep; sell image rights now vs bet on future value; invent your own goal celebration ⚠️ risky vs safe generic one).
-- **"Golpe duro"** (Hard blow) — setback-flavored events specifically: underpaid-in-installments paycheck, food poisoning before a big match, season-ending torn ligament. Always framed as something *happening to* the player, sometimes with a single "cope with it" continue, sometimes with a genuine choice (endure silently vs take a side gig for extra cash).
-- **"Decisión difícil"** (Hard decision) — the highest-stakes dilemmas, always explicitly two-sided: team betting pool gamble, a corruption/match-fixing bribe offer (with severe framing: *"si te agarran, no hay vuelta"* — if caught, no going back), the abroad-transfer decision, the petro-state mega-contract (explicit tradeoffs stated: huge money, but *"se te apagan un poco las stats y no te llama la Selección"*), a boot-sponsor choice (big brand = money + heavy PR obligations vs loyal brand = less money + no hassle).
+- **"Golpe duro"** (Hard blow) — setback-flavored events specifically: underpaid-in-installments paycheck, food poisoning before a big match, season-ending torn ligament. Always framed as something _happening to_ the player, sometimes with a single "cope with it" continue, sometimes with a genuine choice (endure silently vs take a side gig for extra cash).
+- **"Decisión difícil"** (Hard decision) — the highest-stakes dilemmas, always explicitly two-sided: team betting pool gamble, a corruption/match-fixing bribe offer (with severe framing: _"si te agarran, no hay vuelta"_ — if caught, no going back), the abroad-transfer decision, the petro-state mega-contract (explicit tradeoffs stated: huge money, but _"se te apagan un poco las stats y no te llama la Selección"_), a boot-sponsor choice (big brand = money + heavy PR obligations vs loyal brand = less money + no hassle).
 - **"Mercado de pases"** (Transfer market) — its own distinct UI, see §13.
 - **"Sala de prensa"** (Press room) — the personality-tag minigame, see §9.
 
@@ -92,12 +94,12 @@ Four+ distinct labeled categories, each with its own header/icon:
 
 ## 11. Transfer / clan-market mechanics (richer than previously captured)
 
-- Tagline for every offer screen: *"El dado trajo estas ofertas. Elegí: ¿gloria o billetera?"* (glory or wallet?) — states the tension outright.
+- Tagline for every offer screen: _"El dado trajo estas ofertas. Elegí: ¿gloria o billetera?"_ (glory or wallet?) — states the tension outright.
 - Each offer card shows: club, wage, contract length, and a **relative playtime signal** ("≈ Minutos parecidos que ahora" / "⬇️ MENOS" / "⬆️ MÁS") — tells you upfront whether you'll get more or less opportunity at the new club.
-- Every leaving-option shows the same two-line cost/benefit: *"Dejás [club]: -8 de idolatría"* / *"Allá arrancás: Uno más (X/100) — tu fama te precede"* — **confirms the fame-based head start is a partial number bump within the bottom tier**, not an automatic tier jump.
+- Every leaving-option shows the same two-line cost/benefit: _"Dejás [club]: -8 de idolatría"_ / _"Allá arrancás: Uno más (X/100) — tu fama te precede"_ — **confirms the fame-based head start is a partial number bump within the bottom tier**, not an automatic tier jump.
 - "Renovación" (re-sign with current club) is always the first/default option, framed as continued progress toward the next tier rather than a reset.
 - **"📞 Llamar al representante"** — reroll the offer table, explicitly capped at once per entire career.
-- **"El club necesita vender"** — a variant where the *club* initiates the transfer window rather than the player browsing voluntarily (same offer mechanic, different narrative trigger).
+- **"El club necesita vender"** — a variant where the _club_ initiates the transfer window rather than the player browsing voluntarily (same offer mechanic, different narrative trigger).
 - **"¿Cambiar de aire?"** — a third variant: player explicitly asks to be shopped around, costs reputation just for asking (word gets out), and is capped at a small number of uses per career ("Pedidos que te quedan: 2").
 
 ## 12. Injury & decline — no mid-career death
@@ -109,7 +111,7 @@ Four+ distinct labeled categories, each with its own header/icon:
 
 At the point of terminal decline, the game triggers a **hand-authored, two-stage set piece**, not a generic content-bank event:
 
-- Stage 1 ("89' · TU ÚLTIMO PARTIDO — La despedida"): rich scripted narration (stadium standing, banners with your name, parents in the stands), then an explicit risky-vs-safe choice with stated rewards for each ("🎲 Arriesgado +6 Fama +10 Idolatría" vs "🧊 Seguro +3 Fama +8 Idolatría") and a one-line philosophy: *"Cuanto más arriesgada la jugada, más gloria si sale. Vos sabrás."*
+- Stage 1 ("89' · TU ÚLTIMO PARTIDO — La despedida"): rich scripted narration (stadium standing, banners with your name, parents in the stands), then an explicit risky-vs-safe choice with stated rewards for each ("🎲 Arriesgado +6 Fama +10 Idolatría" vs "🧊 Seguro +3 Fama +8 Idolatría") and a one-line philosophy: _"Cuanto más arriesgada la jugada, más gloria si sale. Vos sabrás."_
 - Stage 2 (minute 90, outcome reveal): even the "safe" choice pays off with a poignant **full-circle narrative callback** — giving the moment to a young reserve player who mirrors the player's own career start twenty years earlier. Then transitions straight into the epilogue.
 
 **This is the single most reusable idea in the whole transcript**: guarantee a hand-authored, two-beat, narratively resonant final scene at the end of every run (regardless of risky/safe pick) instead of resolving retirement through the generic content bank.
@@ -120,9 +122,9 @@ At the point of terminal decline, the game triggers a **hand-authored, two-stage
 - Card/sticker tier ("Figurita de bronce") appears tied to the **peak** reputation tier ever reached across the whole career, implying bronze/silver/gold/legendary card-frame art per tier.
 - One-line graded verdict under the headline ("Buen jugador. Pero ídolo es otra cosa" — good player, but being an idol is something else) — varies with how close the run got to the top tier.
 - Stats block includes **Valor pico** (peak market value) as its own tracked figure, separate from total money earned.
-- **"Tu historia, club por club"**: full per-club history — years, matches/goals/assists at that club, the reputation tier+score reached *at that specific club*, trophies won there with year, plus a separate national-team line. Reputation history survives per-faction even after leaving, shown retrospectively.
+- **"Tu historia, club por club"**: full per-club history — years, matches/goals/assists at that club, the reputation tier+score reached _at that specific club_, trophies won there with year, plus a separate national-team line. Reputation history survives per-faction even after leaving, shown retrospectively.
 - **"Copiar imagen de palmarés"**: one-tap shareable image export of the trophy case — a viral/social hook.
-- **"🏅 Distinciones individuales"**: a category of *repeatable, counted* awards distinct from one-off achievements (e.g. "Equipo de la Temporada ×5," listing every specific year it happened) — a running tally with history, not a boolean flag.
+- **"🏅 Distinciones individuales"**: a category of _repeatable, counted_ awards distinct from one-off achievements (e.g. "Equipo de la Temporada ×5," listing every specific year it happened) — a running tally with history, not a boolean flag.
 - **"💔 Finales perdidas"**: a dedicated "heartbreak" section listing every lost final by name, opponent, and year — near-misses get their own permanent record, not just a mention buried in a season recap.
 - Achievement descriptions in the epilogue are **re-rendered with the player's actual number** filled in (e.g. "Eterno: Jugaste hasta los 41" rather than the generic threshold text) — personalized at display time, not just a static description.
 - Final rival comparison gets its own expanded block (not just the achievement bullet): full side-by-side multi-metric tally.
@@ -153,20 +155,99 @@ A second independent extraction of the same game (a "resume from another AI") cr
 
 **Attribute → minigame influence** (confirms §8's "different stat per minigame" pattern)
 
-| Attribute | Influences |
-|---|---|
-| Definición | 1v1 keeper-read, timing-bar zone size, shot accuracy |
-| Velocidad | Extra life in memory minigame (≥80 threshold), breakaway success |
-| Potencia | Aerial duel success even when marked |
-| Liderazgo | Captain pep-talk unlock (≥75), idolatry gains, squad respect |
-| Resistencia | Minutes played, injury resistance, late-career longevity |
+| Attribute   | Influences                                                       |
+| ----------- | ---------------------------------------------------------------- |
+| Definición  | 1v1 keeper-read, timing-bar zone size, shot accuracy             |
+| Velocidad   | Extra life in memory minigame (≥80 threshold), breakaway success |
+| Potencia    | Aerial duel success even when marked                             |
+| Liderazgo   | Captain pep-talk unlock (≥75), idolatry gains, squad respect     |
+| Resistencia | Minutes played, injury resistance, late-career longevity         |
 
 **Idolatría tiers**: Uno más → Querido 👏 → Referente 💙 → Ídolo ⭐ (a 🗿 Leyenda tier appears in some runs above Ídolo).
 
 **Selección status**: Sin chance → En carpeta → Convocado.
 
-**One more preseason tradeoff card** not caught in the first pass: *"Sparring con el central (Rara) → +4 Potencia, +1 Definición, −1 Velocidad"* — a three-stat card (two positive, one negative), confirming tradeoff cards aren't always a clean single-gain/single-cost pair.
+**One more preseason tradeoff card** not caught in the first pass: _"Sparring con el central (Rara) → +4 Potencia, +1 Definición, −1 Velocidad"_ — a three-stat card (two positive, one negative), confirming tradeoff cards aren't always a clean single-gain/single-cost pair.
+
+## 19. Creation as orthogonal dials — identity vs. geography decoupled
+
+The creation screen isn't one pipeline, it's **two independent axes that never cross**:
+
+- **Identity axis** (nationality): sets your home Selección, your historical idols, and your persona. Unchanged for the whole run no matter where you play.
+- **Geography axis** (league country → division → club): pure content-flavor dial. You can be Argentine and debut in Peru, or German and start in the Italian B.
+
+Two consequences worth keeping:
+
+- **The "foreigner" status mechanic**: playing outside your home nation makes you _the extranjero del vestuario_ (the outsider in the locker room) — a distinct social position with its own flavor content — but it never touches your identity track. The Selección stays yours. **Identity is fixed; geography only changes which lens the world views you through.**
+- **Creation is a bundle of orthogonal dials, not one slider**: identity, geography, club tier (§20), position (§25), each a separate choice with its own consequence space. This is a stronger creation model than a single class/location pick.
+
+Map to fantasy: race/lineage (identity, fixed) decoupled from starting realm/kingdom (geography, content-flavored). Playing in a foreign kingdom unlocks "outsider" events but never redefines home; your home kingdom's call-ups continue in parallel regardless of where the guild career goes.
+
+## 20. Second-division starts & the over-reaching risk (rise-from-nowhere arcs)
+
+The guide's "Empezar desde abajo" is a real _structural_ difficulty dial at creation, not a stat modifier:
+
+- In leagues with a playable second division, you can start in the B: **real promotion/relegation** — climb by winning the championship or the playoff, or get scouted up by a first-division club.
+- The tradeoff is telegraphed before you pick, same as §1's bench-vs-start tagline: _"Los clubes grandes no regalan nada: llegar a un grande sin nivel te deja en el banco. A veces el mejor camino a la gloria es ser la bandera de un club chico."_ — **over-reaching into a tier above your level = bench/sidelines, not glory**; the small-club path is framed as a legitimate glory route, not a consolation.
+
+Design note: the game offers _pacing/arc_ choice at creation that doesn't touch numbers — start at the bottom (longer climb, faster local love) vs. start mid-pack. Combined with §19, "difficulty" is spread across several non-numeric choices the player makes before any dice roll.
+
+Map to fantasy: starting as a village nobody with promotion through local tournaments, vs. noble-born mid-tier start; joining a grand guild before your level = grunt work; being the banner of a small town is an explicit, respected glory path.
+
+## 21. Locale-gated event variants — same archetype, local flavor
+
+_"Muchos [eventos] son propios del país donde jugás: no es lo mismo la semana previa al clásico en Montevideo que en Múnich."_ — the same narrative archetype (the big derby week, the cup-final week) is authored in **region-specific variants gated by current geography**, not as a single generic beat.
+
+Cheap-authoring insight: **one archetype × N locale variants produces regional texture without N independent event systems** — the same slot-filling principle as §5, but applied to whole beats rather than card names. The event _shape_ (a pre-derby locker-room dilemma with the same choice structure) is shared; only the dressing (city, rivals, rituals, stakes) changes per region.
+
+Map to fantasy: the "harvest festival," "the winter siege," or "the grand tournament" archetype authored once per region, gated by the character's current kingdom/locale flag. Two players in different realms see genuinely different worlds from the same authored frame.
+
+## 22. Whole-tournament arcs with a self-selected resolution mode
+
+_"El Mundial y el Mundial de Clubes son torneos enteros jugables, y antes de arrancarlos elegís cómo definirlos: por azar (la grilla de celdas tapadas) o por habilidad ('La seña del DT': memorizá la secuencia y repetila, cada vez más rápida)."_
+
+Two ideas here, not one:
+
+- **Whole-arc playability**: a big tournament is a playable bracket of fixtures (§9), not a single resolved fixture — the arc itself is the content.
+- **The resolution-mode choice is a self-selected stakes/engagement dial, offered once at the top of the arc**: luck-mode (covered grid, no stat input) vs. skill-mode (memory sequence, stat-affected) for the _entire_ tournament. The player picks how much control to gamble on before a single match — casual players breeze through on luck, skilled players opt into the harder, winnable path.
+
+This is distinct from per-fixture minigames (§8): it's a mode toggle scoping a whole arc, and it converts "how engaged am I today?" into an actual design choice rather than a difficulty menu.
+
+Map to fantasy: a war campaign or grand tournament resolvable as luck-mode (grid gamble per battle) or skill-mode (memory/reaction sequence), chosen once at the start of the campaign.
+
+## 23. Global individual awards gated by league prestige & moments
+
+Two award mechanics the reference tracks _above_ the club level, distinct from per-faction idolatría (§2) and from repeatable "Team of the Season" distinctions (§14):
+
+- **Balón de Oro**: _"se gana jugando en Europa, con una temporada consagratoria"_ — a top-tier global honor with **two gates: play in the top league + a consecrating season**. League prestige is a hard prerequisite; raw numbers in a minor league can't earn it. Awards can be geographically gated, not just stat-gated.
+- **Premio Puskás**: the best _moment_ of the year (a single highlight goal), voted on — awards can celebrate a standout single beat, not only season-long consistency.
+
+Design note: these give the player a third honor axis — _global_ awards (cross-faction, gated by prestige) sitting above the local (idolatría) and seasonal (distinciones) axes, each with different unlock conditions.
+
+Map to fantasy: a realm-wide "Champion of the Age" honor only achievable while affiliated with the central kingdom + a consecrating campaign; a "Deed of the Year" honor awarded to a single legendary moment the run produced.
+
+## 24. Negotiation as a push-your-luck greed dial
+
+_"Las negociaciones (cuidado: si apretás por demasiada plata, el pase se te puede caer)."_ — bargaining where **over-asking can kill the deal outright**. The reward curve is a genuine gamble: push for more → better terms or the deal collapses.
+
+Consistent with the game's legibility pattern (stated risks on §7's trap question, stated costs on §11's leaving options): **the greed dial is legible before you pull it** — the option shows its risk, so the cost is an informed choice, not a hidden roll. That's what makes the tension fair instead of frustrating.
+
+Map to fantasy: haggling with a patron/guild recruiter where the option itself reads "demand more gold — may break the offer," with the withdrawal outcome as an explicit label on the choice.
+
+## 25. Class/position partitions the possible legend identities
+
+_La 9 es el goleador puro... La 10 es el enganche..._ — and crucially: _"la posición define qué tipo de ídolo vas a terminar siendo."_ The position doesn't just pick a stat start; it **partitions which legend identities are even reachable**, and the epilogue epithet pools (§14) are gated by behavior _and_ by position.
+
+Design note: class is identity-coherence, not just a build — the tombstone flavor stays consistent with the first screen. A 9 can be "El Matador" but never "El Director de Orquesta"; the 10 is the reverse. Players never feel their end-of-life identity contradicted their opening pick.
+
+Map to fantasy: epithet pools partitioned per class — a wizard can be "The Sage," never "The Juggernaut"; a rogue can be "The Phantom," never "The Bastion." Locks the identity loop from creation screen to leaderboard epithet.
+
+## 26. The daily run as a shared-experience retention beat
+
+The Carrera del Día framing is worth stating explicitly because it's a _content_ mechanic, not just a scoring one: _"Todos los jugadores del mundo reciben exactamente la misma partida — misma nacionalidad, mismo club de arranque, mismo puesto y misma suerte — y compiten por el mejor puntaje en un ranking que se renueva cada jornada."_ The identical-run promise converts the seeded-RNG architecture into a **daily shared event** — everyone experiences the same story the same day, and the ranking makes that sameness the draw.
+
+This reinforces the spec's hard constraint (RNG & determinism): the promise only holds if _every_ random draw in a run comes from the single daily seed — one new unseeded touchpoint silently breaks the shared experience for everyone that day. It also gives the daily mode a marketing/social role beyond the leaderboard: the identical narrative becomes something players discuss and compare.
 
 ---
 
-*Six of these sections have since been mapped into the build spec: market value as a distinct stat, the three-tier shop (Consumables added), a richer Archrival system, Career arcs/chapters with a season-shaped loop, a Legacy post-mortem scoring pass with auto-generated epithets, and an elite-tier leaderboard split-off. Still unmapped and available to pull from later: the five distinct mini-game *types* (only the direction-pick and card-pick versions are in the spec so far — the timing-bar, grid-gamble, and memory-match types aren't built yet), and the scripted two-stage retirement finale (the spec's Health/death section handles retirement generically, not as a mandatory hand-authored final scene).*
+_Mapping status: the six systems originally mapped into the build spec (market value as a distinct stat, three-tier shop with Consumables, richer Archrival system, Career arcs/chapters with a season-shaped loop, Legacy post-mortem scoring with auto-generated epithets, elite-tier leaderboard split-off) are now joined by the five mini-game types (timing-bar, grid-gamble, memory-match) and the scripted two-stage retirement finale — all implemented per `docs/improvement-plan.md` (§5.2, §4.1). Still available to mine from the sections above: §19 identity-vs-geography decoupling and the "foreigner" status mechanic, §20 second-division/promotion arcs and the over-reaching bench risk, §21 region-gated event variants, §22 self-selected tournament resolution modes, §23 league-prestige-gated global awards, §24 the push-your-luck negotiation dial, and §25 class-partitioned epithet pools._

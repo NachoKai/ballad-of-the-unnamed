@@ -4,6 +4,7 @@ import type {
   EndingType,
   Gender,
   Locale,
+  Origin,
   RichEpilogueData,
   RunType,
   ServedEvent,
@@ -125,6 +126,7 @@ export const api = {
     gender: Gender
     classId: string
     archetypeId?: string
+    origin?: Origin
     runType: RunType
     locale: Locale
   }) =>

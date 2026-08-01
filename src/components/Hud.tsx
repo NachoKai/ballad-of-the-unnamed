@@ -1,3 +1,4 @@
+import { Globe, Home, Swords, TriangleAlert } from "lucide-react"
 import type { CharacterState, Locale } from "@shared/types"
 import { STAT_KEYS } from "@shared/types"
 import { styled } from "styled-components"
@@ -77,6 +78,15 @@ export function Hud({ character: c, locale, onShopOpen }: Props) {
               <FactionFlag factionId={c.currentClanId} size={14} />
               {t(`faction_${c.currentClanId}`)}
             </ClanTag>
+          )}
+          {c.currentRegion !== c.homeRegion ? (
+            <AbroadTag>
+              <Globe size={12} /> {t("abroadTag")}
+            </AbroadTag>
+          ) : (
+            <HomeTag>
+              <Home size={12} /> {t("homeTag")}
+            </HomeTag>
           )}
         </Name>
         <TurnTip content={t("tooltip_turn")} align="end" side="bottom">
@@ -167,14 +177,15 @@ export function Hud({ character: c, locale, onShopOpen }: Props) {
         {c.rival && (
           <Tooltip content={t("tooltip_rival")}>
             <RivalBadge>
-              ⚔️ {c.rival.name} {t("vs")} <b>{playerScore}</b>—<b>{c.rival.score}</b>
+              <Swords size={12} /> {c.rival.name} {t("vs")} <b>{playerScore}</b>—
+              <b>{c.rival.score}</b>
             </RivalBadge>
           </Tooltip>
         )}
         {c.huntedBy && (
           <Tooltip content={t("tooltip_hunted")}>
             <HuntedBadge>
-              ⚠️ {t("hunted")} {t(`faction_${c.huntedBy}`)}
+              <TriangleAlert size={12} /> {t("hunted")} {t(`faction_${c.huntedBy}`)}
             </HuntedBadge>
           </Tooltip>
         )}
@@ -376,6 +387,36 @@ const ClanTag = styled.span`
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: ${({ theme }) => theme.colors.sage};
+  vertical-align: middle;
+`
+
+const HomeTag = styled.span`
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 6px;
+  padding: 2px 8px;
+  border: 1px solid ${({ theme }) => theme.colors.gold};
+  border-radius: 999px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.colors.gold};
+  vertical-align: middle;
+`
+
+const AbroadTag = styled.span`
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 6px;
+  padding: 2px 8px;
+  border: 1px solid ${({ theme }) => theme.colors.line2};
+  border-radius: 999px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.colors.muted};
   vertical-align: middle;
 `
 

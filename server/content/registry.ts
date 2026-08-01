@@ -46,6 +46,7 @@ export interface ContentRegistry {
   slots: SlotPools
   factions: FactionContent[]
   factionsById: Map<string, FactionContent>
+  regions: Record<string, LocaleMap>
   reputationTiers: Record<string, LocaleMap>
   shop: ShopItem[]
 }
@@ -76,17 +77,24 @@ export function loadContent(): ContentRegistry {
 
   const factionsRaw = readJson<{
     tiers: Record<string, LocaleMap>
-    factions: Record<string, { name: LocaleMap; wealth: number }>
+    factions: Record<string, { name: LocaleMap; wealth: number; region?: string }>
   }>("factions.json")
   const factions = Object.entries(factionsRaw.factions).map(([id, f]) => ({
     id,
     name: f.name,
     wealth: f.wealth,
+    region: f.region ?? "vale",
   }))
   for (const f of factions) validateLocaleMap(f.name, `faction ${f.id}`)
   const reputationTiers = factionsRaw.tiers
   for (const [id, name] of Object.entries(reputationTiers)) {
     validateLocaleMap(name, `tier ${id}`)
+  }
+
+  // §19/§21: region names (bilingual), keyed by region id.
+  const regions = readJson<Record<string, LocaleMap>>("regions.json")
+  for (const [id, name] of Object.entries(regions)) {
+    validateLocaleMap(name, `region ${id}`)
   }
 
   const achievements = readJson<{ achievements: AchievementContent[] }>(
@@ -155,6 +163,7 @@ export function loadContent(): ContentRegistry {
     slots,
     factions,
     factionsById,
+    regions,
     reputationTiers,
     shop,
   }

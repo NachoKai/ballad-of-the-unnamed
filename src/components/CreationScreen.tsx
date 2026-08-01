@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { styled } from "styled-components"
-import type { Gender, Locale, RunType } from "@shared/types"
+import type { Gender, Locale, Origin, RunType } from "@shared/types"
 import { api, type ArchetypeView, type ClassInfo } from "../api"
 import { t } from "../i18n/strings"
 import { STAT_ABBR } from "../constants"
@@ -13,13 +13,20 @@ import { rise } from "./ui/Animation"
 
 interface Props {
   locale: Locale
-  onStart: (name: string, gender: Gender, classId: string, runType: RunType) => Promise<void>
+  onStart: (
+    name: string,
+    gender: Gender,
+    classId: string,
+    runType: RunType,
+    origin: Origin,
+  ) => Promise<void>
   onStartWithArchetype: (
     name: string,
     gender: Gender,
     classId: string,
     archetypeId: string,
     runType: RunType,
+    origin: Origin,
   ) => Promise<void>
 }
 
@@ -33,6 +40,7 @@ export function CreationScreen({ locale, onStart, onStartWithArchetype }: Props)
   const [gender, setGender] = useState<Gender>("male")
   const [classId, setClassId] = useState<string | null>(null)
   const [runType, setRunType] = useState<RunType>("standard")
+  const [origin, setOrigin] = useState<Origin>("humble")
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [archetypes, setArchetypes] = useState<ArchetypeView[]>([])
@@ -63,7 +71,7 @@ export function CreationScreen({ locale, onStart, onStartWithArchetype }: Props)
     } catch (err) {
       console.error("Failed to draw archetypes:", err)
       // Fallback: if archetype-draw fails, skip straight to game with no archetype.
-      await onStart(name.trim() || "Wanderer", gender, classId, runType)
+      await onStart(name.trim() || "Wanderer", gender, classId, runType, origin)
     } finally {
       setBusy(false)
     }
@@ -74,7 +82,14 @@ export function CreationScreen({ locale, onStart, onStartWithArchetype }: Props)
     setBusy(true)
     setError(null)
     try {
-      await onStartWithArchetype(name.trim() || "Wanderer", gender, classId, archetypeId, runType)
+      await onStartWithArchetype(
+        name.trim() || "Wanderer",
+        gender,
+        classId,
+        archetypeId,
+        runType,
+        origin,
+      )
     } catch (e) {
       setError(String((e as Error).message))
       setBusy(false)
@@ -192,6 +207,24 @@ export function CreationScreen({ locale, onStart, onStartWithArchetype }: Props)
               {t(locale, "dailyHint")}
               {dailySeed ? ` (${dailySeed})` : ""}
             </span>
+          </ModePill>
+        </RunModes>
+      </CreationBlock>
+
+      <CreationBlock>
+        <BlockLabel as="span">{t(locale, "chooseOrigin")}</BlockLabel>
+        <RunModes>
+          <ModePill type="button" $active={origin === "humble"} onClick={() => setOrigin("humble")}>
+            <strong>{t(locale, "originHumble")}</strong>
+            <span>{t(locale, "originHumbleHint")}</span>
+          </ModePill>
+          <ModePill
+            type="button"
+            $active={origin === "established"}
+            onClick={() => setOrigin("established")}
+          >
+            <strong>{t(locale, "originEstablished")}</strong>
+            <span>{t(locale, "originEstablishedHint")}</span>
           </ModePill>
         </RunModes>
       </CreationBlock>

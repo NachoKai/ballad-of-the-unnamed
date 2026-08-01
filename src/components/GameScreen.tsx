@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { styled } from "styled-components"
-import type { CharacterState, ServedEvent, Rarity } from "@shared/types"
+import type { CharacterState, ServedEvent, Rarity, RoleSignal } from "@shared/types"
 import type { Locale } from "@shared/types"
 import { t } from "../i18n/strings"
 import { AchIcon } from "./AchIcon"
@@ -17,6 +17,18 @@ import { capitalize } from "../lib/capitalize"
 import { RARITY_CHAOS } from "../constants"
 import { rarityRank } from "@shared/config"
 import { theme } from "../theme"
+
+// §20 minutes-signal shown on clan-join offer cards before the player commits.
+const ROLE_SIGNAL_ICON: Record<RoleSignal, string> = {
+  up: "⬆️",
+  same: "➡️",
+  bench: "🪑",
+}
+const ROLE_SIGNAL_LABEL: Record<RoleSignal, string> = {
+  up: "Up",
+  same: "Same",
+  bench: "Bench",
+}
 
 interface Props {
   locale: Locale
@@ -55,7 +67,6 @@ export function GameScreen({
 
   // Sort choices by rarity so the "safe" option is first and rare/volatile pop last.
   const choices = [...event.choices].sort((a, b) => rarityRank(a.rarity) - rarityRank(b.rarity))
-
   const isSeasonSummary = event.isSeasonSummary
 
   return (
@@ -123,11 +134,23 @@ export function GameScreen({
                     <AchIcon name={c.icon} size={20} />
                   ) : null}
                   {c.label}
+                  {c.roleSignal && (
+                    <Tooltip content={t(locale, `roleSignal${ROLE_SIGNAL_LABEL[c.roleSignal]}`)}>
+                      <RoleSignalTag $signal={c.roleSignal}>
+                        {ROLE_SIGNAL_ICON[c.roleSignal]}
+                      </RoleSignalTag>
+                    </Tooltip>
+                  )}
                 </ChoiceLabel>
                 {isSeasonSummary && c.id === "continue" ? null : (
                   <ChoiceRarity $rarity={c.rarity}>
                     {t(locale, `rarity_${c.rarity}` as never)}
                   </ChoiceRarity>
+                )}
+                {c.riskLabel && (
+                  <RiskTag>
+                    ⚠ {t(locale, "riskTag")}: {c.riskLabel}
+                  </RiskTag>
                 )}
                 {(c.statDeltas ||
                   c.tradeoffDeltas ||
@@ -374,6 +397,37 @@ const BonusTag = styled.span<{ $tint: string }>`
   color: ${({ $tint }) => BONUS_COLOR[$tint] ?? "#9c8f74"};
   background: ${({ $tint }) => `${BONUS_COLOR[$tint] ?? "#9c8f74"}18`};
   line-height: 1.5;
+`
+
+const SIGNAL_COLOR: Record<RoleSignal, string> = {
+  up: "#6f8f6a",
+  same: "#c9a44c",
+  bench: "#bf8a4c",
+}
+
+const RoleSignalTag = styled.span<{ $signal: RoleSignal }>`
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 8px;
+  padding: 1px 7px;
+  border: 1px solid ${({ $signal }) => SIGNAL_COLOR[$signal]};
+  border-radius: 999px;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: ${({ $signal }) => SIGNAL_COLOR[$signal]};
+  vertical-align: middle;
+`
+
+const RiskTag = styled.div`
+  margin-top: 8px;
+  padding: 5px 10px;
+  border: 1px solid ${({ theme }) => theme.colors.bloodBright};
+  border-radius: 4px;
+  background: rgba(191, 30, 30, 0.08);
+  color: ${({ theme }) => theme.colors.bloodBright};
+  font-size: 12px;
+  letter-spacing: 0.03em;
 `
 
 const SummaryBanner = styled.div`

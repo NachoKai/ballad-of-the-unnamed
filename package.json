@@ -9,7 +9,9 @@
     "start": "NODE_ENV=production tsx server/index.ts",
     "db:migrate": "tsx server/db/migrate.ts",
     "i18n:check": "tsx scripts/i18n-parity.ts",
-    "test": "vitest run",
+    "test": "npm run test:src && npm run test:server",
+    "test:src": "vitest run",
+    "test:server": "vitest run --config vitest.server.config.ts",
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check ."

@@ -13,34 +13,58 @@ import type {
 import { localize, peakReputation } from "./helpers.js"
 import { reputationTierId } from "../../shared/config.js"
 
-const EPITHET_PREFIXES: Record<string, { en: string; es: string }> = {
-  warrior: { en: "Iron", es: "Hierro" },
-  wizard: { en: "Arcane", es: "Arcano" },
-  rogue: { en: "Shadow", es: "Sombra" },
-  ranger: { en: "Verdant", es: "Verde" },
-  cleric: { en: "Hallowed", es: "Sagrado" },
-  bard: { en: "Silver", es: "Plateado" },
+// §25 class-partitioned legend identities. The position/class defines what kind
+// of idol you end up being; pools are keyed by behavior archetype and are
+// disjoint per class — a rogue can be "the Phantom" but never "the Bastion".
+type BehaviorArchetype = "legendary" | "mercenary" | "traitor" | "loyal"
+
+const CLASS_IDENTITIES: Record<string, Record<BehaviorArchetype, { en: string; es: string }>> = {
+  warrior: {
+    legendary: { en: "Matador", es: "Matador" },
+    mercenary: { en: "Gilded Axe", es: "Hacha Dorada" },
+    traitor: { en: "Oathbreaker", es: "Perjuro" },
+    loyal: { en: "Banner", es: "Estandarte" },
+  },
+  wizard: {
+    legendary: { en: "Archmage", es: "Archimago" },
+    mercenary: { en: "Sage for Hire", es: "Sabio a Sueldo" },
+    traitor: { en: "Fallen Star", es: "Estrella Caída" },
+    loyal: { en: "Keeper", es: "Guardián" },
+  },
+  rogue: {
+    legendary: { en: "Phantom", es: "Fantasma" },
+    mercenary: { en: "Gilded Fingers", es: "Dedos Dorados" },
+    traitor: { en: "Snake", es: "Serpiente" },
+    loyal: { en: "Night Watch", es: "Centinela Nocturno" },
+  },
+  ranger: {
+    legendary: { en: "Warden", es: "Guardián de lo Salvaje" },
+    mercenary: { en: "Peregrine", es: "Peregrino" },
+    traitor: { en: "Rusty Thorn", es: "Espina Oxidada" },
+    loyal: { en: "Wild Banner", es: "Estandarte Salvaje" },
+  },
+  cleric: {
+    legendary: { en: "Saint", es: "Santo" },
+    mercenary: { en: "Pardon Seller", es: "Vendedor de Indulgencias" },
+    traitor: { en: "Apostate", es: "Apóstata" },
+    loyal: { en: "Candle of the Faith", es: "Cirio de la Fe" },
+  },
+  bard: {
+    legendary: { en: "Swan", es: "Cisne" },
+    mercenary: { en: "Balladeer for Hire", es: "Trovador a Sueldo" },
+    traitor: { en: "Slanderer", es: "Difamador" },
+    loyal: { en: "House Minstrel", es: "Trovador de la Casa" },
+  },
 }
 
-const EPITHET_SUFFIXES: Record<string, { en: string; es: string }> = {
-  warrior: { en: "Blade", es: "Espada" },
-  wizard: { en: "Staff", es: "Bastón" },
-  rogue: { en: "Dagger", es: "Daga" },
-  ranger: { en: "Bow", es: "Arco" },
-  cleric: { en: "Light", es: "Luz" },
-  bard: { en: "Tongue", es: "Lengua" },
-}
-
-function dominantPersonalityTag(c: CharacterState): string | null {
-  let maxCount = 0
-  let dominant: string | null = null
-  for (const [tag, count] of Object.entries(c.personality)) {
-    if (count > maxCount) {
-      maxCount = count
-      dominant = tag
-    }
-  }
-  return dominant
+// Which identity slot a run earns, derived at epilogue time from the membership
+// history and standing. Traitor (betrayal) > loyal (single-clan career) >
+// mercenary (many clans) > legendary (falls through to tier-based flavor).
+function behaviorArchetype(c: CharacterState): BehaviorArchetype {
+  if (c.clanMemberships.some((m) => m.leftReason === "betrayed")) return "traitor"
+  if (c.clanMemberships.length <= 1) return "loyal"
+  if (c.clanMemberships.length >= 3) return "mercenary"
+  return "legendary"
 }
 
 const TAG_EPITHET_PARTS: Record<string, { en: string; es: string }> = {
@@ -56,13 +80,16 @@ const TAG_EPITHET_PARTS: Record<string, { en: string; es: string }> = {
   Leader: { en: "Bright", es: "Brillante" },
 }
 
-function dominantFaction(c: CharacterState): string | null {
-  if (c.reputations.length === 0) return null
-  let best = c.reputations[0]
-  for (const r of c.reputations) {
-    if (r.peakValue > best.peakValue) best = r
+function dominantPersonalityTag(c: CharacterState): string | null {
+  let maxCount = 0
+  let dominant: string | null = null
+  for (const [tag, count] of Object.entries(c.personality)) {
+    if (count > maxCount) {
+      maxCount = count
+      dominant = tag
+    }
   }
-  return best.peakValue >= 20 ? best.faction : null
+  return dominant
 }
 
 export function generateEpithet(
@@ -72,34 +99,47 @@ export function generateEpithet(
 ): EpithetData {
   const clsId = c.class
   const tag = dominantPersonalityTag(c)
-  const factionId = dominantFaction(c)
   const repPeak = peakReputation(c)
   const tier = reputationTierId(repPeak)
 
-  const prefix = tag ? TAG_EPITHET_PARTS[tag] : (EPITHET_PREFIXES[clsId] ?? { en: "The", es: "El" })
-  const suffix = EPITHET_SUFFIXES[clsId] ?? { en: "Wanderer", es: "Errante" }
+  const archetype = behaviorArchetype(c)
+  const homeFaction = registry.factionsById.get(c.homeFactionId)
+  const homeFactionName = homeFaction ? localize(homeFaction.name, locale) : c.homeFactionId
 
+  // §7.1: the subtitle names the HOME faction (fixed identity), even when the
+  // character spent the run abroad or ended dominant elsewhere.
+  const subtitle =
+    locale === "en"
+      ? `${tier.charAt(0).toUpperCase() + tier.slice(1)} of ${homeFactionName}`
+      : `${tier.charAt(0).toUpperCase() + tier.slice(1)} de ${homeFactionName}`
+
+  // Loyal identity explicitly carries the home banner (§25 example).
+  if (archetype === "loyal") {
+    return {
+      title:
+        locale === "en"
+          ? `the Banner of ${homeFactionName}`
+          : `el Estandarte de ${homeFactionName}`,
+      subtitle,
+    }
+  }
+
+  const pool = CLASS_IDENTITIES[clsId] ?? CLASS_IDENTITIES["warrior"]
+  const identity = pool[archetype]
+  const tagWord = tag ? TAG_EPITHET_PARTS[tag] : null
+
+  // The dominant personality tag stays as a secondary descriptor; the class
+  // identity word is the primary one (and stays inside the class's disjoint set).
   let title: string
-  let subtitle: string
-
-  if (factionId) {
-    const faction = registry.factions.find((f) => f.id === factionId)
-    const factionName = faction ? localize(faction.name, locale) : factionId
-    if (locale === "en") {
-      title = `${prefix.en} ${suffix.en}`
-      subtitle = `${tier.charAt(0).toUpperCase() + tier.slice(1)} of ${factionName}`
-    } else {
-      title = `${suffix.es} ${prefix.es}`
-      subtitle = `${tier.charAt(0).toUpperCase() + tier.slice(1)} de ${factionName}`
-    }
+  if (locale === "en") {
+    title = tagWord ? `${tagWord.en} ${identity.en}` : `the ${identity.en}`
   } else {
-    if (locale === "en") {
-      title = `${prefix.en} ${suffix.en}`
-      subtitle = tier.charAt(0).toUpperCase() + tier.slice(1)
-    } else {
-      title = `${suffix.es} ${prefix.es}`
-      subtitle = tier.charAt(0).toUpperCase() + tier.slice(1)
-    }
+    title = tagWord ? `${identity.es} ${tagWord.es}` : identity.es
+  }
+
+  // Mercenary flavor leans on the cash-heavy read when there's no tag to lead.
+  if (!tagWord && archetype === "mercenary" && c.marketValuePeak > 5000) {
+    title = locale === "en" ? `Gilded ${identity.en}` : `${identity.es} Dorado`
   }
 
   return { title, subtitle }
@@ -134,14 +174,32 @@ export function generateDistinctions(
     quests_completed: { en: "Quests Completed", es: "Misiones Completadas" },
     rare_cards: { en: "Rare Encounters Survived", es: "Encuentros Raros Superados" },
     legendary_cards: { en: "Legendary Moments", es: "Momentos Legendarios" },
+    champion_of_the_age: { en: "Champion of the Age", es: "Campeón de la Era" },
+    deed_of_the_year: { en: "Deed of the Year", es: "Hazaña del Año" },
   }
-  return distinctionKeys
+  const base = distinctionKeys
     .filter((k) => (c.counters[k] ?? 0) > 0)
     .map((k) => ({
       id: k,
       label: labels[k] ?? { en: k, es: k },
       count: c.counters[k] ?? 0,
     }))
+  // §7.5: global individual honors surface as their own distinction rows.
+  if (c.achievements.includes("champion_of_the_age")) {
+    base.push({
+      id: "champion_of_the_age",
+      label: labels["champion_of_the_age"],
+      count: 1,
+    })
+  }
+  if (c.achievements.includes("deed_of_the_year")) {
+    base.push({
+      id: "deed_of_the_year",
+      label: labels["deed_of_the_year"],
+      count: c.counters["deeds_of_the_year"] ?? 1,
+    })
+  }
+  return base
 }
 
 export function generateRivalComparison(c: CharacterState): RivalComparison | null {

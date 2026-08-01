@@ -8,7 +8,23 @@ interface EvalContext {
   endingType?: EndingType
 }
 
-function conditionMet(a: AchievementContent, c: CharacterState, ctx: EvalContext): boolean {
+function reputationAt(c: CharacterState, faction: string): number {
+  return c.reputations.find((r) => r.faction === faction)?.value ?? 0
+}
+
+// Current clan's faction wealth. Clan ids double as faction ids, so the
+// current affiliation maps straight into the faction table (§23 league gate).
+function currentFactionWealth(c: CharacterState, registry: ContentRegistry): number {
+  if (!c.currentClanId) return 0
+  return registry.factionsById.get(c.currentClanId)?.wealth ?? 0
+}
+
+function conditionMet(
+  a: AchievementContent,
+  c: CharacterState,
+  ctx: EvalContext,
+  registry: ContentRegistry,
+): boolean {
   const cond = a.condition
   switch (cond.type) {
     case "counter_gte":
@@ -39,6 +55,16 @@ function conditionMet(a: AchievementContent, c: CharacterState, ctx: EvalContext
       return ctx.endingType === cond.value
     case "status":
       return c.status === cond.value
+    case "faction_wealth_gte":
+      return currentFactionWealth(c, registry) >= cond.value
+    case "origin":
+      return c.origin === cond.value
+    case "home_rep_gte":
+      return reputationAt(c, c.homeFactionId) >= cond.value
+    case "and":
+      return cond.conditions.every((sub) =>
+        conditionMet({ ...a, condition: sub }, c, ctx, registry),
+      )
     default:
       return false
   }
@@ -54,7 +80,7 @@ export function evaluateAchievements(
   const owned = new Set(c.achievements)
   for (const a of registry.achievements) {
     if (owned.has(a.id)) continue
-    if (conditionMet(a, c, ctx)) {
+    if (conditionMet(a, c, ctx, registry)) {
       c.achievements.push(a.id)
       owned.add(a.id)
       unlocked.push(a)

@@ -588,5 +588,31 @@
       "en": "The Sapphire Consortium",
       "es": "El Consorcio Zafiro"
     }
+  ],
+  "regionVariant": [
+    {
+      "en": "the Vale's harvest fair",
+      "es": "la feria de la cosecha del Valle"
+    },
+    {
+      "en": "the Coastlands' regatta week",
+      "es": "la semana de regatas de las Tierras de la Costa"
+    },
+    {
+      "en": "the Highlands' winter festival",
+      "es": "el festival de invierno de las Tierras Altas"
+    },
+    {
+      "en": "the Wastelands' cinder pageant",
+      "es": "el certamen de cenizas de las Tierras Yermas"
+    },
+    {
+      "en": "the Capital's grand tournament",
+      "es": "el gran torneo de la Capital"
+    },
+    {
+      "en": "the Isles' moonlit games",
+      "es": "los juegos a la luz de la luna de las Islas"
+    }
   ]
 }

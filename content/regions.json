@@ -1,0 +1,26 @@
+{
+  "vale": {
+    "en": "The Vale",
+    "es": "El Valle"
+  },
+  "coast": {
+    "en": "The Coastlands",
+    "es": "Las Tierras de la Costa"
+  },
+  "highlands": {
+    "en": "The Highlands",
+    "es": "Las Tierras Altas"
+  },
+  "wastelands": {
+    "en": "The Wastelands",
+    "es": "Las Tierras Yermas"
+  },
+  "capital": {
+    "en": "The Capital",
+    "es": "La Capital"
+  },
+  "isles": {
+    "en": "The Isles",
+    "es": "Las Islas"
+  }
+}

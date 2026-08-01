@@ -1,0 +1,338 @@
+[
+  {
+    "id": "foreign_changing_room",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 8,
+    "requiresForeign": true,
+    "narrative": {
+      "en": "In a strange land, you share the changing room with rivals who watch you like a curiosity. A veteran leans in close. 'Where are you from, again? We don't get many of your kind here.'",
+      "es": "En tierra extraña, compartís vestuario con rivales que te miran como una curiosidad. Un veterano se acerca. '¿De dónde dijiste que eras? Acá no llegan muchos de los tuyos.'"
+    },
+    "choices": [
+      {
+        "id": "proud",
+        "label": {
+          "en": "Announce your homeland with pride",
+          "es": "Anunciar tu tierra con orgullo"
+        },
+        "tag": "Confident",
+        "rarity": "rare",
+        "statDeltas": {
+          "charisma": 3
+        },
+        "fameDelta": 5,
+        "reputationDelta": 2,
+        "reputationFaction": "ironhold",
+        "narrative": {
+          "en": "You name your home loud enough for the whole room to hear. A few smirk; a few nod. They will remember the foreigner now.",
+          "es": "Nombrás tu tierra lo bastante fuerte como para que toda la sala te oiga. Algunos sonríen; otros asienten. Ahora recordarán al extranjero."
+        }
+      },
+      {
+        "id": "mock",
+        "label": {
+          "en": "Lean into the outsider act",
+          "es": "Jugar el papel de forastero"
+        },
+        "tag": "Funny",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "dexterity": 1
+        },
+        "goldDelta": 40,
+        "narrative": {
+          "en": "You tell a self-deprecating tale of your homeland's odd customs and win the room with laughter. No one laughs at you again without your permission.",
+          "es": "Contás un relato autodepreciativo de las costumbres raras de tu tierra y te ganás la sala con la risa. Nadie vuelve a reirse de vos sin tu permiso."
+        }
+      },
+      {
+        "id": "silent",
+        "label": {
+          "en": "Say nothing, watch everything",
+          "es": "No decir nada, observarlo todo"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "narrative": {
+          "en": "You let the silence answer. They trade glances, unsure whether you are a threat or a fool. That uncertainty is a weapon in itself.",
+          "es": "Dejás que el silencio responda. Intercambian miradas, sin saber si sos una amenaza o un necio. Esa incertidumbre es un arma en sí misma."
+        }
+      }
+    ]
+  },
+  {
+    "id": "foreign_accent_jeers",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 7,
+    "requiresForeign": true,
+    "narrative": {
+      "en": "A rowdy crowd mimics your accent before a public bout. 'Speak plainly, outlander!' they shout. The officials look at you, waiting to see how you take it.",
+      "es": "Una multitud alborotada imita tu acento antes de un combate público. '¡Habla claro, forastero!', gritan. Los jueces te miran, esperando ver cómo lo tomas."
+    },
+    "choices": [
+      {
+        "id": "flame",
+        "label": {
+          "en": "Turn their jeering into fuel",
+          "es": "Convertir sus burlas en combustible"
+        },
+        "tag": "Aggressive",
+        "rarity": "rare",
+        "statDeltas": {
+          "strength": 2,
+          "constitution": 1
+        },
+        "fameDelta": 8,
+        "injuryRiskDelta": 0.05,
+        "narrative": {
+          "en": "You let them shout until they are hoarse, then win the bout without a word. The silence when you bow is sweeter than any applause.",
+          "es": "Dejás que griten hasta quedarse afónicos y luego ganás el combate sin decir palabra. El silencio cuando saludas es más dulce que cualquier aplauso."
+        }
+      },
+      {
+        "id": "joke",
+        "label": {
+          "en": "Defuse it with a joke",
+          "es": "Desactivarlo con un chiste"
+        },
+        "tag": "Funny",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "charisma": 2
+        },
+        "reputationDelta": 3,
+        "reputationFaction": "ironhold",
+        "narrative": {
+          "en": "You laugh along and land a joke at your own expense. The crowd warms instantly — a foreigner who can take a hit is already half accepted.",
+          "es": "Te reís con ellos y soltás un chiste a tu costa. La multitud se calienta al instante — un forastero que aguanta el golpe ya está medio aceptado."
+        }
+      },
+      {
+        "id": "walk",
+        "label": {
+          "en": "Walk away without responding",
+          "es": "Irte sin responder"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": {
+          "intelligence": 1
+        },
+        "goldDelta": -10,
+        "narrative": {
+          "en": "You refuse to give them the show they want. The jeers die out awkwardly, and you notice a few faces watching you with grudging respect.",
+          "es": "Te negás a darles el espectáculo que quieren. Los silbidos se apagan con torpeza, y notás que algunas caras te miran con respeto a regañadientes."
+        }
+      }
+    ]
+  },
+  {
+    "id": "foreign_home_letter",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "requiresForeign": true,
+    "narrative": {
+      "en": "A courier delivers a sealed letter from home. The script is familiar — news of the people you left behind, and a question: when are you coming back?",
+      "es": "Un mensajero entrega una carta sellada de tu tierra. La letra te resulta familiar — noticias de la gente que dejaste, y una pregunta: ¿cuándo volvés?"
+    },
+    "choices": [
+      {
+        "id": "write_back",
+        "label": {
+          "en": "Write a long reply and send gold home",
+          "es": "Escribir una larga respuesta y enviar oro"
+        },
+        "tag": "Supportive",
+        "rarity": "uncommon",
+        "goldDelta": -60,
+        "staminaDelta": 10,
+        "narrative": {
+          "en": "You pour your heart onto the page and slip coins into the wax. Somewhere far away, a family worries a little less tonight.",
+          "es": "Volás el corazón en la página y deslizás monedas dentro de la cera. En algún lugar lejano, una familia se preocupa un poco menos esta noche."
+        }
+      },
+      {
+        "id": "burn",
+        "label": {
+          "en": "Burn it and focus on the here and now",
+          "es": "Quemarla y concentrarte en el aquí y ahora"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": {
+          "constitution": 2
+        },
+        "narrative": {
+          "en": "The paper turns to ash. The past is a country you cannot afford to visit twice. You tighten your grip on the present.",
+          "es": "El papel se convierte en ceniza. El pasado es un país que no podeś permitirte visitar dos veces. Aprietaś el presente."
+        }
+      },
+      {
+        "id": "read_again",
+        "label": {
+          "en": "Read it again and again, then push onward",
+          "es": "Leerla una y otra vez y luego seguir"
+        },
+        "tag": "Humble",
+        "rarity": "rare",
+        "statDeltas": {
+          "intelligence": 2,
+          "charisma": 1
+        },
+        "narrative": {
+          "en": "You memorize every line until it becomes armor. When the page goes back in your pack, your stride is steadier.",
+          "es": "Memorizás cada línea hasta que se vuelve armadura. Cuando la página vuelve a tu mochila, tu paso es más firme."
+        }
+      }
+    ]
+  },
+  {
+    "id": "foreign_match_fix",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "requiresForeign": true,
+    "narrative": {
+      "en": "A well-dressed stranger corners you in a back room. 'Throw the bout tonight and I'll make it worth your while.' He names a sum that would change your year.",
+      "es": "Un desconocido bien vestido te arrincona en un cuarto trasero. 'Perdé el combate de esta noche y te conviene.' Nombra una suma que cambiaría tu año."
+    },
+    "choices": [
+      {
+        "id": "refuse",
+        "label": {
+          "en": "Refuse and report him",
+          "es": "Rechazarlo y denunciarlo"
+        },
+        "tag": "Professional",
+        "rarity": "rare",
+        "statDeltas": {
+          "charisma": 2
+        },
+        "fameDelta": 6,
+        "reputationDelta": 5,
+        "reputationFaction": "ironhold",
+        "injuryRiskDelta": 0.08,
+        "narrative": {
+          "en": "You walk straight to the officials. The stranger is dragged out cursing your name, and the crowd learns your integrity has a price tag: none.",
+          "es": "Vas directo a los jueces. Al desconocido lo sacan arrastrando maldiciendo tu nombre, y la multitud aprende que tu integridad no tiene precio."
+        }
+      },
+      {
+        "id": "take",
+        "label": {
+          "en": "Take the gold and throw the bout",
+          "es": "Aceptar el oro y perder el combate"
+        },
+        "tag": "Cocky",
+        "rarity": "volatile",
+        "statDeltas": {
+          "dexterity": 4
+        },
+        "tradeoffDeltas": {
+          "constitution": -3
+        },
+        "goldDelta": 500,
+        "fameDelta": -10,
+        "narrative": {
+          "en": "The fall looks accidental. The purse is heavy. But the whispers about the outlander who sold a match follow you like a shadow.",
+          "es": "La caída parece accidental. La bolsa pesa. Pero los rumores sobre el forastero que vendió un combate te siguen como una sombra."
+        }
+      },
+      {
+        "id": "negotiate_up",
+        "label": {
+          "en": "Feign interest, then demand more — and back out",
+          "es": "Fingir interés, pedir más — y retirarte"
+        },
+        "tag": "Strategic",
+        "rarity": "rare",
+        "statDeltas": {
+          "intelligence": 3
+        },
+        "goldDelta": 150,
+        "narrative": {
+          "en": "You play the greedy fool, take the advance, then win the bout anyway. The stranger's face, from the stands, is worth every coin of the advance.",
+          "es": "Haceś el papel del necio ambicioso, tomás el adelanto y luego ganás el combate igual. La cara del desconocido, desde la tribuna, vale cada moneda del adelanto."
+        }
+      }
+    ]
+  },
+  {
+    "id": "foreign_kinsman_found",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "requiresForeign": true,
+    "narrative": {
+      "en": "At a crowded inn, someone greets you in the old tongue. A traveler from your home region — years abroad, weathered but warm. 'By the old songs, I thought I was the last one here.'",
+      "es": "En una posada abarrotada, alguien te saluda en la lengua antigua. Un viajero de tu región de origen — años en el extranjero, curtido pero calido. 'Por las viejas canciones, creí que era el último aquí.'"
+    },
+    "choices": [
+      {
+        "id": "reunite",
+        "label": {
+          "en": "Spend the night trading tales of home",
+          "es": "Pasar la noche contando historias de tu tierra"
+        },
+        "tag": "Supportive",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "charisma": 2
+        },
+        "staminaDelta": 12,
+        "introducesRelationshipId": "wanderer_of_the_homeland",
+        "introducesNpcRole": "ally",
+        "introducesNpcName": {
+          "en": "the Old Campaigner",
+          "es": "el Viejo Campañero"
+        },
+        "affinityDelta": 25,
+        "narrative": {
+          "en": "You drink deep and trade names the world has forgotten. For one night, you are not an outlander — you are family.",
+          "es": "Bebés hondo y cambiás nombres que el mundo ha olvidado. Por una noche, no sos un forastero — sos familia."
+        }
+      },
+      {
+        "id": "ask_work",
+        "label": {
+          "en": "Ask if there's honest work in this region",
+          "es": "Preguntar si hay trabajo honesto en esta región"
+        },
+        "tag": "Professional",
+        "rarity": "common",
+        "statDeltas": {
+          "constitution": 1
+        },
+        "goldDelta": 70,
+        "reputationDelta": 2,
+        "reputationFaction": "ironhold",
+        "narrative": {
+          "en": "He sketches a map of the region's shifting loyalties and names three patrons who pay for a proven blade. Gold is a language every land understands.",
+          "es": "Te dibuja un mapa de las lealtades cambiantes de la región y nombra tres mecenas que pagan por una espada probada. El oro es un idioma que toda tierra entiende."
+        }
+      },
+      {
+        "id": "part",
+        "label": {
+          "en": "Clasp hands and part before dawn",
+          "es": "Estrechar manos y partir antes del amanecer"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "narrative": {
+          "en": "Some doors are better left closed — seeing him made home ache more than staying abroad. You keep the memory, and the road.",
+          "es": "Algunas puertas es mejor dejarlas cerradas — verlo hizo doler más tu tierra que quedarte en el extranjero. Te quedás con el recuerdo, y con el camino."
+        }
+      }
+    ]
+  }
+]

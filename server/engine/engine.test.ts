@@ -7,6 +7,7 @@ import {
   createCharacter,
   generateClanOffer,
   generateRival,
+  negotiationFollowUpEvent,
   resolveChoice,
   resolveMinigame,
   resolveSeasonSummary,
@@ -15,18 +16,23 @@ import {
   seasonStipendFor,
   selectEvent,
   signingGoldFor,
+  tournamentFixtureEvent,
+  tournamentIntroEvent,
 } from "./engine.js"
-import { generateEpilogue } from "./epilogue.js"
+import { generateDistinctions, generateEpilogue, generateEpithet } from "./epilogue.js"
 import { evaluateAchievements } from "./achievements.js"
 import { loadContent } from "../content/registry.js"
 import {
   adjustAffinity,
   applyClanBetrayal,
+  clearExpiredHunted,
   computePowerLevel,
   ensureRelationship,
   fillSlots,
+  isBenched,
   isEligible,
   joinClan,
+  roleSignalFor,
   serveEvent,
   updateMomentum,
 } from "./helpers.js"
@@ -45,6 +51,10 @@ function makeChar(overrides: Partial<CharacterState> = {}): CharacterState {
     epithet: null,
     age: 16,
     currentArc: "adventurer",
+    homeFactionId: "ironhold",
+    homeRegion: "vale",
+    currentRegion: "vale",
+    origin: "humble",
     seasonCount: 0,
     inventory: [],
     lockedEventPools: [],
@@ -71,6 +81,7 @@ function makeChar(overrides: Partial<CharacterState> = {}): CharacterState {
     relationships: [],
     rival: null,
     currentClanId: null,
+    benchedUntilTurn: null,
     huntedBy: null,
     huntedUntilTurn: null,
     clanMemberships: [],
@@ -83,7 +94,7 @@ function makeChar(overrides: Partial<CharacterState> = {}): CharacterState {
 // createCharacter
 // ---------------------------------------------------------------------------
 describe("createCharacter", () => {
-  it("creates a character with correct base stats", () => {
+  it("creates a character with correct base stats (humble origin default)", () => {
     const c = createCharacter({
       id: "c1",
       name: "Hero",
@@ -99,10 +110,30 @@ describe("createCharacter", () => {
     expect(c.constitution).toBe(7)
     expect(c.intelligence).toBe(3)
     expect(c.charisma).toBe(4)
-    expect(c.gold).toBe(120)
+    // §20 humble origin: starting gold halved, no starting renown.
+    expect(c.gold).toBe(60)
     expect(c.status).toBe("alive")
     expect(c.reputations).toHaveLength(1)
     expect(c.reputations[0].faction).toBe("ironhold")
+    expect(c.reputations[0].value).toBe(0)
+    expect(c.origin).toBe("humble")
+    expect(c.homeFactionId).toBe("ironhold")
+    expect(c.homeRegion).toBe("vale")
+    expect(c.currentRegion).toBe("vale")
+  })
+
+  it("established origin keeps full gold and starts with standing at home", () => {
+    const c = createCharacter({
+      id: "c2",
+      name: "Squire",
+      classId: "warrior",
+      origin: "established",
+      locale: "en",
+      registry: reg,
+    })
+    expect(c.gold).toBe(120)
+    expect(c.origin).toBe("established")
+    expect(c.reputations[0].value).toBe(10)
   })
 
   it("accepts all 6 classes", () => {
@@ -1751,8 +1782,12 @@ describe("clan offer amounts", () => {
         if (!joinChoice) continue
         const displayed = joinChoice.goldDelta ?? 0
         expect(displayed).toBeGreaterThan(0)
-        const goldBefore = c.gold
+        // §24: picking an offer defers the join to the negotiation follow-up.
         resolveChoice(c, event, joinChoice.id, reg, rng)
+        expect(c.pendingJoinOffer?.signingGold).toBe(displayed)
+        const followUp = negotiationFollowUpEvent(c, reg)
+        const goldBefore = c.gold
+        resolveChoice(c, followUp, "accept_join", reg, rng)
         expect(c.gold).toBe(goldBefore + displayed)
         tested = true
         break
@@ -1891,5 +1926,494 @@ describe("relationship achievements", () => {
     const result = evaluateAchievements(c, miniReg)
     expect(result).toHaveLength(1)
     expect(result[0].id).toBe("burned_bridge")
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Phase 7: identity, geography, origin, bench, tournaments, honors, epithets
+// ---------------------------------------------------------------------------
+
+// Mirrors the /choose route's one-turn loop: build next event, resolve it with
+// the same rng, return the outcome. Picks the first (safest) choice.
+function playTurn(c: CharacterState, rng: Rng, pick?: (ids: string[]) => string): boolean {
+  const { event, served } = buildServedEvent(c, reg, rng)
+  const isMinigame = event.type === "minigame" || Boolean(event.cards)
+  const ids = served.choices.map((ch) => ch.id)
+  const id = pick ? pick(ids) : ids[0]
+  const outcome = isMinigame
+    ? resolveMinigame(c, event, id, reg, rng)
+    : resolveChoice(c, event, id, reg, rng)
+  if (outcome.completedQuest) {
+    c.counters["quests_completed"] = (c.counters["quests_completed"] ?? 0) + 1
+  }
+  return outcome.ended
+}
+
+// A deterministic fingerprint of a character's game-relevant state.
+function fingerprint(c: CharacterState): string {
+  return JSON.stringify({
+    turn: c.turn,
+    age: c.age,
+    seasonCount: c.seasonCount,
+    gold: c.gold,
+    fame: c.fame,
+    powerLevel: c.powerLevel,
+    status: c.status,
+    currentClanId: c.currentClanId,
+    currentRegion: c.currentRegion,
+    currentArc: c.currentArc,
+    benchedUntilTurn: c.benchedUntilTurn ?? null,
+    pendingTournament: c.pendingTournament ?? null,
+    pendingTournamentResult: c.pendingTournamentResult ?? null,
+    counters: c.counters,
+    reputations: c.reputations.map((r) => [r.faction, r.value, r.peakValue]),
+    clanMemberships: c.clanMemberships.map((m) => [m.clanId, m.leftReason ?? null]),
+    achievements: [...c.achievements].sort(),
+    personality: c.personality,
+    flags: c.flags,
+  })
+}
+
+describe("Phase 7 · origin & identity (§20)", () => {
+  it("established origin starts with full gold and home standing", () => {
+    const c = createCharacter({
+      id: "c",
+      name: "Nob",
+      classId: "warrior",
+      origin: "established",
+      locale: "en",
+      registry: reg,
+    })
+    expect(c.gold).toBe(120)
+    expect(c.reputations[0].value).toBe(10)
+    expect(c.homeFactionId).toBe("ironhold")
+    expect(c.homeRegion).toBe("vale")
+    expect(c.currentRegion).toBe("vale")
+  })
+
+  it("humble origin halves gold and starts with zero renown", () => {
+    const c = createCharacter({
+      id: "c",
+      name: "Pauper",
+      classId: "warrior",
+      origin: "humble",
+      locale: "en",
+      registry: reg,
+    })
+    expect(c.gold).toBe(60)
+    expect(c.reputations[0].value).toBe(0)
+  })
+})
+
+describe("Phase 7 · bench mechanic (§20)", () => {
+  it("joining a big clan above your level benches you and counts the bench_joined counter", () => {
+    const c = makeChar({ currentClanId: null, powerLevel: 20, turn: 10 })
+    // golden_lotus wealth=9 → threshold wealth*12 = 108 > 20 → bench.
+    joinClan(c, "golden_lotus", c.turn, 500, reg)
+    expect(c.benchedUntilTurn).toBe(10 + GAME_CONFIG.benchDurationTurns)
+    expect(c.counters["bench_joined"]).toBe(1)
+    expect(isBenched(c)).toBe(true)
+    expect(c.currentRegion).toBe("capital")
+  })
+
+  it("joining a right-sized clan does not bench you", () => {
+    // golden_lotus wealth=9 → bench threshold wealth*12 = 108; power 200 clears it.
+    const c = makeChar({ currentClanId: null, powerLevel: 200, turn: 10 })
+    joinClan(c, "golden_lotus", c.turn, 500, reg)
+    expect(c.benchedUntilTurn).toBeNull()
+    expect(isBenched(c)).toBe(false)
+  })
+
+  it("benched stat gains are reduced and clear when the deadline passes", () => {
+    const c = makeChar({ currentClanId: "golden_lotus", powerLevel: 20, turn: 10 })
+    c.benchedUntilTurn = 10 + GAME_CONFIG.benchDurationTurns
+    const before = c.strength
+    const ev: EventContent = {
+      id: "bench_gain",
+      minAge: 0,
+      maxAge: 99,
+      weight: 1,
+      narrative: { en: "", es: "" },
+      choices: [
+        {
+          id: "train",
+          rarity: "common",
+          label: { en: "", es: "" },
+          narrative: { en: "", es: "" },
+          statDeltas: { strength: 10 },
+        },
+      ],
+    }
+    resolveChoice(c, ev, "train", reg, new Rng(1))
+    expect(c.strength).toBe(before + Math.round(10 * 0.8))
+    // Advance past the deadline.
+    c.turn = c.benchedUntilTurn!
+    clearExpiredHunted(c)
+    expect(isBenched(c)).toBe(false)
+  })
+})
+
+describe("Phase 7 · role signals on offers (§20)", () => {
+  it("roleSignalFor reports bench/up/same correctly", () => {
+    // golden_lotus wealth=9 → bench below 108, up at/above 162.
+    const weak = makeChar({ powerLevel: 10 })
+    expect(roleSignalFor(weak, "golden_lotus", reg)).toBe("bench")
+    const strong = makeChar({ powerLevel: 200 })
+    expect(roleSignalFor(strong, "golden_lotus", reg)).toBe("up")
+    const mid = makeChar({ powerLevel: 130 })
+    expect(roleSignalFor(mid, "golden_lotus", reg)).toBe("same")
+  })
+
+  it("clan offer cards carry the role signal", () => {
+    const c = makeChar({ powerLevel: 10 })
+    const { offers } = generateClanOffer(c, reg, new Rng(1))
+    expect(offers.length).toBeGreaterThan(0)
+    for (const o of offers) {
+      expect(o.roleSignal).toBeDefined()
+      expect(["up", "same", "bench"]).toContain(o.roleSignal)
+    }
+  })
+})
+
+describe("Phase 7 · foreign & region gating (§19/§21)", () => {
+  it("requiresForeign events only serve while abroad", () => {
+    const home = makeChar({ currentRegion: "vale", homeRegion: "vale" })
+    const abroad = makeChar({ currentRegion: "capital", homeRegion: "vale" })
+    const ev = reg.events.find((e) => e.id === "foreign_changing_room")
+    if (!ev) throw new Error("missing foreign_changing_room")
+    expect(isEligible(ev, home)).toBe(false)
+    expect(isEligible(ev, abroad)).toBe(true)
+  })
+
+  it("requiresRegion events only serve in the matching region", () => {
+    const inCapital = makeChar({ currentRegion: "capital", homeRegion: "vale" })
+    const inVale = makeChar({ currentRegion: "vale", homeRegion: "vale" })
+    const ev = reg.events.find((e) => e.id === "region_capital_gala")
+    if (!ev) throw new Error("missing region_capital_gala")
+    expect(isEligible(ev, inCapital)).toBe(true)
+    expect(isEligible(ev, inVale)).toBe(false)
+  })
+
+  it("joining a foreign clan moves currentRegion, leaving returns home", () => {
+    const c = makeChar({ currentClanId: null, homeRegion: "vale", currentRegion: "vale", turn: 5 })
+    joinClan(c, "golden_lotus", c.turn, 500, reg)
+    expect(c.currentRegion).toBe("capital")
+    c.currentClanId = null
+    c.currentRegion = c.homeRegion
+    expect(c.currentRegion).toBe("vale")
+  })
+})
+
+describe("Phase 7 · negotiation dial (§24)", () => {
+  function pendingOffer(c: CharacterState) {
+    c.pendingJoinOffer = { clanId: "blacktide", signingGold: 500, stipend: 100 }
+  }
+
+  it("accept_join finalizes the deferred join with the shown gold", () => {
+    const c = makeChar({ gold: 50, turn: 5 })
+    pendingOffer(c)
+    const ev = negotiationFollowUpEvent(c, reg)
+    resolveChoice(c, ev, "accept_join", reg, new Rng(1))
+    expect(c.pendingJoinOffer).toBeNull()
+    expect(c.currentClanId).toBe("blacktide")
+    expect(c.gold).toBe(50 + 500)
+    expect(c.counters["negotiations_won"] ?? 0).toBe(0)
+  })
+
+  it("a successful press boosts the signing gold and stipend", () => {
+    const c = makeChar({ gold: 50, turn: 5, charisma: 25 })
+    pendingOffer(c)
+    // charisma 25 → 0.55 + 0.5 = 1.05 capped at 0.95; pick a seed that rolls low.
+    for (let i = 0; i < 20; i++) {
+      const c2 = makeChar({ gold: 50, turn: 5, charisma: 25 })
+      pendingOffer(c2)
+      const ev2 = negotiationFollowUpEvent(c2, reg)
+      const r2 = new Rng(hashSeed("negotiate-win-" + i))
+      const before = c2.gold
+      resolveChoice(c2, ev2, "negotiate_join", reg, r2)
+      if (c2.currentClanId === "blacktide") {
+        expect(c2.gold).toBe(before + Math.round(500 * GAME_CONFIG.negotiationGoldMultiplier))
+        expect(c2.counters["negotiations_won"]).toBe(1)
+        return
+      }
+    }
+    throw new Error("no successful negotiation rolled in 20 seeds")
+  })
+
+  it("a failed press withdraws the offer and hits reputation", () => {
+    for (let i = 0; i < 40; i++) {
+      const c2 = makeChar({
+        gold: 50,
+        turn: 5,
+        charisma: 1,
+        reputations: [{ faction: "blacktide", value: 20, peakValue: 20 }],
+      })
+      pendingOffer(c2)
+      const ev2 = negotiationFollowUpEvent(c2, reg)
+      const r2 = new Rng(hashSeed("negotiate-fail-" + i))
+      resolveChoice(c2, ev2, "negotiate_join", reg, r2)
+      if (c2.currentClanId === null) {
+        expect(c2.reputations.find((r) => r.faction === "blacktide")?.value).toBe(15)
+        expect(c2.counters["negotiation_failures"]).toBe(1)
+        expect(c2.pendingJoinOffer).toBeNull()
+        return
+      }
+    }
+    throw new Error("no failed negotiation rolled in 40 seeds")
+  })
+})
+
+describe("Phase 7 · whole-arc tournaments (§22)", () => {
+  it("intro → 3 fixtures → honor beat resolves through the minigame path", () => {
+    const c = makeChar({ age: 18, turn: 12, currentClanId: null, powerLevel: 60 })
+    const rng = new Rng(hashSeed("tournament"))
+    // Force the tournament intro by repeatedly building events until it appears.
+    let started = false
+    for (let i = 0; i < 40 && !started; i++) {
+      const { event, served } = buildServedEvent(c, reg, rng)
+      if (event.id === "__tournament_intro__") {
+        const luck = served.choices.find((ch) => ch.id === "mode_luck")!
+        resolveChoice(c, event, luck.id, reg, rng)
+        started = true
+      } else {
+        // Consume whatever beat was served so the loop advances.
+        const id = served.choices[0]?.id
+        if (id) {
+          if (event.type === "minigame" || event.cards) resolveMinigame(c, event, id, reg, rng)
+          else resolveChoice(c, event, id, reg, rng)
+        }
+      }
+    }
+    expect(started).toBe(true)
+    expect(c.pendingTournament).not.toBeNull()
+    expect(c.pendingTournament!.mode).toBe("luck")
+    expect(c.pendingTournament!.fixturesLeft).toBe(3)
+
+    // Play out the fixtures.
+    let fixtures = 0
+    while (c.pendingTournament && fixtures < 10) {
+      const { event, served } = buildServedEvent(c, reg, rng)
+      expect(event.id).toBe("__tournament_fixture__")
+      const id = served.choices[0]!.id
+      resolveMinigame(c, event, id, reg, rng)
+      fixtures++
+    }
+    expect(c.pendingTournament).toBeNull()
+    expect(c.pendingTournamentResult).not.toBeNull()
+
+    // Honor beat.
+    const { event: honor, served: honorServed } = buildServedEvent(c, reg, rng)
+    expect(honor.id).toBe("__tournament_outcome__")
+    const continueId = honorServed.choices[0]!.id
+    resolveChoice(c, honor, continueId, reg, rng)
+    expect(c.pendingTournamentResult).toBeNull()
+  })
+
+  it("skill mode resolves through memory_match fixtures", () => {
+    const c = makeChar({ age: 18, turn: 12, currentClanId: null, powerLevel: 60 })
+    const intro = tournamentIntroEvent(c, "grand_melee")
+    resolveChoice(c, intro, "mode_skill", reg, new Rng(1))
+    expect(c.pendingTournament!.mode).toBe("skill")
+    const fixture = tournamentFixtureEvent(c)
+    expect(fixture.subtype).toBe("memory_match")
+  })
+})
+
+describe("Phase 7 · global honors (§23/§7.5)", () => {
+  function makeAch(id: string, condition: AchievementContent["condition"]): ContentRegistry {
+    return {
+      ...reg,
+      achievements: [
+        {
+          id,
+          icon: "x",
+          rarity: "epic",
+          name: { en: "", es: "" },
+          description: { en: "", es: "" },
+          condition,
+        },
+      ],
+    }
+  }
+
+  it("faction_wealth_gte passes only while in a prestigious clan", () => {
+    const rich = makeChar({ currentClanId: "golden_lotus" })
+    const poor = makeChar({ currentClanId: "greywater" })
+    const mini = makeAch("wealthy", { type: "faction_wealth_gte", value: 7 })
+    expect(evaluateAchievements(rich, mini)).toHaveLength(1)
+    expect(evaluateAchievements(poor, mini)).toHaveLength(0)
+  })
+
+  it("and-composition requires every nested condition", () => {
+    const c = makeChar({ currentClanId: "golden_lotus", fame: 85 })
+    const mini = makeAch("champ", {
+      type: "and",
+      conditions: [
+        { type: "faction_wealth_gte", value: 7 },
+        { type: "fame_gte", value: 80 },
+        { type: "counter_gte", key: "tournaments_won", value: 1 },
+      ],
+    })
+    c.counters["tournaments_won"] = 1
+    expect(evaluateAchievements(c, mini)).toHaveLength(1)
+    c.counters["tournaments_won"] = 0
+    expect(evaluateAchievements(c, mini)).toHaveLength(0)
+  })
+
+  it("home_rep_gte checks the fixed home faction", () => {
+    const c = makeChar({
+      homeFactionId: "ironhold",
+      reputations: [
+        { faction: "ironhold", value: 92, peakValue: 92 },
+        { faction: "blacktide", value: 5, peakValue: 5 },
+      ],
+    })
+    const mini = makeAch("underdog", {
+      type: "and",
+      conditions: [
+        { type: "origin", value: "humble" },
+        { type: "home_rep_gte", value: 90 },
+      ],
+    })
+    expect(evaluateAchievements(c, mini)).toHaveLength(1)
+    c.origin = "established"
+    expect(evaluateAchievements(c, mini)).toHaveLength(0)
+  })
+
+  it("generateDistinctions emits champion_of_the_age and deed_of_the_year rows", () => {
+    const c = makeChar({ achievements: ["champion_of_the_age", "deed_of_the_year"] })
+    c.counters["deeds_of_the_year"] = 2
+    const rows = generateDistinctions(c, reg)
+    expect(rows.some((r) => r.id === "champion_of_the_age")).toBe(true)
+    expect(rows.find((r) => r.id === "deed_of_the_year")?.count).toBe(2)
+  })
+})
+
+describe("Phase 7 · class-partitioned epithets (§25)", () => {
+  it("loyal career names the home faction as the banner", () => {
+    const c = makeChar({
+      class: "warrior",
+      homeFactionId: "ironhold",
+      clanMemberships: [
+        {
+          clanId: "ironhold",
+          rank: "trusted",
+          joinedAtTurn: 1,
+          leftAtTurn: null,
+          leftReason: null,
+        },
+      ],
+      reputations: [{ faction: "ironhold", value: 80, peakValue: 80 }],
+    })
+    const epithet = generateEpithet(c, reg, "en")
+    expect(epithet.title).toContain("Ironhold")
+    expect(epithet.subtitle).toContain("Ironhold")
+  })
+
+  it("identity pools are disjoint across classes", () => {
+    const classes = ["warrior", "wizard", "rogue", "ranger", "cleric", "bard"]
+    const seen = new Set<string>()
+    for (const cls of classes) {
+      // Mercenary archetype: >= 3 clan memberships.
+      const c = makeChar({
+        class: cls,
+        clanMemberships: [
+          {
+            clanId: "ironhold",
+            rank: "recruit",
+            joinedAtTurn: 1,
+            leftAtTurn: 5,
+            leftReason: "retired",
+          },
+          {
+            clanId: "blacktide",
+            rank: "recruit",
+            joinedAtTurn: 6,
+            leftAtTurn: 10,
+            leftReason: "retired",
+          },
+          {
+            clanId: "golden_lotus",
+            rank: "recruit",
+            joinedAtTurn: 11,
+            leftAtTurn: null,
+            leftReason: null,
+          },
+        ],
+      })
+      const epithet = generateEpithet(c, reg, "en")
+      // No personality tags, so the title is exactly "the {identity}".
+      const identity = epithet.title.replace(/^the /, "")
+      // The identity word must be unique across classes.
+      expect(seen.has(identity)).toBe(false)
+      seen.add(identity)
+    }
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Phase 7 §7.8: determinism — same daily seed ⇒ identical sequence of turns,
+// including the new seeded systems (negotiation + tournaments). No Math.random.
+// ---------------------------------------------------------------------------
+describe("Phase 7 · daily-seed determinism (§26/§7.8)", () => {
+  it("two runs from the same seed produce identical states across a season", () => {
+    const a = createCharacter({
+      id: "a",
+      name: "A",
+      classId: "warrior",
+      origin: "humble",
+      locale: "en",
+      registry: reg,
+    })
+    const b = createCharacter({
+      id: "b",
+      name: "B",
+      classId: "warrior",
+      origin: "humble",
+      locale: "en",
+      registry: reg,
+    })
+    const rngA = new Rng(hashSeed("daily-seed"))
+    const rngB = new Rng(hashSeed("daily-seed"))
+    a.rival = generateRival(a, reg, rngA)
+    b.rival = generateRival(b, reg, rngB)
+    expect(fingerprint(a)).toBe(fingerprint(b))
+    // Play a full season (seasonLength turns) with identical choices.
+    for (let i = 0; i < GAME_CONFIG.seasonLength + 1; i++) {
+      const endedA = playTurn(a, rngA)
+      const endedB = playTurn(b, rngB)
+      expect(endedA).toBe(endedB)
+      expect(fingerprint(a)).toBe(fingerprint(b))
+      if (endedA) break
+    }
+    expect(a.turn).toBeGreaterThan(0)
+  })
+
+  it("the turn pipeline never calls Math.random", () => {
+    const originalRandom = Math.random
+    const c = createCharacter({
+      id: "c",
+      name: "C",
+      classId: "rogue",
+      origin: "established",
+      locale: "en",
+      registry: reg,
+    })
+    const rng = new Rng(hashSeed("no-math-random"))
+    c.rival = generateRival(c, reg, rng)
+    let hit = false
+    Math.random = () => {
+      hit = true
+      throw new Error("Math.random called in game pipeline")
+    }
+    try {
+      for (let i = 0; i < GAME_CONFIG.seasonLength + 1; i++) {
+        if (playTurn(c, rng)) break
+      }
+    } finally {
+      Math.random = originalRandom
+    }
+    expect(hit).toBe(false)
+    expect(c.turn).toBeGreaterThan(0)
   })
 })

@@ -1,6 +1,6 @@
 # Ballad of the Unnamed — Improvement Plan
 
-> Based on: `docs/fantasy-cyoa-rpg-spec.md` (810 lines), `docs/el-idolo-reference-notes.md` (172 lines), and full codebase audit.
+> Based on: `docs/fantasy-cyoa-rpg-spec.md` (810 lines), `docs/el-idolo-reference-notes.md` (253 lines), and full codebase audit.
 >
 > Current state: core game loop works end-to-end (creation → events → death/retirement → leaderboard). 15 events, 14 minigames, 36 achievements, 6 classes, bilingual EN/ES, deterministic RNG, server-authoritative, deployed on Neon + Vite + Express.
 
@@ -465,6 +465,141 @@ Status: not started. No telemetry, event tracking, or run-data analytics exist. 
 
 ---
 
+## Phase 7: Identity, Geography & Arc Variety (new El Ídolo ideas)
+
+Goal: Take the four orthogonal creation dials (§19-20), region-driven content (§21), self-selected tournament arcs (§22), prestige-gated honors (§23), the push-your-luck negotiation dial (§24), and class-consistent legend identities (§25) from the new reference notes and build them on top of the existing systems.
+
+> El Ídolo ref: `docs/el-idolo-reference-notes.md` §19-§26.
+
+### 7.1 Homeland vs. Geography — the "Outsider" (§19) ⬜
+
+**Spec ref**: — | **El Ídolo ref**: §19 (identity axis never crosses the geography axis; the _extranjero del vestuario_ status)
+
+**Current state**: creation is name → gender → class → archetype. Each class has a fixed `startingFaction` (`content/classes.json`), but there is no "home identity" concept separate from "where you currently belong." A clan move never changes anything about your identity.
+
+**Implementation**:
+
+- Add `homeFactionId: string` to `CharacterState` (`shared/types.ts`), set at creation from `cls.startingFaction` — **fixed forever, never updated by clan moves**.
+- Add a region concept: add a `region` field to every faction in `content/factions.json` (group the 25 factions into ~6 regions, e.g. `vale`, `coast`, `highlands`, `wastelands`, `capital`, `isles`). Add `content/regions.json` with bilingual region names.
+- Derive `currentRegion` at runtime from `currentClanId` → faction → region; solo = home region.
+- Add filter predicates to `EventContent` + `isEligible()` in `server/engine/helpers.ts`:
+  - `requiresForeign?: boolean` → eligible only when `currentRegion !== homeRegion` (the "you're the outsider here" content pool).
+  - `requiresHomeRegion?: boolean` → eligible only when at home.
+- Author `content/events/foreign.json`: 4-6 "outsider in the dressing room" events (tavern suspicion, clan hazing, being blamed after a loss, a local teaching you their ways). Skew rewards so _remaining loyal_ and _high-Charisma_ play pays off — the outsider path is a distinct career flavor, not a punishment.
+- HUD: small `🌍 Abroad / 🏠 Home` tag in `Hud.tsx` next to the faction pill when regions differ.
+- Epithet subtitle keeps naming the **home** faction (identity) when it differs from the current one (§7.7 ties in here).
+
+**Verification**: create a character, accept a clan offer in a foreign region → HUD tag flips to Abroad, foreign events become eligible, home events pause; the end-of-run epithet still names the home faction.
+
+### 7.2 Rise-from-Nowhere Origin & Over-Reaching Bench Risk (§20) ⬜
+
+**Spec ref**: §Career arcs & chapters (structural pacing) | **El Ídolo ref**: §20 (start in the B, real promotion, "arriving above your level leaves you on the bench")
+
+**Current state**: every run starts at age 16 with the same gold and a small reputation head-start in the home faction (`createCharacter` sets rep 10). Joining a big clan has no level gate; a wealth-9 faction and a wealth-1 faction are equally joinable.
+
+**Implementation**:
+
+- Add an `origin` dial at creation (`humble` default / `established`): a 2-card pick after class, mirroring §19's orthogonal-dial idea (no stat math, just a pacing/identity choice).
+  - Humble: starting gold ×0.5, home-faction reputation starts at 0, unlocks `requiresOrigin: "humble"` underdog event pool.
+  - Established: full gold, rep 10, unlocks a small "privileged" flavor pool.
+  - Store as `characters.origin`; add `requiresOrigin?: string` to `EventContent` + `isEligible()`.
+- **Over-reaching bench mechanic**: in `joinClan` (`server/engine/helpers.ts`), if `powerLevel < faction.wealth * 12 && faction.wealth >= 6`, set a `benched` state (e.g. `benchedUntilTurn`) → `-20%` to stat gains while benched and a "you're riding the bench here" narrative on the join.
+- **Telegraph it upfront**: clan offer cards already exist (`ServedClanOffer`). Add `roleSignal: "up" | "same" | "bench"` computed from `powerLevel` vs `faction.wealth` in `generateClanOffer()` (`server/engine/engine.ts`), render it on the offer card in `GameScreen.tsx`. Same pattern as the reference's "⬆️ MÁS / ≈ / ⬇️ MENOS" minutes signal.
+- Achievements: "Underdog" (finish a humble-origin run with Legend-tier rep at the home faction), "Bench to Banner" (join a wealth≥7 clan below level and still reach Renowned there).
+
+**Verification**: a humble run starts poor with underdog events; a low-power character accepting a `golden_lotus` (wealth 9) offer sees the "bench" signal before accepting and gets reduced stat gains until power catches up.
+
+### 7.3 Region-Gated Event Variants (§21) 🟡
+
+**Spec ref**: §Content storage & scale strategy (composability, slot-filling) | **El Ídolo ref**: §21 (same archetype, Montevideo vs. Múnich flavor)
+
+**Current state**: events carry a `location` tag (tavern/road/dungeon/court) and `localizeLocation`, but nothing is region-keyed. The slot-filling machinery (`fillSlots`, `content/slots.json`) already exists.
+
+**Implementation**:
+
+- Add `requiresRegion?: string` to `EventContent`; in `isEligible()` require `regionOf(currentClanId) === requiresRegion`.
+- Author the _same narrative archetype_ in 2-3 region variants — e.g. the big festival week, the winter siege, the grand tournament — in a new `content/events/regions.json`. Same choice structure per variant, different dressing (names, stakes, rituals).
+- Add a `regionVariant` slot pool in `content/slots.json` so a single template can slot-fill the local place/people names via the existing `fillSlots` path — this is the §21 cheap-authoring lever (one archetype × N variants).
+
+**Verification**: move clans across regions → the region-flavored variant of an archetype fires; slot text renders the local name.
+
+### 7.4 Whole-Arc Tournament + Self-Selected Resolution Mode (§22) 🟡
+
+**Spec ref**: §Career arcs & chapters (arcs), §Mini-games | **El Ídolo ref**: §22 (playable tournament arcs, luck-mode vs. skill-mode chosen once up front)
+
+**Current state**: `MinigameSubtype` already includes `grid_gamble` (pure luck) and `memory_match` (skill, stat-gated bonus lives) — exactly the two resolution modes the reference offers. But minigames are single-fixture; there's no multi-fixture arc.
+
+**Implementation** (smallest scoped version):
+
+- Add `pendingTournament?: { mode: "luck" | "skill"; fixturesLeft: number; won: number; nameKey: string }` to `CharacterState`.
+- Config knob `tournamentCadenceYears: 6` in `shared/config.ts` — a tournament arc is rng-gated to fire roughly once every N seasons (like `destinyCardYears`).
+- Synthetic mode-choice event `__tournament_intro__` (generated in `buildServedEvent`, same pattern as `season_summary`): pick **luck** (each fixture = a `grid_gamble` minigame) or **skill** (each fixture = a `memory_match` minigame). One choice, made once at the top of the arc — the self-selected engagement dial.
+- Each fixture is a synthetic minigame event resolved through the existing `resolveMinigame` path with the chosen subtype; `fixturesLeft` decrements; tournament end → honor award (§7.5) + `counters.tournaments_won`.
+- All rolls go through the run's seeded RNG (no new unseeded randomness — this preserves the §26 daily promise).
+
+**Verification**: the intro fires; fixtures resolve in the chosen mode (luck shows the grid, skill shows the memory board); finishing awards the honor; two runs of the same daily seed produce the same tournament outcome.
+
+### 7.5 Global Individual Honors gated by Prestige (§23) ⬜
+
+**Spec ref**: §Legacy / §Achievements | **El Ídolo ref**: §23 (Balón de Oro = play in the top league + a consecrating season; Puskás = a single moment)
+
+**Current state**: `generateDistinctions` (`server/engine/epilogue.ts`) counts battles/quests/rare/legendary counters. Achievements are stat-threshold (`counter_gte`, `fame_gte`, `reputation_gte`, etc.) with no "current faction must be prestigious" gate. No tournament-honor link.
+
+**Implementation**:
+
+- Add a new achievement condition type `{ type: "faction_wealth_gte"; value: number }` in `shared/types.ts` + `server/engine/achievements.ts` — passes only if the current clan's faction `wealth >= value` at check time (league-prestige hard gate).
+- `champion_of_the_age`: `faction_wealth_gte: 7` + `fame_gte: 80` + `counter_gte: tournaments_won ≥ 1` — the "consecrating season" analog.
+- `deed_of_the_year`: a `deeds_of_the_year` counter bumped by authored highlight choices (`countersDelta: { deeds_of_the_year: 1 }` on a handful of standout options); unlock at `counter_gte: 2` — the "single moment" analog.
+- Surface both in the epilogue by extending `generateDistinctions` to emit them as `DistinctionEntry` rows ("Distinciones individuales" already renders them).
+
+**Verification**: play in a wealth≥7 faction with high fame and a tournament win → honor unlocks; a highlight choice bumps `deeds_of_the_year`; both appear in the epilogue distinctions block.
+
+### 7.6 Negotiation Push-Your-Luck Dial (§24) 🟡
+
+**Spec ref**: §Choice rarity system, §Clans (offer flow) | **El Ídolo ref**: §24 ("si apretás por demasiada plata, el pase se te puede caer")
+
+**Current state**: clan offer cards are accept/reject only; `offerQualityModifier` (Guild Herald retinue) already exists as a modifier hook.
+
+**Implementation**:
+
+- In the clan-offer flow, after picking an offer, add a follow-up choice: "Press for more gold" — **with the risk stated on the option itself** (legible-before-you-pull, per §24's design note: the cost is an informed choice, not a hidden roll).
+- Engine roll in `resolveChoice`: success → `signingGold × 1.5` + better stipend; failure → **offer withdrawn** (no clan join, small reputation hit — "word gets out", same flavor as the reference's deal-collapse).
+- Success chance = base + `charisma * coefficient` + `getActiveModifier(c, "offerQualityModifier")` (so the Guild Herald item pays off here too).
+- Serve the risk label on the choice (`ServedChoice`), render in `GameScreen.tsx`.
+
+**Verification**: accept an offer → press for more → either the deal improves or it collapses with a "word got out" narrative; a Guild Herald owner sees meaningfully better odds.
+
+### 7.7 Class-Partitioned Epithet Pools (§25) 🟡
+
+**Spec ref**: §Legacy (auto-generated epithet) | **El Ídolo ref**: §25 (position defines _what kind of idol you end up being_)
+
+**Current state**: `generateEpithet` (`server/engine/epilogue.ts`) builds prefix from the dominant personality tag or a tiny class prefix, suffix from class, subtitle from tier + faction. One universal shape; no archetype partitioning.
+
+**Implementation**:
+
+- Replace the flat `EPITHET_PREFIXES`/`EPITHET_SUFFIXES` with a per-class table of **identity slots keyed by behavior archetype**, derived at epilogue time from counters/achievements/membership history:
+  - Legendary (Legend/Myth tier): warrior "Matador"/"Blade", wizard "Archmage"/"Sage", rogue "Phantom"/"Shadow", ...
+  - Mercenary (many `clanMemberships`, cash-heavy): "Gilded", "Gold-Digger", ...
+  - Traitor (`huntedBy` history / betrayal): "Oathbreaker", "The Judas of X", ...
+  - Loyal (single clan, whole career): "The Banner of X", ...
+- Keep the dominant-tag word as a secondary descriptor. **Enforce disjoint sets**: a rogue can be "The Phantom" but never "The Bastion"; a wizard "The Sage" but never "The Juggernaut" — identity stays coherent from the first screen to the tombstone (that's the whole §25 point).
+- Subtitle keeps naming the **home** faction when it differs from the dominant one (ties into §7.1).
+
+**Verification**: a loyal single-clan legend → "The Banner of [home]"; a betrayer → traitor epithet; a rogue never receives a warrior-only suffix (add a unit test asserting disjointness).
+
+### 7.8 Daily-Shared-Experience Constraint (§26) — verification only ✅
+
+**Spec ref**: §RNG & determinism | **El Ídolo ref**: §26 (identical partida for everyone, same day)
+
+No new build work — daily mode (`runType: "daily"`, `todayDailySeed`) already exists. This idea is a _constraint_ on everything above (7.4's tournament rolls, 7.6's negotiation rolls must all draw from the seeded per-run RNG).
+
+**Add tests** (extends the existing `server/engine/engine.test.ts` determinism suite):
+
+1. Two daily runs with the same seed produce the identical event/choice sequence across a full season (including any tournament/negotiation draws).
+2. A regression guard asserting no unseeded randomness path is reachable in turn-resolution (a new `Math.random` call anywhere in the pipeline silently breaks the daily promise for everyone that day).
+
+---
+
 ## Implementation Order Summary
 
 ```
@@ -475,7 +610,10 @@ Phase 3 (Social):   3.1 ✅, 3.2 🟡, 3.3 ✅, 3.4 🟡, 3.5 ✅ — 2 weeks
 Phase 4 (Legacy):   4.1 ✅, 4.2 ✅, 4.3 ✅, 4.4 ✅ — 1 week
 Phase 5 (Content):  5.1 🟡 (32/60 events etc.), 5.2 ✅, 5.3 🟡, 5.4 ✅ — ongoing
 Phase 6 (Optional): 6.1 ⬜ Analytics — if/when needed
+Phase 7 (New ideas): 7.1 ⬜, 7.2 ⬜, 7.3 🟡, 7.4 🟡, 7.5 ⬜, 7.6 🟡, 7.7 🟡, 7.8 ✅ (tests only) — 2-3 weeks
 ```
+
+Phase 7 ordering: 7.1 (identity/regions) is the foundation — 7.3 (region variants) and 7.7 (home-faction epithets) depend on its region concept. 7.2 (origin + bench) is independent but touches the same `createCharacter`/`joinClan` code as 7.1, so do it right after. 7.4 (tournaments) then 7.5 (honors) chain together. 7.6 (negotiation) and 7.8 (tests) are standalone. 7.8's determinism tests should land with the first seeded-draw change (7.4 or 7.6), not last.
 
 Each phase is self-contained and shippable. No phase blocks any other — content can be authored in parallel with systems work.
 
@@ -488,5 +626,13 @@ Remaining work by priority:
 5. 🟡 **5.1/5.3** — content volume targets + spec-aligned achievement tiers
 6. 🟡 **5.4 (part)** — per-encounter completion tracking (overall % now implemented)
 7. ⬜ **6.1** — analytics (optional)
+8. ⬜ **7.1** — homeland vs. geography decoupling + `requiresForeign` outsider content (foundation for 7.3/7.7)
+9. ⬜ **7.2** — `origin` dial + over-reaching bench risk + `roleSignal` on clan offers
+10. 🟡 **7.3** — region-gated event variants (`content/events/regions.json` + slot pool)
+11. 🟡 **7.4** — whole-arc tournament with self-selected luck/skill mode (reuses `grid_gamble`/`memory_match`)
+12. ⬜ **7.5** — prestige-gated global honors (`faction_wealth_gte` condition + epilogue distinctions)
+13. 🟡 **7.6** — push-your-luck negotiation dial on clan offers (explicit risk label)
+14. 🟡 **7.7** — class-partitioned epithet pools (disjoint per-class identity sets)
+15. ✅ **7.8** — daily-seed determinism tests (land with 7.4/7.6 seeded-draw changes)
 
 Additional feature shipped 2026-07-30: **no consecutive event repeats** — `selectEvent` now tracks `CharacterState.lastEventId` and excludes it from the selection pool (falling back only when it's the sole eligible event), so the same event/minigame never appears two turns in a row.

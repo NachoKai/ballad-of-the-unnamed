@@ -47,6 +47,15 @@ export type RunType = "standard" | "daily"
 
 export type Arc = "child" | "adventurer" | "mercenary" | "kingdom_hero" | "legend" | "old_hero"
 
+// Origin dial at creation: a pacing/identity choice (no stat math). Humble
+// starts poor with an underdog event pool; established starts with full gold
+// and a reputation head-start. See §20.
+export type Origin = "humble" | "established"
+
+// The minutes-signal on a clan offer: does joining this faction put you on the
+// bench (below its level), slot you right in, or see you arrive above it?
+export type RoleSignal = "up" | "same" | "bench"
+
 export type ShopCategory = "retinue" | "consumable" | "luxury"
 
 export type ShopEffectType =
@@ -112,6 +121,9 @@ export interface ChoiceContent {
   tag?: PersonalityTag
   rarity: Rarity
   outcome?: "good" | "risky" | "neutral" | "bad"
+  // §24 legibility: explicit warning surfaced on the choice card before the
+  // player commits (the negotiation greed dial's risk, stated up front).
+  riskLabel?: LocaleMap
   statDeltas?: StatDeltas
   tradeoffDeltas?: StatDeltas // negative, only on volatile / some rare
   goldDelta?: number
@@ -199,6 +211,10 @@ export interface EventContent {
   requiresClanId?: string
   requiresNoClan?: boolean
   requiresHuntedBy?: boolean
+  requiresForeign?: boolean
+  requiresHomeRegion?: boolean
+  requiresRegion?: string
+  requiresOrigin?: string
   excludesIfClanId?: string
   involvesRival?: boolean
   weight: number
@@ -238,6 +254,13 @@ export type AchievementCondition =
   | { type: "relationship_affinity_lte"; value: number }
   | { type: "ending"; value: string }
   | { type: "status"; value: string }
+  // §23: the current clan's faction must be prestigious enough (league gate).
+  | { type: "faction_wealth_gte"; value: number }
+  // §20: the run's origin dial and reputation at the (fixed) home faction.
+  | { type: "origin"; value: Origin }
+  | { type: "home_rep_gte"; value: number }
+  // Compound gate: all nested conditions must pass.
+  | { type: "and"; conditions: AchievementCondition[] }
 
 export interface AchievementContent {
   id: string
@@ -265,6 +288,9 @@ export interface FactionContent {
   // Relative size/wealth of the faction (1-10). Drives signing gold and the
   // per-season stipend members receive — richer factions pay more.
   wealth: number
+  // Region the faction calls home (see content/regions.json). Drives the
+  // Abroad/Home identity and region-gated event variants (§19, §21).
+  region: string
 }
 
 export interface SlotPools {
@@ -282,6 +308,14 @@ export interface CharacterState {
   epithet: string | null
   age: number
   currentArc: Arc
+  // §19 identity axis: home faction + region are fixed forever at creation and
+  // never change no matter which clan the character joins. `currentRegion`
+  // tracks where they currently ply their trade (home region when solo).
+  homeFactionId: string
+  homeRegion: string
+  currentRegion: string
+  // §20 origin dial: humble (poor start, underdog pool) vs established.
+  origin: Origin
   strength: number
   dexterity: number
   constitution: number
@@ -315,12 +349,30 @@ export interface CharacterState {
   lastEventId?: string | null
   // Consecutive turns spent at 0 stamina (forced recovery trigger).
   staminaZeroStreak?: number
+  // §20 bench mechanic: while this turn is in the future, the character is
+  // "riding the bench" at an over-reaching clan and stat gains are reduced.
+  benchedUntilTurn?: number | null
   // Season (seasonCount) in which the last clan offer appeared. Clan offers
   // fire at most once per season; this resets automatically when seasonCount
   // advances past it.
   lastClanOfferSeason?: number | null
   pendingFinaleType?: EndingType
   finaleStage2Choice?: { endingType: EndingType; risky: boolean }
+  // §24 negotiation dial: set when the player picks a clan offer, cleared once
+  // the follow-up accept/negotiate choice resolves. Defers the actual join so
+  // pressing for more gold can collapse the deal.
+  pendingJoinOffer?: { clanId: string; signingGold: number; stipend: number } | null
+  // §22 whole-arc tournament state. `mode` is chosen once at the arc's top.
+  pendingTournament?: {
+    mode: "luck" | "skill"
+    fixturesLeft: number
+    won: number
+    nameKey: string
+  } | null
+  // §22 result stashed when the last fixture resolves; served as the honor beat.
+  pendingTournamentResult?: { won: boolean; nameKey: string } | null
+  // §22 season in which the last tournament arc started (at most once per cadence).
+  lastTournamentSeason?: number | null
 }
 
 export interface ReputationState {
@@ -345,6 +397,10 @@ export interface ServedChoice {
   factionId?: string
   // Per-season stipend offered by a faction (clan offer cards).
   stipend?: number
+  // §20 minutes-signal on a clan-join offer card (up/same/bench).
+  roleSignal?: RoleSignal
+  // §24 legibility: explicit risk warning surfaced on the choice card.
+  riskLabel?: string
 }
 
 export interface ServedEvent {
@@ -373,6 +429,8 @@ export interface ServedClanOffer {
   stipend: number
   perkLabel: string
   icon: string
+  // §20 minutes-signal: up/same/bench based on powerLevel vs faction wealth.
+  roleSignal?: RoleSignal
 }
 
 export interface ServedWorldEvent {
