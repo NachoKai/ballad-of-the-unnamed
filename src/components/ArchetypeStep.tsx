@@ -5,6 +5,7 @@ import { t } from "../i18n/strings"
 import { rise } from "./ui/Animation"
 import { STAT_ABBR } from "../constants"
 import { LinkBtn } from "./ui/Button"
+import { Tooltip } from "./ui/Tooltip"
 import type { Locale } from "@shared/types"
 
 interface Props {
@@ -34,9 +35,11 @@ export function ArchetypeStep({ locale, archetypes, onPick, onBack, busy }: Prop
             <Flavor>{a.flavor}</Flavor>
             <StatList>
               {Object.entries(a.statDeltas).map(([k, v]) => (
-                <StatChip key={k}>
-                  {t(locale, STAT_ABBR[k])} <b>+{v}</b>
-                </StatChip>
+                <Tooltip key={k} content={t(locale, `tooltip_stat_${k}`)}>
+                  <StatChip>
+                    {t(locale, STAT_ABBR[k])} <b>+{v}</b>
+                  </StatChip>
+                </Tooltip>
               ))}
             </StatList>
           </Card>

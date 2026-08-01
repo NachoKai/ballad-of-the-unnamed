@@ -22,6 +22,7 @@ import { CollectionScreen } from "./components/CollectionScreen"
 import { ShopModal } from "./components/ShopModal"
 import { Toasts, useAchievementToasts } from "./components/Toasts"
 import { LinkBtn } from "./components/ui/Button"
+import { LightRays } from "./components/ui/LightRays"
 
 type Screen = "creation" | "game" | "ending" | "leaderboard" | "achievements" | "collection"
 
@@ -189,116 +190,124 @@ export default function App() {
 
   if (resuming) {
     return (
-      <BootScreen>
-        <BootRune aria-hidden="true">{"\u16B1"}</BootRune>
-        <p>{t(locale, "loading")}</p>
-      </BootScreen>
+      <>
+        <LightRays />
+        <BootScreen>
+          <BootRune aria-hidden="true">{"\u16B1"}</BootRune>
+          <p>{t(locale, "loading")}</p>
+        </BootScreen>
+      </>
     )
   }
 
   return (
-    <AppShell>
-      <TopBar>
-        <Brand
-          type="button"
-          onClick={() => (screen === "game" ? undefined : setScreen("creation"))}
-        >
-          <BrandRune aria-hidden="true">{"\u16B1"}</BrandRune>
-          {t(locale, "appTitle")}
-        </Brand>
-        <TopActions>
-          {screen !== "leaderboard" && screen !== "game" && (
-            <LinkBtn type="button" onClick={() => setScreen("leaderboard")}>
-              {t(locale, "leaderboard")}
-            </LinkBtn>
-          )}
-          {screen !== "achievements" && screen !== "game" && (
-            <LinkBtn type="button" onClick={() => setScreen("achievements")}>
-              {t(locale, "achievementsTitle")}
-            </LinkBtn>
-          )}
-          {screen !== "collection" && screen !== "game" && (
-            <LinkBtn type="button" onClick={() => setScreen("collection")}>
-              {t(locale, "trophyHall")}
-            </LinkBtn>
-          )}
-          <LocaleSwitch role="group" aria-label="language">
-            <LocaleBtn type="button" $active={locale === "en"} onClick={() => changeLocale("en")}>
-              EN
-            </LocaleBtn>
-            <LocaleBtn type="button" $active={locale === "es"} onClick={() => changeLocale("es")}>
-              ES
-            </LocaleBtn>
-          </LocaleSwitch>
-        </TopActions>
-      </TopBar>
+    <>
+      <LightRays />
+      <AppShell>
+        <TopBar>
+          <Brand
+            type="button"
+            onClick={() => (screen === "game" ? undefined : setScreen("creation"))}
+          >
+            <BrandRune aria-hidden="true">{"\u16B1"}</BrandRune>
+            {t(locale, "appTitle")}
+          </Brand>
+          <TopActions>
+            {screen !== "leaderboard" && screen !== "game" && (
+              <LinkBtn type="button" onClick={() => setScreen("leaderboard")}>
+                {t(locale, "leaderboard")}
+              </LinkBtn>
+            )}
+            {screen !== "achievements" && screen !== "game" && (
+              <LinkBtn type="button" onClick={() => setScreen("achievements")}>
+                {t(locale, "achievementsTitle")}
+              </LinkBtn>
+            )}
+            {screen !== "collection" && screen !== "game" && (
+              <LinkBtn type="button" onClick={() => setScreen("collection")}>
+                {t(locale, "trophyHall")}
+              </LinkBtn>
+            )}
+            <LocaleSwitch role="group" aria-label="language">
+              <LocaleBtn type="button" $active={locale === "en"} onClick={() => changeLocale("en")}>
+                EN
+              </LocaleBtn>
+              <LocaleBtn type="button" $active={locale === "es"} onClick={() => changeLocale("es")}>
+                ES
+              </LocaleBtn>
+            </LocaleSwitch>
+          </TopActions>
+        </TopBar>
 
-      {screen === "creation" && (
-        <CreationScreen
-          locale={locale}
-          onStart={startRun}
-          onStartWithArchetype={startRunWithArchetype}
-        />
-      )}
+        {screen === "creation" && (
+          <CreationScreen
+            locale={locale}
+            onStart={startRun}
+            onStartWithArchetype={startRunWithArchetype}
+          />
+        )}
 
-      {screen === "game" && character && event && (
-        <GameScreen
-          locale={locale}
-          character={character}
-          event={event}
-          narrative={null}
-          turnNarrative={turnNarrative}
-          onChoose={choose}
-          onAbandon={abandonRun}
-          onShopOpen={() => setShopOpen(true)}
-        />
-      )}
+        {screen === "game" && character && event && (
+          <GameScreen
+            locale={locale}
+            character={character}
+            event={event}
+            narrative={null}
+            turnNarrative={turnNarrative}
+            onChoose={choose}
+            onAbandon={abandonRun}
+            onShopOpen={() => setShopOpen(true)}
+          />
+        )}
 
-      {screen === "game" && shopOpen && runId && (
-        <ShopModal
-          locale={locale}
-          runId={runId}
-          onClose={() => setShopOpen(false)}
-          onPurchased={(res) => {
-            setCharacter((prev) =>
-              prev ? { ...prev, gold: res.gold, inventory: res.inventory ?? prev.inventory } : prev,
-            )
-          }}
-        />
-      )}
+        {screen === "game" && shopOpen && runId && (
+          <ShopModal
+            locale={locale}
+            runId={runId}
+            onClose={() => setShopOpen(false)}
+            onPurchased={(res) => {
+              setCharacter((prev) =>
+                prev
+                  ? { ...prev, gold: res.gold, inventory: res.inventory ?? prev.inventory }
+                  : prev,
+              )
+            }}
+          />
+        )}
 
-      {screen === "ending" && character && ending && (
-        <EndingScreen
-          locale={locale}
-          character={character}
-          endingType={ending.endingType}
-          epilogue={ending.epilogue}
-          score={ending.score}
-          achievements={ending.achievements}
-          richEpilogueData={ending.richEpilogueData}
-          onNewRun={abandonRun}
-          onLeaderboard={() => setScreen("leaderboard")}
-        />
-      )}
+        {screen === "ending" && character && ending && (
+          <EndingScreen
+            locale={locale}
+            character={character}
+            endingType={ending.endingType}
+            epilogue={ending.epilogue}
+            score={ending.score}
+            achievements={ending.achievements}
+            richEpilogueData={ending.richEpilogueData}
+            onNewRun={abandonRun}
+            onLeaderboard={() => setScreen("leaderboard")}
+          />
+        )}
 
-      {screen === "leaderboard" && (
-        <LeaderboardScreen locale={locale} onBack={() => setScreen("creation")} />
-      )}
+        {screen === "leaderboard" && (
+          <LeaderboardScreen locale={locale} onBack={() => setScreen("creation")} />
+        )}
 
-      {screen === "achievements" && (
-        <AchievementsScreen
-          locale={locale}
-          achievements={lastAchievements}
-          onBack={() => setScreen("creation")}
-        />
-      )}
+        {screen === "achievements" && (
+          <AchievementsScreen
+            locale={locale}
+            achievements={lastAchievements}
+            onBack={() => setScreen("creation")}
+          />
+        )}
 
-      {screen === "collection" && (
-        <CollectionScreen locale={locale} onBack={() => setScreen("creation")} />
-      )}
+        {screen === "collection" && (
+          <CollectionScreen locale={locale} onBack={() => setScreen("creation")} />
+        )}
 
-      <Toasts items={toasts} onExpire={dismissToast} />
-    </AppShell>
+        <Toasts items={toasts} onExpire={dismissToast} />
+      </AppShell>
+    </>
   )
 }
 
@@ -308,6 +317,8 @@ const pulse = keyframes`
 `
 
 const BootScreen = styled.div`
+  position: relative;
+  z-index: 1;
   display: grid;
   place-items: center;
   min-height: 70vh;
@@ -322,6 +333,8 @@ const BootRune = styled.div`
 `
 
 const AppShell = styled.div`
+  position: relative;
+  z-index: 1;
   max-width: 980px;
   margin: 0 auto;
   padding: 0 20px 80px;

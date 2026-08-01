@@ -7,6 +7,8 @@ import { STAT_ABBR } from "../constants"
 import { ArchetypeStep } from "./ArchetypeStep"
 import { BtnPrimary } from "./ui/Button"
 import { TextPretty } from "./ui/Text"
+import { GradientText } from "./ui/GradientText"
+import { Tooltip } from "./ui/Tooltip"
 import { rise } from "./ui/Animation"
 
 interface Props {
@@ -102,7 +104,9 @@ export function CreationScreen({ locale, onStart, onStartWithArchetype }: Props)
   return (
     <CreationScreenRoot>
       <CreationHero>
-        <h1>{t(locale, "newLife")}</h1>
+        <h1>
+          <GradientText>{t(locale, "newLife")}</GradientText>
+        </h1>
         <Subtitle>{t(locale, "subtitle")}</Subtitle>
       </CreationHero>
 
@@ -154,13 +158,17 @@ export function CreationScreen({ locale, onStart, onStartWithArchetype }: Props)
               <ClassDesc>{c.description}</ClassDesc>
               <StatRow>
                 {Object.entries(c.base).map(([k, v]) => (
-                  <StatChip key={k}>
-                    <em>{t(locale, STAT_ABBR[k])}</em> {v}
-                  </StatChip>
+                  <Tooltip key={k} content={t(locale, `tooltip_stat_${k}`)}>
+                    <StatChip>
+                      <em>{t(locale, STAT_ABBR[k])}</em> {v}
+                    </StatChip>
+                  </Tooltip>
                 ))}
-                <GoldChip>
-                  <em>{t(locale, "gold")}</em> {c.startingGold}
-                </GoldChip>
+                <Tooltip content={t(locale, "tooltip_gold")}>
+                  <GoldChip>
+                    <em>{t(locale, "gold")}</em> {c.startingGold}
+                  </GoldChip>
+                </Tooltip>
               </StatRow>
             </ClassCard>
           ))}
