@@ -22,7 +22,7 @@ import { CollectionScreen } from "./components/CollectionScreen"
 import { ShopModal } from "./components/ShopModal"
 import { Toasts, useAchievementToasts } from "./components/Toasts"
 import { LinkBtn } from "./components/ui/Button"
-import { LightRays } from "./components/ui/LightRays"
+/* import { LightRays } from "./components/ui/LightRays" */
 
 type Screen = "creation" | "game" | "ending" | "leaderboard" | "achievements" | "collection"
 
@@ -191,6 +191,7 @@ export default function App() {
   if (resuming) {
     return (
       <>
+        {/* <LightRays /> */}
         <BootScreen>
           <BootRune aria-hidden="true">{"\u16B1"}</BootRune>
           <p>{t(locale, "loading")}</p>
@@ -201,6 +202,7 @@ export default function App() {
 
   return (
     <>
+      {/*       <LightRays /> */}
       <AppShell>
         <TopBar>
           <Brand
