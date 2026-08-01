@@ -65,7 +65,7 @@ export function GameScreen({
     // Stat gating: unmet requirements render the card locked (dimmed +
     // disabled); the server rejects the pick anyway if it slips through.
     const locked = c.statMet === false
-    return (
+    const card = (
       <ChoiceCard
         type="button"
         $rarity={c.rarity}
@@ -73,7 +73,6 @@ export function GameScreen({
         $locked={locked}
         onClick={() => pick(c.id)}
         disabled={busy || locked}
-        title={locked ? t(locale, "lockedChoice") : undefined}
       >
         {!compact && <RarityPip $rarity={c.rarity} aria-hidden="true" />}
         <ChoiceLabel>
@@ -155,6 +154,15 @@ export function GameScreen({
         )}
       </ChoiceCard>
     )
+    // Native `title` never renders on a disabled button, so locked cards get
+    // the custom tooltip instead (it hovers via the wrapper span, which
+    // works even when the button itself is disabled). `fill` keeps the
+    // wrapper full-width so the card still stretches across the grid.
+    return locked ? (
+      <Tooltip fill content={t(locale, "lockedChoice")}>
+        {card}
+      </Tooltip>
+    ) : card
   }
 
   return (

@@ -11,6 +11,8 @@ interface TooltipProps {
   side?: TooltipSide
   align?: TooltipAlign
   className?: string
+  /** Render the trigger wrapper as a full-width block instead of a shrink-wrapping inline-flex. */
+  fill?: boolean
 }
 
 export function Tooltip({
@@ -19,10 +21,11 @@ export function Tooltip({
   side = "top",
   align = "center",
   className,
+  fill = false,
 }: TooltipProps) {
   const id = useId()
   return (
-    <TipWrap className={className} aria-describedby={id}>
+    <TipWrap className={className} aria-describedby={id} $fill={fill}>
       {children}
       <TipBody id={id} role="tooltip" $side={side} $align={align}>
         {content}
@@ -31,9 +34,10 @@ export function Tooltip({
   )
 }
 
-const TipWrap = styled.span`
+const TipWrap = styled.span<{ $fill: boolean }>`
   position: relative;
-  display: inline-flex;
+  display: ${({ $fill }) => ($fill ? "block" : "inline-flex")};
+  width: ${({ $fill }) => ($fill ? "100%" : undefined)};
   align-items: baseline;
 
   &:hover > [role="tooltip"],
