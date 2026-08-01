@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Swords } from "lucide-react"
+import { Hourglass, Swords } from "lucide-react"
 import { styled } from "styled-components"
 import type { CharacterState, ServedEvent, Rarity, RoleSignal } from "@shared/types"
 import type { Locale } from "@shared/types"
@@ -148,6 +148,17 @@ export function GameScreen({
       <Hud locale={locale} character={character} onShopOpen={onShopOpen} />
 
       <Scene aria-live="polite">
+        <SceneTime>
+          <Hourglass size={13} color={theme.colors.gold} aria-hidden="true" />
+          <Tooltip content={t(locale, "tooltip_turn")} side="bottom">
+            <TimeText>
+              {t(locale, "turn")} <b>{character.turn}</b>
+              <TimeSep aria-hidden="true">·</TimeSep>
+              {t(locale, "season")} <b>{character.seasonCount}</b>
+            </TimeText>
+          </Tooltip>
+        </SceneTime>
+
         {turnNarrative && <SceneEcho>{capitalize(turnNarrative)}</SceneEcho>}
 
         {event.isRetirementOffer && (
@@ -289,6 +300,59 @@ const Scene = styled.main`
   @media (max-width: 680px) {
     padding: 20px;
   }
+`
+
+const SceneTime = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  color: ${({ theme }) => theme.colors.muted2};
+
+  &::before,
+  &::after {
+    content: "";
+    height: 1px;
+    flex: 1;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      ${({ theme }) => theme.colors.line2}
+    );
+  }
+
+  &::before {
+    margin-right: 6px;
+  }
+
+  &::after {
+    margin-left: 6px;
+    background: linear-gradient(
+      90deg,
+      ${({ theme }) => theme.colors.line2},
+      transparent
+    );
+  }
+`
+
+const TimeText = styled.span`
+  display: inline-flex;
+  align-items: baseline;
+  gap: 7px;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.colors.muted};
+
+  b {
+    font-size: 14px;
+    font-variant-numeric: tabular-nums;
+    color: ${({ theme }) => theme.colors.parchment};
+  }
+`
+
+const TimeSep = styled.span`
+  color: ${({ theme }) => theme.colors.gold};
 `
 
 const SceneEcho = styled.p`

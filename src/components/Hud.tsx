@@ -1,4 +1,4 @@
-import { Globe, Home, Swords, TriangleAlert } from "lucide-react"
+import { Globe, Home, Store, Swords, TriangleAlert } from "lucide-react"
 import type { CharacterState, Locale } from "@shared/types"
 import { STAT_KEYS } from "@shared/types"
 import { styled } from "styled-components"
@@ -89,22 +89,21 @@ export function Hud({ character: c, locale, onShopOpen }: Props) {
             </HomeTag>
           )}
         </Name>
-        <TurnTip content={t("tooltip_turn")} align="end" side="bottom">
-          <TurnPill>
-            {t("turn")} <b>{c.turn}</b>
-          </TurnPill>
-        </TurnTip>
+        {onShopOpen && (
+          <ShopTip content={t("tooltip_shop")} align="end">
+            <ShopBtn type="button" onClick={onShopOpen}>
+              <Store size={14} aria-hidden="true" />
+              {t("shop")}
+              {inventoryCount > 0 && <InvBadge>{inventoryCount}</InvBadge>}
+            </ShopBtn>
+          </ShopTip>
+        )}
       </TopRow>
 
       <MetersRow>
         <Tooltip content={t("tooltip_age")}>
           <Meter>
             {t("age")} <b>{c.age}</b>
-          </Meter>
-        </Tooltip>
-        <Tooltip content={t("tooltip_season")}>
-          <Meter>
-            {t("season")} <b>{c.seasonCount}</b>
           </Meter>
         </Tooltip>
         <Tooltip content={t("tooltip_health")}>
@@ -142,7 +141,7 @@ export function Hud({ character: c, locale, onShopOpen }: Props) {
         </MomentumTip>
       </MetersRow>
 
-      <StatsStrip>
+      <AttributeRow>
         <Tooltip content={t("tooltip_arc")}>
           <ArcPill>{t(arcKey)}</ArcPill>
         </Tooltip>
@@ -153,86 +152,60 @@ export function Hud({ character: c, locale, onShopOpen }: Props) {
             </StatPill>
           </Tooltip>
         ))}
-        {primaryRep && (
-          <Tooltip content={t("tooltip_reputation")}>
-            <RepPill>
-              <FactionFlag factionId={primaryRep.faction} size={14} />
-              {t(`faction_${primaryRep.faction}`)} ·{" "}
-              {translateFor(
-                locale,
-                c.gender,
-                `reputation_tier_${reputationTier(primaryRep.value)}`,
-              )}{" "}
-              [{primaryRep.value}]
-            </RepPill>
-          </Tooltip>
-        )}
-        {topTags.length > 0 && (
-          <TagPill>
-            {topTags
-              .map((tag) => translateFor(locale, c.gender, `personality_tag_${tag}`))
-              .join(" · ")}
-          </TagPill>
-        )}
-        {c.rival && (
-          <Tooltip content={t("tooltip_rival")}>
-            <RivalBadge>
-              <Swords size={12} /> {c.rival.name} {t("vs")} <b>{playerScore}</b>—
-              <b>{c.rival.score}</b>
-            </RivalBadge>
-          </Tooltip>
-        )}
-        {c.huntedBy && (
-          <Tooltip content={t("tooltip_hunted")}>
-            <HuntedBadge>
-              <TriangleAlert size={12} /> {t("hunted")} {t(`faction_${c.huntedBy}`)}
-            </HuntedBadge>
-          </Tooltip>
-        )}
-        {onShopOpen && (
-          <ShopTip content={t("tooltip_shop")} align="end">
-            <ShopBtn type="button" onClick={onShopOpen}>
-              {t("shop")}
-              {inventoryCount > 0 && <InvBadge>{inventoryCount}</InvBadge>}
-            </ShopBtn>
-          </ShopTip>
-        )}
-      </StatsStrip>
+      </AttributeRow>
+
+      {(primaryRep || topTags.length > 0 || c.rival || c.huntedBy) && (
+        <StatusRow>
+          {primaryRep && (
+            <Tooltip content={t("tooltip_reputation")}>
+              <RepPill>
+                <FactionFlag factionId={primaryRep.faction} size={14} />
+                {t(`faction_${primaryRep.faction}`)} ·{" "}
+                {translateFor(
+                  locale,
+                  c.gender,
+                  `reputation_tier_${reputationTier(primaryRep.value)}`,
+                )}{" "}
+                [{primaryRep.value}]
+              </RepPill>
+            </Tooltip>
+          )}
+          {topTags.length > 0 && (
+            <TagPill>
+              {topTags
+                .map((tag) => translateFor(locale, c.gender, `personality_tag_${tag}`))
+                .join(" · ")}
+            </TagPill>
+          )}
+          {c.rival && (
+            <Tooltip content={t("tooltip_rival")}>
+              <RivalBadge>
+                <Swords size={12} /> {c.rival.name} {t("vs")} <b>{playerScore}</b>—
+                <b>{c.rival.score}</b>
+              </RivalBadge>
+            </Tooltip>
+          )}
+          {c.huntedBy && (
+            <Tooltip content={t("tooltip_hunted")}>
+              <HuntedBadge>
+                <TriangleAlert size={12} /> {t("hunted")} {t(`faction_${c.huntedBy}`)}
+              </HuntedBadge>
+            </Tooltip>
+          )}
+        </StatusRow>
+      )}
     </HudWrap>
   )
 }
 
 const HudWrap = styled(Panel)``
 
-const TurnTip = styled(Tooltip)`
+const ShopTip = styled(Tooltip)`
   margin-left: auto;
 `
 
 const MomentumTip = styled(Tooltip)`
   margin-left: auto;
-`
-
-const ShopTip = styled(Tooltip)`
-  margin-left: auto;
-`
-
-const TurnPill = styled.span`
-  display: inline-flex;
-  align-items: baseline;
-  gap: 5px;
-  background: ${({ theme }) => theme.colors.ink3};
-  border: 1px solid ${({ theme }) => theme.colors.line};
-  border-radius: 999px;
-  padding: 3px 10px;
-  font-size: 13px;
-  color: ${({ theme }) => theme.colors.parchment};
-
-  b {
-    font-size: 15px;
-    font-variant-numeric: tabular-nums;
-    color: ${({ theme }) => theme.colors.parchment};
-    font-weight: 600;
-  }
 `
 
 const ArchetypeTag = styled.span`
@@ -259,8 +232,8 @@ const MetersRow = styled.div`
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 10px 14px;
-  padding: 16px 18px;
+  gap: 8px 10px;
+  padding: 14px 18px;
 `
 
 const Name = styled.span`
@@ -274,18 +247,18 @@ const Name = styled.span`
 const Meter = styled.span<{ $low?: boolean }>`
   display: inline-flex;
   align-items: baseline;
-  gap: 6px;
-  padding: 5px 12px;
+  gap: 5px;
+  padding: 4px 11px;
   background: ${({ theme }) => theme.colors.ink3};
   border: 1px solid ${({ $low, theme }) => ($low ? theme.colors.bloodBright : theme.colors.line)};
   border-radius: 999px;
-  font-size: 13px;
-  letter-spacing: 0.04em;
+  font-size: 12px;
+  letter-spacing: 0.03em;
   color: ${({ $low, theme }) => ($low ? theme.colors.bloodBright : theme.colors.muted)};
   text-transform: uppercase;
 
   b {
-    font-size: 16px;
+    font-size: 14px;
     font-variant-numeric: tabular-nums;
     color: ${({ $low, theme }) => ($low ? theme.colors.bloodBright : theme.colors.parchment)};
     text-transform: none;
@@ -293,10 +266,10 @@ const Meter = styled.span<{ $low?: boolean }>`
 `
 
 const MomentumBadge = styled.span<{ $variant: string }>`
-  padding: 5px 12px;
+  padding: 4px 12px;
   border: 1px solid ${({ theme }) => theme.colors.line2};
   border-radius: 999px;
-  font-size: 12px;
+  font-size: 11px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: ${({ $variant, theme }) =>
@@ -305,13 +278,12 @@ const MomentumBadge = styled.span<{ $variant: string }>`
     $variant === "falling" ? theme.colors.bloodBright : theme.colors.sage};
 `
 
-const StatsStrip = styled.div`
-  flex: 1 1 100%;
+const AttributeRow = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 10px;
   align-items: center;
-  padding: 16px 18px;
+  padding: 14px 18px;
   border-top: 1px solid ${({ theme }) => theme.colors.line};
 `
 
@@ -476,4 +448,13 @@ const TagPill = styled.span`
   font-size: 11px;
   letter-spacing: 0.04em;
   color: ${({ theme }) => theme.colors.sage};
+`
+
+const StatusRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 18px;
+  border-top: 1px solid ${({ theme }) => theme.colors.line};
 `
