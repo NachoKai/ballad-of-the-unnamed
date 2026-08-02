@@ -154,7 +154,9 @@ export function loadContent(): ContentRegistry {
         assert(mg.cards && mg.cards.length > 0, `minigame ${mg.id} has no cards`)
       } else {
         assert(
-          mg.resolution.game === "tictactoe" || mg.resolution.game === "rps",
+          mg.resolution.game === "tictactoe" ||
+            mg.resolution.game === "rps" ||
+            mg.resolution.game === "memotest",
           `minigame ${mg.id} invalid interactive game`,
         )
         assert(mg.primaryStat, `minigame ${mg.id} interactive needs primaryStat`)

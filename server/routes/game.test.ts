@@ -310,3 +310,84 @@ describe("POST /minigame-move · interactive minigame moves", () => {
     expect(res.error).toBe("no_interactive_minigame")
   })
 })
+
+describe("POST /minigame-move · memotest", () => {
+  const memotestEv: EventContent = {
+    id: "relic_memotest",
+    type: "minigame",
+    subtype: "interactive",
+    minAge: 0,
+    maxAge: 99,
+    weight: 1,
+    primaryStat: "intelligence",
+    narrative: { en: "n", es: "n" },
+    resolution: {
+      type: "interactive",
+      game: "memotest",
+      baseWinChance: 0.5,
+      statInfluence: { intelligence: 0.012 },
+      rivalSkill: 0.5,
+    },
+    outcomes: {
+      critical: { narrative: { en: "c", es: "c" } },
+      success: { narrative: { en: "s", es: "s" } },
+      partial: { narrative: { en: "p", es: "p" } },
+      fail: { narrative: { en: "f", es: "f" } },
+    },
+  }
+
+  it("/minigame-move deals the deck on the first flip and reveals it", async () => {
+    const c = makeLegendRun()
+    c.pendingMinigame = {
+      eventId: memotestEv.id,
+      game: "memotest",
+      playerPairs: 0,
+      rivalPairs: 0,
+      matched: [],
+      revealed: [],
+      rivalMemory: {},
+      lastPlayerTurn: null,
+      lastRivalTurn: null,
+    }
+    const { statusCode, body } = await postMinigameMove(c, memotestEv, {
+      kind: "memotest",
+      card: 5,
+    })
+    expect(statusCode).toBe(200)
+    const res = body as {
+      status: string
+      minigame: { game: string; view: { revealed: number[]; faces: Record<number, string> } }
+      feedback: null
+    }
+    expect(res.status).toBe("playing")
+    expect(res.minigame.game).toBe("memotest")
+    expect(res.minigame.view.revealed).toEqual([5])
+    expect(Object.keys(res.minigame.view.faces)).toContain("5")
+    expect(res.feedback).toBeNull()
+    // deck persisted on the run for deterministic resume
+    expect(c.pendingMinigame?.deck).toHaveLength(16)
+    expect(store.saveRun).toHaveBeenCalled()
+  })
+
+  it("/minigame-move rejects an out-of-range memotest card", async () => {
+    const c = makeLegendRun()
+    c.pendingMinigame = {
+      eventId: memotestEv.id,
+      game: "memotest",
+      playerPairs: 0,
+      rivalPairs: 0,
+      matched: [],
+      revealed: [],
+      rivalMemory: {},
+      lastPlayerTurn: null,
+      lastRivalTurn: null,
+    }
+    const { statusCode, body } = await postMinigameMove(c, memotestEv, {
+      kind: "memotest",
+      card: 99,
+    })
+    expect(statusCode).toBe(400)
+    const res = body as { error: string }
+    expect(res.error).toBe("invalid_move")
+  })
+})

@@ -8,6 +8,7 @@ import { LinkBtn } from "../ui/Button"
 import { rise } from "../ui/Animation"
 import { TicTacToeGame } from "./TicTacToeGame"
 import { RpsGame } from "./RpsGame"
+import { MemotestGame } from "./MemotestGame"
 import { HowToModal } from "./HowToModal"
 
 interface Props {
@@ -72,6 +73,8 @@ export function MinigameFrame({ locale, event, onMove, onFinished, finishedResul
               onCell={() => {}}
               feedback={null}
             />
+          ) : finalView.game === "memotest" ? (
+            <MemotestGame locale={locale} view={finalView} busy onCard={() => {}} feedback={null} />
           ) : (
             <RpsGame locale={locale} view={finalView} busy onChoice={() => {}} feedback={null} />
           )}
@@ -106,6 +109,14 @@ export function MinigameFrame({ locale, event, onMove, onFinished, finishedResul
           view={view}
           busy={busy}
           onCell={(cell) => handle({ kind: "tictactoe", cell })}
+          feedback={feedback}
+        />
+      ) : view.game === "memotest" ? (
+        <MemotestGame
+          locale={locale}
+          view={view}
+          busy={busy}
+          onCard={(card) => handle({ kind: "memotest", card })}
           feedback={feedback}
         />
       ) : (

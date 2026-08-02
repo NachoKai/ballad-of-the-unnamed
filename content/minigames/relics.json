@@ -1,0 +1,66 @@
+[
+  {
+    "id": "relic_memotest",
+    "type": "minigame",
+    "subtype": "interactive",
+    "minAge": 10,
+    "maxAge": 99,
+    "weight": 2,
+    "primaryStat": "intelligence",
+    "opponent": { "en": "Keeper Sephra", "es": "La guardiana Sephra" },
+    "narrative": {
+      "en": "A ring of candlelight, and a ring of relics: dragon eggs, lost swords, tarnished crowns, phials of phoenix fire. Keeper Sephra of the Relic Shrine spreads sixteen tiles across the altar — every treasure hidden behind two. 'Find the pairs, stranger, and the shrine endows you. Miss, and I take my cut.'",
+      "es": "Un anillo de velas y un anillo de reliquias: huevos de dragón, espadas perdidas, coronas empañadas, frascos de fuego de fénix. La guardiana Sephra del Santuario de Reliquias extiende dieciséis losetas sobre el altar — cada tesoro oculto tras dos. 'Encontrá los pares, forastero, y el santuario te recompensa. Si fallás, me quedo con mi parte.'"
+    },
+    "resolution": {
+      "type": "interactive",
+      "game": "memotest",
+      "baseWinChance": 0.5,
+      "statInfluence": { "intelligence": 0.012 },
+      "statThreshold": 20,
+      "rivalSkill": 0.5
+    },
+    "outcomes": {
+      "critical": {
+        "goldDelta": 240,
+        "fameDelta": 7,
+        "reputationDelta": 3,
+        "reputationFaction": "arcanum",
+        "countersDelta": { "relic_memotest_wins": 1, "battles_won": 1 },
+        "narrative": {
+          "en": "Every pair found, every relic matched in a blur of recall. Sephra bows low, the candle flames bowing with her. 'The shrine has not been read this clean in a generation.' She presses a pouch of gold into your hands and parts with her finest relic as a keepsake.",
+          "es": "Cada par encontrado, cada reliquia emparejada en un destello de memoria. Sephra se inclina, y las llamas de las velas se inclinan con ella. 'El santuario no se leyó tan limpio en una generación.' Te mete una bolsa de oro en las manos y se despide con su mejor reliquia como recuerdo."
+        }
+      },
+      "success": {
+        "goldDelta": 95,
+        "fameDelta": 3,
+        "reputationDelta": 1,
+        "reputationFaction": "arcanum",
+        "countersDelta": { "relic_memotest_wins": 1, "battles_won": 1 },
+        "narrative": {
+          "en": "Your memory holds better than most pilgrims'. Sephra nods, satisfied, and pays out the shrine's bounty. 'The altar remembers those who honor it.'",
+          "es": "Tu memoria aguanta mejor que la de la mayoría de los peregrinos. Sephra asiente, satisfecha, y paga la recompensa del santuario. 'El altar recuerda a quienes lo honran.'"
+        }
+      },
+      "partial": {
+        "goldDelta": -20,
+        "countersReset": ["relic_memotest_streak"],
+        "narrative": {
+          "en": "The altar splits down the middle — as many relics yours as hers. Sephra keeps her cut with a thin smile. 'A draw opens no vaults, stranger.'",
+          "es": "El altar se divide por la mitad — tantas reliquias tuyas como suyas. Sephra se queda con su parte con una sonrisa tenue. 'Un empate no abre bóvedas, forastero.'"
+        }
+      },
+      "fail": {
+        "goldDelta": -60,
+        "reputationDelta": -1,
+        "reputationFaction": "arcanum",
+        "countersReset": ["relic_memotest_streak"],
+        "narrative": {
+          "en": "Sephra's own memory is merciless — she claims pair after pair while yours slips away. She takes her toll from your purse and turns back to her candles, already forgetting you.",
+          "es": "La memoria de Sephra es implacable — reclama par tras par mientras la tuya se te escapa. Cobra su peaje de tu bolsa y vuelve a sus velas, olvidándote ya."
+        }
+      }
+    }
+  }
+]

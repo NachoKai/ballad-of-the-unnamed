@@ -13,9 +13,34 @@ import {
   interactiveTier,
 } from "../server/engine/minigames/index.js"
 import { evaluateAchievements } from "../server/engine/achievements.js"
-import type { CharacterState, EventContent, InteractiveMove } from "../shared/types.js"
+import type {
+  CharacterState,
+  EventContent,
+  InteractiveMove,
+  PendingMinigameState,
+} from "../shared/types.js"
 import type { ServedEvent } from "../shared/types.js"
 import type { ResolveOutput } from "../server/engine/engine.js"
+
+// Simulated player for the memotest: once the deck is known it always flips a
+// matching pair, so the smoke sim resolves the altar quickly and deterministically.
+function memotestSmokeCard(state: PendingMinigameState): number {
+  const revealed = state.revealed ?? []
+  const matched = state.matched ?? []
+  const deck = state.deck
+  if (revealed.length === 1) {
+    const first = revealed[0]
+    if (deck) {
+      for (let i = 0; i < deck.length; i++) {
+        if (i !== first && deck[i] === deck[first] && !matched.includes(i)) return i
+      }
+    }
+  }
+  for (let i = 0; i < 16; i++) {
+    if (!matched.includes(i) && !revealed.includes(i)) return i
+  }
+  return 0
+}
 
 const reg = loadContent()
 console.log(
@@ -47,7 +72,9 @@ function resolveServed(
       const move: InteractiveMove =
         state.game === "tictactoe"
           ? { kind: "tictactoe", cell: (state.board ?? []).findIndex((x) => x === null) }
-          : { kind: "rps", choice: "rock" }
+          : state.game === "memotest"
+            ? { kind: "memotest", card: memotestSmokeCard(state) }
+            : { kind: "rps", choice: "rock" }
       over = applyInteractiveMove(state, move, primaryStat, rng).over
     }
     c.pendingMinigame = null

@@ -474,7 +474,7 @@ gameRouter.post("/minigame-move", async (req: Request, res: Response) => {
     if (before.over) {
       return res.status(400).json({ error: "match_already_finished" })
     }
-    const { over } = applyInteractiveMove(state, move, primaryStat, rng)
+    const { over } = applyInteractiveMove(state, move, primaryStat, rng, ev.resolution)
 
     if (!over) {
       run.rngState = rng.getState()
@@ -506,7 +506,11 @@ gameRouter.post("/minigame-move", async (req: Request, res: Response) => {
   } catch (err) {
     const msg = (err as Error).message
     console.log("[v0] /minigame-move error", msg)
-    if (msg.startsWith("invalid tictactoe cell") || msg.startsWith("invalid move for")) {
+    if (
+      msg.startsWith("invalid tictactoe cell") ||
+      msg.startsWith("invalid memotest card") ||
+      msg.startsWith("invalid move for")
+    ) {
       return res.status(400).json({ error: "invalid_move" })
     }
     return res.status(500).json({ error: "server_error", detail: msg })

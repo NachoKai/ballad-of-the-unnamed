@@ -9,7 +9,7 @@ import {
 } from "./index.js"
 import type { EventContent, InteractiveMove } from "../../../shared/types.js"
 
-function eventWith(game: "tictactoe" | "rps"): EventContent {
+function eventWith(game: "tictactoe" | "rps" | "memotest"): EventContent {
   return {
     id: `ev_${game}`,
     minAge: 0,
@@ -42,6 +42,10 @@ describe("interactive orchestrator", () => {
     const rps = createInteractiveState(eventWith("rps"))
     expect(rps.game).toBe("rps")
     expect(rps.bestOf).toBe(3)
+    const mem = createInteractiveState(eventWith("memotest"))
+    expect(mem.game).toBe("memotest")
+    expect(mem.deck).toBeUndefined() // dealt lazily on the first move
+    expect(mem.matched).toEqual([])
   })
 
   it("serializes a tictactoe view", () => {
@@ -86,6 +90,107 @@ describe("interactive orchestrator", () => {
     expect(() =>
       applyInteractiveMove(state, { kind: "rps", choice: "rock" }, 20, new Rng(1)),
     ).toThrow()
+  })
+
+  it("deals the memotest deck on the first move and reveals the first card", () => {
+    const state = createInteractiveState(eventWith("memotest"))
+    const out = applyInteractiveMove(state, { kind: "memotest", card: 3 }, 20, new Rng(1))
+    expect(out.over).toBe(false)
+    expect(state.deck).toHaveLength(16)
+    expect(state.revealed).toEqual([3])
+    const view = interactiveView(state)
+    if (view.game !== "memotest") throw new Error("expected memotest view")
+    expect(view.pairsTotal).toBe(8)
+    expect(view.faces[3]).toBe(state.deck![3])
+    expect(Object.keys(view.faces)).toHaveLength(1)
+  })
+
+  it("matches a memotest pair for the player on the second flip", () => {
+    const state = createInteractiveState(eventWith("memotest"))
+    applyInteractiveMove(state, { kind: "memotest", card: 0 }, 20, new Rng(1))
+    const first = state.revealed![0]
+    const mate = state.deck!.findIndex((f, i) => i !== first && f === state.deck![first])
+    const out = applyInteractiveMove(state, { kind: "memotest", card: mate }, 20, new Rng(1))
+    expect(out.over).toBe(false)
+    expect(state.playerPairs).toBe(1)
+    expect(state.matched).toContain(first)
+    expect(state.matched).toContain(mate)
+    expect(state.revealed).toEqual([])
+    expect(state.lastPlayerTurn?.matched).toBe(true)
+  })
+
+  it("lets the rival take a turn after a memotest miss", () => {
+    const state = createInteractiveState(eventWith("memotest"))
+    applyInteractiveMove(state, { kind: "memotest", card: 0 }, 20, new Rng(1))
+    const first = state.revealed![0]
+    const mate = state.deck!.findIndex((f, i) => i !== first && f === state.deck![first])
+    // flip a wrong card: the second flip must be a non-matching face
+    const wrong = state.deck!.findIndex((f, i) => i !== first && f !== state.deck![first])
+    expect(wrong).not.toBe(mate)
+    const out = applyInteractiveMove(state, { kind: "memotest", card: wrong }, 20, new Rng(1))
+    expect(out.over).toBe(false)
+    expect(state.playerPairs).toBe(0)
+    expect(state.lastPlayerTurn?.matched).toBe(false)
+    expect(state.lastRivalTurn).toBeDefined()
+    expect(state.revealed).toEqual([])
+  })
+
+  it("rejects illegal memotest moves", () => {
+    const state = createInteractiveState(eventWith("memotest"))
+    expect(() => applyInteractiveMove(state, { kind: "memotest", card: 99 }, 20, new Rng(1))).toThrow()
+    applyInteractiveMove(state, { kind: "memotest", card: 0 }, 20, new Rng(1))
+    // re-flipping the already revealed card
+    expect(() =>
+      applyInteractiveMove(state, { kind: "memotest", card: 0 }, 20, new Rng(1)),
+    ).toThrow()
+    // a rps move for a memotest game
+    expect(() =>
+      applyInteractiveMove(state, { kind: "rps", choice: "rock" }, 20, new Rng(1)),
+    ).toThrow()
+  })
+
+  it("maps memotest pair margins to outcome tiers", () => {
+    const base = () => createInteractiveState(eventWith("memotest"))
+    const sweep = base()
+    sweep.playerPairs = 5
+    sweep.rivalPairs = 3
+    expect(interactiveTier(sweep)).toBe("critical")
+    const narrow = base()
+    narrow.playerPairs = 4
+    narrow.rivalPairs = 3
+    expect(interactiveTier(narrow)).toBe("success")
+    const draw = base()
+    draw.playerPairs = 4
+    draw.rivalPairs = 4
+    expect(interactiveTier(draw)).toBe("partial")
+    const loss = base()
+    loss.playerPairs = 3
+    loss.rivalPairs = 5
+    expect(interactiveTier(loss)).toBe("fail")
+  })
+
+  it("replays a full memotest identically for the same seed and moves", () => {
+    function play(seed: number) {
+      const state = createInteractiveState(eventWith("memotest"))
+      const rng = new Rng(seed)
+      let over = false
+      let guard = 0
+      while (!over && guard < 200) {
+        const matched = state.matched ?? []
+        const revealed = state.revealed ?? []
+        const card = (() => {
+          for (let i = 0; i < 16; i++) if (!matched.includes(i) && !revealed.includes(i)) return i
+          return 0
+        })()
+        over = applyInteractiveMove(state, { kind: "memotest", card }, 20, rng).over
+        guard++
+      }
+      return { state, over }
+    }
+    const a = play(7)
+    const b = play(7)
+    expect(a.state).toEqual(b.state)
+    expect(a.over).toBe(b.over)
   })
 
   it("plays an rps round and reports the round result", () => {

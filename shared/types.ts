@@ -23,7 +23,7 @@ export type StatDeltas = Partial<Record<StatKey, number>>
 
 // ---- Interactive minigames (multi-move, server-authoritative) ----
 
-export type InteractiveGameKind = "tictactoe" | "rps"
+export type InteractiveGameKind = "tictactoe" | "rps" | "memotest"
 
 // The five hand-signs of the goblin's game. Internal keys are language-neutral;
 // the client localizes them (e.g. rock → Piedra, paper → Pergamino, scissors →
@@ -31,6 +31,18 @@ export type InteractiveGameKind = "tictactoe" | "rps"
 // version (rock-paper-scissors-lizard-spock).
 export type RpsChoice = "rock" | "paper" | "scissors" | "lizard" | "spock"
 export type RpsRoundResult = "win" | "loss" | "tie"
+
+// The eight relic faces of the memotest. Language-neutral keys — the client
+// maps them to themed labels + icons (e.g. "dragon_egg" → Dragon's Egg).
+export type MemotestFace =
+  | "dragon_egg"
+  | "sword"
+  | "crown"
+  | "potion"
+  | "phoenix"
+  | "shield"
+  | "scroll"
+  | "gem"
 
 export type TicTacToeMark = "X" | "O"
 export type TicTacToeCell = TicTacToeMark | null
@@ -49,6 +61,18 @@ export interface PendingMinigameState {
   rivalWins?: number
   rivalLastChoice?: RpsChoice | null
   playerLastChoice?: RpsChoice | null
+  // memotest: the 4x4 deck (8 pairs) is dealt lazily from the run Rng on the
+  // first move and persisted, so resume before the first move needs no Rng.
+  deck?: MemotestFace[]
+  matched?: number[]
+  revealed?: number[]
+  playerPairs?: number
+  rivalPairs?: number
+  // index -> face for every card the rival has seen (feeds its memory AI).
+  rivalMemory?: Record<number, MemotestFace>
+  // the last resolved player pair (misses let the rival take a turn).
+  lastPlayerTurn?: { cards: number[]; matched: boolean } | null
+  lastRivalTurn?: { cards: number[]; matched: boolean } | null
 }
 
 // Client-facing serialized view of a game in progress.
@@ -71,10 +95,31 @@ export type ServedInteractiveState =
       over: boolean
       result: "playing" | "player_win" | "rival_win"
     }
+  | {
+      game: "memotest"
+      size: number
+      pairsTotal: number
+      playerPairs: number
+      rivalPairs: number
+      // permanently face-up card indices (matched pairs)
+      matched: number[]
+      // indices currently face-up awaiting the second flip of the player's pair
+      revealed: number[]
+      // face of every currently visible card (matched ∪ revealed)
+      faces: Record<number, MemotestFace>
+      // the last resolved exchanges, for the verdict strips under the grid.
+      // faces for these cards ride in `faces` (matched) or the turn's own map.
+      lastPlayerTurn: { cards: number[]; faces: Record<number, MemotestFace>; matched: boolean } | null
+      lastRivalTurn: { cards: number[]; faces: Record<number, MemotestFace>; matched: boolean } | null
+      over: boolean
+      result: "playing" | "player_win" | "rival_win" | "draw"
+    }
 
 // A single move the client sends to /api/game/minigame-move.
 export type InteractiveMove =
-  { kind: "tictactoe"; cell: number } | { kind: "rps"; choice: RpsChoice }
+  | { kind: "tictactoe"; cell: number }
+  | { kind: "rps"; choice: RpsChoice }
+  | { kind: "memotest"; card: number }
 
 export const PERSONALITY_TAGS = [
   "Humble",
