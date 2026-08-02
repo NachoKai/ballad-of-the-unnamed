@@ -33,11 +33,13 @@ import {
   applyAgeDecline,
   applyClanBetrayal,
   clearExpiredHunted,
+  computeSeasonGrade,
   deductStamina,
   effectiveWeight,
   ensureRelationship,
   fillSlots,
   getActiveModifier,
+  hasPlayableChoice,
   isBenched,
   isFatigued,
   isEligible,
@@ -49,6 +51,7 @@ import {
   recomputeDerived,
   regionOf,
   roleSignalFor,
+  seasonHeadline,
   serveEvent,
   setFlag,
   updateMarketValue,
@@ -152,6 +155,7 @@ export function createCharacter(input: {
     pendingTournament: null,
     pendingTournamentResult: null,
     lastTournamentSeason: null,
+    pendingCapstoneResult: null,
     finaleStage2Choice: undefined,
   }
   recomputeDerived(base)
@@ -336,7 +340,9 @@ export function advanceRival(c: CharacterState, rng: Rng): void {
 export function selectEvent(c: CharacterState, registry: ContentRegistry, rng: Rng): EventContent {
   // Destiny events: roughly once every destinyCardYears in-game years.
   if (wouldBeDestinyTurn(c)) {
-    const destinyPool = registry.events.filter((e) => e.type === "destiny" && isEligible(e, c))
+    const destinyPool = registry.events.filter(
+      (e) => e.type === "destiny" && isEligible(e, c) && hasPlayableChoice(e, c),
+    )
     if (destinyPool.length > 0) {
       const picked = rng.weighted(destinyPool, (ev) => effectiveWeight(ev, c))
       c.lastEventId = picked.id
@@ -349,16 +355,25 @@ export function selectEvent(c: CharacterState, registry: ContentRegistry, rng: R
   const candidates = wantMinigame ? registry.minigames : registry.events
   for (const ev of candidates) {
     if (ev.type === "destiny") continue
-    if (isEligible(ev, c)) pool.push(ev)
+    // Season-end capstones are served by buildServedEvent on the turn before
+    // the season boundary — never through the normal random rotation.
+    if (ev.isCapstone) continue
+    // Never serve a card set the player cannot act on: skip events whose
+    // choices are all stat-locked for this character.
+    if (isEligible(ev, c) && hasPlayableChoice(ev, c)) pool.push(ev)
   }
   // Avoid serving the exact same event twice in a row.
   const noRepeat = pool.filter((ev) => ev.id !== c.lastEventId)
   const preferred = noRepeat.length > 0 ? noRepeat : pool
   // Fallback: if the chosen pool is empty, try the other pool, then any event.
   const finalPool =
-    preferred.length > 0 ? preferred : registry.events.filter((e) => isEligible(e, c))
+    preferred.length > 0
+      ? preferred
+      : registry.events.filter((e) => isEligible(e, c) && hasPlayableChoice(e, c))
   if (finalPool.length === 0) {
-    // Absolute fallback: first event ignoring gating.
+    // Absolute fallback: first event with a playable choice, ignoring gating.
+    const playable = registry.events.find((e) => hasPlayableChoice(e, c))
+    if (playable) return playable
     return registry.events[0]
   }
   const picked = rng.weighted(finalPool, (ev) => effectiveWeight(ev, c))
@@ -834,36 +849,31 @@ export function buildServedEvent(
       finaleStage: undefined,
     }
   }
+  // Season-end capstone: on the turn before the season boundary, serve a
+  // capstone minigame (debate / election) as a set-piece. Its verdict is
+  // stashed on the character and surfaced on the season summary next turn.
+  if (c.turn > 0 && c.turn % GAME_CONFIG.seasonLength === GAME_CONFIG.seasonLength - 1) {
+    const capPool = registry.minigames.filter((ev) => ev.isCapstone && isEligible(ev, c))
+    if (capPool.length > 0) {
+      const picked = rng.weighted(capPool, (ev) => ev.weight)
+      const served = serveEvent(picked, c, c.locale, registry, rng, false)
+      served.isCapstone = true
+      served.capstoneKind = picked.capstoneKind ?? "debate"
+      return { event: picked, served, finaleStage: undefined }
+    }
+  }
   // Season boundary: after every seasonLength turns, serve the season summary.
   if (c.turn > 0 && c.turn % GAME_CONFIG.seasonLength === 0) {
     const ev = generateSeasonSummary(c, registry, rng)
     const served = serveEvent(ev, c, c.locale, registry, rng, false)
     served.isSeasonSummary = true
-    const grade = Math.round(
-      Math.min(
-        10,
-        Math.max(
-          1,
-          c.powerLevel / 10 +
-            c.fame / 20 +
-            (c.counters["battles_won"] ?? 0) * 0.2 +
-            (c.counters["quests_completed"] ?? 0) * 0.1,
-        ),
-      ),
-    )
+    // A resolved capstone verdict swings this season's grade and is shown as a
+    // set-piece block on the summary. resolveSeasonSummary clears it after.
+    const capstone = c.pendingCapstoneResult ?? null
+    const grade = computeSeasonGrade(c, capstone?.gradeDelta ?? 0)
     served.seasonGrade = grade
-    served.seasonHeadline =
-      grade >= 8
-        ? c.locale === "en"
-          ? "A Season of Glory"
-          : "Una Temporada de Gloria"
-        : grade >= 5
-          ? c.locale === "en"
-            ? "A Steady Season"
-            : "Una Temporada Estable"
-          : c.locale === "en"
-            ? "A Season of Hardship"
-            : "Una Temporada de Dificultades"
+    served.seasonHeadline = seasonHeadline(grade, c.locale)
+    if (capstone) served.capstoneResult = capstone
 
     // Roll world events and embed in season summary.
     served.worldEvents = rollWorldEvents(c, registry, rng)
@@ -1013,6 +1023,8 @@ export function buildServedEvent(
 export function resolveSeasonSummary(c: CharacterState, registry: ContentRegistry): void {
   c.seasonCount += 1
   c.turn += 1
+  // The capstone verdict was consumed by this season's summary.
+  c.pendingCapstoneResult = null
   //  liability: the underworld's memory fades slowly, a season at a time.
   if (GAME_CONFIG.liabilityDecayPerSeason > 0) {
     adjustLiability(c, -GAME_CONFIG.liabilityDecayPerSeason)
@@ -1431,6 +1443,13 @@ export function resolveMinigame(
         winChance += 0.1
       }
     }
+    // Season-end debate: personality bends the crowd. Matching tags widen the
+    // win window, conflicting tags narrow it — the same wantedTags / punishedTags
+    // scoring used by regular choices, applied to the hidden roll instead.
+    if (event.capstoneKind === "debate" && event.cards) {
+      const tagSynergy = 1 + computeTagSynergy(c, card)
+      winChance = Math.max(0.02, Math.min(0.97, winChance * tagSynergy))
+    }
     winChance = Math.max(0.02, Math.min(0.97, winChance))
 
     // Hidden roll -> outcome tier.
@@ -1457,6 +1476,17 @@ export function resolveMinigame(
     for (const k of outcome.countersReset) c.counters[k] = 0
   }
   bumpCounter(c, `event_${event.id}`)
+
+  // Season-end capstone: stash the verdict so the season summary surfaces it
+  // next turn and swings that season's grade. resolveSeasonSummary clears it.
+  if (event.capstoneKind && outcome.verdict) {
+    c.pendingCapstoneResult = {
+      kind: event.capstoneKind,
+      tier,
+      verdict: localize(outcome.verdict, c.locale),
+      gradeDelta: outcome.gradeDelta ?? 0,
+    }
+  }
 
   const isTournamentFixture = event.id === "__tournament_fixture__"
   const wonBattle = tier === "critical" || tier === "success"

@@ -18,7 +18,13 @@ import {
   generateRichEpilogueData,
   computeLegacyScore,
 } from "../engine/epilogue.js"
-import { buildRivalUpdate, localize, peakReputation } from "../engine/helpers.js"
+import {
+  buildRivalUpdate,
+  computeSeasonGrade,
+  localize,
+  peakReputation,
+  seasonHeadline,
+} from "../engine/helpers.js"
 import {
   createRun,
   getRun,
@@ -176,34 +182,20 @@ gameRouter.get("/state", async (req: Request, res: Response) => {
       rng,
       run.pendingEvent.id === "__retirement_offer__",
     )
+    // Restore capstone flags for a pending capstone minigame.
+    if (run.pendingEvent.isCapstone) {
+      served.isCapstone = true
+      served.capstoneKind = run.pendingEvent.capstoneKind ?? "debate"
+    }
     // Restore season summary flags.
     if (run.pendingEvent.id === "__season_summary__") {
       served.isSeasonSummary = true
       const c = run.character
-      served.seasonGrade = Math.round(
-        Math.min(
-          10,
-          Math.max(
-            1,
-            c.powerLevel / 10 +
-              c.fame / 20 +
-              (c.counters["battles_won"] ?? 0) * 0.2 +
-              (c.counters["quests_completed"] ?? 0) * 0.1,
-          ),
-        ),
-      )
-      served.seasonHeadline =
-        (served.seasonGrade ?? 5) >= 8
-          ? locale === "en"
-            ? "A Season of Glory"
-            : "Una Temporada de Gloria"
-          : (served.seasonGrade ?? 5) >= 5
-            ? locale === "en"
-              ? "A Steady Season"
-              : "Una Temporada Estable"
-            : locale === "en"
-              ? "A Season of Hardship"
-              : "Una Temporada de Dificultades"
+      const capstone = c.pendingCapstoneResult ?? null
+      const grade = computeSeasonGrade(c, capstone?.gradeDelta ?? 0)
+      served.seasonGrade = grade
+      served.seasonHeadline = seasonHeadline(grade, locale)
+      if (capstone) served.capstoneResult = capstone
 
       if (run.character.rival) {
         served.rivalUpdate = buildRivalUpdate(run.character, registry, locale)

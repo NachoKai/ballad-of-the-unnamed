@@ -320,6 +320,16 @@ export function isEligible(ev: EventContent, c: CharacterState): boolean {
   return true
 }
 
+// Does the character have at least one playable choice in this event? A choice
+// is playable when it is ungated or its stat requirement is met. Guard used by
+// selectEvent so a player is never handed a card set they cannot act on — an
+// event whose choices are ALL stat-locked would soft-lock the run.
+export function hasPlayableChoice(ev: EventContent, c: CharacterState): boolean {
+  const choices = ev.choices ?? []
+  if (choices.length === 0) return false
+  return choices.some((ch) => !ch.requiresStat || c[ch.requiresStat.stat] >= ch.requiresStat.min)
+}
+
 // Momentum nudges the effective weight so runs feel like they have streaks.
 export function effectiveWeight(ev: EventContent, c: CharacterState): number {
   let w = ev.weight
@@ -361,6 +371,7 @@ export function serveEvent(
       id: card.id,
       label: fillSlots(localize(card.label, locale), locale, registry, rng, c),
       icon: card.icon,
+      tag: card.tag,
       rarity: "uncommon" as Rarity,
     }))
     // Cards keep their authored order (no rarity reveal sort for minigames).
@@ -521,4 +532,38 @@ const LOCALE_LOCATION: Record<string, string> = {
 export function localizeLocation(location: string, locale: Locale): string {
   if (locale === "en") return location
   return LOCALE_LOCATION[location] ?? location
+}
+
+// ---- Season grade & headline ----
+
+// The season summary grade (1-10) from power/fame/counters, plus the optional
+// swing from a resolved season-end capstone (debate verdict / urn draw).
+export function computeSeasonGrade(c: CharacterState, capstoneDelta = 0): number {
+  const base = Math.round(
+    Math.min(
+      10,
+      Math.max(
+        1,
+        c.powerLevel / 10 +
+          c.fame / 20 +
+          (c.counters["battles_won"] ?? 0) * 0.2 +
+          (c.counters["quests_completed"] ?? 0) * 0.1,
+      ),
+    ),
+  )
+  return Math.max(1, Math.min(10, base + capstoneDelta))
+}
+
+export function seasonHeadline(grade: number, locale: Locale): string {
+  return grade >= 8
+    ? locale === "en"
+      ? "A Season of Glory"
+      : "Una Temporada de Gloria"
+    : grade >= 5
+      ? locale === "en"
+        ? "A Steady Season"
+        : "Una Temporada Estable"
+      : locale === "en"
+        ? "A Season of Hardship"
+        : "Una Temporada de Dificultades"
 }

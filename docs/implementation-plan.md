@@ -12,7 +12,7 @@ Each block says exactly what files to touch, what to change, and how to verify. 
 
 ---
 
-## Step 1: Faction & Personality HUD
+## Step 1: Faction & Personality HUD ✅ DONE
 
 **Goal**: Show current faction reputation and top personality tags in the HUD during gameplay so the player can see their standing at a glance.
 
@@ -84,7 +84,7 @@ const topTags = personalitySummary(c.personality)
 
 ---
 
-## Step 2: Wire Shop Item Effects into Engine
+## Step 2: Wire Shop Item Effects into Engine ✅ DONE
 
 **Goal**: Purchased retinue and consumable items actually change gameplay math (fatigue, injury risk, momentum, age decline, offer quality).
 
@@ -146,7 +146,7 @@ const adjusted = netStatGain + (c.momentum === "falling" ? Math.abs(momentumMod)
 
 ---
 
-## Step 3: Fix Two-Stage Retirement Finale
+## Step 3: Fix Two-Stage Retirement Finale ✅ DONE
 
 **Goal**: `generateFinaleStage2()` is called and its narrative is shown to the player, making retirement a proper two-act capstone.
 
@@ -207,7 +207,7 @@ if (event.id === "__finale_outcome__") {
 
 ---
 
-## Step 4: Author Rival Confrontation Events
+## Step 4: Author Rival Confrontation Events ✅ DONE
 
 **Goal**: The rival isn't just background — they can appear in authored events.
 
@@ -245,7 +245,7 @@ if (event.id === "__finale_outcome__") {
 
 ---
 
-## Step 5: Author NPC Relationship Events
+## Step 5: Author NPC Relationship Events ✅ DONE
 
 **Goal**: Introduce recurring NPCs through gameplay with `introducesRelationshipId`.
 
@@ -283,7 +283,7 @@ if (event.id === "__finale_outcome__") {
 
 ---
 
-## Step 6: Author Long-Term Flag Events
+## Step 6: Author Long-Term Flag Events ✅ DONE
 
 **Goal**: Choices that set flags and later events that read them, creating narrative callbacks across the run.
 
@@ -320,7 +320,7 @@ if (event.id === "__finale_outcome__") {
 
 ---
 
-## Step 7: New Minigame Types
+## Step 7: New Minigame Types ✅ DONE
 
 **Goal**: Three additional minigame subtypes beyond `weighted_hidden_match`: `timing_bar`, `grid_gamble`, `memory_match`.
 
@@ -391,7 +391,7 @@ if (res.type === "memory_match" && res.statThreshold) {
 
 ---
 
-## Step 8: Graduated Achievement Families
+## Step 8: Graduated Achievement Families ✅ DONE
 
 **Goal**: Convert single-threshold achievements into tiered chains (bronze/silver/gold).
 
@@ -440,7 +440,7 @@ New achievements to add to `content/achievements.json`:
 
 ---
 
-## Step 9: Cross-Run Trophy Hall
+## Step 9: Cross-Run Trophy Hall ✅ DONE
 
 **Goal**: A permanent server-side collection tracker showing every unique event type, faction joined, ending type achieved across ALL runs. Completion percentage display.
 
@@ -505,7 +505,7 @@ FROM leaderboard;
 
 ---
 
-## Step 10: Elite Leaderboard Split
+## Step 10: Elite Leaderboard Split ✅ DONE
 
 **Goal**: Runs above the top 0.1% threshold automatically move to a "Legendary" leaderboard so they don't permanently occupy the top of the main board.
 
@@ -572,32 +572,32 @@ const TIERS = ["standard", "daily", "legendary"] as const
 
 ## Already covered — no work needed
 
-| Puntero system | Ballad equivalent (exists) |
-| -------------- | -------------------------- |
-| Last-move recap ("ÚLTIMO MOVIMIENTO") | `SceneEcho` / `turnNarrative` in `GameScreen.tsx` |
-| Rival score widget ("TU CARRERA VS") | `RivalBadge` in `Hud.tsx` + `advanceRival()` |
-| Starting reputation pick ("TU PRIMERA REPUTACIÓN") | `ArchetypeStep` (3-card draw) |
-| Season recap card w/ grade + headline | `generateSeasonSummary()` (headline, grade, world events) |
-| Energy meter ("ENERGÍA") | `stamina` + `deductStamina()` |
-| Media / average stat | `powerLevel` |
-| Epilogue rival block | `RivalComparison` in `epilogue.ts` |
-| Money that grows each turn | Per-season clan `stipend` (members only — the universal per-turn trickle is **new**, Step 19) |
+| Puntero system                                     | Ballad equivalent (exists)                                                                    |
+| -------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| Last-move recap ("ÚLTIMO MOVIMIENTO")              | `SceneEcho` / `turnNarrative` in `GameScreen.tsx`                                             |
+| Rival score widget ("TU CARRERA VS")               | `RivalBadge` in `Hud.tsx` + `advanceRival()`                                                  |
+| Starting reputation pick ("TU PRIMERA REPUTACIÓN") | `ArchetypeStep` (3-card draw)                                                                 |
+| Season recap card w/ grade + headline              | `generateSeasonSummary()` (headline, grade, world events)                                     |
+| Energy meter ("ENERGÍA")                           | `stamina` + `deductStamina()`                                                                 |
+| Media / average stat                               | `powerLevel`                                                                                  |
+| Epilogue rival block                               | `RivalComparison` in `epilogue.ts`                                                            |
+| Money that grows each turn                         | Per-season clan `stipend` (members only — the universal per-turn trickle is **new**, Step 19) |
 
 ---
 
-## Step 11: Stat-Gated Choices
+## Step 11: Stat-Gated Choices ✅ DONE
 
-**Goal**: Some choices demand a minimum stat, shown as a requirement chip on the card (Puntero's "Imagen 30" / "Gestión 33"). Below the threshold the choice renders locked; meeting it unlocks a new path. This gives stats identity beyond numbers — a high-charisma character genuinely *sees different options*.
+**Goal**: Some choices demand a minimum stat, shown as a requirement chip on the card (Puntero's "Imagen 30" / "Gestión 33"). Below the threshold the choice renders locked; meeting it unlocks a new path. This gives stats identity beyond numbers — a high-charisma character genuinely _sees different options_.
 
 ### Files to change
 
-| File                     | Change                                                                                   |
-| ------------------------ | ---------------------------------------------------------------------------------------- |
-| `shared/types.ts`        | Add `requiresStat` to `ChoiceContent` and `ServedChoice`                                 |
-| `server/engine/engine.ts`| Filter/lock choices in `buildServedEvent()`; reject locked picks in `resolveChoice()`    |
-| `content/events/*.json`  | Add `requiresStat` to a few existing choices so the mechanic is actually in content      |
-| `src/components/GameScreen.tsx` | Render requirement chip + locked state on choice cards                            |
-| `src/i18n/strings.ts`    | "Requires" label (en/es)                                                                |
+| File                            | Change                                                                                |
+| ------------------------------- | ------------------------------------------------------------------------------------- |
+| `shared/types.ts`               | Add `requiresStat` to `ChoiceContent` and `ServedChoice`                              |
+| `server/engine/engine.ts`       | Filter/lock choices in `buildServedEvent()`; reject locked picks in `resolveChoice()` |
+| `content/events/*.json`         | Add `requiresStat` to a few existing choices so the mechanic is actually in content   |
+| `src/components/GameScreen.tsx` | Render requirement chip + locked state on choice cards                                |
+| `src/i18n/strings.ts`           | "Requires" label (en/es)                                                              |
 
 ### Type additions
 
@@ -640,10 +640,10 @@ In `resolveChoice()`: if the chosen `choiceId` maps to a choice whose `requiresS
 
 ### Files to change
 
-| File                     | Change                                                                    |
-| ------------------------ | ------------------------------------------------------------------------- |
+| File                            | Change                                                                    |
+| ------------------------------- | ------------------------------------------------------------------------- |
 | `src/components/GameScreen.tsx` | Compute projected values from `character` + `statDeltas`/`tradeoffDeltas` |
-| `src/components/StatTag.tsx` | Extend to render `12 → 15 (+3)` form when current values are passed      |
+| `src/components/StatTag.tsx`    | Extend to render `12 → 15 (+3)` form when current values are passed       |
 
 ### Implementation
 
@@ -667,21 +667,21 @@ Render the delta row inside each `ChoiceCard` (next to the existing `BonusTag`s)
 
 ---
 
-## Step 13: Liability Meter ("Expediente")
+## Step 13: Liability Meter ("Expediente") ✅ DONE
 
-**Goal**: A new meter that *accumulates* — shady choices, scandals, and failed coercion add to it, and it rarely drains. A high liability opens grim options and closes clean ones, and feeds the epilogue. Puntero's "Expediente" ("what the justice system knows about you") is exactly this; ours is a liability/notoriety meter in fantasy dress (rumors, warrants, witnesses).
+**Goal**: A new meter that _accumulates_ — shady choices, scandals, and failed coercion add to it, and it rarely drains. A high liability opens grim options and closes clean ones, and feeds the epilogue. Puntero's "Expediente" ("what the justice system knows about you") is exactly this; ours is a liability/notoriety meter in fantasy dress (rumors, warrants, witnesses).
 
 ### Files to change
 
-| File                       | Change                                                                                |
-| -------------------------- | ------------------------------------------------------------------------------------- |
-| `shared/types.ts`          | Add `liability` to `CharacterState`; `liabilityDelta` to `ChoiceContent`; `requiresLiability` to `EventContent` |
-| `shared/config.ts`         | `liabilityMax`, thresholds that open/close content                                    |
-| `server/engine/engine.ts`  | Apply `liabilityDelta` in `resolveChoice()`; clamp 0..max                             |
-| `server/engine/helpers.ts` | Gate events on `requiresLiability` in `isEligible()`                                  |
-| `src/components/Hud.tsx`   | Add liability meter pill (blood-tinted when high)                                     |
-| `content/events/*.json`    | Author choices with `liabilityDelta`; events with `requiresLiability`                 |
-| `content/achievements.json`| Add clean-run and corrupted-run achievements                                          |
+| File                        | Change                                                                                                          |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `shared/types.ts`           | Add `liability` to `CharacterState`; `liabilityDelta` to `ChoiceContent`; `requiresLiability` to `EventContent` |
+| `shared/config.ts`          | `liabilityMax`, thresholds that open/close content                                                              |
+| `server/engine/engine.ts`   | Apply `liabilityDelta` in `resolveChoice()`; clamp 0..max                                                       |
+| `server/engine/helpers.ts`  | Gate events on `requiresLiability` in `isEligible()`                                                            |
+| `src/components/Hud.tsx`    | Add liability meter pill (blood-tinted when high)                                                               |
+| `content/events/*.json`     | Author choices with `liabilityDelta`; events with `requiresLiability`                                           |
+| `content/achievements.json` | Add clean-run and corrupted-run achievements                                                                    |
 
 ### Balance approach
 
@@ -697,20 +697,20 @@ Render the delta row inside each `ChoiceCard` (next to the existing `BonusTag`s)
 
 ---
 
-## Step 14: Rival Focus Label
+## Step 14: Rival Focus Label ✅ DONE
 
 **Goal**: The rival isn't just a score — each season they're "about" something (Puntero: Escándalo / Comunidad / Pasillos / Seguridad / Tecnología / Conflicto / Solidaridad). The focus shows in the HUD and flavors `rivalUpdate`; it can bias their score growth.
 
 ### Files to change
 
-| File                       | Change                                                              |
-| -------------------------- | ------------------------------------------------------------------- |
-| `shared/config.ts`         | Add `RIVAL_FOCUSES` pool (en/es labels)                             |
-| `shared/types.ts`          | Add `focusId` to `RivalState`                                       |
-| `server/engine/engine.ts`  | `generateRival()` picks a start focus; `advanceRival()` rotates it via the seeded rng |
-| `server/routes/game.ts`    | Include focus in `rivalUpdate` text                                 |
-| `src/components/Hud.tsx`   | Show focus chip inside `RivalBadge`                                 |
-| `src/i18n/strings.ts`      | Localize focus labels                                               |
+| File                      | Change                                                                                |
+| ------------------------- | ------------------------------------------------------------------------------------- |
+| `shared/config.ts`        | Add `RIVAL_FOCUSES` pool (en/es labels)                                               |
+| `shared/types.ts`         | Add `focusId` to `RivalState`                                                         |
+| `server/engine/engine.ts` | `generateRival()` picks a start focus; `advanceRival()` rotates it via the seeded rng |
+| `server/routes/game.ts`   | Include focus in `rivalUpdate` text                                                   |
+| `src/components/Hud.tsx`  | Show focus chip inside `RivalBadge`                                                   |
+| `src/i18n/strings.ts`     | Localize focus labels                                                                 |
 
 ### Example focus pool (fantasy flavor)
 
@@ -735,18 +735,18 @@ Optional depth: a focus grants the rival a small score bonus on seasons where it
 
 ---
 
-## Step 15: Minigame Trap Cards (Urn Mechanic)
+## Step 15: Minigame Trap Cards (Urn Mechanic) ✅ DONE
 
 **Goal**: Puntero's "ELEGÍ UNA URNA" — three closed urns, you open one, and one was a trap ("ANULADA −4"). Generalize: a minigame can mark one or more cards as traps. Picking a trap forces the fail tier regardless of the hidden variable — risk made visible, outcome hidden.
 
 ### Files to change
 
-| File                                | Change                                                               |
-| ----------------------------------- | -------------------------------------------------------------------- |
-| `shared/types.ts`                   | Add `trap?: boolean` to `MinigameCard`; add `trapCardId` to `MinigameResolution` (optional) |
-| `server/engine/engine.ts`           | In `resolveMinigame()`: if picked card has `trap: true`, resolve as `fail` tier before the hidden-variable roll |
-| `content/minigames/*.json`          | Add at least one trap-card minigame (e.g. `trap_chest`, `haunted_urn`) |
-| `src/components/GameScreen.tsx`     | Card visual hint for traps (subtle skull/mark) and suspense beat before reveal |
+| File                            | Change                                                                                                          |
+| ------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `shared/types.ts`               | Add `trap?: boolean` to `MinigameCard`; add `trapCardId` to `MinigameResolution` (optional)                     |
+| `server/engine/engine.ts`       | In `resolveMinigame()`: if picked card has `trap: true`, resolve as `fail` tier before the hidden-variable roll |
+| `content/minigames/*.json`      | Add at least one trap-card minigame (e.g. `trap_chest`, `haunted_urn`)                                          |
+| `src/components/GameScreen.tsx` | Card visual hint for traps (subtle skull/mark) and suspense beat before reveal                                  |
 
 ### Engine note
 
@@ -758,7 +758,7 @@ if (card?.trap) {
 }
 ```
 
-Trap placement must be authored (fixed per event), not rolled per player — deterministic and reviewable. Keep the trap *hinted* but not labeled (iconography only), so it stays a decision.
+Trap placement must be authored (fixed per event), not rolled per player — deterministic and reviewable. Keep the trap _hinted_ but not labeled (iconography only), so it stays a decision.
 
 ### Verification
 
@@ -774,18 +774,18 @@ Trap placement must be authored (fixed per event), not rolled per player — det
 
 ### Files to change
 
-| File                        | Change                                                                                    |
-| --------------------------- | ----------------------------------------------------------------------------------------- |
-| `content/minigames/elections.json` | **New** — "Election of the Year" capstone minigames (urn mechanic, uses Step 15 traps) |
-| `content/minigames/debates.json`   | **New** — "Debate face to face": 3 responses, hidden verdict, quality after            |
-| `server/engine/engine.ts`  | Serve a capstone minigame on the turn *before* the season summary; include result in the summary |
-| `shared/types.ts`          | Optional `isCapstone` flag on `ServedEvent` so the client renders the showdown frame     |
-| `src/components/GameScreen.tsx` | Capstone frame + suspense "scrutinizing…" beat (reuse existing minigame reveal)        |
+| File                               | Change                                                                                           |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `content/minigames/elections.json` | **New** — "Election of the Year" capstone minigames (urn mechanic, uses Step 15 traps)           |
+| `content/minigames/debates.json`   | **New** — "Debate face to face": 3 responses, hidden verdict, quality after                      |
+| `server/engine/engine.ts`          | Serve a capstone minigame on the turn _before_ the season summary; include result in the summary |
+| `shared/types.ts`                  | Optional `isCapstone` flag on `ServedEvent` so the client renders the showdown frame             |
+| `src/components/GameScreen.tsx`    | Capstone frame + suspense "scrutinizing…" beat (reuse existing minigame reveal)                  |
 
 ### Debate design (reuses what exists)
 
 - The rival makes a claim; three responses map to personality tags (e.g. `Humble` / `Strategic` / `Aggressive`).
-- Hidden variable = the crowd's mood; verdict quality surfaced *after* picking ("MALA −4" / "BUENA +3"), driven by `wantedTags`-style scoring — no new systems, just authored content + the existing minigame resolution.
+- Hidden variable = the crowd's mood; verdict quality surfaced _after_ picking ("MALA −4" / "BUENA +3"), driven by `wantedTags`-style scoring — no new systems, just authored content + the existing minigame resolution.
 - Outcome moves the season's `seasonGrade` and the rival comparison.
 
 ### Verification
@@ -802,12 +802,12 @@ Trap placement must be authored (fixed per event), not rolled per player — det
 
 ### Files to change
 
-| File                        | Change                                                                     |
-| --------------------------- | -------------------------------------------------------------------------- |
-| `content/tutorial.json`     | **New** — pages: Welcome / Everything is a Choice / Stats / Meters / Rival / Your Story (en+es) |
-| `src/components/TutorialScreen.tsx` | **New** — page pager with Next / Skip / Start buttons                 |
-| `src/App.tsx`               | Show tutorial when no run exists and `chronicle_tutorial_seen` flag is unset; wire re-open link |
-| `src/i18n/strings.ts`       | "Skip tutorial", "Next", page nav strings                               |
+| File                                | Change                                                                                          |
+| ----------------------------------- | ----------------------------------------------------------------------------------------------- |
+| `content/tutorial.json`             | **New** — pages: Welcome / Everything is a Choice / Stats / Meters / Rival / Your Story (en+es) |
+| `src/components/TutorialScreen.tsx` | **New** — page pager with Next / Skip / Start buttons                                           |
+| `src/App.tsx`                       | Show tutorial when no run exists and `chronicle_tutorial_seen` flag is unset; wire re-open link |
+| `src/i18n/strings.ts`               | "Skip tutorial", "Next", page nav strings                                                       |
 
 ### Details
 
@@ -829,11 +829,11 @@ Trap placement must be authored (fixed per event), not rolled per player — det
 
 ### Files to change
 
-| File                     | Change                                                                                 |
-| ------------------------ | -------------------------------------------------------------------------------------- |
+| File                     | Change                                                                                         |
+| ------------------------ | ---------------------------------------------------------------------------------------------- |
 | `src/components/Hud.tsx` | Derive + render a career title chip; render the arc path (current arc lit, future arcs dimmed) |
-| `src/i18n/strings.ts`    | Title table per arc × power tier (en/es); arc path labels                              |
-| `src/lib/careerTitle.ts` | **New** helper: `careerTitle(arc, powerLevel)` → localized title                        |
+| `src/i18n/strings.ts`    | Title table per arc × power tier (en/es); arc path labels                                      |
+| `src/lib/careerTitle.ts` | **New** helper: `careerTitle(arc, powerLevel)` → localized title                               |
 
 ### Title table (example)
 
@@ -864,12 +864,12 @@ Titles are derived client-side from `c.currentArc` (already on `CharacterState`;
 
 ### Files to change
 
-| File                         | Change                                                                      |
-| ---------------------------- | --------------------------------------------------------------------------- |
+| File                                | Change                                                                      |
+| ----------------------------------- | --------------------------------------------------------------------------- |
 | `src/components/CreationScreen.tsx` | Add "🎲 Random" button that randomizes name/class/origin/gender client-side |
-| `shared/config.ts`           | Add `goldPerTurn: 3`                                                         |
-| `server/engine/engine.ts`    | In `resolveChoice()`, apply `goldPerTurn` each turn (before/after deltas)    |
-| `src/i18n/strings.ts`        | "Random" label                                                              |
+| `shared/config.ts`                  | Add `goldPerTurn: 3`                                                        |
+| `server/engine/engine.ts`           | In `resolveChoice()`, apply `goldPerTurn` each turn (before/after deltas)   |
+| `src/i18n/strings.ts`               | "Random" label                                                              |
 
 ### Details
 

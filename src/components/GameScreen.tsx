@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { AlertTriangle, Hourglass, Lock, Skull, Swords } from "lucide-react"
+import { AlertTriangle, Hourglass, Lock, Mic, Skull, Swords, Vote } from "lucide-react"
 import { keyframes, styled } from "styled-components"
 import type { CharacterState, ServedEvent, Rarity, RoleSignal } from "@shared/types"
 import type { Locale } from "@shared/types"
@@ -59,6 +59,8 @@ export function GameScreen({
   // Sort choices by rarity so the "safe" option is first and rare/volatile pop last.
   const choices = [...event.choices].sort((a, b) => rarityRank(a.rarity) - rarityRank(b.rarity))
   const isSeasonSummary = event.isSeasonSummary
+  const isCapstone = event.isCapstone === true
+  const capstoneKind = event.capstoneKind ?? "debate"
   const continueChoice = isSeasonSummary ? choices.find((c) => c.id === "continue") : undefined
   const playableChoices = continueChoice ? choices.filter((c) => c.id !== "continue") : choices
 
@@ -92,6 +94,11 @@ export function GameScreen({
         </ChoiceLabel>
         {!compact && (
           <ChoiceRarity $rarity={c.rarity}>{t(locale, `rarity_${c.rarity}` as never)}</ChoiceRarity>
+        )}
+        {/* Season-end debate: each card embodies a personality stance — show the
+            tag so the crowd's mood can be read through the character's own nature. */}
+        {capstoneKind === "debate" && c.tag && (
+          <DebateTag>{t(locale, `personality_tag_${c.tag}` as never)}</DebateTag>
         )}
         {c.riskLabel && (
           <RiskTag>
@@ -197,6 +204,34 @@ export function GameScreen({
           <RetireBanner role="status">{t(locale, "retirementOffered")}</RetireBanner>
         )}
 
+        {isCapstone && (
+          <SpecularBorder
+            radius={8}
+            lineColor={theme.colors.goldBright}
+            baseColor={theme.colors.gold}
+            thickness={1.4}
+            intensity={1.1}
+            style={{ marginBottom: 18 }}
+          >
+            <CapstoneBanner role="status">
+              <CapstoneIcon>
+                {capstoneKind === "election" ? (
+                  <Vote size={22} strokeWidth={2} aria-hidden="true" />
+                ) : (
+                  <Mic size={22} strokeWidth={2} aria-hidden="true" />
+                )}
+              </CapstoneIcon>
+              <CapstoneTitle>
+                {capstoneKind === "election"
+                  ? t(locale, "capstoneElection")
+                  : t(locale, "capstoneDebate")}
+              </CapstoneTitle>
+              <CapstoneTag>{t(locale, "capstone")}</CapstoneTag>
+            </CapstoneBanner>
+            <CapstoneScrutiny>{t(locale, "capstoneScrutiny")}</CapstoneScrutiny>
+          </SpecularBorder>
+        )}
+
         {isSeasonSummary && event.seasonHeadline && (
           <SpecularBorder
             radius={8}
@@ -222,6 +257,13 @@ export function GameScreen({
               <SummarySub>{t(locale, "seasonSummary")}</SummarySub>
             </SummaryBanner>
           </SpecularBorder>
+        )}
+
+        {isSeasonSummary && event.capstoneResult && (
+          <CapstoneVerdictBlock $tier={event.capstoneResult.tier}>
+            <VerdictLabel>{t(locale, "capstoneVerdict")}</VerdictLabel>
+            <VerdictText>{event.capstoneResult.verdict}</VerdictText>
+          </CapstoneVerdictBlock>
         )}
 
         <SceneNarrative>{capitalize(event.narrative)}</SceneNarrative>
@@ -407,6 +449,95 @@ const RetireBanner = styled.div`
   font-style: italic;
 `
 
+const CapstoneBanner = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px 20px;
+  border-radius: ${({ theme }) => theme.radii.sm};
+  background: rgba(201, 164, 76, 0.06);
+`
+
+const CapstoneIcon = styled.span`
+  display: inline-flex;
+  color: ${({ theme }) => theme.colors.goldBright};
+`
+
+const CapstoneTitle = styled.span`
+  font-family: ${({ theme }) => theme.fonts.display};
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.colors.parchment};
+`
+
+const CapstoneTag = styled.span`
+  padding: 2px 10px;
+  border: 1px solid rgba(201, 164, 76, 0.5);
+  border-radius: 999px;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.colors.goldBright};
+`
+
+const CapstoneScrutiny = styled.div`
+  padding: 0 0 14px;
+  text-align: center;
+  font-size: 14px;
+  font-style: italic;
+  color: ${({ theme }) => theme.colors.muted};
+`
+
+const DebateTag = styled.span`
+  display: inline-block;
+  margin-top: 6px;
+  padding: 2px 9px;
+  border: 1px solid ${({ theme }) => theme.colors.line2};
+  border-radius: 4px;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.colors.sage};
+  background: rgba(111, 143, 106, 0.06);
+`
+
+const TIER_COLOR: Record<string, string> = {
+  critical: "#6f8f6a",
+  success: "#6f8f6a",
+  partial: "#c9a44c",
+  fail: "#bf1e1e",
+}
+
+const CapstoneVerdictBlock = styled.div<{ $tier: string }>`
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 18px;
+  padding: 12px 18px;
+  border: 1px solid ${({ $tier }) => TIER_COLOR[$tier] ?? "#9c8f74"};
+  border-radius: ${({ theme }) => theme.radii.sm};
+  background: ${({ $tier }) => `${TIER_COLOR[$tier] ?? "#9c8f74"}12`};
+`
+
+const VerdictLabel = styled.span`
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.colors.muted};
+`
+
+const VerdictText = styled.span`
+  font-family: ${({ theme }) => theme.fonts.display};
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: ${({ theme }) => theme.colors.parchment};
+`
+
 const ChoiceGrid = styled.div`
   display: grid;
   gap: 24px;
@@ -478,6 +609,7 @@ const ChoiceLabel = styled(TextPretty)`
 const ChoiceRarity = styled.span<{ $rarity: Rarity }>`
   display: inline-block;
   margin-top: 6px;
+  margin-right: 10px;
   font-size: 13px;
   letter-spacing: 0.14em;
   text-transform: uppercase;

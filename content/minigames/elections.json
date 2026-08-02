@@ -1,0 +1,235 @@
+[
+  {
+    "id": "election_of_the_year",
+    "type": "minigame",
+    "subtype": "election",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 10,
+    "isCapstone": true,
+    "capstoneKind": "election",
+    "primaryStat": "charisma",
+    "narrative": {
+      "en": "Year's end, and the assembly is naming its Champion of the Season. Whose name you put forward will echo into the next. But one of these names carries hidden strings — and hidden strings snap loudest in public.",
+      "es": "Fin de año, y la asamblea va a nombrar a su Campeona de la Temporada. Cuyo nombre promuevas hará eco en la próxima. Pero uno de estos nombres arrastra hilos ocultos — y los hilos ocultos suenan más fuerte en público."
+    },
+    "cards": [
+      {
+        "id": "candidate_old_guard",
+        "icon": "scroll",
+        "trap": true,
+        "label": {
+          "en": "Back the old guard's candidate",
+          "es": "Respaldar a la candidata de la vieja guardia"
+        }
+      },
+      {
+        "id": "candidate_reformer",
+        "icon": "sun",
+        "label": {
+          "en": "Put forward the young reformer",
+          "es": "Proponer a la joven reformista"
+        }
+      },
+      {
+        "id": "candidate_outsider",
+        "icon": "star",
+        "label": {
+          "en": "Champion the beloved outsider",
+          "es": "Apadrinar a la querida forastera"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.42,
+      "statInfluence": {
+        "charisma": 0.012,
+        "intelligence": 0.004
+      },
+      "cardModifiers": {
+        "candidate_reformer": {
+          "winChanceDelta": 0.05
+        },
+        "candidate_outsider": {
+          "winChanceDelta": 0.1
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "charisma": 2
+        },
+        "fameDelta": 6,
+        "reputationDelta": 3,
+        "verdict": {
+          "en": "GREAT +3",
+          "es": "GRAN +3"
+        },
+        "gradeDelta": 3,
+        "narrative": {
+          "en": "The crowd takes your pick to heart. The champion's speech lands, your name rides on it, and the assembly votes with a roar. You didn't just choose the season — you became it.",
+          "es": "La multitud toma tu elección como propia. El discurso de la campeona acierta, tu nombre cabalga sobre él y la asamblea vota con un rugido. No elegiste la temporada — te convertiste en ella."
+        }
+      },
+      "success": {
+        "fameDelta": 3,
+        "reputationDelta": 1,
+        "verdict": {
+          "en": "GOOD +1",
+          "es": "BUENA +1"
+        },
+        "gradeDelta": 1,
+        "narrative": {
+          "en": "Your candidate wins, and the win sticks. A solid choice, cheered by enough to matter. The season ends with your name spoken kindly in the halls.",
+          "es": "Tu candidata gana, y la victoria perdura. Una elección sólida, vitoreada por los suficientes. La temporada termina con tu nombre pronunciado con cariño en los pasillos."
+        }
+      },
+      "partial": {
+        "fameDelta": 1,
+        "reputationDelta": -1,
+        "verdict": {
+          "en": "MIXED 0",
+          "es": "MIXTA 0"
+        },
+        "gradeDelta": 0,
+        "narrative": {
+          "en": "A split assembly. Your pick squeaks through, then unravels over the winter feast. Half the hall drinks to you; the other half drinks at you.",
+          "es": "Una asamblea dividida. Tu elección pasa por poco y luego se deshace en el banquete de invierno. La mitad de la sala brinda por vos; la otra mitad brinda en tu contra."
+        }
+      },
+      "fail": {
+        "reputationDelta": -3,
+        "fameDelta": -2,
+        "verdict": {
+          "en": "BAD −4",
+          "es": "MALA −4"
+        },
+        "gradeDelta": -4,
+        "narrative": {
+          "en": "The hidden strings snap in public. Your candidate is laughed out of the assembly and your judgment is questioned in every corner. The season closes on a scandal with your name attached.",
+          "es": "Los hilos ocultos se rompen en público. Se ríen de tu candidata en la asamblea y cuestionan tu juicio en cada rincón. La temporada cierra con un escándalo y tu nombre pegado a él."
+        }
+      }
+    }
+  },
+  {
+    "id": "election_war_funding",
+    "type": "minigame",
+    "subtype": "election",
+    "minAge": 18,
+    "maxAge": 99,
+    "weight": 9,
+    "isCapstone": true,
+    "capstoneKind": "election",
+    "primaryStat": "intelligence",
+    "narrative": {
+      "en": "Border raids have emptied the treasury's patience. The council must choose where the season's war chest goes — and whoever sponsors the winning purse earns a slice of its glory. One chest is already promised to someone in the shadows.",
+      "es": "Las incursiones en la frontera agotaron la paciencia del tesoro. El consejo debe decidir adónde va la caja de guerra de la temporada — y quien patrocine la bolsa ganadora se lleva parte de su gloria. Una caja ya está prometida a alguien en las sombras."
+    },
+    "cards": [
+      {
+        "id": "warchest_guilds",
+        "icon": "coins",
+        "trap": true,
+        "label": {
+          "en": "Fund the merchant guilds",
+          "es": "Financiar a los gremios mercantes"
+        }
+      },
+      {
+        "id": "warchest_army",
+        "icon": "shield",
+        "label": {
+          "en": "Fund the standing army",
+          "es": "Financiar al ejército permanente"
+        }
+      },
+      {
+        "id": "warchest_commons",
+        "icon": "wheat",
+        "label": {
+          "en": "Fund the border commons",
+          "es": "Financiar a las comunas de la frontera"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.44,
+      "statInfluence": {
+        "intelligence": 0.012,
+        "charisma": 0.004
+      },
+      "cardModifiers": {
+        "warchest_army": {
+          "winChanceDelta": 0.05
+        },
+        "warchest_commons": {
+          "winChanceDelta": 0.1
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "fameDelta": 5,
+        "goldDelta": 150,
+        "reputationDelta": 3,
+        "verdict": {
+          "en": "GREAT +3",
+          "es": "GRAN +3"
+        },
+        "gradeDelta": 3,
+        "narrative": {
+          "en": "The chest you championed pays off tenfold — raiders turned back, trade lanes safe. The council credits your foresight in every toast. You picked the season's true winner.",
+          "es": "La caja que promoviste rinde diez veces — asaltantes rechazados, rutas comerciales seguras. El consejo acredita tu previsión en cada brindis. Elegiste a la verdadera ganadora de la temporada."
+        }
+      },
+      "success": {
+        "fameDelta": 3,
+        "goldDelta": 60,
+        "reputationDelta": 1,
+        "verdict": {
+          "en": "GOOD +1",
+          "es": "BUENA +1"
+        },
+        "gradeDelta": 1,
+        "narrative": {
+          "en": "The purse does its quiet work and the season ends calmer for it. Your name is thanked, not toasted — but that's still a good season.",
+          "es": "La bolsa hace su trabajo en silencio y la temporada termina más tranquila por ello. Dan las gracias a tu nombre, sin brindis — pero eso sigue siendo una buena temporada."
+        }
+      },
+      "partial": {
+        "fameDelta": 1,
+        "reputationDelta": -1,
+        "verdict": {
+          "en": "MIXED 0",
+          "es": "MIXTA 0"
+        },
+        "gradeDelta": 0,
+        "narrative": {
+          "en": "The chest is spent on a grinding stalemate. Half the council calls it wise, half calls it waste. Your sponsorship is remembered — ambivalently.",
+          "es": "La caja se gasta en un estancamiento desgastante. La mitad del consejo lo llama prudente, la mitad lo llama derroche. Recuerdan tu patrocinio — con ambivalencia."
+        }
+      },
+      "fail": {
+        "reputationDelta": -3,
+        "fameDelta": -2,
+        "goldDelta": -50,
+        "verdict": {
+          "en": "BAD −4",
+          "es": "MALA −4"
+        },
+        "gradeDelta": -4,
+        "narrative": {
+          "en": "The promised chest went to a shadow, and the treasury's loss lands at your feet. The council's accounts inspector gives you a look that will outlast the season.",
+          "es": "La caja prometida fue a parar a una sombra, y la pérdida del tesoro cae a tus pies. La inspectora de cuentas del consejo te dedica una mirada que durará más que la temporada."
+        }
+      }
+    }
+  }
+]

@@ -29,6 +29,7 @@ import {
   computePowerLevel,
   ensureRelationship,
   fillSlots,
+  hasPlayableChoice,
   isBenched,
   isEligible,
   joinClan,
@@ -1415,6 +1416,148 @@ describe("season summary", () => {
 })
 
 // ---------------------------------------------------------------------------
+// Season-end capstone (debates / elections)
+// ---------------------------------------------------------------------------
+describe("season-end capstone", () => {
+  it("serves a capstone minigame on the turn before the season boundary", () => {
+    const c = makeChar({ turn: GAME_CONFIG.seasonLength - 1 })
+    const result = buildServedEvent(c, reg, new Rng(7))
+    expect(result.event.isCapstone).toBe(true)
+    expect(result.served.isCapstone).toBe(true)
+    expect(["debate", "election"]).toContain(result.event.capstoneKind)
+  })
+
+  it("never serves capstone minigames through the random rotation", () => {
+    for (let seed = 1; seed <= 60; seed++) {
+      const c = makeChar({ turn: 1 })
+      const picked = selectEvent(c, reg, new Rng(seed))
+      expect(picked.isCapstone).not.toBe(true)
+    }
+  })
+
+  it("resolving a capstone minigame stashes a pendingCapstoneResult", () => {
+    const debate = reg.minigames.find((m) => m.id === "debate_rival_claim")
+    expect(debate).toBeDefined()
+    const c = makeChar({ charisma: 20 })
+    const rng = new Rng(1337)
+    const out = resolveMinigame(c, debate!, debate!.cards![0].id, reg, rng)
+    expect(out.narrative).toBeTruthy()
+    expect(c.pendingCapstoneResult).toBeDefined()
+    expect(c.pendingCapstoneResult!.kind).toBe("debate")
+    expect([3, 1, 0, -4]).toContain(c.pendingCapstoneResult!.gradeDelta)
+    expect(c.pendingCapstoneResult!.verdict).toBeTruthy()
+  })
+
+  it("forces the fail tier on a trapped election card and still stashes a verdict", () => {
+    const election = reg.minigames.find((m) => m.id === "election_of_the_year")
+    expect(election).toBeDefined()
+    const trapCard = election!.cards!.find((card) => card.trap)
+    expect(trapCard).toBeDefined()
+    const c = makeChar()
+    resolveMinigame(c, election!, trapCard!.id, reg, new Rng(5))
+    expect(c.pendingCapstoneResult).toBeDefined()
+    expect(c.pendingCapstoneResult!.kind).toBe("election")
+    expect(c.pendingCapstoneResult!.gradeDelta).toBe(-4)
+  })
+
+  it("season summary carries the capstone result and its grade swing", () => {
+    const base = makeChar({ turn: GAME_CONFIG.seasonLength, powerLevel: 40, fame: 20 })
+    const boosted = makeChar({
+      turn: GAME_CONFIG.seasonLength,
+      powerLevel: 40,
+      fame: 20,
+      pendingCapstoneResult: {
+        kind: "debate",
+        tier: "critical",
+        verdict: "GREAT +3",
+        gradeDelta: 3,
+      },
+    })
+    const noCapstone = buildServedEvent(base, reg, new Rng(42)).served
+    const withCapstone = buildServedEvent(boosted, reg, new Rng(42)).served
+    expect(noCapstone.isSeasonSummary).toBe(true)
+    expect(withCapstone.isSeasonSummary).toBe(true)
+    expect(withCapstone.capstoneResult?.verdict).toBe("GREAT +3")
+    expect(withCapstone.seasonGrade!).toBeGreaterThanOrEqual(noCapstone.seasonGrade!)
+  })
+
+  it("resolveSeasonSummary clears the consumed capstone result", () => {
+    const c = makeChar({
+      turn: GAME_CONFIG.seasonLength,
+      pendingCapstoneResult: {
+        kind: "election",
+        tier: "fail",
+        verdict: "BAD −4",
+        gradeDelta: -4,
+      },
+    })
+    resolveSeasonSummary(c, reg)
+    expect(c.pendingCapstoneResult).toBeNull()
+  })
+
+  it("debate personality tag synergy widens the win window deterministically", () => {
+    const debateEvent: EventContent = {
+      id: "mg_debate_synergy",
+      type: "minigame",
+      minAge: 0,
+      maxAge: 99,
+      weight: 1,
+      isCapstone: true,
+      capstoneKind: "debate",
+      primaryStat: "charisma",
+      narrative: { en: "", es: "" },
+      cards: [
+        {
+          id: "answer_confidence",
+          icon: "gem",
+          tag: "Confident",
+          wantedTags: { Confident: 1 },
+          label: { en: "Cold confidence", es: "" },
+        },
+      ],
+      resolution: {
+        type: "weighted_hidden_match",
+        baseWinChance: 0.5,
+        statInfluence: {},
+      },
+      outcomes: {
+        critical: {
+          gradeDelta: 3,
+          verdict: { en: "GREAT +3", es: "" },
+          narrative: { en: "Critical", es: "" },
+        },
+        success: {
+          gradeDelta: 1,
+          verdict: { en: "GOOD +1", es: "" },
+          narrative: { en: "Success", es: "" },
+        },
+        partial: {
+          gradeDelta: 0,
+          verdict: { en: "MIXED 0", es: "" },
+          narrative: { en: "Partial", es: "" },
+        },
+        fail: {
+          gradeDelta: -4,
+          verdict: { en: "BAD −4", es: "" },
+          narrative: { en: "Fail", es: "" },
+        },
+      },
+    }
+    const plain = makeChar()
+    const confident = makeChar({ personality: { Confident: 2 } })
+    // Same seed → same hidden roll. The Confident character's double synergy
+    // (1 + 1) clamps winChance to 0.97, so a mid-range roll lands a success
+    // where the plain character (0.5) would only reach a partial.
+    const rollSeed = 1234
+    resolveMinigame(plain, debateEvent, "answer_confidence", reg, new Rng(rollSeed))
+    resolveMinigame(confident, debateEvent, "answer_confidence", reg, new Rng(rollSeed))
+    const plainOutcome = plain.pendingCapstoneResult!
+    const confidentOutcome = confident.pendingCapstoneResult!
+    expect(confidentOutcome.gradeDelta).toBeGreaterThan(plainOutcome.gradeDelta)
+  })
+})
+
+// ---------------------------------------------------------------------------
 // Arc computation
 // ---------------------------------------------------------------------------
 describe("arc computation", () => {
@@ -1577,6 +1720,95 @@ describe("selectEvent no consecutive repeats", () => {
     const rng = new Rng(hashSeed("no-repeat-record"))
     const ev = selectEvent(c, reg, rng)
     expect(c.lastEventId).toBe(ev.id)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Playable-choice guard (never serve an all-locked card set)
+// ---------------------------------------------------------------------------
+describe("hasPlayableChoice", () => {
+  it("returns true when any choice is ungated", () => {
+    const ev: EventContent = {
+      id: "mixed",
+      minAge: 0,
+      maxAge: 99,
+      weight: 1,
+      narrative: { en: "", es: "" },
+      choices: [
+        {
+          id: "gated",
+          rarity: "uncommon",
+          label: { en: "", es: "" },
+          narrative: { en: "", es: "" },
+          requiresStat: { stat: "strength", min: 12 },
+        },
+        {
+          id: "open",
+          rarity: "common",
+          label: { en: "", es: "" },
+          narrative: { en: "", es: "" },
+        },
+      ],
+    }
+    expect(hasPlayableChoice(ev, makeChar({ strength: 1 }))).toBe(true)
+  })
+
+  it("returns false when every choice is stat-locked", () => {
+    const ev: EventContent = {
+      id: "all_gated",
+      minAge: 0,
+      maxAge: 99,
+      weight: 1,
+      narrative: { en: "", es: "" },
+      choices: [
+        {
+          id: "a",
+          rarity: "uncommon",
+          label: { en: "", es: "" },
+          narrative: { en: "", es: "" },
+          requiresStat: { stat: "strength", min: 12 },
+        },
+        {
+          id: "b",
+          rarity: "rare",
+          label: { en: "", es: "" },
+          narrative: { en: "", es: "" },
+          requiresStat: { stat: "dexterity", min: 12 },
+        },
+      ],
+    }
+    const weak = makeChar({ strength: 1, dexterity: 1 })
+    expect(hasPlayableChoice(ev, weak)).toBe(false)
+    const strong = makeChar({ strength: 20, dexterity: 1 })
+    expect(hasPlayableChoice(ev, strong)).toBe(true)
+  })
+
+  it("returns false for events with no choices", () => {
+    const ev: EventContent = {
+      id: "empty",
+      minAge: 0,
+      maxAge: 99,
+      weight: 1,
+      narrative: { en: "", es: "" },
+      choices: [],
+    }
+    expect(hasPlayableChoice(ev, makeChar())).toBe(false)
+  })
+
+  it("selectEvent never hands a weak character an all-locked event", () => {
+    // A 1-everything character fails every stat gate; regardless of the seed,
+    // the served event must always keep at least one playable choice.
+    const weak = makeChar({
+      strength: 1,
+      dexterity: 1,
+      constitution: 1,
+      intelligence: 1,
+      charisma: 1,
+    })
+    for (let seed = 1; seed <= 80; seed++) {
+      const picked = selectEvent(weak, reg, new Rng(seed))
+      expect(hasPlayableChoice(picked, weak)).toBe(true)
+    }
   })
 })
 
@@ -1814,7 +2046,9 @@ describe("Rival", () => {
     const rngB = new Rng(5)
     advanceRival(c, rngA)
     advanceRival(d, rngB)
-    const bonus = RIVAL_FOCUSES.find((f) => f.id === c.rival!.focusId)!.scoreBonus - RIVAL_FOCUSES.find((f) => f.id === d.rival!.focusId)!.scoreBonus
+    const bonus =
+      RIVAL_FOCUSES.find((f) => f.id === c.rival!.focusId)!.scoreBonus -
+      RIVAL_FOCUSES.find((f) => f.id === d.rival!.focusId)!.scoreBonus
     expect(c.rival!.score - d.rival!.score).toBe(bonus)
   })
 
@@ -2706,30 +2940,17 @@ describe(" negotiation dial ", () => {
 describe(" whole-arc tournaments ", () => {
   it("intro → 3 fixtures → honor beat resolves through the minigame path", () => {
     const c = makeChar({ age: 18, turn: 12, currentClanId: null, powerLevel: 60 })
-    const rng = new Rng(hashSeed("tournament"))
-    // Force the tournament intro by repeatedly building events until it appears.
-    let started = false
-    for (let i = 0; i < 40 && !started; i++) {
-      const { event, served } = buildServedEvent(c, reg, rng)
-      if (event.id === "__tournament_intro__") {
-        const luck = served.choices.find((ch) => ch.id === "mode_luck")!
-        resolveChoice(c, event, luck.id, reg, rng)
-        started = true
-      } else {
-        // Consume whatever beat was served so the loop advances.
-        const id = served.choices[0]?.id
-        if (id) {
-          if (event.type === "minigame" || event.cards) resolveMinigame(c, event, id, reg, rng)
-          else resolveChoice(c, event, id, reg, rng)
-        }
-      }
-    }
-    expect(started).toBe(true)
+    // Start the arc deterministically: accept the intro directly instead of
+    // gambling on the random intro roll, so the test never depends on the RNG
+    // stream landing the coin flip within a fixed loop window.
+    const intro = tournamentIntroEvent(c, "grand_melee")
+    resolveChoice(c, intro, "mode_luck", reg, new Rng(hashSeed("tournament")))
     expect(c.pendingTournament).not.toBeNull()
     expect(c.pendingTournament!.mode).toBe("luck")
     expect(c.pendingTournament!.fixturesLeft).toBe(3)
 
-    // Play out the fixtures.
+    // Play out the fixtures through buildServedEvent.
+    const rng = new Rng(hashSeed("tournament"))
     let fixtures = 0
     while (c.pendingTournament && fixtures < 10) {
       const { event, served } = buildServedEvent(c, reg, rng)

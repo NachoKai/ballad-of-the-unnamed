@@ -171,6 +171,20 @@ export interface ChoiceContent {
 
 export type OutcomeTier = "critical" | "success" | "partial" | "fail"
 
+// What kind of season-end capstone a minigame is (Puntero's "ELEGÍ UNA URNA"
+// vs "DEBATE CARA A CARA"). Drives the client's capstone frame + summary block.
+export type CapstoneKind = "debate" | "election"
+
+// The verdict of a resolved season-end capstone, surfaced on the season
+// summary: the tier, the localized "BUENA +3" / "MALA −4" label, and the grade
+// swing applied to that season's grade.
+export interface CapstoneResult {
+  kind: CapstoneKind
+  tier: OutcomeTier
+  verdict: string
+  gradeDelta: number
+}
+
 export interface MinigameCard {
   id: string
   icon: string
@@ -180,6 +194,13 @@ export interface MinigameCard {
   // deterministic. Never served to the client — only `hasTraps` is, so the
   // trap's identity stays hidden until the reveal.
   trap?: boolean
+  // Personality alignment (debate cards): the tag this response embodies.
+  tag?: PersonalityTag
+  // Personality tag synergy: matching tags boost the hidden roll, conflicting
+  // tags penalize it. Same semantics as ChoiceContent.wantedTags/punishedTags,
+  // reused by the capstone debate minigames.
+  wantedTags?: Partial<Record<PersonalityTag, number>>
+  punishedTags?: Partial<Record<PersonalityTag, number>>
 }
 
 export interface MinigameOutcome {
@@ -194,6 +215,10 @@ export interface MinigameOutcome {
   countersDelta?: Record<string, number>
   countersReset?: string[]
   narrative: LocaleMap
+  // Season-end capstone: localized verdict surfaced after picking (e.g.
+  // "BUENA +3" / "MALA −4") and the grade swing applied to the season summary.
+  verdict?: LocaleMap
+  gradeDelta?: number
 }
 
 export type MinigameSubtype =
@@ -236,6 +261,11 @@ export interface EventContent {
   // Liability gate: dark-path events only appear once the character's
   // liability ("Expediente") reaches the minimum.
   requiresLiability?: { min: number }
+  // Season-end capstone: this minigame is served on the turn before the
+  // season summary instead of a random event. Its outcome surfaces a verdict
+  // and moves the season grade.
+  isCapstone?: boolean
+  capstoneKind?: CapstoneKind
   weight: number
   location?: string
   narrative: LocaleMap
@@ -402,6 +432,9 @@ export interface CharacterState {
   pendingTournamentResult?: { won: boolean; nameKey: string } | null
   // season in which the last tournament arc started (at most once per cadence).
   lastTournamentSeason?: number | null
+  // season-end capstone result, set when the capstone minigame resolves and
+  // consumed by the following season summary. Cleared when the summary resolves.
+  pendingCapstoneResult?: CapstoneResult | null
 }
 
 export interface ReputationState {
@@ -453,6 +486,12 @@ export interface ServedEvent {
   // Urn mechanic: true when this minigame's card set contains a trap. Lets
   // the client hint at danger (iconography only) without revealing which card.
   hasTraps?: boolean
+  // Season-end capstone: this event is a capstone minigame (debate/election)
+  // and its kind drives the client's showdown frame.
+  isCapstone?: boolean
+  capstoneKind?: CapstoneKind
+  // Season summary: the resolved capstone's verdict shown as a set-piece block.
+  capstoneResult?: CapstoneResult
   // Gold paid to the character this season by their faction (season summary).
   stipendEarned?: number
   flagLabel?: string

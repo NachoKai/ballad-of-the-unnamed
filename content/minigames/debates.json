@@ -1,0 +1,146 @@
+[
+  {
+    "id": "debate_rival_claim",
+    "type": "minigame",
+    "subtype": "debate",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 10,
+    "isCapstone": true,
+    "capstoneKind": "debate",
+    "primaryStat": "charisma",
+    "narrative": {
+      "en": "The season's final council. {rivalName} steps to the dais, paints you as a fraud before the whole court, and lets the accusation hang in the air. The crowd's mood is fickle — answer in the way that rings true to who you are.",
+      "es": "El consejo final de la temporada. {rivalName} sube al estrado, te pinta como un fraude ante toda la corte y deja la acusación flotando en el aire. El ánimo de la multitud es caprichoso — respondé de la manera que suene verdadera a quien sos."
+    },
+    "cards": [
+      {
+        "id": "answer_confidence",
+        "icon": "gem",
+        "tag": "Confident",
+        "wantedTags": {
+          "Confident": 1
+        },
+        "punishedTags": {
+          "Humble": 0.5
+        },
+        "label": {
+          "en": "Answer with cold confidence",
+          "es": "Responder con fría confianza"
+        }
+      },
+      {
+        "id": "answer_fire",
+        "icon": "flame",
+        "tag": "Cocky",
+        "wantedTags": {
+          "Cocky": 1,
+          "Aggressive": 0.5
+        },
+        "punishedTags": {
+          "Supportive": 0.5
+        },
+        "label": {
+          "en": "Answer with fire and mockery",
+          "es": "Responder con fuego y burla"
+        }
+      },
+      {
+        "id": "answer_reason",
+        "icon": "brain",
+        "tag": "Strategic",
+        "wantedTags": {
+          "Strategic": 1,
+          "Professional": 0.5
+        },
+        "punishedTags": {
+          "Aggressive": 0.5
+        },
+        "label": {
+          "en": "Answer with measured reason",
+          "es": "Responder con razón serena"
+        }
+      },
+      {
+        "id": "answer_grace",
+        "icon": "heart-handshake",
+        "tag": "Supportive",
+        "wantedTags": {
+          "Supportive": 1,
+          "Humble": 0.5
+        },
+        "punishedTags": {
+          "Cocky": 0.5
+        },
+        "label": {
+          "en": "Answer with warmth and grace",
+          "es": "Responder con calidez y gracia"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.42,
+      "statInfluence": {
+        "charisma": 0.012,
+        "intelligence": 0.004
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "charisma": 2
+        },
+        "fameDelta": 6,
+        "reputationDelta": 3,
+        "verdict": {
+          "en": "GREAT +3",
+          "es": "GRAN +3"
+        },
+        "gradeDelta": 3,
+        "narrative": {
+          "en": "Your reply lands like a verdict. The court falls silent, then erupts. {rivalName} opens their mouth, finds nothing, and steps down. You owned this council — and everyone in it knows it.",
+          "es": "Tu respuesta cae como un veredicto. La corte enmudece y luego estalla. {rivalName} abre la boca, no encuentra nada y baja del estrado. Dominaste este consejo — y todos en él lo saben."
+        }
+      },
+      "success": {
+        "fameDelta": 3,
+        "reputationDelta": 1,
+        "verdict": {
+          "en": "GOOD +1",
+          "es": "BUENA +1"
+        },
+        "gradeDelta": 1,
+        "narrative": {
+          "en": "Your answer carries the room. Doubters nod; a few cheer. {rivalName} retreats into a careful silence. A good season to be known by.",
+          "es": "Tu respuesta convence a la sala. Los escépticos asienten; algunos vitorean. {rivalName} se repliega en un silencio prudente. Una buena temporada para que te recuerden."
+        }
+      },
+      "partial": {
+        "reputationDelta": -1,
+        "verdict": {
+          "en": "MIXED 0",
+          "es": "MIXTA 0"
+        },
+        "gradeDelta": 0,
+        "narrative": {
+          "en": "Half the room nods, half looks away. {rivalName} parries your words and the council disperses without a clear verdict. A draw in the public eye — neither saint nor fraud.",
+          "es": "Media sala asiente, media desvía la mirada. {rivalName} desvía tus palabras y el consejo se disuelve sin un veredicto claro. Un empate ante el público — ni santa ni fraude."
+        }
+      },
+      "fail": {
+        "reputationDelta": -3,
+        "fameDelta": -2,
+        "verdict": {
+          "en": "BAD −4",
+          "es": "MALA −4"
+        },
+        "gradeDelta": -4,
+        "narrative": {
+          "en": "Your words tangle. {rivalName} seizes the opening and drives it home, and the court's laughter follows you out the door. The season ends on a sour note that everyone will quote.",
+          "es": "Tus palabras se enredan. {rivalName} aprovecha el hueco y lo remata, y la risa de la corte te sigue hasta la puerta. La temporada termina con una nota amarga que todos citarán."
+        }
+      }
+    }
+  }
+]
