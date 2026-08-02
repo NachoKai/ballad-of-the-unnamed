@@ -31,6 +31,13 @@ export const GAME_CONFIG = {
   // honor beat) is rng-gated to fire roughly once every N in-game years.
   tournamentCadenceYears: 6,
 
+  // Interactive minigames (tictactoe / rps) are a rare garnish: at most this
+  // many per run, and never more often than every N turns, so they stay a
+  // treat instead of dominating the rotation. Tracked via deterministic
+  // counters on the character, so daily runs stay reproducible.
+  maxInteractiveMinigamesPerRun: 3,
+  interactiveMinigameCooldownTurns: 20,
+
   // Bench mechanic: turns a character sits "on the bench" after over-
   // reaching into a clan far above their level (stat gains reduced meanwhile).
   benchDurationTurns: 6,

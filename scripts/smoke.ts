@@ -1,12 +1,21 @@
 import { Rng, hashSeed } from "../shared/rng.js"
 import { loadContent } from "../server/content/registry.js"
 import {
+  applyMinigameOutcome,
   buildServedEvent,
   createCharacter,
   resolveChoice,
   resolveMinigame,
 } from "../server/engine/engine.js"
+import {
+  applyInteractiveMove,
+  createInteractiveState,
+  interactiveTier,
+} from "../server/engine/minigames/index.js"
 import { evaluateAchievements } from "../server/engine/achievements.js"
+import type { CharacterState, EventContent, InteractiveMove } from "../shared/types.js"
+import type { ServedEvent } from "../shared/types.js"
+import type { ResolveOutput } from "../server/engine/engine.js"
 
 const reg = loadContent()
 console.log(
@@ -21,6 +30,37 @@ console.log(
   "classes",
 )
 
+// Resolve one served event, driving interactive minigames to completion through
+// the move engine (they have no cards and never go through the card-pick roll).
+function resolveServed(
+  c: CharacterState,
+  event: EventContent,
+  served: ServedEvent,
+  rng: Rng,
+): ResolveOutput {
+  if (event.resolution?.type === "interactive") {
+    if (!c.pendingMinigame) c.pendingMinigame = createInteractiveState(event)
+    const state = c.pendingMinigame
+    const primaryStat = c[event.primaryStat ?? "intelligence"] as number
+    let over = false
+    while (!over) {
+      const move: InteractiveMove =
+        state.game === "tictactoe"
+          ? { kind: "tictactoe", cell: (state.board ?? []).findIndex((x) => x === null) }
+          : { kind: "rps", choice: "rock" }
+      over = applyInteractiveMove(state, move, primaryStat, rng).over
+    }
+    c.pendingMinigame = null
+    return applyMinigameOutcome(c, event, interactiveTier(state), reg, rng)
+  }
+  const isMini = event.type === "minigame" || Boolean(event.cards)
+  if (isMini) return resolveMinigame(c, event, event.cards![0].id, reg, rng)
+  // A simulated player can't pick a stat-locked choice — filter them out.
+  const playable = served.choices.filter((ch) => ch.statMet !== false)
+  const choiceId = (playable[0] ?? served.choices[0])?.id
+  return resolveChoice(c, event, choiceId, reg, rng)
+}
+
 for (const classId of ["warrior", "wizard", "rogue", "ranger"]) {
   const rng = new Rng(hashSeed(`smoke-${classId}`))
   const c = createCharacter({
@@ -33,10 +73,7 @@ for (const classId of ["warrior", "wizard", "rogue", "ranger"]) {
   let turns = 0
   while (c.status === "alive" && turns < 300) {
     const { event, served } = buildServedEvent(c, reg, rng)
-    const isMini = event.type === "minigame" || Boolean(event.cards)
-    const out = isMini
-      ? resolveMinigame(c, event, event.cards![0].id, reg, rng)
-      : resolveChoice(c, event, served.choices[0].id, reg, rng)
+    const out = resolveServed(c, event, served, rng)
     evaluateAchievements(c, reg, { endingType: out.endingType })
     turns++
     if (out.ended) {
@@ -65,10 +102,7 @@ function run(seed: string): string {
 
   while (c.status === "alive" && turns < 300) {
     const { event, served } = buildServedEvent(c, reg, rng)
-    const isMini = event.type === "minigame" || Boolean(event.cards)
-    const out = isMini
-      ? resolveMinigame(c, event, event.cards![0].id, reg, rng)
-      : resolveChoice(c, event, served.choices[0].id, reg, rng)
+    const out = resolveServed(c, event, served, rng)
     turns++
     if (out.ended) return `${out.endingType}:${c.age}:${c.gold}:${turns}`
   }

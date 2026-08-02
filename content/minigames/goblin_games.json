@@ -1,0 +1,126 @@
+[
+  {
+    "id": "goblin_hand_game",
+    "type": "minigame",
+    "subtype": "interactive",
+    "minAge": 10,
+    "maxAge": 99,
+    "weight": 2,
+    "primaryStat": "intelligence",
+    "opponent": { "en": "Grimble the goblin", "es": "Grimble el goblin" },
+    "narrative": {
+      "en": "A grubby goblin slaps the table and grins, showing every tooth. He lays out five grubby hand-signs: stone, parchment, dagger, salamander, mage. 'Beat me best of three and I'll split the spoils. Lose, and you pay the toll for crossing my bridge.'",
+      "es": "Un goblin mugriento golpea la mesa y sonríe mostrando todos los dientes. Muestra cinco señales mugrientas: piedra, pergamino, daga, salamandra, mago. 'Ganame al mejor de tres y reparto el botín. Si perdés, pagás el peaje por cruzar mi puente.'"
+    },
+    "resolution": {
+      "type": "interactive",
+      "game": "rps",
+      "bestOf": 3,
+      "baseWinChance": 0.5,
+      "statInfluence": { "intelligence": 0.012 },
+      "statThreshold": 20,
+      "rivalSkill": 0.6
+    },
+    "outcomes": {
+      "critical": {
+        "goldDelta": 220,
+        "fameDelta": 5,
+        "countersDelta": { "goblin_games_won": 1, "battles_won": 1 },
+        "narrative": {
+          "en": "Grimble slaps his own forehead in disbelief. 'Nobody beats Grimble twice to nothing!' He counts out the coins slowly, as if parting with a limb.",
+          "es": "Grimble se da una palmada en la frente, incrédulo. '¡Nadie le gana a Grimble dos a nada!' Cuenta las monedas despacio, como si se despidiera de un miembro."
+        }
+      },
+      "success": {
+        "goldDelta": 90,
+        "fameDelta": 2,
+        "countersDelta": { "goblin_games_won": 1, "battles_won": 1 },
+        "narrative": {
+          "en": "Best of three, and you take it. Grimble sulks, pays out, and mutters about 'counting signs.'",
+          "es": "Al mejor de tres, y lo ganás. Grimble hace un puchero, paga y murmura sobre 'contar señales.'"
+        }
+      },
+      "partial": {
+        "goldDelta": -30,
+        "countersReset": ["goblin_games_streak"],
+        "narrative": {
+          "en": "It goes to the final round, and the goblin's stubby fingers are quicker than your luck. You pay the toll, lighter by a few coins.",
+          "es": "Va hasta la ronda final, y los dedos regordetes del goblin son más rápidos que tu suerte. Pagás el peaje, unos pesos más liviano."
+        }
+      },
+      "fail": {
+        "goldDelta": -80,
+        "reputationDelta": -1,
+        "reputationFaction": "greywater",
+        "countersReset": ["goblin_games_streak"],
+        "narrative": {
+          "en": "Grimble runs the table, cackling. You hand over far more than the toll and slink off while he counts your coins aloud.",
+          "es": "Grimble barre la mesa riéndose. Entregás mucho más que el peaje y te escabullís mientras cuenta tus monedas en voz alta."
+        }
+      }
+    }
+  },
+  {
+    "id": "tactician_boards",
+    "type": "minigame",
+    "subtype": "interactive",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 2,
+    "primaryStat": "intelligence",
+    "opponent": { "en": "Strategos Varen", "es": "La estratega Varen" },
+    "narrative": {
+      "en": "Strategos Varen carves a nine-cell grid in the dirt with the point of a blade. 'Three in a row, like battle lines. Win clean and I'll fund your next campaign. Stalemate buys you nothing.'",
+      "es": "La estratega Varen traza una cuadrícula de nueve casillas en la tierra con la punta de una hoja. 'Tres en línea, como líneas de batalla. Ganá limpio y financio tu próxima campaña. El empate no compra nada.'"
+    },
+    "resolution": {
+      "type": "interactive",
+      "game": "tictactoe",
+      "baseWinChance": 0.5,
+      "statInfluence": { "intelligence": 0.012 },
+      "statThreshold": 20,
+      "rivalSkill": 0.62
+    },
+    "outcomes": {
+      "critical": {
+        "goldDelta": 180,
+        "fameDelta": 6,
+        "reputationDelta": 3,
+        "reputationFaction": "ironhold",
+        "countersDelta": { "battles_won": 1, "board_games_won": 1 },
+        "narrative": {
+          "en": "Three swift lines, and the Strategos sweeps the grid clean in grudging respect. 'Not in twenty years has anyone run the board on me.' She presses a fat purse into your hand.",
+          "es": "Tres líneas rápidas, y la estratega barre la cuadrícula con respeto a regañadientes. 'En veinte años nadie me corrió el tablero.' Te mete una bolsa repleta en la mano."
+        }
+      },
+      "success": {
+        "goldDelta": 70,
+        "fameDelta": 3,
+        "reputationDelta": 1,
+        "reputationFaction": "ironhold",
+        "countersDelta": { "battles_won": 1, "board_games_won": 1 },
+        "narrative": {
+          "en": "You close the line through her weakest flank. Varen nods slowly. 'A commander thinks a dozen moves deep. You think three. That will do.'",
+          "es": "Cerrás la línea por su flanco más débil. Varen asiente despacio. 'Una comandante piensa doce jugadas por delante. Vos pensás tres. Eso alcanza.'"
+        }
+      },
+      "partial": {
+        "countersReset": ["board_games_streak"],
+        "narrative": {
+          "en": "The grid fills to a stalemate. Varen taps the last empty square. 'A draw buys nothing, and teaches less.' She walks off without a word.",
+          "es": "La cuadrícula se llena en un empate. Varen toca el último casillero vacío. 'Un empate no compra nada y enseña menos.' Se va sin decir palabra."
+        }
+      },
+      "fail": {
+        "goldDelta": -40,
+        "reputationDelta": -2,
+        "reputationFaction": "ironhold",
+        "countersReset": ["board_games_streak"],
+        "narrative": {
+          "en": "Varen threads three in a row through a gap you swore you'd sealed. 'Battle lines, friend. You forgot your rear guard.' She collects the stake and the lesson.",
+          "es": "Varen enhebra tres en línea por un hueco que juraste haber sellado. 'Líneas de batalla, amiga. Olvidaste tu retaguardia.' Cobra la apuesta y la lección."
+        }
+      }
+    }
+  }
+]

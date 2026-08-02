@@ -145,10 +145,21 @@ export function loadContent(): ContentRegistry {
     const arr = readJson<EventContent[]>(join("minigames", file))
     for (const mg of arr) {
       validateLocaleMap(mg.narrative, `minigame ${mg.id} narrative`)
-      assert(mg.cards && mg.cards.length > 0, `minigame ${mg.id} has no cards`)
       assert(mg.resolution, `minigame ${mg.id} has no resolution`)
       assert(mg.outcomes, `minigame ${mg.id} has no outcomes`)
-      for (const card of mg.cards) {
+      // Interactive minigames are multi-move games with no card grid; classic
+      // minigames are a hidden-roll card pick and must author cards.
+      const interactive = mg.resolution.type === "interactive"
+      if (!interactive) {
+        assert(mg.cards && mg.cards.length > 0, `minigame ${mg.id} has no cards`)
+      } else {
+        assert(
+          mg.resolution.game === "tictactoe" || mg.resolution.game === "rps",
+          `minigame ${mg.id} invalid interactive game`,
+        )
+        assert(mg.primaryStat, `minigame ${mg.id} interactive needs primaryStat`)
+      }
+      for (const card of mg.cards ?? []) {
         validateLocaleMap(card.label, `minigame ${mg.id} card ${card.id} label`)
       }
       for (const tier of ["critical", "success", "partial", "fail"] as const) {

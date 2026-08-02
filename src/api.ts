@@ -3,11 +3,14 @@ import type {
   CharacterState,
   EndingType,
   Gender,
+  InteractiveGameKind,
+  InteractiveMove,
   Locale,
   Origin,
   RichEpilogueData,
   RunType,
   ServedEvent,
+  ServedInteractiveState,
 } from "@shared/types"
 
 export interface AchievementView {
@@ -49,6 +52,25 @@ export interface ChooseResponse {
   narrative: string
   newAchievements: AchievementContent[]
   ended: boolean
+  endingType?: EndingType
+  epilogue?: string
+  score?: number
+  event?: ServedEvent
+  richEpilogueData?: RichEpilogueData
+}
+
+// Response of POST /api/game/minigame-move. A "playing" status carries the
+// fresh board; "finished" resolves the outcome and behaves like a ChooseResponse
+// (plus the final board so the result banner can show the completed game).
+export interface MinigameMoveResponse {
+  status: "playing" | "finished"
+  minigame?: { game: InteractiveGameKind; view: ServedInteractiveState }
+  feedback?: string | null
+  // finished — mirrors ChooseResponse:
+  character?: CharacterState
+  narrative?: string
+  newAchievements?: AchievementContent[]
+  ended?: boolean
   endingType?: EndingType
   epilogue?: string
   score?: number
@@ -149,6 +171,13 @@ export const api = {
 
   choose: (input: { runId: string; choiceId?: string; cardId?: string }) =>
     jfetch<ChooseResponse>("/api/game/choose", {
+      method: "POST",
+      body: JSON.stringify(input),
+    }),
+
+  // One move of an interactive minigame (tictactoe / rps).
+  minigameMove: (input: { runId: string; move: InteractiveMove }) =>
+    jfetch<MinigameMoveResponse>("/api/game/minigame-move", {
       method: "POST",
       body: JSON.stringify(input),
     }),

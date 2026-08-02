@@ -353,14 +353,32 @@ export function selectEvent(c: CharacterState, registry: ContentRegistry, rng: R
   const pool: EventContent[] = []
   const wantMinigame = rng.bool(0.28)
   const candidates = wantMinigame ? registry.minigames : registry.events
+  // Interactive minigames are a rare garnish: at most maxInteractiveMinigamesPerRun
+  // per run, spaced at least interactiveMinigameCooldownTurns turns apart. Both
+  // limits are tracked on the character (deterministic per run, so daily seeds
+  // stay reproducible). Classic card-pick minigames are unaffected.
+  const interactiveServed = c.counters["interactive_games_served"] ?? 0
+  const interactiveBudget = GAME_CONFIG.maxInteractiveMinigamesPerRun - interactiveServed
+  const lastInteractiveTurn = c.counters["last_interactive_turn"] ?? Number.NEGATIVE_INFINITY
+  const interactiveReady =
+    c.turn - lastInteractiveTurn >= GAME_CONFIG.interactiveMinigameCooldownTurns
   for (const ev of candidates) {
     if (ev.type === "destiny") continue
     // Season-end capstones are served by buildServedEvent on the turn before
     // the season boundary — never through the normal random rotation.
     if (ev.isCapstone) continue
     // Never serve a card set the player cannot act on: skip events whose
-    // choices are all stat-locked for this character.
-    if (isEligible(ev, c) && hasPlayableChoice(ev, c)) pool.push(ev)
+    // choices are all stat-locked for this character. Interactive minigames
+    // have no choices at all — they resolve move-by-move, so they are always
+    // playable when eligible (subject to the per-run cap + cooldown above).
+    if (isEligible(ev, c)) {
+      if (ev.resolution?.type === "interactive") {
+        if (interactiveBudget <= 0 || !interactiveReady) continue
+        pool.push(ev)
+      } else if (hasPlayableChoice(ev, c)) {
+        pool.push(ev)
+      }
+    }
   }
   // Avoid serving the exact same event twice in a row.
   const noRepeat = pool.filter((ev) => ev.id !== c.lastEventId)
@@ -378,6 +396,11 @@ export function selectEvent(c: CharacterState, registry: ContentRegistry, rng: R
   }
   const picked = rng.weighted(finalPool, (ev) => effectiveWeight(ev, c))
   c.lastEventId = picked.id
+  // Track interactive minigame servings so the per-run cap + cooldown hold.
+  if (picked.resolution?.type === "interactive") {
+    bumpCounter(c, "interactive_games_served")
+    c.counters["last_interactive_turn"] = c.turn
+  }
   return picked
 }
 
@@ -1397,10 +1420,13 @@ export function resolveMinigame(
   const res = event.resolution
   const outcomes = event.outcomes
   if (!res || !outcomes) throw new Error(`minigame ${event.id} malformed`)
+  // Interactive minigames are multi-move and resolve through
+  // /api/game/minigame-move, never through the single card-pick roll.
+  if (res.type === "interactive") {
+    throw new Error(`interactive minigame ${event.id} must use minigame-move`)
+  }
   const card = (event.cards ?? []).find((k) => k.id === cardId)
   if (!card) throw new Error(`unknown card ${cardId}`)
-
-  c.turn += 1
 
   // Urn mechanic: picking a trapped card forces the fail tier before the
   // hidden variable is even consulted — risk made visible, outcome hidden.
@@ -1461,6 +1487,18 @@ export function resolveMinigame(
     else tier = "fail"
   }
 
+  return applyMinigameOutcome(c, event, tier, registry, rng)
+}
+
+export function applyMinigameOutcome(
+  c: CharacterState,
+  event: EventContent,
+  tier: OutcomeTier,
+  registry: ContentRegistry,
+  rng: Rng,
+): ResolveOutput {
+  c.turn += 1
+  const outcomes = event.outcomes!
   const outcome: MinigameOutcome = outcomes[tier]
   const net = applyStatDeltas(c, outcome.statDeltas)
   if (outcome.goldDelta) c.gold += outcome.goldDelta

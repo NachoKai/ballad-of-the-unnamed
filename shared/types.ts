@@ -21,6 +21,61 @@ export type StatKey = (typeof STAT_KEYS)[number]
 
 export type StatDeltas = Partial<Record<StatKey, number>>
 
+// ---- Interactive minigames (multi-move, server-authoritative) ----
+
+export type InteractiveGameKind = "tictactoe" | "rps"
+
+// The five hand-signs of the goblin's game. Internal keys are language-neutral;
+// the client localizes them (e.g. rock → Piedra, paper → Pergamino, scissors →
+// Daga, lizard → Salamandra, spock → Mago). Rules are the classic 5-signal
+// version (rock-paper-scissors-lizard-spock).
+export type RpsChoice = "rock" | "paper" | "scissors" | "lizard" | "spock"
+export type RpsRoundResult = "win" | "loss" | "tie"
+
+export type TicTacToeMark = "X" | "O"
+export type TicTacToeCell = TicTacToeMark | null
+
+// Server-persisted in-progress state (stored in character.pendingMinigame).
+// Language-neutral on purpose — localize at serve time, never persist prose.
+export interface PendingMinigameState {
+  eventId: string
+  game: InteractiveGameKind
+  // tictactoe:
+  board?: TicTacToeCell[]
+  marksPlaced?: number
+  // rps:
+  bestOf?: number
+  playerWins?: number
+  rivalWins?: number
+  rivalLastChoice?: RpsChoice | null
+  playerLastChoice?: RpsChoice | null
+}
+
+// Client-facing serialized view of a game in progress.
+export type ServedInteractiveState =
+  | {
+      game: "tictactoe"
+      board: TicTacToeCell[]
+      playerMark: TicTacToeMark
+      rivalMark: TicTacToeMark
+      over: boolean
+      result: "playing" | "player_win" | "rival_win" | "draw"
+    }
+  | {
+      game: "rps"
+      bestOf: number
+      playerWins: number
+      rivalWins: number
+      round: number
+      lastRound: { player: RpsChoice; rival: RpsChoice; result: RpsRoundResult } | null
+      over: boolean
+      result: "playing" | "player_win" | "rival_win"
+    }
+
+// A single move the client sends to /api/game/minigame-move.
+export type InteractiveMove =
+  { kind: "tictactoe"; cell: number } | { kind: "rps"; choice: RpsChoice }
+
 export const PERSONALITY_TAGS = [
   "Humble",
   "Cocky",
@@ -222,7 +277,7 @@ export interface MinigameOutcome {
 }
 
 export type MinigameSubtype =
-  "weighted_hidden_match" | "timing_bar" | "grid_gamble" | "memory_match"
+  "weighted_hidden_match" | "timing_bar" | "grid_gamble" | "memory_match" | "interactive"
 
 export interface MinigameResolution {
   type: MinigameSubtype
@@ -234,6 +289,10 @@ export interface MinigameResolution {
   // memory_match: statThreshold grants bonus lives.
   statThreshold?: number
   bonusLives?: number
+  // interactive minigames (type: "interactive"):
+  game?: InteractiveGameKind
+  bestOf?: number // rps: target round wins to take the match (default 3)
+  rivalSkill?: number // 0..1 rival competence; higher player primaryStat lowers it
 }
 
 export interface EventContent {
@@ -277,6 +336,8 @@ export interface EventContent {
   resolution?: MinigameResolution
   outcomes?: Record<OutcomeTier, MinigameOutcome>
   primaryStat?: StatKey
+  // interactive minigame: the opponent's name shown in the game frame.
+  opponent?: LocaleMap
 }
 
 export interface ClassContent {
@@ -435,6 +496,8 @@ export interface CharacterState {
   // season-end capstone result, set when the capstone minigame resolves and
   // consumed by the following season summary. Cleared when the summary resolves.
   pendingCapstoneResult?: CapstoneResult | null
+  // in-progress interactive minigame state, persisted across moves/reloads.
+  pendingMinigame?: PendingMinigameState | null
 }
 
 export interface ReputationState {
@@ -495,6 +558,13 @@ export interface ServedEvent {
   // Gold paid to the character this season by their faction (season summary).
   stipendEarned?: number
   flagLabel?: string
+  // Interactive minigame: a multi-move game frame instead of a card grid.
+  // When present, `choices` is empty and the client renders a game component.
+  interactive?: {
+    game: InteractiveGameKind
+    opponentName: string
+    view: ServedInteractiveState
+  }
 }
 
 export interface ServedClanOffer {

@@ -5,13 +5,14 @@ import type {
   CharacterState,
   EndingType,
   Gender,
+  InteractiveMove,
   Locale,
   Origin,
   RichEpilogueData,
   RunType,
   ServedEvent,
 } from "@shared/types"
-import { type AchievementView, api } from "./api"
+import { type AchievementView, api, type MinigameMoveResponse } from "./api"
 import { makeT, t } from "./i18n/strings"
 import { t as resolveLocaleMap } from "@shared/i18n"
 import { CreationScreen } from "./components/CreationScreen"
@@ -51,6 +52,10 @@ export default function App() {
   const [ending, setEnding] = useState<EndingData | null>(null)
   const [shopOpen, setShopOpen] = useState(false)
   const [canBuy, setCanBuy] = useState(false)
+  // Result of the final move of an interactive minigame (banner + next event).
+  const [pendingMinigameResult, setPendingMinigameResult] = useState<MinigameMoveResponse | null>(
+    null,
+  )
   const [resuming, setResuming] = useState(() => localStorage.getItem(RUN_KEY) !== null)
   const [runId, setRunId] = useState<string | null>(() => localStorage.getItem(RUN_KEY))
   const [lastAchievements, setLastAchievements] = useState<AchievementView[]>(() => {
@@ -223,6 +228,74 @@ export default function App() {
     if (res.event) setEvent(res.event)
   }
 
+  // One move of an interactive minigame. The final move resolves the outcome;
+  // its payload is stashed so the game frame can show the result banner, and
+  // applied when the player clicks Continue (onMinigameFinished).
+  async function minigameMove(move: InteractiveMove): Promise<MinigameMoveResponse> {
+    const currentRunId = runId
+    if (!currentRunId) return { status: "playing" } as MinigameMoveResponse
+    try {
+      const res = await api.minigameMove({ runId: currentRunId, move })
+      if (res.status === "finished") {
+        setPendingMinigameResult(res)
+      }
+      return res
+    } catch {
+      // Mirror /choose recovery: transient error or the run is gone.
+      try {
+        const state = await api.state(currentRunId)
+        if (state.finished || !state.event) throw new Error("run finished or gone")
+        setTurnNarrative("The fates hesitate... try again.")
+        return { status: "playing" } as MinigameMoveResponse
+      } catch {
+        localStorage.removeItem(RUN_KEY)
+        setRunId(null)
+        setCharacter(null)
+        setEvent(null)
+        setScreen("creation")
+        return { status: "playing" } as MinigameMoveResponse
+      }
+    }
+  }
+
+  // Apply the finished minigame payload: fresh character, toasts, and either
+  // the next event or the ending — mirroring the /choose handler.
+  function applyMinigameResult(res: MinigameMoveResponse) {
+    setPendingMinigameResult(null)
+    if (!res.character) return
+    setCharacter(res.character)
+    pushToasts(res.newAchievements ?? [])
+
+    if (res.ended && res.endingType) {
+      localStorage.removeItem(RUN_KEY)
+      const fresh = (res.newAchievements ?? []).map((a) => ({
+        id: a.id,
+        icon: a.icon,
+        rarity: a.rarity,
+        hidden: false,
+        name: resolveLocaleMap(a.name, locale),
+        description: resolveLocaleMap(a.description, locale),
+      }))
+      const merged = new Map<string, AchievementView>()
+      for (const a of lastAchievements) merged.set(a.id, a)
+      for (const a of fresh) merged.set(a.id, a)
+      const all = [...merged.values()]
+      localStorage.setItem(ACH_KEY, JSON.stringify(all))
+      setLastAchievements(all)
+      setEnding({
+        endingType: res.endingType,
+        epilogue: res.epilogue ?? "",
+        score: res.score ?? 0,
+        achievements: res.newAchievements ?? [],
+        richEpilogueData: res.richEpilogueData,
+      })
+      setScreen("ending")
+      return
+    }
+    setTurnNarrative(res.narrative ?? null)
+    if (res.event) setEvent(res.event)
+  }
+
   function abandonRun() {
     localStorage.removeItem(RUN_KEY)
     setRunId(null)
@@ -298,6 +371,11 @@ export default function App() {
             narrative={null}
             turnNarrative={turnNarrative}
             onChoose={choose}
+            onMinigameMove={minigameMove}
+            onMinigameFinished={() => {
+              if (pendingMinigameResult) applyMinigameResult(pendingMinigameResult)
+            }}
+            minigameFinishedResult={pendingMinigameResult}
             onAbandon={abandonRun}
             onShopOpen={() => setShopOpen(true)}
             canBuy={canBuy}

@@ -5,12 +5,19 @@ import { computeScore, GAME_CONFIG } from "../../shared/config.js"
 import { genderize } from "../../shared/genderize.js"
 import { loadContent } from "../content/registry.js"
 import {
+  applyMinigameOutcome,
   buildServedEvent,
   createCharacter,
   generateRival,
   resolveChoice,
   resolveMinigame,
+  type ResolveOutput,
 } from "../engine/engine.js"
+import {
+  applyInteractiveMove,
+  interactiveTier,
+  interactiveView,
+} from "../engine/minigames/index.js"
 import { evaluateAchievements } from "../engine/achievements.js"
 import {
   generateEpilogue,
@@ -37,9 +44,9 @@ import type {
   AchievementContent,
   ArchetypeContent,
   Gender,
+  InteractiveMove,
   Locale,
   RunType,
-  TurnResult,
 } from "../../shared/types.js"
 
 export const gameRouter = Router()
@@ -306,6 +313,98 @@ gameRouter.post("/buy", async (req: Request, res: Response) => {
   }
 })
 
+// Shared tail for /choose and the finished branch of /minigame-move: applies
+// quest/achievement bookkeeping, then either finalizes the ending or serves
+// the next event. Returns the exact response payload for both routes.
+async function finishResolvedTurn(
+  run: RunRecord,
+  outcome: ResolveOutput,
+  rng: Rng,
+): Promise<Record<string, unknown>> {
+  const c = run.character
+  const locale = run.locale
+  if (outcome.completedQuest) {
+    c.counters["quests_completed"] = (c.counters["quests_completed"] ?? 0) + 1
+  }
+  const newAchievements = evaluateAchievements(c, registry, { endingType: outcome.endingType })
+
+  if (outcome.ended && outcome.endingType) {
+    const score = computeScore({
+      achievementsCount: c.achievements.length,
+      battlesWon: c.counters["battles_won"] ?? 0,
+      questsCompleted: c.counters["quests_completed"] ?? 0,
+      ageAtEnd: c.age,
+      finalPowerLevel: c.powerLevel,
+      reputationPeak: peakReputation(c),
+      netWorth: c.gold,
+      endingType: outcome.endingType,
+      legacyScore: computeLegacyScore(c),
+    })
+    const epilogue = generateEpilogue(c, outcome.endingType, registry, locale)
+    const epithetData = generateEpithet(c, registry, locale)
+    const richEpilogueData = generateRichEpilogueData(
+      c,
+      outcome.endingType,
+      score,
+      registry,
+      locale,
+    )
+    c.epithet = epithetData.title
+    const finalAch = evaluateAchievements(c, registry, {
+      endingType: outcome.endingType,
+      scoreSoFar: score,
+      runEnded: true,
+    })
+    newAchievements.push(...finalAch)
+    run.finished = true
+    run.pendingEvent = null
+    run.rngState = rng.getState()
+    await saveRun(run)
+    await persistCharacterSnapshot(run)
+    await insertLeaderboardEntry({
+      runId: run.id,
+      name: c.name,
+      characterClass: c.class,
+      finalPowerLevel: c.powerLevel,
+      netWorth: c.gold,
+      achievementsCount: c.achievements.length,
+      battlesWon: c.counters["battles_won"] ?? 0,
+      questsCompleted: c.counters["quests_completed"] ?? 0,
+      ageAtEnd: c.age,
+      reputationPeak: peakReputation(c),
+      endingType: outcome.endingType,
+      score,
+      legacyScore: computeLegacyScore(c),
+      epithet: epithetData.title,
+      epilogue,
+      runType: run.runType,
+      seed: run.seed,
+    })
+    return {
+      character: c,
+      narrative: outcome.narrative,
+      newAchievements,
+      ended: true,
+      endingType: outcome.endingType,
+      epilogue,
+      richEpilogueData,
+      score,
+    }
+  }
+
+  const { event, served } = buildServedEvent(c, registry, rng)
+  run.pendingEvent = event
+  run.rngState = rng.getState()
+  await saveRun(run)
+  return {
+    character: c,
+    narrative: outcome.narrative,
+    newAchievements,
+    ended: false,
+    event: served,
+  }
+}
+
 // POST /api/game/choose  { runId, choiceId, cardId }
 gameRouter.post("/choose", async (req: Request, res: Response) => {
   try {
@@ -314,114 +413,20 @@ gameRouter.post("/choose", async (req: Request, res: Response) => {
     if (run.finished) return res.status(409).json({ error: "run_finished" })
     if (!run.pendingEvent) return res.status(409).json({ error: "no_pending_event" })
 
-    const locale = run.locale
     const event = run.pendingEvent
     const rng = new Rng(run.rngState)
     const isMinigame = event.type === "minigame" || Boolean(event.cards)
+
+    // Interactive minigames are multi-move and resolve through /minigame-move,
+    // never through a single card-pick — reject stray /choose calls.
+    const isInteractive = event.resolution?.type === "interactive"
+    if (isInteractive) return res.status(400).json({ error: "interactive_minigame" })
 
     const outcome = isMinigame
       ? resolveMinigame(run.character, event, String(req.body?.cardId ?? ""), registry, rng)
       : resolveChoice(run.character, event, String(req.body?.choiceId ?? ""), registry, rng)
 
-    // Track quests for scoring.
-    if (outcome.completedQuest) {
-      run.character.counters["quests_completed"] =
-        (run.character.counters["quests_completed"] ?? 0) + 1
-    }
-
-    // Evaluate achievements (mid-run conditions).
-    const newAchievements = evaluateAchievements(run.character, registry, {
-      endingType: outcome.endingType,
-    })
-
-    let result: TurnResult
-
-    if (outcome.ended && outcome.endingType) {
-      const c = run.character
-      const score = computeScore({
-        achievementsCount: c.achievements.length,
-        battlesWon: c.counters["battles_won"] ?? 0,
-        questsCompleted: c.counters["quests_completed"] ?? 0,
-        ageAtEnd: c.age,
-        finalPowerLevel: c.powerLevel,
-        reputationPeak: peakReputation(c),
-        netWorth: c.gold,
-        endingType: outcome.endingType,
-        legacyScore: computeLegacyScore(c),
-      })
-      const epilogue = generateEpilogue(c, outcome.endingType, registry, locale)
-      const epithetData = generateEpithet(c, registry, locale)
-      const richEpilogueData = generateRichEpilogueData(
-        c,
-        outcome.endingType,
-        score,
-        registry,
-        locale,
-      )
-
-      c.epithet = epithetData.title
-
-      // Final achievement pass now that score is known. runEnded gates
-      // end-of-life achievements (e.g. A Clean Conscience).
-      const finalAch = evaluateAchievements(run.character, registry, {
-        endingType: outcome.endingType,
-        scoreSoFar: score,
-        runEnded: true,
-      })
-      newAchievements.push(...finalAch)
-
-      run.finished = true
-      run.pendingEvent = null
-      run.rngState = rng.getState()
-      await saveRun(run)
-
-      await persistCharacterSnapshot(run)
-
-      await insertLeaderboardEntry({
-        runId: run.id,
-        name: c.name,
-        characterClass: c.class,
-        finalPowerLevel: c.powerLevel,
-        netWorth: c.gold,
-        achievementsCount: c.achievements.length,
-        battlesWon: c.counters["battles_won"] ?? 0,
-        questsCompleted: c.counters["quests_completed"] ?? 0,
-        ageAtEnd: c.age,
-        reputationPeak: peakReputation(c),
-        endingType: outcome.endingType,
-        score,
-        legacyScore: computeLegacyScore(c),
-        epithet: epithetData.title,
-        epilogue,
-        runType: run.runType,
-        seed: run.seed,
-      })
-
-      result = {
-        character: c,
-        narrative: outcome.narrative,
-        newAchievements,
-        ended: true,
-        endingType: outcome.endingType,
-        epilogue,
-        richEpilogueData,
-      }
-      return res.json({ ...result, score })
-    }
-
-    // Not ended: pick the next event.
-    const { event: nextEvent, served } = buildServedEvent(run.character, registry, rng)
-    run.pendingEvent = nextEvent
-    run.rngState = rng.getState()
-    await saveRun(run)
-
-    result = {
-      character: run.character,
-      narrative: outcome.narrative,
-      newAchievements,
-      ended: false,
-    }
-    return res.json({ ...result, event: served })
+    return res.json(await finishResolvedTurn(run, outcome, rng))
   } catch (err) {
     const msg = (err as Error).message
     console.log("[v0] /choose error", msg)
@@ -431,6 +436,78 @@ gameRouter.post("/choose", async (req: Request, res: Response) => {
       msg.startsWith("locked choice")
     ) {
       return res.status(400).json({ error: "invalid_choice" })
+    }
+    return res.status(500).json({ error: "server_error", detail: msg })
+  }
+})
+
+// POST /api/game/minigame-move  { runId, move } — one move of an interactive
+// minigame. Persists the game state after every move; the final move resolves
+// the outcome through the standard outcome pipeline and serves the next event.
+gameRouter.post("/minigame-move", async (req: Request, res: Response) => {
+  try {
+    const run = await loadOwnedRun(req)
+    if (!run) return res.status(404).json({ error: "not_found" })
+    if (run.finished) return res.status(409).json({ error: "run_finished" })
+    const ev = run.pendingEvent
+    const c = run.character
+    if (!ev || ev.resolution?.type !== "interactive" || !c.pendingMinigame) {
+      return res.status(400).json({ error: "no_interactive_minigame" })
+    }
+    if (c.pendingMinigame.eventId !== ev.id) {
+      return res.status(400).json({ error: "interactive_mismatch" })
+    }
+
+    const move = req.body?.move as InteractiveMove
+    if (!move || typeof move !== "object") {
+      return res.status(400).json({ error: "invalid_move" })
+    }
+
+    const rng = new Rng(run.rngState)
+    const primaryStat = c[ev.primaryStat ?? "intelligence"] as number
+
+    const state = c.pendingMinigame
+    const before = interactiveView(state)
+    // Reject moves after the match is already over: applyInteractiveMove has no
+    // guard against post-over moves (rps keeps counting wins, ttt throws on a
+    // full board), so the current view's over flag is the authoritative gate.
+    if (before.over) {
+      return res.status(400).json({ error: "match_already_finished" })
+    }
+    const { over } = applyInteractiveMove(state, move, primaryStat, rng)
+
+    if (!over) {
+      run.rngState = rng.getState()
+      await saveRun(run)
+      return res.json({
+        status: "playing",
+        minigame: {
+          game: state.game,
+          view: interactiveView(state),
+        },
+        feedback: null,
+      })
+    }
+
+    // Game over: resolve the tier and clear the pending game. The final view
+    // rides along so the client can render the completed board under the
+    // result banner (the last move's state is never sent as a "playing" frame).
+    const tier = interactiveTier(state)
+    const finalView = interactiveView(state)
+    c.pendingMinigame = null
+    run.character = c
+    const outcome = applyMinigameOutcome(c, ev, tier, registry, rng)
+    const payload = await finishResolvedTurn(run, outcome, rng)
+    return res.json({
+      status: "finished",
+      minigame: { game: state.game, view: finalView },
+      ...payload,
+    })
+  } catch (err) {
+    const msg = (err as Error).message
+    console.log("[v0] /minigame-move error", msg)
+    if (msg.startsWith("invalid tictactoe cell") || msg.startsWith("invalid move for")) {
+      return res.status(400).json({ error: "invalid_move" })
     }
     return res.status(500).json({ error: "server_error", detail: msg })
   }

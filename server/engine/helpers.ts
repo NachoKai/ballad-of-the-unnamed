@@ -22,6 +22,7 @@ import {
 } from "../../shared/config.js"
 import { fmtInt } from "../../shared/format.js"
 import { genderize } from "../../shared/genderize.js"
+import { interactiveOpponentName, prepareInteractiveServe } from "./minigames/index.js"
 
 // Fill {slot:pool} placeholders in a narrative string deterministically.
 // The same rng sequence + same seed => identical filled text for daily mode.
@@ -364,6 +365,25 @@ export function serveEvent(
   isRetirementOffer: boolean,
 ): ServedEvent {
   const narrative = fillSlots(localize(ev.narrative, locale), locale, registry, rng, c)
+  const flagLabel = ev.flagLabel ? localize(ev.flagLabel, locale) : undefined
+
+  // Interactive minigames are multi-move games (tictactoe / rps) served as a
+  // game frame instead of a card grid. The initial view is Rng-free and the
+  // persisted state is initialized here once per event.
+  const isInteractive = ev.resolution?.type === "interactive"
+  if (isInteractive) {
+    const view = prepareInteractiveServe(ev, c, locale)
+    const opponentName = interactiveOpponentName(ev, c, locale)
+    return {
+      eventId: ev.id,
+      narrative,
+      choices: [],
+      isRetirementOffer,
+      flagLabel,
+      hasTraps: false,
+      interactive: { game: ev.resolution!.game ?? "tictactoe", opponentName, view },
+    }
+  }
 
   // Minigames present their cards as choices; regular events present choices.
   const isMinigame = ev.type === "minigame" || Boolean(ev.cards)
@@ -404,7 +424,6 @@ export function serveEvent(
     // Sort so rarer, more interesting choices read last (feels like a reveal).
     choices.sort((a, b) => rarityRank(a.rarity) - rarityRank(b.rarity))
   }
-  const flagLabel = ev.flagLabel ? localize(ev.flagLabel, locale) : undefined
   // Urn mechanic: hint that a trap lurks among the cards (never which one).
   const hasTraps = isMinigame && ev.cards ? ev.cards.some((k) => k.trap) : false
   return { eventId: ev.id, narrative, choices, isRetirementOffer, flagLabel, hasTraps }

@@ -3,6 +3,7 @@ import { Rng, hashSeed } from "../../shared/rng.js"
 import { computeScore, GAME_CONFIG, arcForAge, RIVAL_FOCUSES } from "../../shared/config.js"
 import {
   advanceRival,
+  applyMinigameOutcome,
   buildServedEvent,
   createCharacter,
   generateClanOffer,
@@ -21,6 +22,11 @@ import {
 } from "./engine.js"
 import { generateDistinctions, generateEpilogue, generateEpithet } from "./epilogue.js"
 import { evaluateAchievements } from "./achievements.js"
+import {
+  applyInteractiveMove,
+  createInteractiveState,
+  interactiveTier,
+} from "./minigames/index.js"
 import { loadContent } from "../content/registry.js"
 import {
   adjustAffinity,
@@ -37,7 +43,12 @@ import {
   serveEvent,
   updateMomentum,
 } from "./helpers.js"
-import type { AchievementContent, CharacterState, EventContent } from "../../shared/types.js"
+import type {
+  AchievementContent,
+  CharacterState,
+  EventContent,
+  InteractiveMove,
+} from "../../shared/types.js"
 import type { ContentRegistry } from "../content/registry.js"
 
 const reg = loadContent()
@@ -608,6 +619,68 @@ describe("resolveMinigame", () => {
     const out = resolveMinigame(c, event, "strike", reg, rng)
     expect(out.narrative).toBeTruthy()
     expect(typeof out.ended).toBe("boolean")
+  })
+
+  it("applyMinigameOutcome applies deltas for a forced tier", () => {
+    const c = createCharacter({
+      id: "mg-fx",
+      name: "Tier",
+      classId: "warrior",
+      origin: "humble",
+      locale: "en",
+      registry: reg,
+    })
+    const event: EventContent = {
+      id: "forced_tier_test",
+      minAge: 0,
+      maxAge: 99,
+      weight: 1,
+      narrative: { en: "n", es: "n" },
+      outcomes: {
+        critical: { goldDelta: 500, narrative: { en: "crit", es: "crit" } },
+        success: { goldDelta: 100, narrative: { en: "ok", es: "ok" } },
+        partial: { narrative: { en: "p", es: "p" } },
+        fail: { goldDelta: -50, narrative: { en: "f", es: "f" } },
+      },
+    }
+    const out = applyMinigameOutcome(c, event, "critical", reg, new Rng(1))
+    expect(c.gold).toBe(560)
+    expect(out.narrative).toBe("crit")
+    expect(c.turn).toBe(1)
+    expect(c.counters.event_forced_tier_test).toBe(1)
+  })
+
+  it("interactive minigames never resolve through the hidden roll", () => {
+    const c = createCharacter({
+      id: "mg-int",
+      name: "Inter",
+      classId: "warrior",
+      origin: "humble",
+      locale: "en",
+      registry: reg,
+    })
+    const event: EventContent = {
+      id: "interactive_blocked",
+      minAge: 0,
+      maxAge: 99,
+      weight: 1,
+      primaryStat: "intelligence",
+      narrative: { en: "n", es: "n" },
+      cards: [{ id: "rock", icon: "sword", label: { en: "Rock", es: "Roca" } }],
+      resolution: {
+        type: "interactive",
+        game: "rps",
+        baseWinChance: 0.5,
+        statInfluence: {},
+      },
+      outcomes: {
+        critical: { narrative: { en: "c", es: "c" } },
+        success: { narrative: { en: "s", es: "s" } },
+        partial: { narrative: { en: "p", es: "p" } },
+        fail: { narrative: { en: "f", es: "f" } },
+      },
+    }
+    expect(() => resolveMinigame(c, event, "rock", reg, new Rng(1))).toThrow()
   })
 })
 
@@ -1851,7 +1924,11 @@ describe("hasPlayableChoice", () => {
     })
     for (let seed = 1; seed <= 80; seed++) {
       const picked = selectEvent(weak, reg, new Rng(seed))
-      expect(hasPlayableChoice(picked, weak)).toBe(true)
+      // Interactive minigames carry no choices but are always playable through
+      // the move loop — selectEvent treats them as playable when eligible.
+      const playable =
+        picked.resolution?.type === "interactive" || hasPlayableChoice(picked, weak)
+      expect(playable).toBe(true)
     }
   })
 })
@@ -2755,6 +2832,30 @@ describe("relationship achievements", () => {
 function playTurn(c: CharacterState, rng: Rng, pick?: (ids: string[]) => string): boolean {
   const { event, served } = buildServedEvent(c, reg, rng)
   const isMinigame = event.type === "minigame" || Boolean(event.cards)
+
+  // Interactive minigames resolve move-by-move through the minigame engine
+  // (never the card-pick roll). Drive the match to completion exactly like
+  // POST /api/game/minigame-move does, then apply the outcome tier.
+  if (event.resolution?.type === "interactive") {
+    if (!c.pendingMinigame) c.pendingMinigame = createInteractiveState(event)
+    const state = c.pendingMinigame
+    const primaryStat = c[event.primaryStat ?? "intelligence"] as number
+    let over = false
+    while (!over) {
+      const move: InteractiveMove =
+        state.game === "tictactoe"
+          ? { kind: "tictactoe", cell: (state.board ?? []).findIndex((x) => x === null) }
+          : { kind: "rps", choice: "rock" }
+      over = applyInteractiveMove(state, move, primaryStat, rng).over
+    }
+    c.pendingMinigame = null
+    const outcome = applyMinigameOutcome(c, event, interactiveTier(state), reg, rng)
+    if (outcome.completedQuest) {
+      c.counters["quests_completed"] = (c.counters["quests_completed"] ?? 0) + 1
+    }
+    return outcome.ended
+  }
+
   // A simulated player can't pick a stat-locked choice — filter them out.
   const ids = served.choices.filter((ch) => ch.statMet !== false).map((ch) => ch.id)
   const id = pick ? pick(ids) : ids[0]
@@ -3224,5 +3325,175 @@ describe(" daily-seed determinism", () => {
     }
     expect(hit).toBe(false)
     expect(c.turn).toBeGreaterThan(0)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Interactive minigames: serve interactive frames + event selection
+// ---------------------------------------------------------------------------
+describe("interactive minigame serving", () => {
+  it("serveEvent attaches an interactive frame and initializes pendingMinigame", () => {
+    const c = createCharacter({
+      id: "sv-int",
+      name: "Serve",
+      classId: "warrior",
+      origin: "humble",
+      locale: "en",
+      registry: reg,
+    })
+    const ev: EventContent = {
+      id: "interactive_serve",
+      type: "minigame",
+      subtype: "interactive",
+      minAge: 0,
+      maxAge: 99,
+      weight: 1,
+      primaryStat: "intelligence",
+      opponent: { en: "Grimble", es: "Grimble" },
+      narrative: { en: "n", es: "n" },
+      resolution: {
+        type: "interactive",
+        game: "rps",
+        bestOf: 3,
+        baseWinChance: 0.5,
+        statInfluence: { intelligence: 0.01 },
+      },
+      outcomes: {
+        critical: { narrative: { en: "c", es: "c" } },
+        success: { narrative: { en: "s", es: "s" } },
+        partial: { narrative: { en: "p", es: "p" } },
+        fail: { narrative: { en: "f", es: "f" } },
+      },
+    }
+    const rng = new Rng(1)
+    const served = serveEvent(ev, c, "en", reg, rng, false)
+    expect(served.interactive).toBeDefined()
+    expect(served.interactive!.game).toBe("rps")
+    expect(served.interactive!.opponentName).toBe("Grimble")
+    expect(served.interactive!.view.result).toBe("playing")
+    expect(served.choices).toEqual([])
+    expect(c.pendingMinigame).toBeDefined()
+    expect(c.pendingMinigame!.eventId).toBe("interactive_serve")
+  })
+
+  it("selectEvent can pick an interactive minigame without cards", () => {
+    // The real content does not ship an interactive minigame yet (Task 8
+    // authors goblin_games.json), so drive selection through a mini-registry
+    // whose minigame pool is exactly one cardless interactive event.
+    const interactiveEv: EventContent = {
+      id: "interactive_select",
+      type: "minigame",
+      subtype: "interactive",
+      minAge: 0,
+      maxAge: 99,
+      weight: 1,
+      primaryStat: "intelligence",
+      narrative: { en: "n", es: "n" },
+      resolution: {
+        type: "interactive",
+        game: "tictactoe",
+        baseWinChance: 0.5,
+        statInfluence: {},
+      },
+      outcomes: {
+        critical: { narrative: { en: "c", es: "c" } },
+        success: { narrative: { en: "s", es: "s" } },
+        partial: { narrative: { en: "p", es: "p" } },
+        fail: { narrative: { en: "f", es: "f" } },
+      },
+    }
+    const plainEv: EventContent = {
+      id: "plain_select",
+      minAge: 0,
+      maxAge: 99,
+      weight: 1,
+      narrative: { en: "n", es: "n" },
+      choices: [
+        { id: "ok", rarity: "common", label: { en: "", es: "" }, narrative: { en: "", es: "" } },
+      ],
+    }
+    const miniReg = {
+      ...reg,
+      minigames: [interactiveEv],
+      events: [plainEv],
+    } as unknown as ContentRegistry
+    const c = createCharacter({
+      id: "sel-int",
+      name: "Sel",
+      classId: "warrior",
+      origin: "humble",
+      locale: "en",
+      registry: reg,
+    })
+    // wantMinigame fires for some seed; when it does, the interactive minigame
+    // (no cards, no choices) must be pushed into the pool and pickable.
+    let found = false
+    for (let seed = 1; seed <= 60; seed++) {
+      const picked = selectEvent(c, miniReg, new Rng(seed))
+      if (picked.id === interactiveEv.id) {
+        found = true
+        break
+      }
+    }
+    expect(found).toBe(true)
+  })
+
+  it("caps interactive minigames per run and spaces them out", () => {
+    // With the real registry, classic card-pick minigames never enter the random
+    // pool (they have cards, not choices — hasPlayableChoice returns false), so
+    // every wantMinigame turn would otherwise serve an interactive game. The
+    // per-run cap + cooldown must throttle them: at most
+    // maxInteractiveMinigamesPerRun per run, at least
+    // interactiveMinigameCooldownTurns apart.
+    const c = makeChar()
+    const servedTurns: number[] = []
+    for (let seed = 1; seed <= 300; seed++) {
+      // Simulate a resolved turn before the next selection.
+      c.turn += 1
+      const picked = selectEvent(c, reg, new Rng(seed))
+      if (picked.resolution?.type === "interactive") {
+        servedTurns.push(c.turn)
+      }
+    }
+    expect(servedTurns.length).toBeLessThanOrEqual(GAME_CONFIG.maxInteractiveMinigamesPerRun)
+    for (let i = 1; i < servedTurns.length; i++) {
+      expect(servedTurns[i] - servedTurns[i - 1]).toBeGreaterThanOrEqual(
+        GAME_CONFIG.interactiveMinigameCooldownTurns,
+      )
+    }
+  })
+
+  it("selectEvent stops serving interactive minigames once the cap is reached", () => {
+    // Pre-seed the run's counter at the cap: no seed may serve an interactive
+    // game again, even though the real registry would otherwise pick one on
+    // every minigame turn.
+    const c = makeChar({
+      counters: { interactive_games_served: GAME_CONFIG.maxInteractiveMinigamesPerRun },
+    })
+    for (let seed = 1; seed <= 120; seed++) {
+      const picked = selectEvent(c, reg, new Rng(seed))
+      expect(picked.resolution?.type).not.toBe("interactive")
+    }
+  })
+
+  it("selectEvent honors the interactive minigame cooldown", () => {
+    // Last interactive game was served at turn 0; at turn 10 the cooldown
+    // (interactiveMinigameCooldownTurns) has not elapsed, so no seed may serve
+    // an interactive game.
+    const soon = makeChar({ turn: 10, counters: { last_interactive_turn: 0 } })
+    for (let seed = 1; seed <= 120; seed++) {
+      const picked = selectEvent(soon, reg, new Rng(seed))
+      expect(picked.resolution?.type).not.toBe("interactive")
+    }
+    // Once the cooldown has elapsed, interactive games become available again.
+    const later = makeChar({ turn: 30, counters: { last_interactive_turn: 0 } })
+    let found = false
+    for (let seed = 1; seed <= 120; seed++) {
+      if (selectEvent(later, reg, new Rng(seed)).resolution?.type === "interactive") {
+        found = true
+        break
+      }
+    }
+    expect(found).toBe(true)
   })
 })

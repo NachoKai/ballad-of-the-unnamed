@@ -21,7 +21,7 @@ vi.mock("../store/runStore.js", () => ({
 import { gameRouter } from "./game.js"
 import { createCharacter } from "../engine/engine.js"
 import { loadContent } from "../content/registry.js"
-import type { CharacterState } from "../../shared/types.js"
+import type { CharacterState, EventContent } from "../../shared/types.js"
 
 const reg = loadContent()
 
@@ -82,6 +82,85 @@ async function postBuy(run: CharacterState, itemId: string) {
   return jsonPromise
 }
 
+// Drive POST /choose with a synthetic pending event on the run.
+async function postChoose(run: CharacterState, pendingEvent: EventContent, cardId: string) {
+  let statusCode = 200
+  let resolveJson!: (v: { statusCode: number; body: unknown }) => void
+  const res = {
+    status(code: number) {
+      statusCode = code
+      return this
+    },
+    json(body: unknown) {
+      resolveJson({ statusCode, body })
+      return this
+    },
+  } as unknown as Response
+  store.getRun.mockResolvedValue({
+    id: run.id,
+    runType: "standard",
+    seed: "s",
+    rngState: 1,
+    locale: "en",
+    character: run,
+    pendingEvent,
+    finished: false,
+  })
+  store.saveRun.mockResolvedValue(undefined)
+
+  const jsonPromise = new Promise<{ statusCode: number; body: unknown }>((r) => {
+    resolveJson = r
+  })
+  const req = {
+    method: "POST",
+    url: "/choose",
+    body: { runId: run.id, cardId },
+    query: {},
+  } as unknown as Request
+  gameRouter(req, res, () => {})
+  return jsonPromise
+}
+
+// Drive POST /minigame-move with a synthetic pending interactive event on the
+// run (the real interactive minigame content ships in Task 8).
+async function postMinigameMove(run: CharacterState, pendingEvent: EventContent, move: unknown) {
+  let statusCode = 200
+  let resolveJson!: (v: { statusCode: number; body: unknown }) => void
+  const res = {
+    status(code: number) {
+      statusCode = code
+      return this
+    },
+    json(body: unknown) {
+      resolveJson({ statusCode, body })
+      return this
+    },
+  } as unknown as Response
+  store.getRun.mockResolvedValue({
+    id: run.id,
+    runType: "standard",
+    seed: "s",
+    rngState: 1,
+    locale: "en",
+    character: run,
+    pendingEvent,
+    finished: false,
+  })
+  store.saveRun.mockResolvedValue(undefined)
+
+  const jsonPromise = new Promise<{ statusCode: number; body: unknown }>((r) => {
+    resolveJson = r
+  })
+  const req = {
+    method: "POST",
+    url: "/minigame-move",
+    body: { runId: run.id, move },
+    query: {},
+  } as unknown as Request
+  gameRouter(req, res, () => {})
+  return jsonPromise
+}
+
 describe("POST /buy · achievementTrigger wiring", () => {
   it("buying floating_realm unlocks jetset_life and returns it in newAchievements", async () => {
     const c = makeLegendRun()
@@ -122,5 +201,112 @@ describe("POST /buy · achievementTrigger wiring", () => {
     expect(statusCode).toBe(400)
     const res = body as { error: string }
     expect(res.error).toBe("not_enough_gold")
+  })
+})
+
+describe("POST /choose · interactive minigame guard", () => {
+  it("/choose rejects interactive minigames", async () => {
+    const c = makeLegendRun()
+    // goblin_games.json (the real interactive minigame content) ships in Task 8;
+    // drive the guard through a synthetic interactive event on run.pendingEvent.
+    const ev: EventContent = {
+      id: "interactive_route_test",
+      type: "minigame",
+      subtype: "interactive",
+      minAge: 0,
+      maxAge: 99,
+      weight: 1,
+      primaryStat: "intelligence",
+      narrative: { en: "n", es: "n" },
+      resolution: {
+        type: "interactive",
+        game: "rps",
+        bestOf: 3,
+        baseWinChance: 0.5,
+        statInfluence: {},
+      },
+      outcomes: {
+        critical: { narrative: { en: "c", es: "c" } },
+        success: { narrative: { en: "s", es: "s" } },
+        partial: { narrative: { en: "p", es: "p" } },
+        fail: { narrative: { en: "f", es: "f" } },
+      },
+    }
+    c.pendingMinigame = {
+      eventId: ev.id,
+      game: "rps",
+      bestOf: 3,
+      playerWins: 0,
+      rivalWins: 0,
+      rivalLastChoice: null,
+      playerLastChoice: null,
+    }
+    const { statusCode, body } = await postChoose(c, ev, "rock")
+    expect(statusCode).toBe(400)
+    const res = body as { error: string }
+    expect(res.error).toBe("interactive_minigame")
+  })
+})
+
+describe("POST /minigame-move · interactive minigame moves", () => {
+  // Synthetic interactive tictactoe content (real content ships in Task 8).
+  const interactiveEv: EventContent = {
+    id: "tactician_boards",
+    type: "minigame",
+    subtype: "interactive",
+    minAge: 0,
+    maxAge: 99,
+    weight: 1,
+    primaryStat: "intelligence",
+    narrative: { en: "n", es: "n" },
+    resolution: {
+      type: "interactive",
+      game: "tictactoe",
+      baseWinChance: 0.5,
+      statInfluence: {},
+    },
+    outcomes: {
+      critical: { narrative: { en: "c", es: "c" } },
+      success: { narrative: { en: "s", es: "s" } },
+      partial: { narrative: { en: "p", es: "p" } },
+      fail: { narrative: { en: "f", es: "f" } },
+    },
+  }
+
+  it("/minigame-move advances a tictactoe game and finishes it", async () => {
+    const c = makeLegendRun()
+    c.pendingMinigame = {
+      eventId: interactiveEv.id,
+      game: "tictactoe",
+      board: Array(9).fill(null),
+      marksPlaced: 0,
+    }
+    const { statusCode, body } = await postMinigameMove(c, interactiveEv, {
+      kind: "tictactoe",
+      cell: 0,
+    })
+    expect(statusCode).toBe(200)
+    const res = body as {
+      status: string
+      minigame: { game: string; view: { board: (string | null)[]; over: boolean } }
+      feedback: null
+    }
+    expect(res.status).toBe("playing")
+    expect(res.minigame.view.board[0]).toBe("X")
+    const rivalCells = res.minigame.view.board.filter((cell) => cell === "O")
+    expect(rivalCells).toHaveLength(1)
+    expect(res.feedback).toBeNull()
+    expect(store.saveRun).toHaveBeenCalled()
+  })
+
+  it("/minigame-move rejects moves when no interactive game is pending", async () => {
+    const c = makeLegendRun()
+    const { statusCode, body } = await postMinigameMove(c, interactiveEv, {
+      kind: "tictactoe",
+      cell: 0,
+    })
+    expect(statusCode).toBe(400)
+    const res = body as { error: string }
+    expect(res.error).toBe("no_interactive_minigame")
   })
 })

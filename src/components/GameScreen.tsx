@@ -1,12 +1,20 @@
 import { useState } from "react"
 import { AlertTriangle, Hourglass, Lock, Mic, Skull, Swords, Vote } from "lucide-react"
 import { keyframes, styled } from "styled-components"
-import type { CharacterState, ServedEvent, Rarity, RoleSignal } from "@shared/types"
+import type {
+  CharacterState,
+  InteractiveMove,
+  ServedEvent,
+  Rarity,
+  RoleSignal,
+} from "@shared/types"
 import type { Locale } from "@shared/types"
+import type { MinigameMoveResponse } from "../api"
 import { t } from "../i18n/strings"
 import { AchIcon } from "./AchIcon"
 import { FactionFlag } from "./FactionFlag"
 import { Hud } from "./Hud"
+import { MinigameFrame } from "./minigames/MinigameFrame"
 import { StatTag } from "./StatTag"
 import { LinkBtn } from "./ui/Button"
 import { TextPretty } from "./ui/Text"
@@ -27,6 +35,9 @@ interface Props {
   narrative: string | null
   turnNarrative: string | null
   onChoose: (choiceId: string) => Promise<void>
+  onMinigameMove: (move: InteractiveMove) => Promise<MinigameMoveResponse>
+  onMinigameFinished: () => void
+  minigameFinishedResult: MinigameMoveResponse | null
   onAbandon: () => void
   onShopOpen?: () => void
   canBuy?: boolean
@@ -38,6 +49,9 @@ export function GameScreen({
   event,
   turnNarrative,
   onChoose,
+  onMinigameMove,
+  onMinigameFinished,
+  minigameFinishedResult,
   onAbandon,
   onShopOpen,
   canBuy,
@@ -269,18 +283,29 @@ export function GameScreen({
 
         <SceneNarrative>{capitalize(event.narrative)}</SceneNarrative>
 
-        <ChoiceGrid role="group" aria-label={t(locale, "chooseAction")}>
-          {playableChoices.map((c) => (
-            <ChoiceCardWrap
-              key={c.id}
-              color={theme.colors.rarity[c.rarity]}
-              chaos={RARITY_CHAOS[c.rarity]}
-              borderRadius={8}
-            >
-              {renderChoiceBody(c, false)}
-            </ChoiceCardWrap>
-          ))}
-        </ChoiceGrid>
+        {event.interactive ? (
+          <MinigameFrame
+            key={event.eventId}
+            locale={locale}
+            event={event}
+            onMove={onMinigameMove}
+            onFinished={onMinigameFinished}
+            finishedResult={minigameFinishedResult}
+          />
+        ) : (
+          <ChoiceGrid role="group" aria-label={t(locale, "chooseAction")}>
+            {playableChoices.map((c) => (
+              <ChoiceCardWrap
+                key={c.id}
+                color={theme.colors.rarity[c.rarity]}
+                chaos={RARITY_CHAOS[c.rarity]}
+                borderRadius={8}
+              >
+                {renderChoiceBody(c, false)}
+              </ChoiceCardWrap>
+            ))}
+          </ChoiceGrid>
+        )}
 
         {isSeasonSummary && (
           <>
