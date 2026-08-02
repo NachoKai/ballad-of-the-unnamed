@@ -3,7 +3,7 @@ import type { CharacterState, Locale } from "@shared/types"
 import { STAT_KEYS } from "@shared/types"
 import { keyframes, styled } from "styled-components"
 import { genderize } from "@shared/genderize"
-import { GAME_CONFIG, reputationTierId } from "@shared/config"
+import { GAME_CONFIG, REPUTATION_TIERS, reputationTierId } from "@shared/config"
 import { gt as translateFor, t as translate } from "../i18n/strings"
 import { STAT_ABBR } from "../constants"
 import { personalitySummary } from "../lib/personality"
@@ -16,6 +16,12 @@ interface Props {
   locale: Locale
   onShopOpen?: () => void
   canBuy?: boolean
+}
+
+// Reputation is clamped 0..100 server-side; the bar fills across the whole
+// scale so the tier tick marks stay at their true positions.
+function repFillPct(value: number): number {
+  return Math.max(0, Math.min(100, value))
 }
 
 export function Hud({ character: c, locale, onShopOpen, canBuy }: Props) {
@@ -76,6 +82,28 @@ export function Hud({ character: c, locale, onShopOpen, canBuy }: Props) {
             </HomeTag>
           </Tooltip>
         )}
+        {topTags.length > 0 && (
+          <Tooltip content={t("tooltip_personality")}>
+            <TagPill>
+              {topTags
+                .map((tag) => translateFor(locale, c.gender, `personality_tag_${tag}`))
+                .join(" · ")}
+            </TagPill>
+          </Tooltip>
+        )}
+        <Tooltip content={t("tooltip_arc")}>
+          <ArcPill>{t(arcKey)}</ArcPill>
+        </Tooltip>
+        {c.huntedBy && (
+          <Tooltip content={t("tooltip_hunted")}>
+            <HuntedBadge>
+              <TriangleAlert size={12} /> {t("hunted")} {t(`faction_${c.huntedBy}`)}
+            </HuntedBadge>
+          </Tooltip>
+        )}
+        <Tooltip content={t("tooltip_momentum")} align="end">
+          <MomentumBadge $variant={c.momentum}>{t(momentumKey)}</MomentumBadge>
+        </Tooltip>
         {onShopOpen && (
           <ShopTip content={t("tooltip_shop")} align="end">
             <ShopBtn type="button" onClick={onShopOpen}>
@@ -168,41 +196,29 @@ export function Hud({ character: c, locale, onShopOpen, canBuy }: Props) {
 
       <StatusRow>
         {primaryRep && (
-          <Tooltip content={t("tooltip_reputation")}>
-            <RepPill>
-              <FactionFlag factionId={primaryRep.faction} size={14} />
-              {t(`faction_${primaryRep.faction}`)} ·{" "}
-              {translateFor(
-                locale,
-                c.gender,
-                `reputation_tier_${reputationTierId(primaryRep.value)}`,
-              )}{" "}
-              [{primaryRep.value}]
-            </RepPill>
-          </Tooltip>
+          <RepTip content={t("tooltip_reputation")}>
+            <RepBar>
+              <RepBarHead>
+                <FactionFlag factionId={primaryRep.faction} size={14} />
+                <RepBarName>{t(`faction_${primaryRep.faction}`)}</RepBarName>
+                <RepBarTier>
+                  {translateFor(
+                    locale,
+                    c.gender,
+                    `reputation_tier_${reputationTierId(primaryRep.value)}`,
+                  )}{" "}
+                  [{primaryRep.value}]
+                </RepBarTier>
+              </RepBarHead>
+              <RepBarTrack>
+                <RepBarFill $pct={repFillPct(primaryRep.value)} />
+                {REPUTATION_TIERS.slice(1).map((tier) => (
+                  <RepTick key={tier.id} $at={tier.min} $active={primaryRep.value >= tier.min} />
+                ))}
+              </RepBarTrack>
+            </RepBar>
+          </RepTip>
         )}
-        {topTags.length > 0 && (
-          <Tooltip content={t("tooltip_personality")}>
-            <TagPill>
-              {topTags
-                .map((tag) => translateFor(locale, c.gender, `personality_tag_${tag}`))
-                .join(" · ")}
-            </TagPill>
-          </Tooltip>
-        )}
-        {c.huntedBy && (
-          <Tooltip content={t("tooltip_hunted")}>
-            <HuntedBadge>
-              <TriangleAlert size={12} /> {t("hunted")} {t(`faction_${c.huntedBy}`)}
-            </HuntedBadge>
-          </Tooltip>
-        )}
-        <Tooltip content={t("tooltip_arc")}>
-          <ArcPill>{t(arcKey)}</ArcPill>
-        </Tooltip>
-        <MomentumTip content={t("tooltip_momentum")} align="end">
-          <MomentumBadge $variant={c.momentum}>{t(momentumKey)}</MomentumBadge>
-        </MomentumTip>
       </StatusRow>
     </HudWrap>
   )
@@ -211,10 +227,6 @@ export function Hud({ character: c, locale, onShopOpen, canBuy }: Props) {
 const HudWrap = styled(Panel)``
 
 const ShopTip = styled(Tooltip)`
-  margin-left: auto;
-`
-
-const MomentumTip = styled(Tooltip)`
   margin-left: auto;
 `
 
@@ -565,17 +577,69 @@ const HuntedBadge = styled.span`
   letter-spacing: 0.08em;
 `
 
-const RepPill = styled.span`
-  display: inline-flex;
+const RepTip = styled(Tooltip)`
+  flex: 0 0 100%;
+`
+
+const RepBar = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  padding: 8px 12px;
+  background: ${({ theme }) => theme.colors.ink3};
+  border: 1px solid ${({ theme }) => theme.colors.line};
+  border-radius: ${({ theme }) => theme.radii.sm};
+`
+
+const RepBarHead = styled.div`
+  display: flex;
   align-items: center;
-  gap: 5px;
-  padding: 4px 12px;
-  border: 1px solid ${({ theme }) => theme.colors.gold};
-  border-radius: 999px;
+  gap: 7px;
   font-size: 13px;
   letter-spacing: 0.06em;
-  color: ${({ theme }) => theme.colors.gold};
   text-transform: uppercase;
+  color: ${({ theme }) => theme.colors.gold};
+`
+
+const RepBarName = styled.span`
+  font-weight: 600;
+`
+
+const RepBarTier = styled.span`
+  margin-left: auto;
+  color: ${({ theme }) => theme.colors.goldBright};
+`
+
+const RepBarTrack = styled.div`
+  position: relative;
+  height: 10px;
+  border-radius: 999px;
+  background: ${({ theme }) => theme.colors.ink};
+  overflow: hidden;
+`
+
+const RepBarFill = styled.div<{ $pct: number }>`
+  height: 100%;
+  width: ${({ $pct }) => `${$pct}%`};
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    ${({ theme }) => theme.colors.gold},
+    ${({ theme }) => theme.colors.goldBright}
+  );
+  transition: width 0.4s ease;
+`
+
+const RepTick = styled.span<{ $at: number; $active: boolean }>`
+  position: absolute;
+  top: 50%;
+  left: ${({ $at }) => `${$at}%`};
+  transform: translate(-50%, -50%);
+  width: 2px;
+  height: 15px;
+  border-radius: 1px;
+  background: ${({ $active, theme }) => ($active ? theme.colors.goldBright : theme.colors.muted2)};
 `
 
 const TagPill = styled.span`
