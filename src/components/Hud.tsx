@@ -1,4 +1,15 @@
-import { Globe, Home, Skull, Store, Swords, TriangleAlert } from "lucide-react"
+import {
+  Activity,
+  Crosshair,
+  Globe,
+  Home,
+  Skull,
+  Store,
+  Swords,
+  TrendingDown,
+  TrendingUp,
+  TriangleAlert,
+} from "lucide-react"
 import type { Arc, CharacterState, Locale } from "@shared/types"
 import { STAT_KEYS } from "@shared/types"
 import { keyframes, styled } from "styled-components"
@@ -10,6 +21,7 @@ import { personalitySummary } from "../lib/personality"
 import { careerTitle } from "../lib/careerTitle"
 import { FactionFlag } from "./FactionFlag"
 import { Panel } from "./ui/Panel"
+import { Tag } from "./ui/Tag"
 import { Tooltip } from "./ui/Tooltip"
 
 interface Props {
@@ -40,6 +52,8 @@ export function Hud({ character: c, locale, onShopOpen, canBuy }: Props) {
         : "momentumNormal"
   const arcKey = `arc_${c.currentArc}`
   const career = careerTitle(locale, c.gender, c.currentArc, c.powerLevel)
+  const MomentumIcon =
+    c.momentum === "rising" ? TrendingUp : c.momentum === "falling" ? TrendingDown : Activity
   const currentArcIndex = PATH_ARCS.indexOf(c.currentArc)
   const inventoryCount = c.inventory?.reduce((s, i) => s + i.qty, 0) ?? 0
   const playerScore = (c.counters["battles_won"] ?? 0) + (c.counters["quests_completed"] ?? 0)
@@ -71,49 +85,51 @@ export function Hud({ character: c, locale, onShopOpen, canBuy }: Props) {
         <TagList>
           {c.currentClanId && (
             <Tooltip content={t("tooltip_faction")} side="bottom">
-              <ClanTag>
+              <Tag $tone="sage">
                 <FactionFlag factionId={c.currentClanId} size={14} />
                 {t(`faction_${c.currentClanId}`)}
-              </ClanTag>
+              </Tag>
             </Tooltip>
           )}
           {c.currentRegion !== c.homeRegion ? (
             <Tooltip content={t("tooltip_location")} side="bottom">
-              <AbroadTag>
+              <Tag $tone="muted">
                 <Globe size={12} /> {t("abroadTag")}
-              </AbroadTag>
+              </Tag>
             </Tooltip>
           ) : (
             <Tooltip content={t("tooltip_location")} side="bottom">
-              <HomeTag>
+              <Tag $tone="gold">
                 <Home size={12} /> {t("homeTag")}
-              </HomeTag>
+              </Tag>
             </Tooltip>
           )}
           {topTags.length > 0 && (
             <Tooltip content={t("tooltip_personality")}>
-              <TagPill>
+              <Tag $tone="sage">
                 {topTags
                   .map((tag) => translateFor(locale, c.gender, `personality_tag_${tag}`))
                   .join(" · ")}
-              </TagPill>
+              </Tag>
             </Tooltip>
           )}
           <Tooltip content={t("tooltip_arc")}>
-            <ArcPill>{t(arcKey)}</ArcPill>
+            <Tag $tone="gold">{t(arcKey)}</Tag>
           </Tooltip>
           <Tooltip content={t("tooltip_careerTitle")}>
-            <CareerTitlePill>{career}</CareerTitlePill>
+            <Tag $tone="gold">{career}</Tag>
           </Tooltip>
           {c.huntedBy && (
             <Tooltip content={t("tooltip_hunted")}>
-              <HuntedBadge>
+              <Tag $tone="blood">
                 <TriangleAlert size={12} /> {t("hunted")} {t(`faction_${c.huntedBy}`)}
-              </HuntedBadge>
+              </Tag>
             </Tooltip>
           )}
           <Tooltip content={t("tooltip_momentum")} align="end">
-            <MomentumBadge $variant={c.momentum}>{t(momentumKey)}</MomentumBadge>
+            <Tag $tone={c.momentum === "falling" ? "blood" : "sage"}>
+              <MomentumIcon size={12} aria-hidden="true" /> {t(momentumKey)}
+            </Tag>
           </Tooltip>
         </TagList>
         {onShopOpen && (
@@ -192,14 +208,16 @@ export function Hud({ character: c, locale, onShopOpen, canBuy }: Props) {
         {c.rival && (
           <>
             <Tooltip content={t("tooltip_rival")}>
-              <RivalBadge>
+              <Tag $tone="blood">
                 <Swords size={12} /> {c.rival.name} {t("vs")} <b>{playerScore}</b>—
                 <b>{c.rival.score}</b>
-              </RivalBadge>
+              </Tag>
             </Tooltip>
             {c.rival.focusId && (
               <Tooltip content={t("tooltip_rival_focus")} side="bottom">
-                <FocusChip>{t(`rivalFocus_${c.rival.focusId}`)}</FocusChip>
+                <FocusChip>
+                  <Crosshair size={12} aria-hidden="true" /> {t(`rivalFocus_${c.rival.focusId}`)}
+                </FocusChip>
               </Tooltip>
             )}
           </>
@@ -438,50 +456,6 @@ const LiabilityMeter = styled.span<{ $high?: boolean; $stained?: boolean }>`
   }
 `
 
-const MomentumBadge = styled.span<{ $variant: string }>`
-  padding: 4px 12px;
-  border: 1px solid ${({ theme }) => theme.colors.line2};
-  border-radius: 999px;
-  font-size: 13px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  color: ${({ $variant, theme }) =>
-    $variant === "falling" ? theme.colors.bloodBright : theme.colors.sage};
-  border-color: ${({ $variant, theme }) =>
-    $variant === "falling" ? theme.colors.bloodBright : theme.colors.sage};
-`
-
-const ArcPill = styled.span`
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 4px 12px;
-  border: 1px solid ${({ theme }) => theme.colors.gold};
-  border-radius: 999px;
-  font-size: 12px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  color: ${({ theme }) => theme.colors.goldBright};
-`
-
-const CareerTitlePill = styled.span`
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 4px 12px;
-  background: linear-gradient(180deg, rgba(201, 164, 76, 0.16), rgba(201, 164, 76, 0.06));
-  border: 1px solid ${({ theme }) => theme.colors.goldBright};
-  border-radius: 999px;
-  font-family: ${({ theme }) => theme.fonts.display};
-  font-size: 12px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  color: ${({ theme }) => theme.colors.goldBright};
-`
-
 const ShopBtn = styled.button`
   position: relative;
   display: inline-flex;
@@ -547,101 +521,8 @@ const InvBadge = styled.span`
   font-weight: 700;
 `
 
-const ClanTag = styled.span`
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  margin-left: 6px;
-  padding: 2px 8px;
-  border: 1px solid ${({ theme }) => theme.colors.sage};
-  border-radius: 999px;
-  font-size: 13px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  color: ${({ theme }) => theme.colors.sage};
-  vertical-align: middle;
-`
-
-const HomeTag = styled.span`
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  margin-left: 6px;
-  padding: 2px 8px;
-  border: 1px solid ${({ theme }) => theme.colors.gold};
-  border-radius: 999px;
-  font-size: 13px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  color: ${({ theme }) => theme.colors.gold};
-  vertical-align: middle;
-`
-
-const AbroadTag = styled.span`
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  margin-left: 6px;
-  padding: 2px 8px;
-  border: 1px solid ${({ theme }) => theme.colors.line2};
-  border-radius: 999px;
-  font-size: 13px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  color: ${({ theme }) => theme.colors.muted};
-  vertical-align: middle;
-`
-
-const RivalBadge = styled.span`
-  display: inline-flex;
-  align-items: baseline;
-  gap: 5px;
-  padding: 3px 10px;
-  border: 1px solid ${({ theme }) => theme.colors.bloodBright};
-  border-radius: 999px;
-  font-size: 13px;
-  white-space: nowrap;
-  color: ${({ theme }) => theme.colors.bloodBright};
-  letter-spacing: 0.04em;
-
-  b {
-    font-size: 15px;
-    font-variant-numeric: tabular-nums;
-    font-weight: 600;
-    color: ${({ theme }) => theme.colors.parchment};
-  }
-`
-
-const FocusChip = styled.span`
-  display: inline-flex;
-  align-items: center;
+const FocusChip = styled(Tag)`
   margin-left: auto;
-  padding: 4px 12px;
-  border: 1px solid ${({ theme }) => theme.colors.line2};
-  border-radius: 999px;
-  font-size: 13px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: ${({ theme }) => theme.colors.muted};
-  white-space: nowrap;
-`
-
-const HuntedBadge = styled.span`
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 4px 12px;
-  background: rgba(191, 30, 30, 0.12);
-  border: 1px solid ${({ theme }) => theme.colors.bloodBright};
-  border-radius: 999px;
-  font-size: 13px;
-  white-space: nowrap;
-  color: ${({ theme }) => theme.colors.bloodBright};
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
 `
 
 const RepTip = styled(Tooltip)`
@@ -707,19 +588,6 @@ const RepTick = styled.span<{ $at: number; $active: boolean }>`
   height: 15px;
   border-radius: 1px;
   background: ${({ $active, theme }) => ($active ? theme.colors.goldBright : theme.colors.muted2)};
-`
-
-const TagPill = styled.span`
-  display: inline-flex;
-  align-items: baseline;
-  gap: 5px;
-  padding: 4px 12px;
-  border: 1px solid ${({ theme }) => theme.colors.sage};
-  border-radius: 999px;
-  font-size: 13px;
-  letter-spacing: 0.04em;
-  white-space: nowrap;
-  color: ${({ theme }) => theme.colors.sage};
 `
 
 const StatusRow = styled.div`

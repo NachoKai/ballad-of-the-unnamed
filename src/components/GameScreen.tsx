@@ -17,6 +17,7 @@ import { Tooltip } from "./ui/Tooltip"
 import { capitalize } from "../lib/capitalize"
 import { RARITY_CHAOS, ROLE_SIGNAL, STAT_ABBR } from "../constants"
 import { rarityRank } from "@shared/config"
+import { fmtInt } from "@shared/format"
 import { theme } from "../theme"
 
 interface Props {
@@ -251,7 +252,7 @@ export function GameScreen({
                       : "bad"
                 }
               >
-                {(event.seasonGrade ?? 0).toFixed(1)}
+                {fmtInt(event.seasonGrade ?? 0)}
               </SummaryGrade>
               <SummaryHeadline>{event.seasonHeadline}</SummaryHeadline>
               <SummarySub>{t(locale, "seasonSummary")}</SummarySub>

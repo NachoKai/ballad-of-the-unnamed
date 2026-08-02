@@ -10,6 +10,7 @@ import {
   getCrossRunCollection,
 } from "../store/runStore.js"
 import { todayDailySeed } from "../../shared/rng.js"
+import { fmtInt } from "../../shared/format.js"
 import type { LeaderboardCategory, Locale, RunType } from "../../shared/types.js"
 
 export const metaRouter = Router()
@@ -98,7 +99,7 @@ metaRouter.get("/collection", async (_req: Request, res: Response) => {
       overall: {
         collected,
         total,
-        pct: total === 0 ? 0 : Math.round((collected / total) * 1000) / 10,
+        pct: total === 0 ? 0 : fmtInt((collected / total) * 100),
       },
     },
   })

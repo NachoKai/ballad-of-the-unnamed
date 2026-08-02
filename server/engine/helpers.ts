@@ -20,6 +20,7 @@ import {
   reputationTierId,
   RIVAL_FOCUSES,
 } from "../../shared/config.js"
+import { fmtInt } from "../../shared/format.js"
 import { genderize } from "../../shared/genderize.js"
 
 // Fill {slot:pool} placeholders in a narrative string deterministically.
@@ -55,18 +56,19 @@ export function localize(map: LocaleMap, locale: Locale): string {
 // Power level is a single scalar used for scoring and matchmaking-style gates.
 export function computePowerLevel(c: CharacterState): number {
   const statSum = STAT_KEYS.reduce((s, k) => s + c[k], 0)
-  return Math.round(statSum + c.fame / 5 + c.age / 2)
+  return fmtInt(statSum + c.fame / 5 + c.age / 2)
 }
 
 export function recomputeDerived(c: CharacterState): void {
-  // Clamp stats to sane ranges.
+  // Clamp stats to sane ranges. All player-facing numbers are integers, so
+  // round away any fractional noise (fatigue-modified stamina, weighted gains).
   for (const k of STAT_KEYS) {
-    c[k] = Math.max(0, Math.min(40, c[k]))
+    c[k] = Math.max(0, Math.min(40, fmtInt(c[k])))
   }
-  c.health = Math.max(0, Math.min(100, c.health))
-  c.stamina = Math.max(0, Math.min(100, c.stamina))
-  c.fame = Math.max(0, c.fame)
-  c.gold = Math.max(0, c.gold)
+  c.health = Math.max(0, Math.min(100, fmtInt(c.health)))
+  c.stamina = Math.max(0, Math.min(100, fmtInt(c.stamina)))
+  c.fame = Math.max(0, fmtInt(c.fame))
+  c.gold = Math.max(0, fmtInt(c.gold))
   c.powerLevel = computePowerLevel(c)
   // liability: normalize (also repairs stale saves that predate the field).
   adjustLiability(c, 0)
