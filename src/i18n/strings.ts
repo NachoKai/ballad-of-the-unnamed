@@ -261,6 +261,9 @@ const en: StringMap = {
   tooltip_rival: "A rival shares your path. Outpace them for glory.",
   tooltip_shop: "Spend your gold on gear, retinue, and luxuries.",
   tooltip_hunted: "A faction hunts you. Danger follows.",
+  tooltip_faction: "The faction you serve — their halls back you, and their quarrels become yours.",
+  tooltip_location: "Where you stand. Abroad, you are a stranger in a foreign region.",
+  tooltip_rival_focus: "What your rival is chasing this run. Outpace them on this front for glory.",
   tooltip_abandon: "Abandon this life and begin anew. This run's progress is lost forever.",
   tooltip_stat_strength: "Strength — feats of might and battle.",
   tooltip_stat_dexterity: "Dexterity — speed, precision, and cunning hands.",
@@ -541,6 +544,12 @@ const es: StringMap = {
   tooltip_rival: "Un rival comparte tu camino. Supéralo para lograr gloria.",
   tooltip_shop: "Gasta tu oro en equipo, séquito y lujos.",
   tooltip_hunted: "Una facción te persigue. El peligro te sigue.",
+  tooltip_faction:
+    "La facción a la que sirves: sus salones te respaldan y sus disputas se vuelven tuyas.",
+  tooltip_location:
+    "Dónde te encuentras. En el exterior, eres un extraño en una región extranjera.",
+  tooltip_rival_focus:
+    "Lo que tu rival persigue en esta vida. Supéralo en este frente para lograr gloria.",
   tooltip_abandon:
     "Abandonar esta vida y empezar de nuevo. El progreso de esta partida se pierde para siempre.",
   tooltip_stat_strength: "Fuerza: proezas de poderío y combate.",

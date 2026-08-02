@@ -567,6 +567,110 @@ describe("resolveMinigame", () => {
 })
 
 // ---------------------------------------------------------------------------
+// Minigame trap cards (urn mechanic)
+// ---------------------------------------------------------------------------
+describe("minigame trap cards", () => {
+  const trapEvent: EventContent = {
+    id: "mg_trap",
+    type: "minigame",
+    minAge: 0,
+    maxAge: 99,
+    weight: 1,
+    primaryStat: "intelligence",
+    narrative: { en: "", es: "" },
+    cards: [
+      { id: "urn_ash", icon: "flask-conical", label: { en: "Ash", es: "" } },
+      { id: "urn_bone", icon: "skull", label: { en: "Bone", es: "" }, trap: true },
+      { id: "urn_gilt", icon: "gem", label: { en: "Gilt", es: "" } },
+    ],
+    resolution: {
+      type: "weighted_hidden_match",
+      // Near-certain win: only the trap can force a fail.
+      baseWinChance: 0.97,
+      statInfluence: {},
+    },
+    outcomes: {
+      critical: { goldDelta: 10, narrative: { en: "PERFECT", es: "" } },
+      success: { goldDelta: 5, narrative: { en: "WIN", es: "" } },
+      partial: { goldDelta: 1, narrative: { en: "MEH", es: "" } },
+      fail: { goldDelta: -10, narrative: { en: "ANULADA", es: "" } },
+    },
+  }
+
+  it("picking the trapped card always lands the fail tier, whatever the seed", () => {
+    for (const seed of [1, 2, 3, 99, 1234]) {
+      const c = makeChar({ gold: 100 })
+      const out = resolveMinigame(c, trapEvent, "urn_bone", reg, new Rng(seed))
+      expect(out.narrative).toBe("ANULADA")
+      expect(c.gold).toBe(90)
+    }
+  })
+
+  it("non-trap cards still resolve via the hidden-variable roll (win possible)", () => {
+    for (const seed of [1, 7, 42]) {
+      const c = makeChar()
+      const out = resolveMinigame(c, trapEvent, "urn_ash", reg, new Rng(seed))
+      expect(["PERFECT", "WIN"]).toContain(out.narrative)
+    }
+  })
+
+  it("trap resolution is deterministic per seed", () => {
+    const a = makeChar({ gold: 100 })
+    const b = makeChar({ gold: 100 })
+    const outA = resolveMinigame(a, trapEvent, "urn_bone", reg, new Rng(77))
+    const outB = resolveMinigame(b, trapEvent, "urn_bone", reg, new Rng(77))
+    expect(outA.narrative).toBe(outB.narrative)
+    expect(a.gold).toBe(b.gold)
+  })
+
+  it("serveEvent hints hasTraps without leaking which card is the trap", () => {
+    const c = makeChar()
+    const served = serveEvent(trapEvent, c, "en", reg, new Rng(1), false)
+    expect(served.hasTraps).toBe(true)
+    // The served choices must not carry the trap flag — only the aggregate hint.
+    for (const ch of served.choices) {
+      expect((ch as { trap?: boolean }).trap).toBeUndefined()
+    }
+  })
+
+  it("events without traps never set hasTraps", () => {
+    const c = makeChar()
+    const plain: EventContent = {
+      id: "mg_plain",
+      type: "minigame",
+      minAge: 0,
+      maxAge: 99,
+      weight: 1,
+      primaryStat: "strength",
+      narrative: { en: "", es: "" },
+      cards: [{ id: "strike", icon: "sword", label: { en: "Strike", es: "" } }],
+      resolution: { type: "weighted_hidden_match", baseWinChance: 0.5, statInfluence: {} },
+      outcomes: {
+        critical: { narrative: { en: "", es: "" } },
+        success: { narrative: { en: "", es: "" } },
+        partial: { narrative: { en: "", es: "" } },
+        fail: { narrative: { en: "", es: "" } },
+      },
+    }
+    const served = serveEvent(plain, c, "en", reg, new Rng(1), false)
+    expect(served.hasTraps).toBe(false)
+  })
+
+  it("authored haunted_urn marks exactly one card as a trap", () => {
+    const urn = reg.minigames.find((m) => m.id === "haunted_urn")
+    if (!urn) throw new Error("missing haunted_urn fixture")
+    const traps = (urn.cards ?? []).filter((k) => k.trap)
+    expect(traps).toHaveLength(1)
+    // Picking the authored trap always fails.
+    for (const seed of [5, 50, 500]) {
+      const c = makeChar()
+      const out = resolveMinigame(c, urn, traps[0].id, reg, new Rng(seed))
+      expect(out.narrative).toBe(urn.outcomes!.fail.narrative.en)
+    }
+  })
+})
+
+// ---------------------------------------------------------------------------
 // Liability meter ("Expediente")
 // ---------------------------------------------------------------------------
 describe("liability (Expediente)", () => {

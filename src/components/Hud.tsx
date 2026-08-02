@@ -44,39 +44,46 @@ export function Hud({ character: c, locale, onShopOpen }: Props) {
           <b>{c.name}</b>
           <NameSep aria-hidden="true">·</NameSep>
           <span>{className}</span>
+          {c.archetype && (
+            <>
+              <NameSep aria-hidden="true">·</NameSep>
+              <span>{genderize(t(`archetype_${c.archetype}`), c.gender)}</span>
+            </>
+          )}
         </NameText>
       </NameBanner>
 
       <TopRow>
-          {c.archetype && (
-            <Tooltip content={t("tooltip_archetype")} side="bottom">
-              <ArchetypeTag>{genderize(t(`archetype_${c.archetype}`), c.gender)}</ArchetypeTag>
-            </Tooltip>
-          )}
-          {c.currentClanId && (
+        {c.currentClanId && (
+          <Tooltip content={t("tooltip_faction")} side="bottom">
             <ClanTag>
               <FactionFlag factionId={c.currentClanId} size={14} />
               {t(`faction_${c.currentClanId}`)}
             </ClanTag>
-          )}
-          {c.currentRegion !== c.homeRegion ? (
+          </Tooltip>
+        )}
+        {c.currentRegion !== c.homeRegion ? (
+          <Tooltip content={t("tooltip_location")} side="bottom">
             <AbroadTag>
               <Globe size={12} /> {t("abroadTag")}
             </AbroadTag>
-          ) : (
+          </Tooltip>
+        ) : (
+          <Tooltip content={t("tooltip_location")} side="bottom">
             <HomeTag>
               <Home size={12} /> {t("homeTag")}
             </HomeTag>
-          )}
-          {onShopOpen && (
-            <ShopTip content={t("tooltip_shop")} align="end">
-              <ShopBtn type="button" onClick={onShopOpen}>
-                <Store size={14} aria-hidden="true" />
-                {t("shop")}
-                {inventoryCount > 0 && <InvBadge>{inventoryCount}</InvBadge>}
-              </ShopBtn>
-            </ShopTip>
-          )}
+          </Tooltip>
+        )}
+        {onShopOpen && (
+          <ShopTip content={t("tooltip_shop")} align="end">
+            <ShopBtn type="button" onClick={onShopOpen}>
+              <Store size={14} aria-hidden="true" />
+              {t("shop")}
+              {inventoryCount > 0 && <InvBadge>{inventoryCount}</InvBadge>}
+            </ShopBtn>
+          </ShopTip>
+        )}
       </TopRow>
 
       <MetersRow>
@@ -149,45 +156,49 @@ export function Hud({ character: c, locale, onShopOpen }: Props) {
               <b>{c.rival.score}</b>
             </RivalBadge>
           </Tooltip>
-          {c.rival.focusId && <FocusChip>{t(`rivalFocus_${c.rival.focusId}`)}</FocusChip>}
+          {c.rival.focusId && (
+            <Tooltip content={t("tooltip_rival_focus")} side="bottom">
+              <FocusChip>{t(`rivalFocus_${c.rival.focusId}`)}</FocusChip>
+            </Tooltip>
+          )}
         </RivalRow>
       )}
 
       <StatusRow>
-          {primaryRep && (
-            <Tooltip content={t("tooltip_reputation")}>
-              <RepPill>
-                <FactionFlag factionId={primaryRep.faction} size={14} />
-                {t(`faction_${primaryRep.faction}`)} ·{" "}
-                {translateFor(
-                  locale,
-                  c.gender,
-                  `reputation_tier_${reputationTierId(primaryRep.value)}`,
-                )}{" "}
-                [{primaryRep.value}]
-              </RepPill>
-            </Tooltip>
-          )}
-          {topTags.length > 0 && (
-            <Tooltip content={t("tooltip_personality")}>
-              <TagPill>
-                {topTags
-                  .map((tag) => translateFor(locale, c.gender, `personality_tag_${tag}`))
-                  .join(" · ")}
-              </TagPill>
-            </Tooltip>
-          )}
-          {c.huntedBy && (
-            <Tooltip content={t("tooltip_hunted")}>
-              <HuntedBadge>
-                <TriangleAlert size={12} /> {t("hunted")} {t(`faction_${c.huntedBy}`)}
-              </HuntedBadge>
-            </Tooltip>
-          )}
-          <MomentumTip content={t("tooltip_momentum")} align="end">
-            <MomentumBadge $variant={c.momentum}>{t(momentumKey)}</MomentumBadge>
-          </MomentumTip>
-        </StatusRow>
+        {primaryRep && (
+          <Tooltip content={t("tooltip_reputation")}>
+            <RepPill>
+              <FactionFlag factionId={primaryRep.faction} size={14} />
+              {t(`faction_${primaryRep.faction}`)} ·{" "}
+              {translateFor(
+                locale,
+                c.gender,
+                `reputation_tier_${reputationTierId(primaryRep.value)}`,
+              )}{" "}
+              [{primaryRep.value}]
+            </RepPill>
+          </Tooltip>
+        )}
+        {topTags.length > 0 && (
+          <Tooltip content={t("tooltip_personality")}>
+            <TagPill>
+              {topTags
+                .map((tag) => translateFor(locale, c.gender, `personality_tag_${tag}`))
+                .join(" · ")}
+            </TagPill>
+          </Tooltip>
+        )}
+        {c.huntedBy && (
+          <Tooltip content={t("tooltip_hunted")}>
+            <HuntedBadge>
+              <TriangleAlert size={12} /> {t("hunted")} {t(`faction_${c.huntedBy}`)}
+            </HuntedBadge>
+          </Tooltip>
+        )}
+        <MomentumTip content={t("tooltip_momentum")} align="end">
+          <MomentumBadge $variant={c.momentum}>{t(momentumKey)}</MomentumBadge>
+        </MomentumTip>
+      </StatusRow>
     </HudWrap>
   )
 }
@@ -200,19 +211,6 @@ const ShopTip = styled(Tooltip)`
 
 const MomentumTip = styled(Tooltip)`
   margin-left: auto;
-`
-
-const ArchetypeTag = styled.span`
-  display: inline-block;
-  margin-left: 6px;
-  padding: 1px 8px;
-  border: 1px solid ${({ theme }) => theme.colors.line2};
-  border-radius: 999px;
-  font-size: 13px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: ${({ theme }) => theme.colors.muted};
-  vertical-align: middle;
 `
 
 const TopRow = styled.div`
@@ -276,8 +274,6 @@ const MetersRow = styled.div`
   gap: 8px 10px;
   padding: 14px 18px;
 `
-
-
 
 const Meter = styled.span<{ $low?: boolean }>`
   display: inline-flex;

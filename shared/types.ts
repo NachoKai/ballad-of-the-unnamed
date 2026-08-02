@@ -175,6 +175,11 @@ export interface MinigameCard {
   id: string
   icon: string
   label: LocaleMap
+  // Urn mechanic: picking a trapped card forces the fail tier regardless of
+  // the hidden variable. Authored per event (never rolled) so daily runs stay
+  // deterministic. Never served to the client — only `hasTraps` is, so the
+  // trap's identity stays hidden until the reveal.
+  trap?: boolean
 }
 
 export interface MinigameOutcome {
@@ -445,6 +450,9 @@ export interface ServedEvent {
   rivalUpdate?: string
   isClanOffer?: boolean
   clanOfferChoices?: ServedClanOffer[]
+  // Urn mechanic: true when this minigame's card set contains a trap. Lets
+  // the client hint at danger (iconography only) without revealing which card.
+  hasTraps?: boolean
   // Gold paid to the character this season by their faction (season summary).
   stipendEarned?: number
   flagLabel?: string

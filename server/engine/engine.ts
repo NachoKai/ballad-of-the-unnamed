@@ -1389,49 +1389,57 @@ export function resolveMinigame(
 
   c.turn += 1
 
-  // Compute win chance from base + stat influence + card modifier.
-  let winChance = res.baseWinChance
-  for (const [stat, per] of Object.entries(res.statInfluence)) {
-    winChance += (c[stat as keyof CharacterState] as number) * (per as number)
-  }
-  let critChance = 0.1
-  const mod = res.cardModifiers?.[cardId]
-  if (mod) {
-    winChance += mod.winChanceDelta ?? 0
-    critChance += mod.critChanceDelta ?? 0
-  }
-  winChance = Math.max(0.02, Math.min(0.97, winChance))
-
-  // Subtype-specific adjustments.
-  const subtype = res.type ?? "weighted_hidden_match"
-  if (subtype === "grid_gamble") {
-    // Pure luck: ignore stat influence, keep only base + card modifiers.
-    winChance = Math.max(0.02, Math.min(0.97, res.baseWinChance + (mod?.winChanceDelta ?? 0)))
-    critChance = 0.05
-  }
-  if (subtype === "timing_bar" && res.statThreshold) {
-    // Stat widens the green zone: bonus if primary stat >= threshold.
-    const primaryStat = event.primaryStat
-    if (primaryStat && (c[primaryStat as keyof CharacterState] as number) >= res.statThreshold) {
-      winChance += 0.08
-    }
-  }
-  if (subtype === "memory_match" && res.statThreshold) {
-    // Stat-gated bonus: higher stat = better recall.
-    const primaryStat = event.primaryStat
-    if (primaryStat && (c[primaryStat as keyof CharacterState] as number) >= res.statThreshold) {
-      winChance += 0.1
-    }
-  }
-  winChance = Math.max(0.02, Math.min(0.97, winChance))
-
-  // Hidden roll -> outcome tier.
-  const roll = rng.next()
+  // Urn mechanic: picking a trapped card forces the fail tier before the
+  // hidden variable is even consulted — risk made visible, outcome hidden.
+  // Trap placement is authored per event (never rolled), so daily runs stay
+  // deterministic: same seed + same pick → same forced fail.
   let tier: OutcomeTier
-  if (roll < winChance * critChance) tier = "critical"
-  else if (roll < winChance) tier = "success"
-  else if (roll < winChance + (1 - winChance) * 0.4) tier = "partial"
-  else tier = "fail"
+  if (card.trap) {
+    tier = "fail"
+  } else {
+    // Compute win chance from base + stat influence + card modifier.
+    let winChance = res.baseWinChance
+    for (const [stat, per] of Object.entries(res.statInfluence)) {
+      winChance += (c[stat as keyof CharacterState] as number) * (per as number)
+    }
+    let critChance = 0.1
+    const mod = res.cardModifiers?.[cardId]
+    if (mod) {
+      winChance += mod.winChanceDelta ?? 0
+      critChance += mod.critChanceDelta ?? 0
+    }
+    winChance = Math.max(0.02, Math.min(0.97, winChance))
+
+    // Subtype-specific adjustments.
+    const subtype = res.type ?? "weighted_hidden_match"
+    if (subtype === "grid_gamble") {
+      // Pure luck: ignore stat influence, keep only base + card modifiers.
+      winChance = Math.max(0.02, Math.min(0.97, res.baseWinChance + (mod?.winChanceDelta ?? 0)))
+      critChance = 0.05
+    }
+    if (subtype === "timing_bar" && res.statThreshold) {
+      // Stat widens the green zone: bonus if primary stat >= threshold.
+      const primaryStat = event.primaryStat
+      if (primaryStat && (c[primaryStat as keyof CharacterState] as number) >= res.statThreshold) {
+        winChance += 0.08
+      }
+    }
+    if (subtype === "memory_match" && res.statThreshold) {
+      // Stat-gated bonus: higher stat = better recall.
+      const primaryStat = event.primaryStat
+      if (primaryStat && (c[primaryStat as keyof CharacterState] as number) >= res.statThreshold) {
+        winChance += 0.1
+      }
+    }
+    winChance = Math.max(0.02, Math.min(0.97, winChance))
+
+    // Hidden roll -> outcome tier.
+    const roll = rng.next()
+    if (roll < winChance * critChance) tier = "critical"
+    else if (roll < winChance) tier = "success"
+    else if (roll < winChance + (1 - winChance) * 0.4) tier = "partial"
+    else tier = "fail"
+  }
 
   const outcome: MinigameOutcome = outcomes[tier]
   const net = applyStatDeltas(c, outcome.statDeltas)

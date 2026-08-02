@@ -1,6 +1,6 @@
 import { useState } from "react"
-import { AlertTriangle, Hourglass, Lock, Swords } from "lucide-react"
-import { styled } from "styled-components"
+import { AlertTriangle, Hourglass, Lock, Skull, Swords } from "lucide-react"
+import { keyframes, styled } from "styled-components"
 import type { CharacterState, ServedEvent, Rarity, RoleSignal } from "@shared/types"
 import type { Locale } from "@shared/types"
 import { t } from "../i18n/strings"
@@ -104,6 +104,12 @@ export function GameScreen({
             {c.requiresStat.min}
           </RequirementTag>
         )}
+        {/* Urn mechanic: a trap lurks among these cards — hinted, never labeled. */}
+        {event.hasTraps && (
+          <TrapMark aria-hidden="true">
+            <Skull size={14} strokeWidth={2} />
+          </TrapMark>
+        )}
         {(c.statDeltas ||
           c.tradeoffDeltas ||
           c.fameDelta ||
@@ -162,7 +168,9 @@ export function GameScreen({
       <Tooltip fill content={t(locale, "lockedChoice")}>
         {card}
       </Tooltip>
-    ) : card
+    ) : (
+      card
+    )
   }
 
   return (
@@ -534,6 +542,31 @@ const RiskTag = styled.div`
   svg {
     flex-shrink: 0;
   }
+`
+
+const trapPulse = keyframes`
+  0%,
+  100% {
+    opacity: 0.18;
+    transform: scale(0.92);
+  }
+  50% {
+    opacity: 0.34;
+    transform: scale(1.06);
+  }
+`
+
+// Urn mechanic: subtle skull watermark so the player knows a trap hides among
+// the cards (identity stays hidden — every card carries the same mark).
+const TrapMark = styled.span`
+  position: absolute;
+  right: 14px;
+  bottom: 12px;
+  display: inline-flex;
+  color: ${({ theme }) => theme.colors.bloodBright};
+  opacity: 0.28;
+  pointer-events: none;
+  animation: ${trapPulse} 2.6s ease-in-out infinite;
 `
 
 const RequirementTag = styled.span<{ $met: boolean }>`

@@ -392,7 +392,9 @@ export function serveEvent(
     choices.sort((a, b) => rarityRank(a.rarity) - rarityRank(b.rarity))
   }
   const flagLabel = ev.flagLabel ? localize(ev.flagLabel, locale) : undefined
-  return { eventId: ev.id, narrative, choices, isRetirementOffer, flagLabel }
+  // Urn mechanic: hint that a trap lurks among the cards (never which one).
+  const hasTraps = isMinigame && ev.cards ? ev.cards.some((k) => k.trap) : false
+  return { eventId: ev.id, narrative, choices, isRetirementOffer, flagLabel, hasTraps }
 }
 
 export function statLabelKeys(): readonly StatKey[] {
