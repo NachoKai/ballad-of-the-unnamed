@@ -59,18 +59,33 @@ const MASCULINE_TO_GENDERED: Record<string, string> = {
 // applied to female characters; male keeps the authored label.
 const CHROME_TO_FEMININE: Record<string, string> = {
   agresivo: "agresiva",
+  anciano: "anciana",
+  aventurero: "aventurera",
+  caballero: "caballera",
+  campeón: "campeona",
+  capitán: "capitana",
   cercano: "cercana",
   conocido: "conocida",
   desconocido: "desconocida",
   divertido: "divertida",
+  elegido: "elegida",
+  espadachín: "espadachina",
   estratégico: "estratégica",
   estoico: "estoica",
+  guardián: "guardiana",
+  héroe: "heroína",
   marginado: "marginada",
+  mercenario: "mercenaria",
+  mítico: "mítica",
+  niño: "niña",
+  oculto: "oculta",
   presumido: "presumida",
   renombrado: "renombrada",
   respetado: "respetada",
+  sabio: "sabia",
   seguro: "segura",
   solidario: "solidaria",
+  veterano: "veterana",
 }
 
 // Preserve the original token's capitalization pattern (title case in vocatives

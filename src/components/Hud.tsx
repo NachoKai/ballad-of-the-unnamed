@@ -1,5 +1,5 @@
 import { Globe, Home, Skull, Store, Swords, TriangleAlert } from "lucide-react"
-import type { CharacterState, Locale } from "@shared/types"
+import type { Arc, CharacterState, Locale } from "@shared/types"
 import { STAT_KEYS } from "@shared/types"
 import { keyframes, styled } from "styled-components"
 import { genderize } from "@shared/genderize"
@@ -7,6 +7,7 @@ import { GAME_CONFIG, REPUTATION_TIERS, reputationTierId } from "@shared/config"
 import { gt as translateFor, t as translate } from "../i18n/strings"
 import { STAT_ABBR } from "../constants"
 import { personalitySummary } from "../lib/personality"
+import { careerTitle } from "../lib/careerTitle"
 import { FactionFlag } from "./FactionFlag"
 import { Panel } from "./ui/Panel"
 import { Tooltip } from "./ui/Tooltip"
@@ -17,6 +18,10 @@ interface Props {
   onShopOpen?: () => void
   canBuy?: boolean
 }
+
+// The chapters of a life of renown, in order. "child" is skipped — it is the
+// prologue, not a rung on the road to power.
+const PATH_ARCS: Arc[] = ["adventurer", "mercenary", "kingdom_hero", "legend", "old_hero"]
 
 // Reputation is clamped 0..100 server-side; the bar fills across the whole
 // scale so the tier tick marks stay at their true positions.
@@ -34,6 +39,8 @@ export function Hud({ character: c, locale, onShopOpen, canBuy }: Props) {
         ? "momentumFalling"
         : "momentumNormal"
   const arcKey = `arc_${c.currentArc}`
+  const career = careerTitle(locale, c.gender, c.currentArc, c.powerLevel)
+  const currentArcIndex = PATH_ARCS.indexOf(c.currentArc)
   const inventoryCount = c.inventory?.reduce((s, i) => s + i.qty, 0) ?? 0
   const playerScore = (c.counters["battles_won"] ?? 0) + (c.counters["quests_completed"] ?? 0)
 
@@ -60,50 +67,55 @@ export function Hud({ character: c, locale, onShopOpen, canBuy }: Props) {
         </NameText>
       </NameBanner>
 
-      <TopRow>
-        {c.currentClanId && (
-          <Tooltip content={t("tooltip_faction")} side="bottom">
-            <ClanTag>
-              <FactionFlag factionId={c.currentClanId} size={14} />
-              {t(`faction_${c.currentClanId}`)}
-            </ClanTag>
+      <TagRow>
+        <TagList>
+          {c.currentClanId && (
+            <Tooltip content={t("tooltip_faction")} side="bottom">
+              <ClanTag>
+                <FactionFlag factionId={c.currentClanId} size={14} />
+                {t(`faction_${c.currentClanId}`)}
+              </ClanTag>
+            </Tooltip>
+          )}
+          {c.currentRegion !== c.homeRegion ? (
+            <Tooltip content={t("tooltip_location")} side="bottom">
+              <AbroadTag>
+                <Globe size={12} /> {t("abroadTag")}
+              </AbroadTag>
+            </Tooltip>
+          ) : (
+            <Tooltip content={t("tooltip_location")} side="bottom">
+              <HomeTag>
+                <Home size={12} /> {t("homeTag")}
+              </HomeTag>
+            </Tooltip>
+          )}
+          {topTags.length > 0 && (
+            <Tooltip content={t("tooltip_personality")}>
+              <TagPill>
+                {topTags
+                  .map((tag) => translateFor(locale, c.gender, `personality_tag_${tag}`))
+                  .join(" · ")}
+              </TagPill>
+            </Tooltip>
+          )}
+          <Tooltip content={t("tooltip_arc")}>
+            <ArcPill>{t(arcKey)}</ArcPill>
           </Tooltip>
-        )}
-        {c.currentRegion !== c.homeRegion ? (
-          <Tooltip content={t("tooltip_location")} side="bottom">
-            <AbroadTag>
-              <Globe size={12} /> {t("abroadTag")}
-            </AbroadTag>
+          <Tooltip content={t("tooltip_careerTitle")}>
+            <CareerTitlePill>{career}</CareerTitlePill>
           </Tooltip>
-        ) : (
-          <Tooltip content={t("tooltip_location")} side="bottom">
-            <HomeTag>
-              <Home size={12} /> {t("homeTag")}
-            </HomeTag>
+          {c.huntedBy && (
+            <Tooltip content={t("tooltip_hunted")}>
+              <HuntedBadge>
+                <TriangleAlert size={12} /> {t("hunted")} {t(`faction_${c.huntedBy}`)}
+              </HuntedBadge>
+            </Tooltip>
+          )}
+          <Tooltip content={t("tooltip_momentum")} align="end">
+            <MomentumBadge $variant={c.momentum}>{t(momentumKey)}</MomentumBadge>
           </Tooltip>
-        )}
-        {topTags.length > 0 && (
-          <Tooltip content={t("tooltip_personality")}>
-            <TagPill>
-              {topTags
-                .map((tag) => translateFor(locale, c.gender, `personality_tag_${tag}`))
-                .join(" · ")}
-            </TagPill>
-          </Tooltip>
-        )}
-        <Tooltip content={t("tooltip_arc")}>
-          <ArcPill>{t(arcKey)}</ArcPill>
-        </Tooltip>
-        {c.huntedBy && (
-          <Tooltip content={t("tooltip_hunted")}>
-            <HuntedBadge>
-              <TriangleAlert size={12} /> {t("hunted")} {t(`faction_${c.huntedBy}`)}
-            </HuntedBadge>
-          </Tooltip>
-        )}
-        <Tooltip content={t("tooltip_momentum")} align="end">
-          <MomentumBadge $variant={c.momentum}>{t(momentumKey)}</MomentumBadge>
-        </Tooltip>
+        </TagList>
         {onShopOpen && (
           <ShopTip content={t("tooltip_shop")} align="end">
             <ShopBtn type="button" onClick={onShopOpen}>
@@ -114,7 +126,7 @@ export function Hud({ character: c, locale, onShopOpen, canBuy }: Props) {
             </ShopBtn>
           </ShopTip>
         )}
-      </TopRow>
+      </TagRow>
 
       <PrimaryGrid>
         <PrimaryTip content={t("tooltip_health")}>
@@ -194,6 +206,24 @@ export function Hud({ character: c, locale, onShopOpen, canBuy }: Props) {
         )}
       </DetailsSection>
 
+      <PathTip content={t("tooltip_path")} side="bottom" fill>
+        <PathRow>
+          <PathLabel>{t("pathLabel")}</PathLabel>
+          <PathSteps>
+            {PATH_ARCS.map((arc, i) => {
+              const state =
+                i < currentArcIndex ? "reached" : i === currentArcIndex ? "current" : "future"
+              return (
+                <PathStepGroup key={arc}>
+                  {i > 0 && <PathArrow aria-hidden="true">→</PathArrow>}
+                  <PathStep $state={state}>{t(`arc_${arc}`)}</PathStep>
+                </PathStepGroup>
+              )
+            })}
+          </PathSteps>
+        </PathRow>
+      </PathTip>
+
       <StatusRow>
         {primaryRep && (
           <RepTip content={t("tooltip_reputation")}>
@@ -227,21 +257,32 @@ export function Hud({ character: c, locale, onShopOpen, canBuy }: Props) {
 const HudWrap = styled(Panel)``
 
 const ShopTip = styled(Tooltip)`
-  margin-left: auto;
+  flex: 0 0 auto;
 `
 
-const TopRow = styled.div`
+const TagRow = styled.div`
   display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 18px 14px;
+  border-top: 1px solid ${({ theme }) => theme.colors.line};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.line};
+`
+
+const TagList = styled.div`
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 10px 14px;
-  padding: 12px 18px 16px;
+  gap: 8px 12px;
+  min-width: 0;
 `
 
 const NameBanner = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 16px 18px 0;
+  padding: 20px 18px 6px;
 
   &::before,
   &::after {
@@ -287,8 +328,8 @@ const NameSep = styled.span`
 const PrimaryGrid = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  padding: 14px 18px 8px;
+  gap: 12px;
+  padding: 20px 18px 14px;
 `
 
 const PrimaryTip = styled(Tooltip)`
@@ -343,8 +384,8 @@ const DetailsSection = styled.div`
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px 10px;
-  padding: 10px 14px;
+  gap: 10px 12px;
+  padding: 14px 18px;
 `
 
 const Meter = styled.span<{ $low?: boolean }>`
@@ -357,6 +398,7 @@ const Meter = styled.span<{ $low?: boolean }>`
   border-radius: 999px;
   font-size: 13px;
   letter-spacing: 0.03em;
+  white-space: nowrap;
   color: ${({ $low, theme }) => ($low ? theme.colors.bloodBright : theme.colors.muted)};
   text-transform: uppercase;
 
@@ -378,6 +420,7 @@ const LiabilityMeter = styled.span<{ $high?: boolean; $stained?: boolean }>`
   border-radius: 999px;
   font-size: 13px;
   letter-spacing: 0.03em;
+  white-space: nowrap;
   text-transform: uppercase;
   color: ${({ $high, $stained, theme }) =>
     $high ? theme.colors.bloodBright : $stained ? "#c9803c" : theme.colors.muted};
@@ -402,6 +445,7 @@ const MomentumBadge = styled.span<{ $variant: string }>`
   font-size: 13px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
+  white-space: nowrap;
   color: ${({ $variant, theme }) =>
     $variant === "falling" ? theme.colors.bloodBright : theme.colors.sage};
   border-color: ${({ $variant, theme }) =>
@@ -418,6 +462,23 @@ const ArcPill = styled.span`
   font-size: 12px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+  white-space: nowrap;
+  color: ${({ theme }) => theme.colors.goldBright};
+`
+
+const CareerTitlePill = styled.span`
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 12px;
+  background: linear-gradient(180deg, rgba(201, 164, 76, 0.16), rgba(201, 164, 76, 0.06));
+  border: 1px solid ${({ theme }) => theme.colors.goldBright};
+  border-radius: 999px;
+  font-family: ${({ theme }) => theme.fonts.display};
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
   color: ${({ theme }) => theme.colors.goldBright};
 `
 
@@ -437,6 +498,7 @@ const ShopBtn = styled.button`
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.04em;
+  white-space: nowrap;
   color: ${({ theme }) => theme.colors.ink};
   cursor: pointer;
   transition: all 0.12s;
@@ -496,6 +558,7 @@ const ClanTag = styled.span`
   font-size: 13px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  white-space: nowrap;
   color: ${({ theme }) => theme.colors.sage};
   vertical-align: middle;
 `
@@ -511,6 +574,7 @@ const HomeTag = styled.span`
   font-size: 13px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  white-space: nowrap;
   color: ${({ theme }) => theme.colors.gold};
   vertical-align: middle;
 `
@@ -526,6 +590,7 @@ const AbroadTag = styled.span`
   font-size: 13px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  white-space: nowrap;
   color: ${({ theme }) => theme.colors.muted};
   vertical-align: middle;
 `
@@ -538,6 +603,7 @@ const RivalBadge = styled.span`
   border: 1px solid ${({ theme }) => theme.colors.bloodBright};
   border-radius: 999px;
   font-size: 13px;
+  white-space: nowrap;
   color: ${({ theme }) => theme.colors.bloodBright};
   letter-spacing: 0.04em;
 
@@ -572,6 +638,7 @@ const HuntedBadge = styled.span`
   border: 1px solid ${({ theme }) => theme.colors.bloodBright};
   border-radius: 999px;
   font-size: 13px;
+  white-space: nowrap;
   color: ${({ theme }) => theme.colors.bloodBright};
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -651,6 +718,7 @@ const TagPill = styled.span`
   border-radius: 999px;
   font-size: 13px;
   letter-spacing: 0.04em;
+  white-space: nowrap;
   color: ${({ theme }) => theme.colors.sage};
 `
 
@@ -658,7 +726,73 @@ const StatusRow = styled.div`
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
-  padding: 12px 18px;
+  gap: 10px;
+  padding: 16px 18px 18px;
   border-top: 1px solid ${({ theme }) => theme.colors.line};
+`
+
+const PathTip = styled(Tooltip)`
+  display: block;
+  padding: 12px 18px 8px;
+`
+
+const PathRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: ${({ theme }) => theme.colors.ink3};
+  border: 1px solid ${({ theme }) => theme.colors.line};
+  border-radius: ${({ theme }) => theme.radii.sm};
+`
+
+const PathLabel = styled.span`
+  flex-shrink: 0;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.colors.gold};
+`
+
+const PathSteps = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+`
+
+const PathStepGroup = styled.span`
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+`
+
+const PathArrow = styled.span`
+  color: ${({ theme }) => theme.colors.muted2};
+  font-size: 13px;
+`
+
+const PathStep = styled.span<{ $state: "reached" | "current" | "future" }>`
+  padding: 2px 8px;
+  border: 1px solid
+    ${({ $state, theme }) =>
+      $state === "current"
+        ? theme.colors.goldBright
+        : $state === "reached"
+          ? theme.colors.line2
+          : theme.colors.line};
+  border-radius: 999px;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: ${({ $state, theme }) =>
+    $state === "current"
+      ? theme.colors.goldBright
+      : $state === "reached"
+        ? theme.colors.parchmentDim
+        : theme.colors.muted2};
+  background: ${({ $state }) =>
+    $state === "current" ? "rgba(201, 164, 76, 0.12)" : "transparent"};
 `
