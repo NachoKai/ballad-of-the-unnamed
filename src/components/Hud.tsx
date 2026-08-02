@@ -1,7 +1,7 @@
 import { Globe, Home, Skull, Store, Swords, TriangleAlert } from "lucide-react"
 import type { CharacterState, Locale } from "@shared/types"
 import { STAT_KEYS } from "@shared/types"
-import { styled } from "styled-components"
+import { keyframes, styled } from "styled-components"
 import { genderize } from "@shared/genderize"
 import { GAME_CONFIG, reputationTierId } from "@shared/config"
 import { gt as translateFor, t as translate } from "../i18n/strings"
@@ -15,9 +15,10 @@ interface Props {
   character: CharacterState
   locale: Locale
   onShopOpen?: () => void
+  canBuy?: boolean
 }
 
-export function Hud({ character: c, locale, onShopOpen }: Props) {
+export function Hud({ character: c, locale, onShopOpen, canBuy }: Props) {
   const t = (k: string) => translate(locale, k)
   const className = t(`class_${c.class}`)
   const momentumKey =
@@ -81,30 +82,45 @@ export function Hud({ character: c, locale, onShopOpen }: Props) {
               <Store size={14} aria-hidden="true" />
               {t("shop")}
               {inventoryCount > 0 && <InvBadge>{inventoryCount}</InvBadge>}
+              {canBuy && <ShopDot aria-hidden="true" />}
             </ShopBtn>
           </ShopTip>
         )}
       </TopRow>
 
-      <MetersRow>
+      <PrimaryGrid>
+        <PrimaryTip content={t("tooltip_health")}>
+          <PrimaryCard $tint="sage" $low={c.health < 30}>
+            <CardLabel>{t("health")}</CardLabel>
+            <CardValue $low={c.health < 30}>{c.health}</CardValue>
+          </PrimaryCard>
+        </PrimaryTip>
+        <PrimaryTip content={t("tooltip_stamina")}>
+          <PrimaryCard $tint="sage" $low={c.stamina < 20}>
+            <CardLabel>{t("stamina")}</CardLabel>
+            <CardValue $low={c.stamina < 20}>{c.stamina}</CardValue>
+          </PrimaryCard>
+        </PrimaryTip>
+        <PrimaryTip content={t("tooltip_gold")}>
+          <PrimaryCard $tint="gold">
+            <CardLabel>{t("gold")}</CardLabel>
+            <CardValue $tint="gold">{c.gold}</CardValue>
+          </PrimaryCard>
+        </PrimaryTip>
+        {STAT_KEYS.map((k) => (
+          <PrimaryTip key={k} content={t(`tooltip_stat_${k}`)}>
+            <PrimaryCard>
+              <CardLabel>{t(STAT_ABBR[k])}</CardLabel>
+              <CardValue>{c[k]}</CardValue>
+            </PrimaryCard>
+          </PrimaryTip>
+        ))}
+      </PrimaryGrid>
+
+      <DetailsSection>
         <Tooltip content={t("tooltip_age")}>
           <Meter>
             {t("age")} <b>{c.age}</b>
-          </Meter>
-        </Tooltip>
-        <Tooltip content={t("tooltip_health")}>
-          <Meter>
-            {t("health")} <b>{c.health}</b>
-          </Meter>
-        </Tooltip>
-        <Tooltip content={t("tooltip_stamina")}>
-          <Meter $low={c.stamina < 20}>
-            {t("stamina")} <b>{c.stamina}</b>
-          </Meter>
-        </Tooltip>
-        <Tooltip content={t("tooltip_gold")}>
-          <Meter>
-            {t("gold")} <b>{c.gold}</b>
           </Meter>
         </Tooltip>
         <Tooltip content={t("tooltip_fame")}>
@@ -133,36 +149,22 @@ export function Hud({ character: c, locale, onShopOpen }: Props) {
             MV <b>{c.marketValue}</b>
           </Meter>
         </Tooltip>
-      </MetersRow>
-
-      <AttributeRow>
-        <Tooltip content={t("tooltip_arc")}>
-          <ArcPill>{t(arcKey)}</ArcPill>
-        </Tooltip>
-        {STAT_KEYS.map((k) => (
-          <Tooltip key={k} content={t(`tooltip_stat_${k}`)}>
-            <StatPill>
-              {t(STAT_ABBR[k])} <b>{c[k]}</b>
-            </StatPill>
-          </Tooltip>
-        ))}
-      </AttributeRow>
-
-      {c.rival && (
-        <RivalRow>
-          <Tooltip content={t("tooltip_rival")}>
-            <RivalBadge>
-              <Swords size={12} /> {c.rival.name} {t("vs")} <b>{playerScore}</b>—
-              <b>{c.rival.score}</b>
-            </RivalBadge>
-          </Tooltip>
-          {c.rival.focusId && (
-            <Tooltip content={t("tooltip_rival_focus")} side="bottom">
-              <FocusChip>{t(`rivalFocus_${c.rival.focusId}`)}</FocusChip>
+        {c.rival && (
+          <>
+            <Tooltip content={t("tooltip_rival")}>
+              <RivalBadge>
+                <Swords size={12} /> {c.rival.name} {t("vs")} <b>{playerScore}</b>—
+                <b>{c.rival.score}</b>
+              </RivalBadge>
             </Tooltip>
-          )}
-        </RivalRow>
-      )}
+            {c.rival.focusId && (
+              <Tooltip content={t("tooltip_rival_focus")} side="bottom">
+                <FocusChip>{t(`rivalFocus_${c.rival.focusId}`)}</FocusChip>
+              </Tooltip>
+            )}
+          </>
+        )}
+      </DetailsSection>
 
       <StatusRow>
         {primaryRep && (
@@ -195,6 +197,9 @@ export function Hud({ character: c, locale, onShopOpen }: Props) {
             </HuntedBadge>
           </Tooltip>
         )}
+        <Tooltip content={t("tooltip_arc")}>
+          <ArcPill>{t(arcKey)}</ArcPill>
+        </Tooltip>
         <MomentumTip content={t("tooltip_momentum")} align="end">
           <MomentumBadge $variant={c.momentum}>{t(momentumKey)}</MomentumBadge>
         </MomentumTip>
@@ -267,12 +272,67 @@ const NameSep = styled.span`
   color: ${({ theme }) => theme.colors.gold};
 `
 
-const MetersRow = styled.div`
+const PrimaryGrid = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 14px 18px 8px;
+`
+
+const PrimaryTip = styled(Tooltip)`
+  flex: 1 1 0;
+  min-width: 104px;
+`
+
+const PrimaryCard = styled.span<{ $tint?: "gold" | "sage"; $low?: boolean }>`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 12px 8px 11px;
+  background: ${({ theme }) => theme.colors.ink3};
+  border: 1px solid ${({ theme }) => theme.colors.line};
+  border-top: 2px solid
+    ${({ $tint, $low, theme }) =>
+      $low
+        ? theme.colors.bloodBright
+        : $tint === "gold"
+          ? theme.colors.goldBright
+          : $tint === "sage"
+            ? theme.colors.sage
+            : theme.colors.line2};
+  border-radius: ${({ theme }) => theme.radii.sm};
+`
+
+const CardLabel = styled.span`
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.colors.muted};
+`
+
+const CardValue = styled.span<{ $tint?: "gold"; $low?: boolean }>`
+  font-family: ${({ theme }) => theme.fonts.display};
+  font-size: 24px;
+  line-height: 1;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: ${({ $tint, $low, theme }) =>
+    $low
+      ? theme.colors.bloodBright
+      : $tint === "gold"
+        ? theme.colors.goldBright
+        : theme.colors.parchment};
+`
+
+const DetailsSection = styled.div`
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 8px 10px;
-  padding: 14px 18px;
+  padding: 10px 14px;
 `
 
 const Meter = styled.span<{ $low?: boolean }>`
@@ -336,59 +396,67 @@ const MomentumBadge = styled.span<{ $variant: string }>`
     $variant === "falling" ? theme.colors.bloodBright : theme.colors.sage};
 `
 
-const AttributeRow = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  align-items: center;
-  padding: 14px 18px;
-  border-top: 1px solid ${({ theme }) => theme.colors.line};
-`
-
-const StatPill = styled.span`
+const ArcPill = styled.span`
   display: inline-flex;
-  align-items: baseline;
+  align-items: center;
   gap: 5px;
-  background: ${({ theme }) => theme.colors.ink3};
-  border: 1px solid ${({ theme }) => theme.colors.line};
+  padding: 4px 12px;
+  border: 1px solid ${({ theme }) => theme.colors.gold};
   border-radius: 999px;
-  padding: 3px 10px;
-  font-size: 13px;
-  color: ${({ theme }) => theme.colors.parchment};
-
-  b {
-    font-size: 15px;
-    font-variant-numeric: tabular-nums;
-    color: ${({ theme }) => theme.colors.parchment};
-    font-weight: 600;
-  }
-`
-
-const ArcPill = styled(StatPill)`
-  border-color: ${({ theme }) => theme.colors.gold};
-  color: ${({ theme }) => theme.colors.goldBright};
-  text-transform: uppercase;
-  font-size: 13px;
+  font-size: 12px;
   letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.colors.goldBright};
 `
 
 const ShopBtn = styled.button`
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: ${({ theme }) => theme.colors.ink3};
-  border: 1px solid ${({ theme }) => theme.colors.line};
+  background: linear-gradient(
+    180deg,
+    ${({ theme }) => theme.colors.goldBright},
+    ${({ theme }) => theme.colors.gold}
+  );
+  border: 1px solid ${({ theme }) => theme.colors.goldBright};
   border-radius: 999px;
   padding: 5px 14px;
   font-size: 13px;
-  color: ${({ theme }) => theme.colors.gold};
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: ${({ theme }) => theme.colors.ink};
   cursor: pointer;
   transition: all 0.12s;
 
   &:hover {
-    background: ${({ theme }) => theme.colors.ink2};
-    border-color: ${({ theme }) => theme.colors.gold};
+    filter: brightness(1.1);
+    box-shadow: 0 0 12px rgba(201, 164, 76, 0.35);
   }
+`
+
+const shopPulse = keyframes`
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.55;
+    transform: scale(0.82);
+  }
+`
+
+const ShopDot = styled.span`
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: ${({ theme }) => theme.colors.sage};
+  border: 2px solid ${({ theme }) => theme.colors.ink2};
+  animation: ${shopPulse} 1.6s ease-in-out infinite;
 `
 
 const InvBadge = styled.span`
@@ -399,8 +467,8 @@ const InvBadge = styled.span`
   height: 18px;
   padding: 0 5px;
   border-radius: 999px;
-  background: ${({ theme }) => theme.colors.gold};
-  color: ${({ theme }) => theme.colors.ink};
+  background: ${({ theme }) => theme.colors.ink};
+  color: ${({ theme }) => theme.colors.goldBright};
   font-size: 13px;
   font-weight: 700;
 `
@@ -469,24 +537,14 @@ const RivalBadge = styled.span`
   }
 `
 
-const RivalRow = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px 10px;
-  padding: 10px 18px;
-  border-top: 1px solid ${({ theme }) => theme.colors.line};
-  background: linear-gradient(90deg, rgba(191, 30, 30, 0.07), transparent 55%);
-`
-
 const FocusChip = styled.span`
   display: inline-flex;
   align-items: center;
   margin-left: auto;
-  padding: 1px 9px;
+  padding: 4px 12px;
   border: 1px solid ${({ theme }) => theme.colors.line2};
   border-radius: 999px;
-  font-size: 11px;
+  font-size: 13px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: ${({ theme }) => theme.colors.muted};
@@ -497,7 +555,7 @@ const HuntedBadge = styled.span`
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 3px 10px;
+  padding: 4px 12px;
   background: rgba(191, 30, 30, 0.12);
   border: 1px solid ${({ theme }) => theme.colors.bloodBright};
   border-radius: 999px;
@@ -511,7 +569,7 @@ const RepPill = styled.span`
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 3px 10px;
+  padding: 4px 12px;
   border: 1px solid ${({ theme }) => theme.colors.gold};
   border-radius: 999px;
   font-size: 13px;
@@ -524,7 +582,7 @@ const TagPill = styled.span`
   display: inline-flex;
   align-items: baseline;
   gap: 5px;
-  padding: 3px 10px;
+  padding: 4px 12px;
   border: 1px solid ${({ theme }) => theme.colors.sage};
   border-radius: 999px;
   font-size: 13px;

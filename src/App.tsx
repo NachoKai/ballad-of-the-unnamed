@@ -50,6 +50,7 @@ export default function App() {
   const [turnNarrative, setTurnNarrative] = useState<string | null>(null)
   const [ending, setEnding] = useState<EndingData | null>(null)
   const [shopOpen, setShopOpen] = useState(false)
+  const [canBuy, setCanBuy] = useState(false)
   const [resuming, setResuming] = useState(() => localStorage.getItem(RUN_KEY) !== null)
   const [runId, setRunId] = useState<string | null>(() => localStorage.getItem(RUN_KEY))
   const [lastAchievements, setLastAchievements] = useState<AchievementView[]>(() => {
@@ -95,6 +96,29 @@ export default function App() {
     localStorage.setItem(LOCALE_KEY, next)
   }
 
+  // Refetch shop availability whenever gold or inventory changes so the HUD
+  // button can signal when something affordable and unowned exists.
+  const shopSignal = character
+    ? `${character.gold}|${(character.inventory ?? []).map((i) => `${i.itemId}:${i.qty}`).join(",")}`
+    : ""
+  useEffect(() => {
+    if (screen !== "game" || !runId) return
+    let cancelled = false
+    api
+      .shop(runId)
+      .then((res) => {
+        if (!cancelled) {
+          setCanBuy(res.items.some((i) => i.owned === 0 && res.gold >= i.cost))
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setCanBuy(false)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [runId, screen, shopSignal])
+
   async function startRun(
     name: string,
     gender: Gender,
@@ -104,6 +128,7 @@ export default function App() {
   ) {
     const res = await api.newRun({ name, gender, classId, origin, runType, locale })
     setRunId(res.runId)
+    setCanBuy(false)
     localStorage.setItem(RUN_KEY, res.runId)
     setCharacter(res.character)
     setEvent(res.event)
@@ -130,6 +155,7 @@ export default function App() {
       locale,
     })
     setRunId(res.runId)
+    setCanBuy(false)
     localStorage.setItem(RUN_KEY, res.runId)
     setCharacter(res.character)
     setEvent(res.event)
@@ -274,6 +300,7 @@ export default function App() {
             onChoose={choose}
             onAbandon={abandonRun}
             onShopOpen={() => setShopOpen(true)}
+            canBuy={canBuy}
           />
         )}
 
@@ -353,7 +380,7 @@ const BootRune = styled.div`
 const AppShell = styled.div`
   position: relative;
   z-index: 1;
-  max-width: 980px;
+  max-width: 1120px;
   margin: 0 auto;
   padding: 0 20px 80px;
   min-height: 100vh;

@@ -28,6 +28,7 @@ interface Props {
   onChoose: (choiceId: string) => Promise<void>
   onAbandon: () => void
   onShopOpen?: () => void
+  canBuy?: boolean
 }
 
 export function GameScreen({
@@ -38,6 +39,7 @@ export function GameScreen({
   onChoose,
   onAbandon,
   onShopOpen,
+  canBuy,
 }: Props) {
   const [busy, setBusy] = useState(false)
   const [selected, setSelected] = useState<string | null>(null)
@@ -175,7 +177,7 @@ export function GameScreen({
 
   return (
     <GameLayout>
-      <Hud locale={locale} character={character} onShopOpen={onShopOpen} />
+      <Hud locale={locale} character={character} onShopOpen={onShopOpen} canBuy={canBuy} />
 
       <Scene aria-live="polite">
         <SceneTime>
