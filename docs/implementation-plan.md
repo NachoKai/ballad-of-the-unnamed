@@ -768,7 +768,7 @@ Trap placement must be authored (fixed per event), not rolled per player — det
 
 ---
 
-## Step 16: Season-End Capstone + Rival Debate (content)
+## Step 16: Season-End Capstone + Rival Debate (content) ✅ DONE
 
 **Goal**: Puntero closes each year with a set-piece — an election ("ELEGÍ UNA URNA") or a debate vs the rival ("DEBATE CARA A CARA", verdict after: "MALA −4"). Add a season-end capstone beat and a debate minigame, authored as content on top of Step 15 + the existing tag-synergy mechanism (`wantedTags` / `punishedTags` on `ChoiceContent`, already used by the Negotiation Gambit-style events in `content/events/personality.json`).
 
@@ -823,7 +823,7 @@ Trap placement must be authored (fixed per event), not rolled per player — det
 
 ---
 
-## Step 18: Career Titles & Path HUD
+## Step 18: Career Titles & Path HUD ✅ DONE
 
 **Goal**: Puntero's title evolves with your career ("MILITANTE ESTUDIANTIL" → "REFERENTE DESDE EL LLANO") and the HUD shows "RUTA AL PODER" — where you are on the path to the top. Give our character a mid-run career title derived from arc + power level, and show the arc path in the HUD.
 
@@ -858,7 +858,7 @@ Titles are derived client-side from `c.currentArc` (already on `CharacterState`;
 
 ---
 
-## Step 19: Quick Wins (Random Creation + Passive Gold)
+## Step 19: Quick Wins (Random Creation + Passive Gold) ✅ DONE
 
 **Goal**: Two small Puntero touches: an "AL AZAR" random creation button and a trickle of gold each turn (Puntero's capital grows $0→$3→$6). Low effort, high polish.
 
@@ -903,9 +903,9 @@ Step 13: Liability Meter (Expediente)     → 2-3 hours (engine + content + UI)
 Step 14: Rival Focus Label                → 1 hour (config + engine + UI)
 Step 15: Minigame Trap Cards              → 1-2 hours (engine + content)
 Step 16: Season-End Capstone + Debates    → 2-3 hours (engine + content + UI)
-Step 17: New-Player Tutorial              → 1-2 hours (content + UI)
+Step 17: New-Player Tutorial              → 1-2 hours (content + UI)  ⬜ not implemented
 Step 18: Career Titles & Path HUD         → 1 hour (pure UI)
 Step 19: Quick Wins (Random + Gold)       → 1 hour (UI + small engine)
 ```
 
-Steps 4-6, 8 and the content portions of 11/13/15/16/17 are JSON additions and can be done in any order or in parallel. Steps 11 and 13 touch engine eligibility/resolution and should land before authored content depends on them. Step 12 and 18 are near-pure UI and safe to parallelize; Step 14 touches `generateRival()` / `advanceRival()` (engine) and `routes/game.ts`, so treat it as engine-adjacent. All new rng use in 14-16 must go through the per-run seeded `Rng` to preserve daily-mode determinism.
+Steps 4-6, 8 and the content portions of 11/13/15/16/17 are JSON additions and can be done in any order or in parallel. Steps 11 and 13 touch engine eligibility/resolution and should land before authored content depends on them. Step 12 and 18 are near-pure UI and safe to parallelize; Step 14 touches `generateRival()` / `advanceRival()` (engine) and `routes/game.ts`, so treat it as engine-adjacent. All new rng use in 14-16 must go through the per-run seeded `Rng` to preserve daily-mode determinism. **Status 2026-08-02:** Steps 16, 18, 19 are done; only Step 17 (Tutorial) remains open.

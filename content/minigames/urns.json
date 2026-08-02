@@ -15,18 +15,27 @@
       {
         "id": "urn_ash",
         "icon": "flask-conical",
-        "label": { "en": "Urn of Ash", "es": "Urna de Cenizas" }
+        "label": {
+          "en": "Urn of Ash",
+          "es": "Urna de Cenizas"
+        }
       },
       {
         "id": "urn_bone",
         "icon": "skull",
-        "label": { "en": "Urn of Bone", "es": "Urna de Huesos" },
+        "label": {
+          "en": "Urn of Bone",
+          "es": "Urna de Huesos"
+        },
         "trap": true
       },
       {
         "id": "urn_gilt",
         "icon": "gem",
-        "label": { "en": "Urn of Gilt", "es": "Urna Dorada" }
+        "label": {
+          "en": "Urn of Gilt",
+          "es": "Urna Dorada"
+        }
       }
     ],
     "resolution": {
@@ -34,24 +43,32 @@
       "baseWinChance": 0.4,
       "statInfluence": {},
       "cardModifiers": {
-        "urn_gilt": { "winChanceDelta": 0.1 },
-        "urn_ash": { "winChanceDelta": 0.05 }
+        "urn_gilt": {
+          "winChanceDelta": 0.1
+        },
+        "urn_ash": {
+          "winChanceDelta": 0.05
+        }
       }
     },
     "outcomes": {
       "critical": {
         "goldDelta": 300,
         "fameDelta": 7,
-        "countersDelta": { "urns_opened": 1 },
+        "countersDelta": {
+          "urns_opened": 1
+        },
         "narrative": {
           "en": "The urn opens with a sigh of old air — and spills the royal seal and a fortune in silver. The keeper bows: the kings themselves must have smiled on you.",
-          "es": "La urna se abre con un suspiro de aire antiguo — y derrama el sello real y una fortuna en plata. El custodio se inclina: los propios reyes deben haber sonreído para vos."
+          "es": "La urna se abre con un suspiro de aire antiguo — y derrama el sello real y una fortuna en plata. El custodio se inclina: los propios reyes deben haberte sonreído."
         }
       },
       "success": {
         "goldDelta": 110,
         "fameDelta": 2,
-        "countersDelta": { "urns_opened": 1 },
+        "countersDelta": {
+          "urns_opened": 1
+        },
         "narrative": {
           "en": "A respectable hoard of coins, and a signet ring worth keeping. The keeper nods — a fair urn for a fair gambler.",
           "es": "Un tesoro respetable de monedas, y un anillo de sello que vale la pena guardar. El custodio asiente — una urna justa para un jugador justo."
@@ -59,7 +76,9 @@
       },
       "partial": {
         "goldDelta": 20,
-        "countersReset": ["urn_streak"],
+        "countersReset": [
+          "urn_streak"
+        ],
         "narrative": {
           "en": "The urn holds little more than dust and a single tarnished coin. The keeper shrugs: 'Not every urn keeps its promise.'",
           "es": "La urna guarda poco más que polvo y una sola moneda oxidada. El custodio se encoge de hombros: 'No toda urna cumple su promesa.'"
@@ -69,7 +88,9 @@
         "goldDelta": -30,
         "injuryRiskDelta": 0.15,
         "liabilityDelta": 8,
-        "countersReset": ["urn_streak"],
+        "countersReset": [
+          "urn_streak"
+        ],
         "narrative": {
           "en": "ANULADA. A needle-trap springs from the urn the instant you touch its seal. The keeper's face goes cold: 'The curse always finds its hand.' You shake off the venom and the sting of your own luck.",
           "es": "ANULADA. Una trampa de agujas salta de la urna apenas tocás su sello. La cara del custodio se endurece: 'La maldición siempre encuentra su mano.' Sacudís el veneno y el escozor de tu propia suerte."

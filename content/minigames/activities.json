@@ -88,7 +88,9 @@
       "partial": {
         "goldDelta": 30,
         "injuryRiskDelta": 0.1,
-        "countersReset": ["heist_streak"],
+        "countersReset": [
+          "heist_streak"
+        ],
         "narrative": {
           "en": "You trigger a minor ward. You escape singed, pockets half-full, with guards on your tail.",
           "es": "Activás un sello menor. Escapás chamuscado, los bolsillos a medio llenar, con guardias pisándote los talones."
@@ -99,7 +101,9 @@
         "reputationFaction": "arcanum",
         "liabilityDelta": 12,
         "injuryRiskDelta": 0.3,
-        "countersReset": ["heist_streak"],
+        "countersReset": [
+          "heist_streak"
+        ],
         "narrative": {
           "en": "The vault seals behind you. Magic binds your limbs as the Arcanum's wardens close in. They know your face now — this will cost you, and not just in gold.",
           "es": "La bóveda se sella detrás de vos. La magia atrapa tus miembros mientras los guardianes del Arcanum se acercan. Ahora conocen tu cara — esto te va a costar, y no solo en oro."
@@ -196,7 +200,9 @@
       "partial": {
         "goldDelta": -15,
         "injuryRiskDelta": 0.05,
-        "countersReset": ["drinking_streak"],
+        "countersReset": [
+          "drinking_streak"
+        ],
         "narrative": {
           "en": "You manage to finish, barely. You split the tab and stagger home with your pride dented.",
           "es": "Lográs terminar, apenas. Dividen la cuenta y volvés tambaleándote con el orgullo abollado."
@@ -206,7 +212,9 @@
         "goldDelta": -30,
         "reputationDelta": -1,
         "injuryRiskDelta": 0.15,
-        "countersReset": ["drinking_streak"],
+        "countersReset": [
+          "drinking_streak"
+        ],
         "narrative": {
           "en": "The room spins. You slide off the stool and wake up face-down outside, missing a pouch and your dignity.",
           "es": "La habitación da vueltas. Resbalás del taburete y despertás boca abajo afuera, sin una bolsa y sin dignidad."
@@ -302,7 +310,9 @@
       "partial": {
         "healthDelta": -5,
         "injuryRiskDelta": 0.1,
-        "countersReset": ["chase_streak"],
+        "countersReset": [
+          "chase_streak"
+        ],
         "narrative": {
           "en": "You slip on wet cobbles and twist your ankle. A street vendor trips them, and you both limp away empty-handed.",
           "es": "Resbalás en los adoquines mojados y te torcés el tobillo. Un vendedor callejero los hace tropezar, y ambos se van cojeando con las manos vacías."
@@ -311,7 +321,9 @@
       "fail": {
         "fameDelta": -2,
         "injuryRiskDelta": 0.2,
-        "countersReset": ["chase_streak"],
+        "countersReset": [
+          "chase_streak"
+        ],
         "narrative": {
           "en": "They vanish into the sewers. You stand at the grate, gasping, as the echoes of their laughter fade below.",
           "es": "Desaparecen en las alcantarillas. Te quedás frente a la reja, jadeando, mientras los ecos de su risa se apagan allá abajo."
@@ -406,7 +418,9 @@
       },
       "partial": {
         "goldDelta": -30,
-        "countersReset": ["gamble_streak"],
+        "countersReset": [
+          "gamble_streak"
+        ],
         "narrative": {
           "en": "You win a few rounds but lose more. You walk away near even — wiser, if poorer.",
           "es": "Ganás algunas rondas pero perdés más. Te vas casi empatado — más sabio, si acaso más pobre."
@@ -415,7 +429,9 @@
       "fail": {
         "goldDelta": -100,
         "reputationDelta": -1,
-        "countersReset": ["gamble_streak"],
+        "countersReset": [
+          "gamble_streak"
+        ],
         "narrative": {
           "en": "The dealer was three moves ahead. You clean out your pockets and slink out into the rain, cleaned out.",
           "es": "La crupier iba tres movimientos adelante. Vacías tus bolsillos y te escabullís bajo la lluvia, pelado."
@@ -515,7 +531,9 @@
       "partial": {
         "healthDelta": -8,
         "injuryRiskDelta": 0.12,
-        "countersReset": ["survival_streak"],
+        "countersReset": [
+          "survival_streak"
+        ],
         "narrative": {
           "en": "You endure, but barely. Cold and hunger gnaw at you. The Thornwood let you live — this time.",
           "es": "Aguantás, pero apenas. El frío y el hambre te carcomen. El Espinar te dejó vivir — esta vez."
@@ -524,7 +542,9 @@
       "fail": {
         "healthDelta": -15,
         "injuryRiskDelta": 0.3,
-        "countersReset": ["survival_streak"],
+        "countersReset": [
+          "survival_streak"
+        ],
         "narrative": {
           "en": "The night takes everything. You stumble out at dawn, frostbitten and lost, owing your life to a Thornwood patrol.",
           "es": "La noche se lo lleva todo. Salís tambaleante al amanecer, congelado y perdido, debiéndole la vida a una patrulla de Espinar."
@@ -626,7 +646,9 @@
         "goldDelta": 20,
         "reputationDelta": -1,
         "reputationFaction": "crownguard",
-        "countersReset": ["courtly_streak"],
+        "countersReset": [
+          "courtly_streak"
+        ],
         "narrative": {
           "en": "You hold your ground but fail to sway the room. A minor concession is granted — barely enough.",
           "es": "Mantenés tu posición pero no lográs convencer a la sala. Te conceden una concesión menor — apenas suficiente."
@@ -636,7 +658,9 @@
         "reputationDelta": -4,
         "reputationFaction": "crownguard",
         "fameDelta": -2,
-        "countersReset": ["courtly_streak"],
+        "countersReset": [
+          "courtly_streak"
+        ],
         "narrative": {
           "en": "You misread the room badly. The seneschal's stare could cut glass. You're escorted out before you make things worse.",
           "es": "Malinterpretás la sala por completo. La mirada del senescal podría cortar vidrio. Te escoltan fuera antes de que empeores las cosas."
@@ -738,7 +762,9 @@
       "partial": {
         "goldDelta": 20,
         "injuryRiskDelta": 0.08,
-        "countersReset": ["smithing_streak"],
+        "countersReset": [
+          "smithing_streak"
+        ],
         "narrative": {
           "en": "The steel cools too fast and your edge chips. You salvage what you can, but the Guild's eyes say 'next time.'",
           "es": "El acero se enfría muy rápido y el filo se astilla. Salvá lo que podés, pero la mirada del Gremio dice 'la próxima.'"
@@ -749,7 +775,9 @@
         "reputationDelta": -2,
         "reputationFaction": "ironhold",
         "injuryRiskDelta": 0.15,
-        "countersReset": ["smithing_streak"],
+        "countersReset": [
+          "smithing_streak"
+        ],
         "narrative": {
           "en": "Your hammer lands wrong. The billet twists into scrap. You leave the forge to the sound of pitying murmurs.",
           "es": "Tu martillo cae mal. El tocho se retuerce en chatarra. Dejás la forja entre murmullos de lástima."
@@ -845,7 +873,9 @@
       },
       "partial": {
         "fameDelta": -1,
-        "countersReset": ["archery_streak"],
+        "countersReset": [
+          "archery_streak"
+        ],
         "narrative": {
           "en": "You flinch on the last shot. It strays wide. The crowd sighs, and you step back with a shrug.",
           "es": "Parpadeás en el último tiro. Se desvía. La multitud suspira, y retrocedés con un encogimiento de hombros."
@@ -854,7 +884,9 @@
       "fail": {
         "fameDelta": -3,
         "goldDelta": -10,
-        "countersReset": ["archery_streak"],
+        "countersReset": [
+          "archery_streak"
+        ],
         "narrative": {
           "en": "The bowstring snaps on your second pull. Your shots go wild. You slink off as the next contender takes the line.",
           "es": "La cuerda del arco se rompe en tu segundo tiro. Tus flechas se pierden. Te escabullís mientras la siguiente contendiente toma la línea."
@@ -949,7 +981,7 @@
         "healthDelta": -8,
         "narrative": {
           "en": "You slip on the final span and crash into the water. Bruised and half-drowned, you drag yourself to shore, clutching your pack.",
-          "es": "Resbalás en el último tramo y caes al agua. Magullado y medio ahogado, te arrastrás a la orilla, aferrando tu equipaje."
+          "es": "Resbalás en el último tramo y caés al agua. Magullado y medio ahogado, te arrastrás a la orilla, aferrando tu equipaje."
         }
       },
       "fail": {
@@ -972,8 +1004,8 @@
     "weight": 5,
     "primaryStat": "charisma",
     "narrative": {
-      "en": "A hooded figure beckons from a shadowy table. 'Three treasures among nine cups. Pick well — or walk away with nothing.' The dice have no loyalty.",
-      "es": "Una figura encapuchada te llama desde una mesa oscura. 'Tres tesoros entre nueve copas. Elegí bien — o andate con las manos vacías.' Los dados no tienen lealtad."
+      "en": "A hooded figure beckons from a shadowy table. 'Three treasures among nine cups. Pick well — or walk away with nothing.' The cups keep their own secrets.",
+      "es": "Una figura encapuchada te llama desde una mesa oscura. 'Tres tesoros entre nueve copas. Elegí bien — o andate con las manos vacías.' Las copas guardan sus propios secretos."
     },
     "cards": [
       {
@@ -1146,7 +1178,9 @@
       },
       "partial": {
         "goldDelta": 10,
-        "countersReset": ["fishing_streak"],
+        "countersReset": [
+          "fishing_streak"
+        ],
         "narrative": {
           "en": "You land a minnow just as the sun rises. It wins a pity copper and the dock's softest laughter.",
           "es": "Atrapás un pececito justo cuando sale el sol. Gana un cobre por lástima y la risa más suave del muelle."
@@ -1155,7 +1189,9 @@
       "fail": {
         "goldDelta": -15,
         "fameDelta": -1,
-        "countersReset": ["fishing_streak"],
+        "countersReset": [
+          "fishing_streak"
+        ],
         "narrative": {
           "en": "The line snaps on your one big bite. You reel in nothing but a broken hook and a crowd that saw the whole thing.",
           "es": "La línea se corta en tu única mordida grande. Recogés nada más que un anzuelo roto y una multitud que vio todo."
@@ -1562,7 +1598,9 @@
       "partial": {
         "healthDelta": -5,
         "injuryRiskDelta": 0.1,
-        "countersReset": ["hunt_streak"],
+        "countersReset": [
+          "hunt_streak"
+        ],
         "narrative": {
           "en": "The shot grazes — the stag bolts into the deep wood, leaving you with a torn sleeve from the brambles and no bounty.",
           "es": "El disparo roza — el ciervo dispara hacia el bosque profundo, dejándote con la manga rota por las zarzas y sin recompensa."
@@ -1572,7 +1610,9 @@
         "fameDelta": -2,
         "reputationDelta": -1,
         "reputationFaction": "thornwood",
-        "countersReset": ["hunt_streak"],
+        "countersReset": [
+          "hunt_streak"
+        ],
         "narrative": {
           "en": "Your bowstring snaps in the cold. The stag is gone before you can nock another arrow. The wardens' disappointment is worse than the lost bounty.",
           "es": "La cuerda de tu arco se rompe con el frío. El ciervo se va antes de que puedas enganchar otra flecha. La decepción de las guardias es peor que la recompensa perdida."

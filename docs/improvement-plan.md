@@ -2,7 +2,7 @@
 
 > Based on: `docs/fantasy-cyoa-rpg-spec.md` (810 lines), `docs/el-idolo-reference-notes.md` (253 lines), and full codebase audit.
 >
-> Current state: core game loop works end-to-end (creation → events → death/retirement → leaderboard). 65 events, 25 minigames, 67 achievements, 6 classes, bilingual EN/ES, deterministic RNG, server-authoritative, deployed on Neon + Vite + Express.
+> Current state: core game loop works end-to-end (creation → events → death/retirement → leaderboard). 68 events, 29 minigames, 69 achievements, 6 classes, bilingual EN/ES, deterministic RNG, server-authoritative, deployed on Neon + Vite + Express.
 
 ## Status Legend
 
@@ -38,14 +38,14 @@
 
 ### New bugs surfaced in the 2026-08-01 audit
 
-| #  | Status | Issue                                                                                                                      | File                              | Fix                                                                                                            |
-| -- | ------ | -------------------------------------------------------------------------------------------------------------------------- | --------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| B7 | ✅ | Achievement toast titles/descriptions hardcode `.en`, ignoring the player's selected locale                                | `src/components/Toasts.tsx:22-23` | **Fixed 2026-08-01** — `useAchievementToasts` now takes the active `locale` and resolves via `resolveLocaleMap` (same path as the rest of the UI) |
-| B8 | ✅ | `floating_realm` shop item declares `achievementTrigger: "jetset_life"` but no achievement with that id exists             | `content/shop.json`               | **Fixed 2026-08-01** — authored the `jetset_life` achievement (`counter_gte` on the `jetset_life` counter) **and** wired `/buy` to bump the trigger counter, evaluate, and return `newAchievements` so the toast fires |
-| B9 | ✅ | `bench_to_banner` achievement checks counter `bench_joined`, but no content/engine code ever increments it                  | `content/achievements.json`, `server/engine/helpers.ts` | **Already fixed in code** — `joinClan()` in `helpers.ts` bumps `bench_joined` when the bench state is applied (test `engine.test.ts:2009` asserts it); doc was stale |
-| B10 | ✅ | `wastelands` is one of the 6 regions but no region-gated event uses it (`regions.json` events cover vale/coast/highlands/capital/isles only) | `content/events/regions.json` | **Fixed 2026-08-01** — authored `region_wastelands_cinder` (cinder-duel/scavenge/ember-camp) covering all 6 regions |
-| B11 | ✅ | `leaderboard_entries` table is dead schema — full normalized layout + 5 category indexes exist but no code reads/writes it; leaderboard routes use the `leaderboard` table instead | `server/db/schema.sql:127` | **Fixed 2026-08-01** — dropped the table + indexes from schema; added `DROP TABLE IF EXISTS leaderboard_entries;` to the migration section so existing installs clean up on next migrate |
-| B12 | ✅ | Many event/minigame counters have no achievement tracking them (`clans_joined`, `clans_betrayed`, `fishing_won`, `hunts_won`, `survivals_won`, `courtly_won`, `chases_won`, `street_fights_won`, `alchemy_won`, `clutch_duels`) | `content/achievements.json` | **Fixed 2026-08-01** — authored 10 achievements over the counters (`wandering_blade`, `oathbreaker`, `master_angler`, `grand_huntsman`, `unbroken`, `court_favorite`, `fleet_footed`, `alley_king`, `master_alchemist`, `clutch_artist`) |
+| #   | Status | Issue                                                                                                                                                                                                                           | File                                                    | Fix                                                                                                                                                                                                                                      |
+| --- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| B7  | ✅     | Achievement toast titles/descriptions hardcode `.en`, ignoring the player's selected locale                                                                                                                                     | `src/components/Toasts.tsx:22-23`                       | **Fixed 2026-08-01** — `useAchievementToasts` now takes the active `locale` and resolves via `resolveLocaleMap` (same path as the rest of the UI)                                                                                        |
+| B8  | ✅     | `floating_realm` shop item declares `achievementTrigger: "jetset_life"` but no achievement with that id exists                                                                                                                  | `content/shop.json`                                     | **Fixed 2026-08-01** — authored the `jetset_life` achievement (`counter_gte` on the `jetset_life` counter) **and** wired `/buy` to bump the trigger counter, evaluate, and return `newAchievements` so the toast fires                   |
+| B9  | ✅     | `bench_to_banner` achievement checks counter `bench_joined`, but no content/engine code ever increments it                                                                                                                      | `content/achievements.json`, `server/engine/helpers.ts` | **Already fixed in code** — `joinClan()` in `helpers.ts` bumps `bench_joined` when the bench state is applied (test `engine.test.ts:2009` asserts it); doc was stale                                                                     |
+| B10 | ✅     | `wastelands` is one of the 6 regions but no region-gated event uses it (`regions.json` events cover vale/coast/highlands/capital/isles only)                                                                                    | `content/events/regions.json`                           | **Fixed 2026-08-01** — authored `region_wastelands_cinder` (cinder-duel/scavenge/ember-camp) covering all 6 regions                                                                                                                      |
+| B11 | ✅     | `leaderboard_entries` table is dead schema — full normalized layout + 5 category indexes exist but no code reads/writes it; leaderboard routes use the `leaderboard` table instead                                              | `server/db/schema.sql:127`                              | **Fixed 2026-08-01** — dropped the table + indexes from schema; added `DROP TABLE IF EXISTS leaderboard_entries;` to the migration section so existing installs clean up on next migrate                                                 |
+| B12 | ✅     | Many event/minigame counters have no achievement tracking them (`clans_joined`, `clans_betrayed`, `fishing_won`, `hunts_won`, `survivals_won`, `courtly_won`, `chases_won`, `street_fights_won`, `alchemy_won`, `clutch_duels`) | `content/achievements.json`                             | **Fixed 2026-08-01** — authored 10 achievements over the counters (`wandering_blade`, `oathbreaker`, `master_angler`, `grand_huntsman`, `unbroken`, `court_favorite`, `fleet_footed`, `alley_king`, `master_alchemist`, `clutch_artist`) |
 
 ---
 
@@ -405,18 +405,18 @@ Goal: Enough variety for 20+ runs before repetition sets in.
 
 **Spec ref**: — (volume targets)
 
-Status: current counts as of audit — Events **65**/60, Minigames **25**/25, Achievements **67**/50, Archetypes **30**/30+, World events **10**/20+, Clans 25 factions all region-tagged (9 authored clan events exercising join/leave/betray), NPC relationships system in place with 2 authored recurring NPCs (`ser_aldric`, `wanderer_of_the_homeland`). Target numbers in the table below are the Phase 5 goals. **2026-07-30: content expansion shipped — 17 new events (9 clan + 8 rest/recovery), 8 new minigames, 8 new achievement tiers. 2026-08-01 audit: added 10 world events, 5 region-variant events, 5 foreign/outsider events, 5 personality events, 3 destiny events. 2026-08-01 bugfix pass (B7-B12): +1 region event (`region_wastelands_cinder`), +11 achievements (`jetset_life` + 10 counter achievements).**
+Status: current counts as of audit — Events **68**/60, Minigames **29**/25, Achievements **69**/50, Archetypes **30**/30+, World events **10**/20+, Clans 25 factions all region-tagged (9 authored clan events exercising join/leave/betray), NPC relationships system in place with 2 authored recurring NPCs (`ser_aldric`, `wanderer_of_the_homeland`). Target numbers in the table below are the Phase 5 goals. **2026-07-30: content expansion shipped — 17 new events (9 clan + 8 rest/recovery), 8 new minigames, 8 new achievement tiers. 2026-08-01 audit: added 10 world events, 5 region-variant events, 5 foreign/outsider events, 5 personality events, 3 destiny events. 2026-08-01 bugfix pass (B7-B12): +1 region event (`region_wastelands_cinder`), +11 achievements (`jetset_life` + 10 counter achievements). 2026-08-02: +3 minigames (Season-End Capstone debates/elections), +2 achievements.**
 
-| Category                           | Current       | Phase 5 Target          |
-| ---------------------------------- | ------------- | ----------------------- |
-| Events (tavern/road/dungeon/court + new themes) | 65            | 80+                     |
-| Minigames (duels + activities)     | 25            | 25+                     |
-| Achievements                       | 67            | 60+                     |
-| Slot pool entries                  | ~152          | 300+                    |
-| Archetypes                         | 30            | 30+ (5-8 per class)     |
-| World events                       | 10            | 20+                     |
-| Clans                              | 25 (factions) | 10+ joinable with perks (9 clan events now ✅) |
-| NPC relationships                  | 2             | 15+ recurring NPCs      |
+| Category                                        | Current       | Phase 5 Target                                 |
+| ----------------------------------------------- | ------------- | ---------------------------------------------- |
+| Events (tavern/road/dungeon/court + new themes) | 68            | 80+                                            |
+| Minigames (duels + activities)                  | 29            | 25+                                            |
+| Achievements                                    | 69            | 60+                                            |
+| Slot pool entries                               | ~152          | 300+                                           |
+| Archetypes                                      | 30            | 30+ (5-8 per class)                            |
+| World events                                    | 10            | 20+                                            |
+| Clans                                           | 25 (factions) | 10+ joinable with perks (9 clan events now ✅) |
+| NPC relationships                               | 2             | 15+ recurring NPCs                             |
 
 **Key principle**: Composability over raw count. Each authored event template + slot pools + age/class/fame gating produces many distinct felt variants. A few hundred templates should produce thousands of unique-feeling runs.
 
@@ -558,11 +558,11 @@ Goal: Take the four orthogonal creation dials (§19-20), region-driven content (
 
 **Verification**: the intro fires; fixtures resolve in the chosen mode (luck shows the grid, skill shows the memory board); finishing awards the honor; two runs of the same daily seed produce the same tournament outcome.
 
-### 7.5 Global Individual Honors gated by Prestige (§23) ⬜
+### 7.5 Global Individual Honors gated by Prestige (§23) ✅
 
 **Spec ref**: §Legacy / §Achievements | **El Ídolo ref**: §23 (Balón de Oro = play in the top league + a consecrating season; Puskás = a single moment)
 
-**Current state**: `generateDistinctions` (`server/engine/epilogue.ts`) counts battles/quests/rare/legendary counters. Achievements are stat-threshold (`counter_gte`, `fame_gte`, `reputation_gte`, etc.) with no "current faction must be prestigious" gate. No tournament-honor link.
+**Status (2026-08-02): fully implemented.** `faction_wealth_gte` is a first-class achievement condition (`shared/types.ts` + `server/engine/achievements.ts` case), authored on `champion_of_the_age` (`faction_wealth_gte: 7` + `fame_gte: 80` + `counter_gte: tournaments_won ≥ 1`) and on the `deed_of_the_year` achievement; `generateDistinctions` in `server/engine/epilogue.ts` emits both as `DistinctionEntry` rows. Tournament wins bump `counters.tournaments_won` (7.4), so the "consecrating season" chain is live end-to-end. Verified in `server/engine/engine.test.ts` (faction_wealth_gte tests).
 
 **Implementation**:
 
@@ -573,11 +573,11 @@ Goal: Take the four orthogonal creation dials (§19-20), region-driven content (
 
 **Verification**: play in a wealth≥7 faction with high fame and a tournament win → honor unlocks; a highlight choice bumps `deeds_of_the_year`; both appear in the epilogue distinctions block.
 
-### 7.6 Negotiation Push-Your-Luck Dial (§24) 🟡
+### 7.6 Negotiation Push-Your-Luck Dial (§24) ✅
 
 **Spec ref**: §Choice rarity system, §Clans (offer flow) | **El Ídolo ref**: §24 ("si apretás por demasiada plata, el pase se te puede caer")
 
-**Current state**: clan offer cards are accept/reject only; `offerQualityModifier` (Guild Herald retinue) already exists as a modifier hook.
+**Status (2026-08-02): fully implemented.** Picking a clan offer now defers the join to a `negotiationFollowUpEvent` (`server/engine/engine.ts:490`): the player accepts, or presses for more gold with the risk stated on the option itself. Success → `signingGold × negotiationGoldMultiplier` (1.5) + improved stipend, bumps `counters.negotiations_won`; failure → deal withdrawn + reputation hit, bumps `counters.negotiation_failures`. Success chance = `negotiationBaseChance + charisma × negotiationCharismaCoeff` (+ `offerQualityModifier`). Config knobs live in `shared/config.ts:38-43`. Verified in `server/engine/engine.test.ts` ("negotiation dial" suite).
 
 **Implementation**:
 
@@ -588,11 +588,11 @@ Goal: Take the four orthogonal creation dials (§19-20), region-driven content (
 
 **Verification**: accept an offer → press for more → either the deal improves or it collapses with a "word got out" narrative; a Guild Herald owner sees meaningfully better odds.
 
-### 7.7 Class-Partitioned Epithet Pools (§25) 🟡
+### 7.7 Class-Partitioned Epithet Pools (§25) ✅
 
 **Spec ref**: §Legacy (auto-generated epithet) | **El Ídolo ref**: §25 (position defines _what kind of idol you end up being_)
 
-**Current state**: `generateEpithet` (`server/engine/epilogue.ts`) builds prefix from the dominant personality tag or a tiny class prefix, suffix from class, subtitle from tier + faction. One universal shape; no archetype partitioning.
+**Status (2026-08-02): fully implemented.** `generateEpithet` (`server/engine/epilogue.ts`) now uses a per-class `CLASS_IDENTITIES` table of **disjoint identity slots** keyed by behavior archetype (`legendary` / `mercenary` / `traitor` / `loyal`), derived at epilogue time from `clanMemberships` history + standing. Disjointness verified by a unit test in `server/engine/engine.test.ts` ("class-partitioned epithets" suite, e.g. a rogue never receives a warrior-only identity). The subtitle keeps naming the **home** faction.
 
 **Implementation**:
 
@@ -625,11 +625,11 @@ No new build work — daily mode (`runType: "daily"`, `todayDailySeed`) already 
 Phase 0 (Bugs):    B1-B6 ✅ (B4 partially) — 1-2 days
 Phase 1 (Identity): 1.1 ✅, 1.2 🟡, 1.3 ✅, 1.4 ✅ — 1 week
 Phase 2 (Economy):  2.1 ✅, 2.2 ✅, 2.3 ✅, 2.4 ✅ — 1.5 weeks
-Phase 3 (Social):   3.1 ✅, 3.2 🟡, 3.3 ✅, 3.4 🟡, 3.5 ✅ — 2 weeks
+Phase 3 (Social):   3.1 ✅, 3.2 🟡, 3.3 ✅, 3.4 ✅, 3.5 ✅ — 2 weeks
 Phase 4 (Legacy):   4.1 ✅, 4.2 ✅, 4.3 ✅, 4.4 ✅ — 1 week
-Phase 5 (Content):  5.1 🟡 (32/60 events etc.), 5.2 ✅, 5.3 🟡, 5.4 ✅ — ongoing
+Phase 5 (Content):  5.1 🟡 (68/80 events, 29/25 minigames, 69/60+ achievements), 5.2 ✅, 5.3 ✅, 5.4 ✅ — ongoing
 Phase 6 (Optional): 6.1 ⬜ Analytics — if/when needed
-Phase 7 (New ideas): 7.1 ⬜, 7.2 ⬜, 7.3 🟡, 7.4 🟡, 7.5 ⬜, 7.6 🟡, 7.7 🟡, 7.8 ✅ (tests only) — 2-3 weeks
+Phase 7 (New ideas): 7.1 ✅, 7.2 ✅, 7.3 ✅, 7.4 ✅, 7.5 ✅, 7.6 ✅, 7.7 ✅, 7.8 ✅ (tests) — shipped
 ```
 
 Phase 7 ordering: 7.1 (identity/regions) is the foundation — 7.3 (region variants) and 7.7 (home-faction epithets) depend on its region concept. 7.2 (origin + bench) is independent but touches the same `createCharacter`/`joinClan` code as 7.1, so do it right after. 7.4 (tournaments) then 7.5 (honors) chain together. 7.6 (negotiation) and 7.8 (tests) are standalone. 7.8's determinism tests should land with the first seeded-draw change (7.4 or 7.6), not last.
@@ -641,17 +641,10 @@ Remaining work by priority:
 1. 🟡 **1.2 (part)** — add `press_conference` minigame subtype (5 personality-tag events with `wantedTags`/`punishedTags` authored ✅)
 2. 🟡 **1.4 (part)** — more authored rest/recovery events using `staminaDelta` beyond the forced-recovery path
 3. 🟡 **3.2** — separate `rivals` table + parallel rival RNG stream
-4. 🟡 **3.4** — author events using `joinClanId` / `leaveReason` / `requiresNoClan`
-5. 🟡 **5.1/5.3** — content volume targets + spec-aligned achievement tiers
-6. 🟡 **5.4 (part)** — per-encounter completion tracking (overall % now implemented)
-7. ⬜ **6.1** — analytics (optional)
-8. ⬜ **7.1** — homeland vs. geography decoupling + `requiresForeign` outsider content (foundation for 7.3/7.7)
-9. ⬜ **7.2** — `origin` dial + over-reaching bench risk + `roleSignal` on clan offers
-10. 🟡 **7.3** — region-gated event variants (`content/events/regions.json` + slot pool)
-11. 🟡 **7.4** — whole-arc tournament with self-selected luck/skill mode (reuses `grid_gamble`/`memory_match`)
-12. ⬜ **7.5** — prestige-gated global honors (`faction_wealth_gte` condition + epilogue distinctions)
-13. 🟡 **7.6** — push-your-luck negotiation dial on clan offers (explicit risk label)
-14. 🟡 **7.7** — class-partitioned epithet pools (disjoint per-class identity sets)
-15. ✅ **7.8** — daily-seed determinism tests (land with 7.4/7.6 seeded-draw changes)
+4. 🟡 **5.1** — content volume targets (events 68/80, world 10/20+, NPC relationships 2/15+)
+5. 🟡 **5.4 (part)** — per-encounter completion tracking (overall % now implemented)
+6. ⬜ **6.1** — analytics (optional)
+
+> Phase 7 is fully shipped as of 2026-08-02: 7.1 homeland/outsider ✅, 7.2 origin + bench ✅, 7.3 region-gated variants ✅, 7.4 tournaments ✅, 7.5 prestige-gated honors ✅, 7.6 negotiation dial ✅, 7.7 class-partitioned epithets ✅, 7.8 determinism tests ✅.
 
 Additional feature shipped 2026-07-30: **no consecutive event repeats** — `selectEvent` now tracks `CharacterState.lastEventId` and excludes it from the selection pool (falling back only when it's the sole eligible event), so the same event/minigame never appears two turns in a row.

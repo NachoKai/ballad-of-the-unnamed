@@ -437,6 +437,56 @@
       "es": "el borde de un abismo sin fondo"
     }
   ],
+  "worldLocation": [
+    {
+      "en": "the Cinder Peaks",
+      "es": "los Picos de Brasa"
+    },
+    {
+      "en": "the Sunken Isles",
+      "es": "las Islas Hundidas"
+    },
+    {
+      "en": "the Drowned Coast",
+      "es": "la Costa Sumergida"
+    },
+    {
+      "en": "the Serrated Highlands",
+      "es": "las Tierras Altas Dentadas"
+    },
+    {
+      "en": "the Whispering Wastes",
+      "es": "las Llanuras Susurrantes"
+    },
+    {
+      "en": "the Pale Gorge",
+      "es": "la Garganta Pálida"
+    },
+    {
+      "en": "the Obsidian Reach",
+      "es": "la Región de Obsidiana"
+    },
+    {
+      "en": "the Thornmarch",
+      "es": "la Marcha de Espinas"
+    },
+    {
+      "en": "the Grey Bastion",
+      "es": "la Fortaleza Gris"
+    },
+    {
+      "en": "the Scorched Sands",
+      "es": "las Arenas Abrasadoras"
+    },
+    {
+      "en": "the Emerald Vale",
+      "es": "la Vega Esmeralda"
+    },
+    {
+      "en": "the Iron Marsh",
+      "es": "la Ciénaga de Hierro"
+    }
+  ],
   "creatureName": [
     {
       "en": "a mangy dire-wolf",
@@ -452,7 +502,7 @@
     },
     {
       "en": "a cave wyrm",
-      "es": "un sierpe de caverna"
+      "es": "una sierpe de caverna"
     },
     {
       "en": "a cursed revenant",

@@ -50,7 +50,7 @@ pnpm format           # prettier --write .
 
 ## Gotchas
 
-- README says "Tailwind CSS" — **wrong**. The client uses **styled-components** (styled.ts, theme.ts, GlobalStyle.ts). No Tailwind config exists.
+- The client uses **styled-components** (styled.ts, theme.ts, GlobalStyle.ts). No Tailwind config exists.
 - Balance tuning lives in `shared/config.ts` (`GAME_CONFIG`), not in engine logic.
 - Vite `root` is `src/`, `publicDir` is `../public`, build output is `dist/client` (vercel.json rewrites SPA → index.html).
 - Two test suites: `src/**` (vitest root) and `server/**` + `shared/**` (vitest.server.config.ts). `engine.test.ts` is the large one.

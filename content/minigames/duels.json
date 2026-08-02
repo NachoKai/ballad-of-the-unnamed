@@ -305,7 +305,7 @@
         },
         "narrative": {
           "en": "You land more hits than you take. The brawl winds down with you still on your feet and a rowdy cheer in your name.",
-          "es": "Acertás más golpes de los que recibís. La pelea se calma con vos todavía en pie y un vítores a tu nombre."
+          "es": "Acertás más golpes de los que recibís. La pelea se calma con vos todavía en pie y vítores a tu nombre."
         }
       },
       "partial": {
@@ -805,7 +805,7 @@
     "primaryStat": "charisma",
     "narrative": {
       "en": "A Thornwood caravan master sits across from you, arms folded. Their wagons are heavy with ironwork and ore. Your offer needs to match their stubbornness — and they're very, very stubborn.",
-      "es": "Una maestra de caravana del Espinar se sienta frente a vos, con los brazos cruzados. Sus carromatos van cargados de hierro y mineral. Tu oferta debe igualar su terquedad — y son muy, muy tercos."
+      "es": "Una maestra de caravana del Espinar se sienta frente a vos, con los brazos cruzados. Sus carromatos van cargados de hierro y mineral. Tu oferta debe igualar su terquedad — y es muy, muy terca."
     },
     "cards": [
       {

@@ -43,7 +43,7 @@
         "goldDelta": 40,
         "narrative": {
           "en": "You tell a self-deprecating tale of your homeland's odd customs and win the room with laughter. No one laughs at you again without your permission.",
-          "es": "Contás un relato autodepreciativo de las costumbres raras de tu tierra y te ganás la sala con la risa. Nadie vuelve a reirse de vos sin tu permiso."
+          "es": "Contás un relato autodepreciativo de las costumbres raras de tu tierra y te ganás la sala con la risa. Nadie vuelve a reírse de vos sin tu permiso."
         }
       },
       {
@@ -273,7 +273,7 @@
     "requiresForeign": true,
     "narrative": {
       "en": "At a crowded inn, someone greets you in the old tongue. A traveler from your home region — years abroad, weathered but warm. 'By the old songs, I thought I was the last one here.'",
-      "es": "En una posada abarrotada, alguien te saluda en la lengua antigua. Un viajero de tu región de origen — años en el extranjero, curtido pero calido. 'Por las viejas canciones, creí que era el último aquí.'"
+      "es": "En una posada abarrotada, alguien te saluda en la lengua antigua. Un viajero de tu región de origen — años en el extranjero, curtido pero cálido. 'Por las viejas canciones, creí que era el último aquí.'"
     },
     "choices": [
       {
