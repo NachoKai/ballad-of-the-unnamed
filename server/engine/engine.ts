@@ -1150,6 +1150,7 @@ export function resolveChoice(
 
   c.turn += 1
   recordRarity(c, choice.rarity)
+  c.gold += GAME_CONFIG.goldPerTurn
 
   // Personality: award the tag associated with the choice.
   if (choice.tag) {

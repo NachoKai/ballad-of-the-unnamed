@@ -340,7 +340,51 @@ describe("resolveChoice", () => {
       ],
     }
     resolveChoice(c, event, "rich", reg, new Rng(1))
-    expect(c.gold).toBe(150)
+    expect(c.gold).toBe(150 + GAME_CONFIG.goldPerTurn)
+  })
+
+  it("grants passive gold each resolved turn even without a gold delta", () => {
+    const c = makeChar({ gold: 100 })
+    const event: EventContent = {
+      id: "test",
+      minAge: 0,
+      maxAge: 99,
+      weight: 1,
+      narrative: { en: "", es: "" },
+      choices: [
+        {
+          id: "pick",
+          rarity: "common",
+          label: { en: "", es: "" },
+          narrative: { en: "", es: "" },
+        },
+      ],
+    }
+    resolveChoice(c, event, "pick", reg, new Rng(1))
+    expect(c.gold).toBe(100 + GAME_CONFIG.goldPerTurn)
+  })
+
+  it("passive gold is deterministic across seeds", () => {
+    const a = makeChar({ gold: 100 })
+    const b = makeChar({ gold: 100 })
+    const event: EventContent = {
+      id: "test",
+      minAge: 0,
+      maxAge: 99,
+      weight: 1,
+      narrative: { en: "", es: "" },
+      choices: [
+        {
+          id: "pick",
+          rarity: "common",
+          label: { en: "", es: "" },
+          narrative: { en: "", es: "" },
+        },
+      ],
+    }
+    resolveChoice(a, event, "pick", reg, new Rng(1))
+    resolveChoice(b, event, "pick", reg, new Rng(999))
+    expect(a.gold).toBe(b.gold)
   })
 
   it("tracks personality tags", () => {
@@ -2343,7 +2387,7 @@ describe("joinClan signing gold", () => {
     }
     resolveChoice(c, event, "join_ironhold", reg, new Rng(1))
     expect(c.currentClanId).toBe("ironhold")
-    expect(c.gold).toBe(100 + 750)
+    expect(c.gold).toBe(100 + 750 + GAME_CONFIG.goldPerTurn)
   })
 
   it("computes a signing gold when the choice has no goldDelta", () => {
@@ -2368,7 +2412,7 @@ describe("joinClan signing gold", () => {
     resolveChoice(c, event, "join_ironhold", reg, new Rng(1))
     // ironhold wealth is 5 -> 100 + 500 = 600
     expect(c.currentClanId).toBe("ironhold")
-    expect(c.gold).toBe(100 + 600)
+    expect(c.gold).toBe(100 + 600 + GAME_CONFIG.goldPerTurn)
   })
 })
 
@@ -2561,7 +2605,7 @@ describe("clan offer amounts", () => {
         const followUp = negotiationFollowUpEvent(c, reg)
         const goldBefore = c.gold
         resolveChoice(c, followUp, "accept_join", reg, rng)
-        expect(c.gold).toBe(goldBefore + displayed)
+        expect(c.gold).toBe(goldBefore + displayed + GAME_CONFIG.goldPerTurn)
         tested = true
         break
       }
@@ -2625,7 +2669,7 @@ describe("clan offer amounts", () => {
     resolveChoice(c, event, "join_blacktide", reg, new Rng(1))
     expect(c.huntedBy).toBe("ironhold")
     expect(c.currentClanId).toBe("blacktide")
-    expect(c.gold).toBe(100 + 500)
+    expect(c.gold).toBe(100 + 500 + GAME_CONFIG.goldPerTurn)
     expect(c.clanMemberships.find((m) => m.clanId === "ironhold")?.leftReason).toBe("betrayed")
   })
 
@@ -2650,7 +2694,7 @@ describe("clan offer amounts", () => {
     if (!ev) throw new Error("missing clan_loyalty_bribe fixture")
     resolveChoice(c, ev, "betray", reg, new Rng(1))
     expect(c.currentClanId).toBe("blacktide")
-    expect(c.gold).toBe(100 + 200)
+    expect(c.gold).toBe(100 + 200 + GAME_CONFIG.goldPerTurn)
     expect(c.huntedBy).toBe("greywater")
     expect(c.counters["clans_betrayed"]).toBe(1)
     expect(c.clanMemberships.find((m) => m.clanId === "greywater")?.leftReason).toBe("betrayed")
@@ -2890,7 +2934,7 @@ describe(" negotiation dial ", () => {
     resolveChoice(c, ev, "accept_join", reg, new Rng(1))
     expect(c.pendingJoinOffer).toBeNull()
     expect(c.currentClanId).toBe("blacktide")
-    expect(c.gold).toBe(50 + 500)
+    expect(c.gold).toBe(50 + 500 + GAME_CONFIG.goldPerTurn)
     expect(c.counters["negotiations_won"] ?? 0).toBe(0)
   })
 
@@ -2906,7 +2950,11 @@ describe(" negotiation dial ", () => {
       const before = c2.gold
       resolveChoice(c2, ev2, "negotiate_join", reg, r2)
       if (c2.currentClanId === "blacktide") {
-        expect(c2.gold).toBe(before + Math.round(500 * GAME_CONFIG.negotiationGoldMultiplier))
+        expect(c2.gold).toBe(
+          before +
+            Math.round(500 * GAME_CONFIG.negotiationGoldMultiplier) +
+            GAME_CONFIG.goldPerTurn,
+        )
         expect(c2.counters["negotiations_won"]).toBe(1)
         return
       }

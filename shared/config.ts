@@ -66,6 +66,7 @@ export const GAME_CONFIG = {
   liabilityMax: 100,
   liabilityDecayPerSeason: 1,
   liabilityNotoriousThreshold: 50,
+  goldPerTurn: 3,
 
   // Top 0.1% of all-time runs get promoted to "legendary" tier.
   legendaryThresholdPercentile: 0.999,

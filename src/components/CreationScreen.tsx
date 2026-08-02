@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { Dices } from "lucide-react"
 import { styled } from "styled-components"
 import type { Gender, Locale, Origin, RunType } from "@shared/types"
 import { api, type ArchetypeView, type ClassInfo } from "../api"
@@ -6,11 +7,38 @@ import { t } from "../i18n/strings"
 import { STAT_ABBR } from "../constants"
 import { AchIcon } from "./AchIcon"
 import { ArchetypeStep } from "./ArchetypeStep"
-import { BtnPrimary } from "./ui/Button"
+import { BtnGhost, BtnPrimary } from "./ui/Button"
 import { TextPretty } from "./ui/Text"
 import { GradientText } from "./ui/GradientText"
 import { Tooltip } from "./ui/Tooltip"
 import { rise } from "./ui/Animation"
+
+const RANDOM_NAMES = [
+  "Kaelen",
+  "Mira",
+  "Orin",
+  "Sable",
+  "Tamsin",
+  "Borin",
+  "Lyra",
+  "Gareth",
+  "Nyx",
+  "Elowen",
+  "Cedric",
+  "Rowan",
+  "Isolde",
+  "Thorne",
+  "Vesper",
+  "Aldric",
+  "Maren",
+  "Silas",
+  "Wren",
+  "Darian",
+]
+
+function pick<T>(arr: readonly T[]): T {
+  return arr[Math.floor(Math.random() * arr.length)]
+}
 
 interface Props {
   locale: Locale
@@ -78,6 +106,38 @@ export function CreationScreen({ locale, onStart, onStartWithArchetype }: Props)
     }
   }
 
+  async function randomize() {
+    if (classes.length === 0 || busy) return
+    const n = pick(RANDOM_NAMES)
+    const g = pick(["male", "female"] as Gender[])
+    const cid = pick(classes).id
+    const o = pick(["humble", "established"] as Origin[])
+    setName(n)
+    setGender(g)
+    setClassId(cid)
+    setOrigin(o)
+    setBusy(true)
+    setError(null)
+    try {
+      let archetypeId: string | null = null
+      try {
+        const res = await api.drawArchetypes({ classId: cid, locale, gender: g })
+        if (res.archetypes.length > 0) archetypeId = pick(res.archetypes).id
+      } catch (err) {
+        console.error("Failed to draw archetypes:", err)
+      }
+      if (archetypeId) {
+        await onStartWithArchetype(n.trim() || "Wanderer", g, cid, archetypeId, runType, o)
+      } else {
+        await onStart(n.trim() || "Wanderer", g, cid, runType, o)
+      }
+    } catch (e) {
+      setError(String((e as Error).message))
+    } finally {
+      setBusy(false)
+    }
+  }
+
   async function pickArchetype(archetypeId: string) {
     if (!classId || busy) return
     setBusy(true)
@@ -128,13 +188,24 @@ export function CreationScreen({ locale, onStart, onStartWithArchetype }: Props)
 
       <CreationBlock>
         <BlockLabel htmlFor="hero-name">{t(locale, "chooseName")}</BlockLabel>
-        <NameInput
-          id="hero-name"
-          value={name}
-          maxLength={24}
-          placeholder={t(locale, "namePlaceholder")}
-          onChange={(e) => setName(e.target.value)}
-        />
+        <NameRow>
+          <NameInput
+            id="hero-name"
+            value={name}
+            maxLength={24}
+            placeholder={t(locale, "namePlaceholder")}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <RandomBtn
+            type="button"
+            disabled={classes.length === 0 || busy}
+            onClick={randomize}
+            aria-label={t(locale, "random")}
+          >
+            <Dices size={16} aria-hidden="true" />
+            {t(locale, "random")}
+          </RandomBtn>
+        </NameRow>
       </CreationBlock>
 
       <CreationBlock>
@@ -235,9 +306,11 @@ export function CreationScreen({ locale, onStart, onStartWithArchetype }: Props)
 
       {error && <FormError>{error}</FormError>}
 
-      <BeginBtn type="button" disabled={!classId || busy || !name.trim()} onClick={begin}>
-        {busy ? t(locale, "loading") : t(locale, "begin")}
-      </BeginBtn>
+      <ActionsRow>
+        <BeginBtn type="button" disabled={!classId || busy || !name.trim()} onClick={begin}>
+          {busy ? t(locale, "loading") : t(locale, "begin")}
+        </BeginBtn>
+      </ActionsRow>
     </CreationScreenRoot>
   )
 }
@@ -279,6 +352,8 @@ const BlockLabel = styled.label`
 
 const NameInput = styled.input`
   width: 100%;
+  flex: 1 1 auto;
+  min-width: 0;
   background: ${({ theme }) => theme.colors.ink3};
   border: 1px solid ${({ theme }) => theme.colors.line2};
   border-radius: ${({ theme }) => theme.radii.sm};
@@ -295,6 +370,16 @@ const NameInput = styled.input`
     outline: none;
     border-color: ${({ theme }) => theme.colors.gold};
     box-shadow: 0 0 0 3px rgba(201, 164, 76, 0.15);
+  }
+`
+
+const NameRow = styled.div`
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+
+  @media (max-width: 480px) {
+    flex-direction: column;
   }
 `
 
@@ -466,9 +551,30 @@ const FormError = styled.p`
 `
 
 const BeginBtn = styled(BtnPrimary)`
-  margin-top: 26px;
   width: 100%;
   padding: 16px;
   font-size: 19px;
   text-transform: uppercase;
+`
+
+const ActionsRow = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 26px;
+`
+
+const RandomBtn = styled(BtnGhost)`
+  flex: 0 0 auto;
+  align-self: stretch;
+  padding: 0 22px;
+  font-size: 15px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+
+  @media (max-width: 480px) {
+    padding: 12px 22px;
+    align-self: auto;
+  }
 `
