@@ -451,9 +451,10 @@ const RetireBanner = styled.div`
 
 const CapstoneBanner = styled.div`
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 10px;
   padding: 16px 20px;
   border-radius: ${({ theme }) => theme.radii.sm};
   background: rgba(201, 164, 76, 0.06);
@@ -484,7 +485,7 @@ const CapstoneTag = styled.span`
 `
 
 const CapstoneScrutiny = styled.div`
-  padding: 0 0 14px;
+  padding: 14px 20px;
   text-align: center;
   font-size: 14px;
   font-style: italic;
