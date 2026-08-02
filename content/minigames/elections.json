@@ -231,5 +231,473 @@
         }
       }
     }
+  },
+  {
+    "id": "election_guild_master",
+    "type": "minigame",
+    "subtype": "election",
+    "minAge": 18,
+    "maxAge": 99,
+    "weight": 9,
+    "isCapstone": true,
+    "capstoneKind": "election",
+    "primaryStat": "intelligence",
+    "narrative": {
+      "en": "The merchant guild's charter comes up for renewal, and every guildhall in the city is jockeying to name the next Guildmaster. The ledgers will decide the season — but one name is already written in a book the auditors never see.",
+      "es": "La carta del gremio mercante se renueva, y cada casa gremial de la ciudad puja por nombrar al próximo Maestre. Los libros de cuentas decidirán la temporada — pero un nombre ya está escrito en un libro que los auditores nunca ven."
+    },
+    "cards": [
+      {
+        "id": "guild_cartel",
+        "icon": "hand-coins",
+        "trap": true,
+        "label": {
+          "en": "Back the cartel's favorite",
+          "es": "Respaldar a la favorita del cártel"
+        }
+      },
+      {
+        "id": "guild_ledger",
+        "icon": "coins",
+        "label": {
+          "en": "Back the master of the ledger",
+          "es": "Respaldar a la maestra de los libros"
+        }
+      },
+      {
+        "id": "guild_underdog",
+        "icon": "megaphone",
+        "label": {
+          "en": "Back the guildhall underdog",
+          "es": "Respaldar a la opositora del gremio"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.44,
+      "statInfluence": {
+        "intelligence": 0.012,
+        "charisma": 0.004
+      },
+      "cardModifiers": {
+        "guild_ledger": {
+          "winChanceDelta": 0.05
+        },
+        "guild_underdog": {
+          "winChanceDelta": 0.1
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "goldDelta": 200,
+        "fameDelta": 4,
+        "reputationDelta": 3,
+        "verdict": {
+          "en": "GREAT +3",
+          "es": "GRAN +3"
+        },
+        "gradeDelta": 3,
+        "narrative": {
+          "en": "Your pick steers the guild through a tariff war and comes out rich. The new Guildmaster signs a charter that names you first among friends, and every scale tips your way from then on.",
+          "es": "Tu elegida conduce al gremio a través de una guerra arancelaria y sale enriquecida. La nueva Maestre firma una carta que te nombra primero entre sus amigos, y de ahí en más todas las balanzas se inclinan a tu favor."
+        }
+      },
+      "success": {
+        "goldDelta": 80,
+        "fameDelta": 2,
+        "reputationDelta": 1,
+        "verdict": {
+          "en": "GOOD +1",
+          "es": "BUENA +1"
+        },
+        "gradeDelta": 1,
+        "narrative": {
+          "en": "The guild votes your candidate in, and the first season's books close in the black. Your name appears in the right columns, next to the right numbers.",
+          "es": "El gremio elige a tu candidata y los primeros libros de la temporada cierran en negro. Tu nombre aparece en las columnas correctas, junto a los números correctos."
+        }
+      },
+      "partial": {
+        "goldDelta": 30,
+        "reputationDelta": -1,
+        "verdict": {
+          "en": "MIXED 0",
+          "es": "MIXTA 0"
+        },
+        "gradeDelta": 0,
+        "narrative": {
+          "en": "The charter is renewed, but with your candidate demoted to a vote without a voice. The guild thrives; your influence, less so. Half the halls greet you warmly, half measure you for a mark.",
+          "es": "La carta se renueva, pero con tu candidata rebajada a un voto sin voz. El gremio prospera; tu influencia, mucho menos. La mitad de los salones te saluda con calidez, la otra mitad te mide para marcarte."
+        }
+      },
+      "fail": {
+        "goldDelta": -80,
+        "fameDelta": -2,
+        "reputationDelta": -3,
+        "liabilityDelta": 1,
+        "verdict": {
+          "en": "BAD −4",
+          "es": "MALA −4"
+        },
+        "gradeDelta": -4,
+        "narrative": {
+          "en": "The hidden book surfaces at the vote, and the guild turns on the name you vouched for — and on you. Auditors shadow your accounts all winter, and the cartel's debt is now, quietly, yours.",
+          "es": "El libro oculto sale a la luz en la votación, y el gremio se vuelve contra el nombre que avalaste — y contra vos. Los auditores siguen tus cuentas todo el invierno, y la deuda del cártel ahora es, en silencio, tuya."
+        }
+      }
+    }
+  },
+  {
+    "id": "election_temple_voice",
+    "type": "minigame",
+    "subtype": "election",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 8,
+    "isCapstone": true,
+    "capstoneKind": "election",
+    "primaryStat": "charisma",
+    "narrative": {
+      "en": "The temple's Voice falls silent at the season's turning, and the faithful must choose who will speak for them. One candidate's devotion hides a darker vow — and the bells toll for whoever backs her.",
+      "es": "La Voz del templo enmudece en el giro de la temporada, y los fieles deben elegir quién hablará por ellos. La devoción de una candidata oculta un voto más oscuro — y las campanas doblan por quien la respalde."
+    },
+    "cards": [
+      {
+        "id": "temple_inquisitor",
+        "icon": "flame",
+        "trap": true,
+        "label": {
+          "en": "Back the stern inquisitor",
+          "es": "Respaldar a la severa inquisidora"
+        }
+      },
+      {
+        "id": "temple_scribe",
+        "icon": "book-open",
+        "label": {
+          "en": "Back the scholar of the old rites",
+          "es": "Respaldar a la erudita de los ritos antiguos"
+        }
+      },
+      {
+        "id": "temple_healer",
+        "icon": "heart-handshake",
+        "label": {
+          "en": "Back the beloved healer",
+          "es": "Respaldar a la querida sanadora"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.42,
+      "statInfluence": {
+        "charisma": 0.012,
+        "intelligence": 0.004
+      },
+      "cardModifiers": {
+        "temple_scribe": {
+          "winChanceDelta": 0.05
+        },
+        "temple_healer": {
+          "winChanceDelta": 0.1
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "charisma": 2,
+          "constitution": 1
+        },
+        "fameDelta": 5,
+        "reputationDelta": 4,
+        "verdict": {
+          "en": "GREAT +3",
+          "es": "GRAN +3"
+        },
+        "gradeDelta": 3,
+        "narrative": {
+          "en": "The Voice you championed speaks, and the temple's healing light falls on the whole season. The faithful whisper your name in their prayers — a blessing that follows you past the winter.",
+          "es": "La Voz que promoviste habla, y la luz sanadora del templo cae sobre toda la temporada. Los fieles susurran tu nombre en sus oraciones — una bendición que te sigue más allá del invierno."
+        }
+      },
+      "success": {
+        "fameDelta": 3,
+        "reputationDelta": 2,
+        "verdict": {
+          "en": "GOOD +1",
+          "es": "BUENA +1"
+        },
+        "gradeDelta": 1,
+        "narrative": {
+          "en": "Your candidate becomes the new Voice and speaks well. The congregation nods along, and your judgment is quoted in the refectories all season.",
+          "es": "Tu candidata se convierte en la nueva Voz y habla bien. La congregación asiente, y citan tu criterio en los refectorios durante toda la temporada."
+        }
+      },
+      "partial": {
+        "fameDelta": 1,
+        "reputationDelta": -1,
+        "verdict": {
+          "en": "MIXED 0",
+          "es": "MIXTA 0"
+        },
+        "gradeDelta": 0,
+        "narrative": {
+          "en": "The temple elects a compromise no one fully wanted. The Voice speaks, but the choir half-listens, and the faithful wait to see whose judgment they trust — yours included.",
+          "es": "El templo elige un compromiso que nadie quería del todo. La Voz habla, pero el coro escucha a medias, y los fieles esperan ver en quién confiar — vos incluido."
+        }
+      },
+      "fail": {
+        "fameDelta": -2,
+        "reputationDelta": -4,
+        "verdict": {
+          "en": "BAD −4",
+          "es": "MALA −4"
+        },
+        "gradeDelta": -4,
+        "narrative": {
+          "en": "The darker vow comes to light during the first sermon, and the temple denounces the Voice — and the hand that raised her. The faithful cross themselves when you pass.",
+          "es": "El voto oscuro sale a la luz durante el primer sermón, y el templo denuncia a la Voz — y a la mano que la elevó. Los fieles se persignan al verte pasar."
+        }
+      }
+    }
+  },
+  {
+    "id": "election_magistrate",
+    "type": "minigame",
+    "subtype": "election",
+    "minAge": 18,
+    "maxAge": 99,
+    "weight": 9,
+    "isCapstone": true,
+    "capstoneKind": "election",
+    "primaryStat": "intelligence",
+    "narrative": {
+      "en": "The city must elect a chief magistrate before the courts reopen. Three benches of candidates plead their cases — but one robe hides a debt that already has a buyer.",
+      "es": "La ciudad debe elegir a una jueza mayor antes de que reabran los tribunales. Tres bancas de candidatas exponen sus causas — pero una toga esconde una deuda que ya tiene comprador."
+    },
+    "cards": [
+      {
+        "id": "magistrate_patron",
+        "icon": "eye-off",
+        "trap": true,
+        "label": {
+          "en": "Back the patron's candidate",
+          "es": "Respaldar a la candidata del patrón"
+        }
+      },
+      {
+        "id": "magistrate_letter",
+        "icon": "scroll-text",
+        "label": {
+          "en": "Back the letter of the law",
+          "es": "Respaldar a la letra de la ley"
+        }
+      },
+      {
+        "id": "magistrate_commons",
+        "icon": "handshake",
+        "label": {
+          "en": "Back the people's judge",
+          "es": "Respaldar a la jueza del pueblo"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.44,
+      "statInfluence": {
+        "intelligence": 0.012,
+        "charisma": 0.004
+      },
+      "cardModifiers": {
+        "magistrate_letter": {
+          "winChanceDelta": 0.05
+        },
+        "magistrate_commons": {
+          "winChanceDelta": 0.1
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "fameDelta": 6,
+        "reputationDelta": 3,
+        "verdict": {
+          "en": "GREAT +3",
+          "es": "GRAN +3"
+        },
+        "gradeDelta": 3,
+        "narrative": {
+          "en": "The magistrate you backed presides over a landmark case and rules it clean. Courts across the region cite the verdict — and the name of the one who chose her.",
+          "es": "La jueza que respaldaste preside un caso histórico y lo resuelve con limpieza. Los tribunales de la región citan el fallo — y el nombre de quien la eligió."
+        }
+      },
+      "success": {
+        "fameDelta": 3,
+        "reputationDelta": 1,
+        "verdict": {
+          "en": "GOOD +1",
+          "es": "BUENA +1"
+        },
+        "gradeDelta": 1,
+        "narrative": {
+          "en": "The courts open under a steady hand. Your candidate keeps the docket honest, and the bench remembers who had the judgment to back her.",
+          "es": "Los tribunales abren con mano firme. Tu candidata mantiene el expediente honesto, y el estrado recuerda quién tuvo el criterio para respaldarla."
+        }
+      },
+      "partial": {
+        "fameDelta": 1,
+        "reputationDelta": -1,
+        "verdict": {
+          "en": "MIXED 0",
+          "es": "MIXTA 0"
+        },
+        "gradeDelta": 0,
+        "narrative": {
+          "en": "The election yields a magistrate who rules by favor as much as law. Half the city trusts the bench again; half waits for the other shoe — and keeps an eye on you.",
+          "es": "La elección produce una jueza que falla tanto por favor como por ley. La mitad de la ciudad vuelve a confiar en el estrado; la otra espera el otro zapato — y te vigila de reojo."
+        }
+      },
+      "fail": {
+        "fameDelta": -2,
+        "reputationDelta": -3,
+        "liabilityDelta": 2,
+        "verdict": {
+          "en": "BAD −4",
+          "es": "MALA −4"
+        },
+        "gradeDelta": -4,
+        "narrative": {
+          "en": "The bought debt surfaces in open court, and the bench is disgraced — with your endorsement found in the margins. The city's clerks start a file on you that never quite closes.",
+          "es": "La deuda comprada sale a la luz en plena sala, y el estrado queda deshonrado — con tu aval encontrado en los márgenes. Los escribanos de la ciudad abren un expediente sobre vos que nunca termina de cerrarse."
+        }
+      }
+    }
+  },
+  {
+    "id": "election_succession",
+    "type": "minigame",
+    "subtype": "election",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 8,
+    "isCapstone": true,
+    "capstoneKind": "election",
+    "primaryStat": "charisma",
+    "narrative": {
+      "en": "The old house's heir is dead, and the council of elders must name the next in line before the season's end. One bloodline claim is polished — and one is forged in a fire that left no witnesses.",
+      "es": "El heredero de la vieja casa ha muerto, y el consejo de ancianos debe nombrar al siguiente en la línea antes de que termine la temporada. Un reclamo de sangre está pulido — y otro fue forjado en un incendio que no dejó testigos."
+    },
+    "cards": [
+      {
+        "id": "succession_hawk",
+        "icon": "swords",
+        "trap": true,
+        "label": {
+          "en": "Back the warlike heir",
+          "es": "Respaldar a la heredera guerrera"
+        }
+      },
+      {
+        "id": "succession_diplomat",
+        "icon": "crown",
+        "label": {
+          "en": "Back the courtly diplomat",
+          "es": "Respaldar a la diplomática de la corte"
+        }
+      },
+      {
+        "id": "succession_sage",
+        "icon": "brain",
+        "label": {
+          "en": "Back the overlooked sage",
+          "es": "Respaldar a la sabia ignorada"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.42,
+      "statInfluence": {
+        "charisma": 0.012,
+        "intelligence": 0.004
+      },
+      "cardModifiers": {
+        "succession_diplomat": {
+          "winChanceDelta": 0.05
+        },
+        "succession_sage": {
+          "winChanceDelta": 0.1
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "charisma": 2
+        },
+        "goldDelta": 150,
+        "fameDelta": 6,
+        "reputationDelta": 3,
+        "verdict": {
+          "en": "GREAT +3",
+          "es": "GRAN +3"
+        },
+        "gradeDelta": 3,
+        "narrative": {
+          "en": "The heir you championed takes the house's seat, and the old house's fortune warms to you like a hearth. Poets rehearse your name alongside the new heir's — the season belongs to your judgment.",
+          "es": "La heredera que promoviste ocupa el asiento de la casa, y la fortuna de la vieja casa se calienta contigo como un hogar. Los poetas ensayan tu nombre junto al de la nueva heredera — la temporada le pertenece a tu criterio."
+        }
+      },
+      "success": {
+        "goldDelta": 50,
+        "fameDelta": 3,
+        "reputationDelta": 1,
+        "verdict": {
+          "en": "GOOD +1",
+          "es": "BUENA +1"
+        },
+        "gradeDelta": 1,
+        "narrative": {
+          "en": "The succession passes cleanly, and the new heir remembers who stood beside her. A place is kept for you at the high table, and a purse, too.",
+          "es": "La sucesión transcurre sin sobresaltos, y la nueva heredera recuerda quién estuvo a su lado. Te reservan un lugar en la mesa alta, y también una bolsa."
+        }
+      },
+      "partial": {
+        "fameDelta": 1,
+        "reputationDelta": -1,
+        "verdict": {
+          "en": "MIXED 0",
+          "es": "MIXTA 0"
+        },
+        "gradeDelta": 0,
+        "narrative": {
+          "en": "The house names a compromise heir, and the court splits between old loyalty and new money. Your candidate bows gracefully; your name is toasted at one end of the hall and studied at the other.",
+          "es": "La casa nombra una heredera de compromiso, y la corte se divide entre la vieja lealtad y el dinero nuevo. Tu candidata hace una reverencia elegante; brindan por tu nombre en un extremo del salón y te estudian en el otro."
+        }
+      },
+      "fail": {
+        "fameDelta": -3,
+        "reputationDelta": -3,
+        "verdict": {
+          "en": "BAD −4",
+          "es": "MALA −4"
+        },
+        "gradeDelta": -4,
+        "narrative": {
+          "en": "The forged claim is denounced at the naming ceremony, and the house's fury finds its way to your name. Doors that once opened to you now close with a sound like a latch being drawn.",
+          "es": "El reclamo forjado es denunciado en la ceremonia de nombramiento, y la furia de la casa encuentra el camino hacia tu nombre. Las puertas que antes se te abrían ahora se cierran con un sonido como de cerrojo corrido."
+        }
+      }
+    }
   }
 ]
