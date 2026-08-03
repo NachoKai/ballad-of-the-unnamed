@@ -1,5 +1,5 @@
-import type { Locale, LocaleMap } from "./types"
-import { fmtInt } from "./format"
+import type { Locale, LocaleMap } from "./types.js"
+import { fmtInt } from "./format.js"
 
 export const LOCALES: Locale[] = ["en", "es"]
 export const DEFAULT_LOCALE: Locale = "en"
