@@ -54,3 +54,4 @@ pnpm format           # prettier --write .
 - Balance tuning lives in `shared/config.ts` (`GAME_CONFIG`), not in engine logic.
 - Vite `root` is `src/`, `publicDir` is `../public`, build output is `dist/client` (vercel.json rewrites SPA → index.html).
 - Two test suites: `src/**` (vitest root) and `server/**` + `shared/**` (vitest.server.config.ts). `engine.test.ts` is the large one.
+- `@types/express-serve-static-core` is a **direct devDep even though nothing imports it** — pnpm hoists direct `@types/*` to `node_modules/@types`, and Vercel's function-build language service (`@vercel/node`) can't resolve it through the hoisted `@types/express` symlink otherwise, collapsing `Request`/`Response` to empty types. Keep the version pinned exactly to the transitive resolution; do not remove.
