@@ -323,6 +323,8 @@ const NameBanner = styled.div`
 const NameText = styled.span`
   display: inline-flex;
   align-items: baseline;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 8px;
   white-space: nowrap;
   font-size: 13px;

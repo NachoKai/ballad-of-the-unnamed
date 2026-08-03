@@ -52,6 +52,7 @@ export default function App() {
   const [ending, setEnding] = useState<EndingData | null>(null)
   const [shopOpen, setShopOpen] = useState(false)
   const [canBuy, setCanBuy] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
   // Result of the final move of an interactive minigame (banner + next event).
   const [pendingMinigameResult, setPendingMinigameResult] = useState<MinigameMoveResponse | null>(
     null,
@@ -353,6 +354,72 @@ export default function App() {
               </LocaleBtn>
             </LocaleSwitch>
           </TopActions>
+          <HamburgerBtn
+            type="button"
+            aria-label={menuOpen ? t(locale, "closeMenu") : t(locale, "openMenu")}
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((v) => !v)}
+          >
+            <HamburgerLine $open={menuOpen} />
+            <HamburgerLine $open={menuOpen} />
+            <HamburgerLine $open={menuOpen} />
+          </HamburgerBtn>
+          {menuOpen && (
+            <MobileMenu role="menu">
+              {screen !== "leaderboard" && screen !== "game" && (
+                <MobileLink
+                  type="button"
+                  role="menuitem"
+                  onClick={() => {
+                    setMenuOpen(false)
+                    setScreen("leaderboard")
+                  }}
+                >
+                  {t(locale, "leaderboard")}
+                </MobileLink>
+              )}
+              {screen !== "achievements" && screen !== "game" && (
+                <MobileLink
+                  type="button"
+                  role="menuitem"
+                  onClick={() => {
+                    setMenuOpen(false)
+                    setScreen("achievements")
+                  }}
+                >
+                  {t(locale, "achievementsTitle")}
+                </MobileLink>
+              )}
+              {screen !== "collection" && screen !== "game" && (
+                <MobileLink
+                  type="button"
+                  role="menuitem"
+                  onClick={() => {
+                    setMenuOpen(false)
+                    setScreen("collection")
+                  }}
+                >
+                  {t(locale, "trophyHall")}
+                </MobileLink>
+              )}
+              <LocaleSwitch role="group" aria-label="language">
+                <LocaleBtn
+                  type="button"
+                  $active={locale === "en"}
+                  onClick={() => changeLocale("en")}
+                >
+                  EN
+                </LocaleBtn>
+                <LocaleBtn
+                  type="button"
+                  $active={locale === "es"}
+                  onClick={() => changeLocale("es")}
+                >
+                  ES
+                </LocaleBtn>
+              </LocaleSwitch>
+            </MobileMenu>
+          )}
         </TopBar>
 
         {screen === "creation" && (
@@ -484,6 +551,7 @@ const Brand = styled.button`
   display: inline-flex;
   align-items: center;
   gap: 10px;
+  min-width: 0;
   background: none;
   border: none;
   padding: 0;
@@ -492,6 +560,17 @@ const Brand = styled.button`
   font-weight: 700;
   letter-spacing: 0.04em;
   color: ${({ theme }) => theme.colors.goldBright};
+
+  span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  @media (max-width: 680px) {
+    font-size: 18px;
+    gap: 8px;
+  }
 `
 
 const BrandRune = styled.span`
@@ -504,6 +583,92 @@ const TopActions = styled.div`
   display: flex;
   align-items: center;
   gap: 14px;
+
+  @media (max-width: 680px) {
+    display: none;
+  }
+`
+
+const HamburgerBtn = styled.button`
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  width: 44px;
+  height: 44px;
+  background: transparent;
+  border: 1px solid ${({ theme }) => theme.colors.line2};
+  border-radius: ${({ theme }) => theme.radii.sm};
+  cursor: pointer;
+
+  @media (max-width: 680px) {
+    display: inline-flex;
+  }
+`
+
+const HamburgerLine = styled.span<{ $open: boolean }>`
+  width: 20px;
+  height: 2px;
+  background: ${({ theme }) => theme.colors.gold};
+  border-radius: 2px;
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+
+  &:nth-child(1) {
+    transform: ${({ $open }) => ($open ? "translateY(7px) rotate(45deg)" : "none")};
+  }
+
+  &:nth-child(2) {
+    opacity: ${({ $open }) => ($open ? 0 : 1)};
+  }
+
+  &:nth-child(3) {
+    transform: ${({ $open }) => ($open ? "translateY(-7px) rotate(-45deg)" : "none")};
+  }
+`
+
+const MobileMenu = styled.div`
+  display: none;
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+  padding: 10px;
+  background: rgba(29, 25, 19, 0.97);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid ${({ theme }) => theme.colors.line};
+  border-radius: ${({ theme }) => theme.radii.sm};
+  box-shadow: ${({ theme }) => theme.shadow};
+  z-index: 25;
+
+  @media (max-width: 680px) {
+    display: flex;
+  }
+`
+
+const MobileLink = styled.button`
+  background: none;
+  border: 1px solid transparent;
+  border-radius: ${({ theme }) => theme.radii.sm};
+  padding: 12px 14px;
+  text-align: left;
+  color: ${({ theme }) => theme.colors.parchmentDim};
+  font-size: 17px;
+  letter-spacing: 0.03em;
+  transition:
+    color 0.15s,
+    border-color 0.15s;
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.goldBright};
+    border-color: ${({ theme }) => theme.colors.line2};
+  }
 `
 
 const LocaleSwitch = styled.div`
@@ -511,6 +676,12 @@ const LocaleSwitch = styled.div`
   border: 1px solid ${({ theme }) => theme.colors.line2};
   border-radius: ${({ theme }) => theme.radii.sm};
   overflow: hidden;
+
+  @media (max-width: 680px) {
+    display: flex;
+    width: 100%;
+    margin-top: 4px;
+  }
 `
 
 const LocaleBtn = styled.button<{ $active: boolean }>`
@@ -525,4 +696,10 @@ const LocaleBtn = styled.button<{ $active: boolean }>`
     color 0.15s;
   background: ${({ $active, theme }) => ($active ? theme.colors.gold : "transparent")};
   font-weight: ${({ $active }) => ($active ? 600 : 400)};
+
+  @media (max-width: 680px) {
+    flex: 1;
+    padding: 10px 12px;
+    font-size: 13px;
+  }
 `

@@ -130,31 +130,33 @@ export function LeaderboardScreen({ locale, onBack }: Props) {
       )}
 
       {!loading && sorted.length > 0 && (
-        <BoardTable role="table">
-          <BoardRowHead role="row">
-            <span>#</span>
-            <span>{t(locale, "name")}</span>
-            <span>{t(locale, "classLabel")}</span>
-            <span>{t(locale, "endingLabel")}</span>
-            <NumCell>{t(locale, sortLabel ?? "scoreLabel")}</NumCell>
-            <NumCell>{t(locale, "ageShort")}</NumCell>
-          </BoardRowHead>
-          {sorted.map((e) => (
-            <BoardRow role="row" key={e.id}>
-              <Rank $rank={e.rank <= 3 ? e.rank : undefined}>{e.rank}</Rank>
-              <CellName>
-                {e.name}
-                {e.epithet && <EpithetLabel>{e.epithet}</EpithetLabel>}
-              </CellName>
-              <span>{t(locale, `class_${e.class}` as never)}</span>
-              <EndingTag $ending={e.endingType}>
-                {t(locale, `ending_${e.endingType}` as never)}
-              </EndingTag>
-              <NumCell>{sortValue(e, category).toLocaleString()}</NumCell>
-              <NumCell>{e.ageAtEnd}</NumCell>
-            </BoardRow>
-          ))}
-        </BoardTable>
+        <BoardTableWrap>
+          <BoardTable role="table">
+            <BoardRowHead role="row">
+              <span>#</span>
+              <span>{t(locale, "name")}</span>
+              <span>{t(locale, "classLabel")}</span>
+              <span>{t(locale, "endingLabel")}</span>
+              <NumCell>{t(locale, sortLabel ?? "scoreLabel")}</NumCell>
+              <NumCell>{t(locale, "ageShort")}</NumCell>
+            </BoardRowHead>
+            {sorted.map((e) => (
+              <BoardRow role="row" key={e.id}>
+                <Rank $rank={e.rank <= 3 ? e.rank : undefined}>{e.rank}</Rank>
+                <CellName>
+                  {e.name}
+                  {e.epithet && <EpithetLabel>{e.epithet}</EpithetLabel>}
+                </CellName>
+                <span>{t(locale, `class_${e.class}` as never)}</span>
+                <EndingTag $ending={e.endingType}>
+                  {t(locale, `ending_${e.endingType}` as never)}
+                </EndingTag>
+                <NumCell>{sortValue(e, category).toLocaleString()}</NumCell>
+                <NumCell>{e.ageAtEnd}</NumCell>
+              </BoardRow>
+            ))}
+          </BoardTable>
+        </BoardTableWrap>
       )}
 
       <BackBtn type="button" onClick={onBack}>
@@ -217,7 +219,14 @@ const CatBtn = styled.button<{ $active: boolean }>`
   font-weight: ${({ $active }) => ($active ? 600 : 400)};
 `
 
+const BoardTableWrap = styled.div`
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: ${({ theme }) => theme.radii.lg};
+`
+
 const BoardTable = styled.div`
+  min-width: 648px;
   width: 100%;
   background: ${({ theme }) => theme.colors.ink2};
   border: 1px solid ${({ theme }) => theme.colors.line};

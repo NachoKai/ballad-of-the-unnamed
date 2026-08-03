@@ -12,6 +12,11 @@ export const GlobalStyle = createGlobalStyle`
   #root {
     margin: 0;
     min-height: 100%;
+    /* Prevent page-level horizontal scroll on narrow/mobile screens. The
+       "clip" value (where supported) does not create a scroll container, so
+       the sticky topbar keeps working; "hidden" is the older-browser fallback. */
+    overflow-x: hidden;
+    overflow-x: clip;
   }
 
   * {

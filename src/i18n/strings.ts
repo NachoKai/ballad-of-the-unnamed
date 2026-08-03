@@ -25,6 +25,8 @@ const en: StringMap = {
   play: "Play",
   leaderboard: "Hall of Legends",
   loading: "Consulting the fates...",
+  openMenu: "Open menu",
+  closeMenu: "Close menu",
   age: "Age",
   gold: "Gold",
   health: "Health",
@@ -339,10 +341,13 @@ const en: StringMap = {
   rpsHowMage: "Mage's sorcery shatters Stone and Dagger",
   tttHowTitle: "Three in a Row",
   tttHowIntro: "You play the Sun; your rival plays the Moon.",
-  tttHowBody: "Claim three cells in a line — row, column or diagonal — before your rival. A full board with no line is a draw.",
+  tttHowBody:
+    "Claim three cells in a line — row, column or diagonal — before your rival. A full board with no line is a draw.",
   memHowTitle: "The Relic Shrine",
-  memHowIntro: "Sixteen relics lie face-down on the altar — eight pairs. Find both halves of a pair to claim it.",
-  memHowBody: "Flip two tiles per turn. A matching pair is yours and you keep playing; a miss hands the turn to your rival. Match more pairs than the Keeper to win.",
+  memHowIntro:
+    "Sixteen relics lie face-down on the altar — eight pairs. Find both halves of a pair to claim it.",
+  memHowBody:
+    "Flip two tiles per turn. A matching pair is yours and you keep playing; a miss hands the turn to your rival. Match more pairs than the Keeper to win.",
   memPairs: "Pairs",
   memYou: "You",
   memPickSecond: "Pick its match",
@@ -386,6 +391,8 @@ const es: StringMap = {
   play: "Jugar",
   leaderboard: "Salón de Leyendas",
   loading: "Consultando al destino...",
+  openMenu: "Abrir menú",
+  closeMenu: "Cerrar menú",
   age: "Edad",
   gold: "Oro",
   health: "Salud",
@@ -700,7 +707,8 @@ const es: StringMap = {
   rpsLoseRound: "Pierden la ronda.",
   rpsTieRound: "Empate.",
   rpsHowTitle: "Las cinco señales",
-  rpsHowIntro: "Cada señal vence a dos y pierde contra dos. El primero en ganar dos rondas se lleva el botín.",
+  rpsHowIntro:
+    "Cada señal vence a dos y pierde contra dos. El primero en ganar dos rondas se lleva el botín.",
   rpsHowStone: "La Piedra aplasta la Daga y la Salamandra",
   rpsHowParchment: "El Pergamino cubre la Piedra y silencia al Mago",
   rpsHowDagger: "La Daga corta el Pergamino y ensarta a la Salamandra",
@@ -708,10 +716,13 @@ const es: StringMap = {
   rpsHowMage: "La magia del Mago hace trizas la Piedra y la Daga",
   tttHowTitle: "Tres en raya",
   tttHowIntro: "Vos jugás con el Sol; tu rival, con la Luna.",
-  tttHowBody: "Alineá tres casillas — en fila, columna o diagonal — antes que tu rival. Si el tablero se llena sin línea, es un empate.",
+  tttHowBody:
+    "Alineá tres casillas — en fila, columna o diagonal — antes que tu rival. Si el tablero se llena sin línea, es un empate.",
   memHowTitle: "El Santuario de Reliquias",
-  memHowIntro: "Dieciséis reliquias yacen boca abajo sobre el altar — ocho pares. Encontrá las dos mitades de un par para reclamarlo.",
-  memHowBody: "Dale vuelta a dos losetas por turno. Un par acertado es tuyo y seguís jugando; un fallo le pasa el turno a tu rival. Igualá más pares que la guardiana para ganar.",
+  memHowIntro:
+    "Dieciséis reliquias yacen boca abajo sobre el altar — ocho pares. Encontrá las dos mitades de un par para reclamarlo.",
+  memHowBody:
+    "Dale vuelta a dos losetas por turno. Un par acertado es tuyo y seguís jugando; un fallo le pasa el turno a tu rival. Igualá más pares que la guardiana para ganar.",
   memPairs: "Pares",
   memYou: "Vos",
   memPickSecond: "Elegí su par",
