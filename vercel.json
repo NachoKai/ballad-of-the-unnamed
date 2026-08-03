@@ -1,14 +1,6 @@
 {
   "buildCommand": "vite build",
   "outputDirectory": "dist/client",
-  "functions": {
-    "api/index.ts": {
-      "includeFiles": [
-        "content/**",
-        "server/db/schema.sql"
-      ]
-    }
-  },
   "rewrites": [
     {
       "source": "/api/(.*)",
