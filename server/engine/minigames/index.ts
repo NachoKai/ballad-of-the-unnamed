@@ -88,13 +88,23 @@ export function interactiveView(state: PendingMinigameState): ServedInteractiveS
       playerPairs: state.playerPairs ?? 0,
       rivalPairs: state.rivalPairs ?? 0,
       matched,
+      playerMatched: state.playerMatched ?? [],
+      rivalMatched: state.rivalMatched ?? [],
       revealed,
       faces,
       lastPlayerTurn: state.lastPlayerTurn
-        ? { cards: state.lastPlayerTurn.cards, faces: pairFaces(state, state.lastPlayerTurn.cards), matched: state.lastPlayerTurn.matched }
+        ? {
+            cards: state.lastPlayerTurn.cards,
+            faces: pairFaces(state, state.lastPlayerTurn.cards),
+            matched: state.lastPlayerTurn.matched,
+          }
         : null,
       lastRivalTurn: state.lastRivalTurn
-        ? { cards: state.lastRivalTurn.cards, faces: pairFaces(state, state.lastRivalTurn.cards), matched: state.lastRivalTurn.matched }
+        ? {
+            cards: state.lastRivalTurn.cards,
+            faces: pairFaces(state, state.lastRivalTurn.cards),
+            matched: state.lastRivalTurn.matched,
+          }
         : null,
       over: memotestOver(state),
       result: memotestResult(state),
@@ -191,6 +201,7 @@ export function applyInteractiveMove(
     if (deck[card] === deck[first]) {
       state.playerPairs = (state.playerPairs ?? 0) + 1
       state.matched = [...matched, first, card]
+      state.playerMatched = [...(state.playerMatched ?? []), first, card]
       state.lastPlayerTurn = { cards: [first, card], matched: true }
       state.lastRivalTurn = null
       res.over = memotestOver(state)

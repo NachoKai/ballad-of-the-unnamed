@@ -93,6 +93,9 @@ describe("memotest engine", () => {
     expect(s.rivalPairs).toBe(1)
     expect(s.matched).toContain(first)
     expect(s.matched).toContain(second)
+    expect(s.rivalMatched).toContain(first)
+    expect(s.rivalMatched).toContain(second)
+    expect(s.playerMatched).toEqual([])
   })
 
   it("a skilled rival claims a pair it has already seen", () => {

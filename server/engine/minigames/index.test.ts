@@ -115,6 +115,9 @@ describe("interactive orchestrator", () => {
     expect(state.playerPairs).toBe(1)
     expect(state.matched).toContain(first)
     expect(state.matched).toContain(mate)
+    expect(state.playerMatched).toContain(first)
+    expect(state.playerMatched).toContain(mate)
+    expect(state.rivalMatched).toEqual([])
     expect(state.revealed).toEqual([])
     expect(state.lastPlayerTurn?.matched).toBe(true)
   })
@@ -137,7 +140,9 @@ describe("interactive orchestrator", () => {
 
   it("rejects illegal memotest moves", () => {
     const state = createInteractiveState(eventWith("memotest"))
-    expect(() => applyInteractiveMove(state, { kind: "memotest", card: 99 }, 20, new Rng(1))).toThrow()
+    expect(() =>
+      applyInteractiveMove(state, { kind: "memotest", card: 99 }, 20, new Rng(1)),
+    ).toThrow()
     applyInteractiveMove(state, { kind: "memotest", card: 0 }, 20, new Rng(1))
     // re-flipping the already revealed card
     expect(() =>

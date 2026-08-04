@@ -35,14 +35,7 @@ export type RpsRoundResult = "win" | "loss" | "tie"
 // The eight relic faces of the memotest. Language-neutral keys — the client
 // maps them to themed labels + icons (e.g. "dragon_egg" → Dragon's Egg).
 export type MemotestFace =
-  | "dragon_egg"
-  | "sword"
-  | "crown"
-  | "potion"
-  | "phoenix"
-  | "shield"
-  | "scroll"
-  | "gem"
+  "dragon_egg" | "sword" | "crown" | "potion" | "phoenix" | "shield" | "scroll" | "gem"
 
 export type TicTacToeMark = "X" | "O"
 export type TicTacToeCell = TicTacToeMark | null
@@ -65,6 +58,10 @@ export interface PendingMinigameState {
   // first move and persisted, so resume before the first move needs no Rng.
   deck?: MemotestFace[]
   matched?: number[]
+  // matched pairs split by who claimed them — the client colors the cards
+  // differently so the altar reads like a shared game.
+  playerMatched?: number[]
+  rivalMatched?: number[]
   revealed?: number[]
   playerPairs?: number
   rivalPairs?: number
@@ -103,14 +100,25 @@ export type ServedInteractiveState =
       rivalPairs: number
       // permanently face-up card indices (matched pairs)
       matched: number[]
+      // the same indices, split by who claimed each pair (colors the cards)
+      playerMatched: number[]
+      rivalMatched: number[]
       // indices currently face-up awaiting the second flip of the player's pair
       revealed: number[]
       // face of every currently visible card (matched ∪ revealed)
       faces: Record<number, MemotestFace>
       // the last resolved exchanges, for the verdict strips under the grid.
       // faces for these cards ride in `faces` (matched) or the turn's own map.
-      lastPlayerTurn: { cards: number[]; faces: Record<number, MemotestFace>; matched: boolean } | null
-      lastRivalTurn: { cards: number[]; faces: Record<number, MemotestFace>; matched: boolean } | null
+      lastPlayerTurn: {
+        cards: number[]
+        faces: Record<number, MemotestFace>
+        matched: boolean
+      } | null
+      lastRivalTurn: {
+        cards: number[]
+        faces: Record<number, MemotestFace>
+        matched: boolean
+      } | null
       over: boolean
       result: "playing" | "player_win" | "rival_win" | "draw"
     }

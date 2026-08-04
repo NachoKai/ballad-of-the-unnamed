@@ -8,7 +8,7 @@ import { LinkBtn } from "../ui/Button"
 import { rise } from "../ui/Animation"
 import { TicTacToeGame } from "./TicTacToeGame"
 import { RpsGame } from "./RpsGame"
-import { MemotestGame } from "./MemotestGame"
+import { MemotestGame, type MemotestPeek } from "./MemotestGame"
 import { HowToModal } from "./HowToModal"
 
 interface Props {
@@ -19,17 +19,43 @@ interface Props {
   finishedResult: MinigameMoveResponse | null
 }
 
+// How long the player's freshly flipped memotest pair stays face-up before the
+// board flips it back (and the rival acts). Without this the server resolves
+// the second flip instantly and the second card is never readable.
+const MEMOTEST_PEEK_MS = 900
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
 export function MinigameFrame({ locale, event, onMove, onFinished, finishedResult }: Props) {
   const [view, setView] = useState<ServedInteractiveState>(event.interactive!.view)
   const [feedback, setFeedback] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
   const [showHowTo, setShowHowTo] = useState(false)
+  const [peek, setPeek] = useState<MemotestPeek | null>(null)
 
   async function handle(move: InteractiveMove) {
     if (busy) return
     setBusy(true)
     try {
       const res = await onMove(move)
+      // Memotest second flip: the server clears `revealed` the moment it judges
+      // the pair, so a miss would otherwise flip the second card back before the
+      // player can read it. Hold the resolved pair face-up briefly instead.
+      if (
+        move.kind === "memotest" &&
+        view.game === "memotest" &&
+        view.revealed.length === 1 &&
+        res.minigame?.view.game === "memotest" &&
+        res.minigame.view.lastPlayerTurn &&
+        !res.minigame.view.lastPlayerTurn.matched
+      ) {
+        const last = res.minigame.view.lastPlayerTurn
+        setPeek({ cards: last.cards, faces: last.faces })
+        await sleep(MEMOTEST_PEEK_MS)
+        setPeek(null)
+      }
       if (res.status === "playing" && res.minigame) {
         setView(res.minigame.view)
         setFeedback(res.feedback ?? null)
@@ -54,15 +80,13 @@ export function MinigameFrame({ locale, event, onMove, onFinished, finishedResul
     return (
       <Frame>
         <ResultCard $tone={tone}>
-          <ResultTitle>{t(locale, won ? "minigameVictory" : draw ? "minigameDraw" : "minigameDefeat")}</ResultTitle>
+          <ResultTitle>
+            {t(locale, won ? "minigameVictory" : draw ? "minigameDraw" : "minigameDefeat")}
+          </ResultTitle>
           <ResultSub>
             {t(
               locale,
-              won
-                ? "minigameResultWin"
-                : draw
-                  ? "minigameResultDraw"
-                  : "minigameResultLose",
+              won ? "minigameResultWin" : draw ? "minigameResultDraw" : "minigameResultLose",
             )}
           </ResultSub>
           {finalView.game === "tictactoe" ? (
@@ -118,6 +142,7 @@ export function MinigameFrame({ locale, event, onMove, onFinished, finishedResul
           busy={busy}
           onCard={(card) => handle({ kind: "memotest", card })}
           feedback={feedback}
+          peek={peek}
         />
       ) : (
         <RpsGame
@@ -149,11 +174,7 @@ const OpponentHeader = styled.div`
   padding: 12px 18px;
   border: 1px solid ${({ theme }) => theme.colors.line2};
   border-radius: ${({ theme }) => theme.radii.sm};
-  background: linear-gradient(
-    180deg,
-    rgba(201, 164, 76, 0.08),
-    rgba(201, 164, 76, 0.02)
-  );
+  background: linear-gradient(180deg, rgba(201, 164, 76, 0.08), rgba(201, 164, 76, 0.02));
 `
 
 const OpponentIcon = styled.span`

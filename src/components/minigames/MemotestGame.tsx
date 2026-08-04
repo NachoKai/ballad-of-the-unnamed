@@ -1,18 +1,16 @@
 import { keyframes, styled } from "styled-components"
-import {
-  Crown,
-  Egg,
-  Flame,
-  FlaskConical,
-  Gem,
-  ScrollText,
-  Shield,
-  Sword,
-} from "lucide-react"
+import { Crown, Egg, Flame, FlaskConical, Gem, ScrollText, Shield, Sword } from "lucide-react"
 import type { Locale, MemotestFace, ServedInteractiveState } from "@shared/types"
 import { t } from "../../i18n/strings"
 
 type MemoView = Extract<ServedInteractiveState, { game: "memotest" }>
+
+// A short-lived client-side reveal: cards the server has already resolved but
+// we keep face-up so the player can read them (e.g. the second card of a miss).
+export interface MemotestPeek {
+  cards: number[]
+  faces: Record<number, MemotestFace>
+}
 
 interface Props {
   locale: Locale
@@ -20,6 +18,7 @@ interface Props {
   busy: boolean
   onCard: (card: number) => void
   feedback: string | null
+  peek?: MemotestPeek | null
 }
 
 const FACE_ICONS: Record<MemotestFace, typeof Egg> = {
@@ -63,7 +62,7 @@ export function cardRows(size: number, count: number): number[][] {
   return rows
 }
 
-export function MemotestGame({ locale, view, busy, onCard, feedback }: Props) {
+export function MemotestGame({ locale, view, busy, onCard, feedback, peek }: Props) {
   const rows = cardRows(view.size, view.size * view.size)
   const pickHint = view.revealed.length === 0 ? "minigameChooseMove" : "memPickSecond"
   const lastPlayer = view.lastPlayerTurn
@@ -86,9 +85,26 @@ export function MemotestGame({ locale, view, busy, onCard, feedback }: Props) {
         {rows.map((row, r) => (
           <Row key={r}>
             {row.map((idx) => {
-              const face = isFaceUp(view, idx) ? view.faces[idx] : null
-              const matched = view.matched.includes(idx)
+              const peeked = peek != null && peek.cards.includes(idx)
+              const face = peeked
+                ? (peek.faces[idx] ?? null)
+                : isFaceUp(view, idx)
+                  ? view.faces[idx]
+                  : null
+              const owner = view.playerMatched.includes(idx)
+                ? "player"
+                : view.rivalMatched.includes(idx)
+                  ? "rival"
+                  : null
               const Icon = face ? FACE_ICONS[face] : null
+              const $state =
+                face === null
+                  ? "down"
+                  : owner === "player"
+                    ? "playerMatched"
+                    : owner === "rival"
+                      ? "rivalMatched"
+                      : "revealed"
               return (
                 <Card
                   key={idx}
@@ -96,7 +112,7 @@ export function MemotestGame({ locale, view, busy, onCard, feedback }: Props) {
                   disabled={busy || view.over || face !== null}
                   onClick={() => onCard(idx)}
                   aria-label={face ? t(locale, FACE_KEYS[face]) : `tile ${idx}`}
-                  $state={face === null ? "down" : matched ? "matched" : "revealed"}
+                  $state={$state}
                 >
                   {Icon ? (
                     <Icon size={30} strokeWidth={1.7} aria-hidden="true" />
@@ -146,7 +162,9 @@ export function MemotestGame({ locale, view, busy, onCard, feedback }: Props) {
               )
             })}
           </TurnMoves>
-          <TurnVerdict>{t(locale, lastRival.matched ? "memRivalMatched" : "memRivalMissed")}</TurnVerdict>
+          <TurnVerdict>
+            {t(locale, lastRival.matched ? "memRivalMatched" : "memRivalMissed")}
+          </TurnVerdict>
         </TurnStrip>
       )}
 
@@ -239,10 +257,12 @@ const flipIn = keyframes`
 const CARD_TONE: Record<string, { bg: string; border: string; color: string }> = {
   down: { bg: "rgba(201, 164, 76, 0.06)", border: "#3a3126", color: "#6b5d45" },
   revealed: { bg: "rgba(201, 164, 76, 0.14)", border: "#c9a44c", color: "#c9a44c" },
-  matched: { bg: "rgba(111, 143, 106, 0.16)", border: "#6f8f6a", color: "#9fc08f" },
+  // player-claimed pairs in blue, rival-claimed pairs in yellow.
+  playerMatched: { bg: "rgba(90, 134, 200, 0.18)", border: "#5a86c8", color: "#a7c6ea" },
+  rivalMatched: { bg: "rgba(201, 164, 76, 0.2)", border: "#c9a44c", color: "#e6c874" },
 }
 
-const Card = styled.button<{ $state: "down" | "revealed" | "matched" }>`
+const Card = styled.button<{ $state: "down" | "revealed" | "playerMatched" | "rivalMatched" }>`
   aspect-ratio: 1;
   display: grid;
   place-items: center;

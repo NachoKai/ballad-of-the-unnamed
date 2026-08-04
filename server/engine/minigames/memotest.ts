@@ -29,6 +29,8 @@ export function createMemotestState(eventId: string): PendingMinigameState {
     playerPairs: 0,
     rivalPairs: 0,
     matched: [],
+    playerMatched: [],
+    rivalMatched: [],
     revealed: [],
     rivalMemory: {},
     lastPlayerTurn: null,
@@ -100,9 +102,7 @@ export function rivalMemotestTurn(
     const first = known.length > 0 ? rng.pick(known) : rng.pick(unknown)
     const secondPool = unknown.filter((idx) => idx !== first)
     const second =
-      secondPool.length > 0
-        ? rng.pick(secondPool)
-        : rng.pick(known.filter((idx) => idx !== first))
+      secondPool.length > 0 ? rng.pick(secondPool) : rng.pick(known.filter((idx) => idx !== first))
     return flipRivalPair(state, [first, second], memory, matched)
   }
 
@@ -128,6 +128,7 @@ function flipRivalPair(
     turn.matched = true
     state.rivalPairs = (state.rivalPairs ?? 0) + 1
     state.matched = [...matched, a, b]
+    state.rivalMatched = [...(state.rivalMatched ?? []), a, b]
   }
   state.rivalMemory = memory
   state.lastRivalTurn = { cards, matched: turn.matched }

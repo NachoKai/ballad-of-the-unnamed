@@ -10,6 +10,8 @@ function memView(partial: Partial<Extract<ServedInteractiveState, { game: "memot
     playerPairs: 0,
     rivalPairs: 0,
     matched: [],
+    playerMatched: [],
+    rivalMatched: [],
     revealed: [],
     faces: {},
     lastPlayerTurn: null,
