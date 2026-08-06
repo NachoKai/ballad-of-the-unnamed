@@ -58,11 +58,12 @@ interface Props {
     runType: RunType,
     origin: Origin,
   ) => Promise<void>
+  onTutorial: () => void
 }
 
 type Step = "form" | "archetype"
 
-export function CreationScreen({ locale, onStart, onStartWithArchetype }: Props) {
+export function CreationScreen({ locale, onStart, onStartWithArchetype, onTutorial }: Props) {
   const [step, setStep] = useState<Step>("form")
   const [classes, setClasses] = useState<ClassInfo[]>([])
   const [dailySeed, setDailySeed] = useState("")
@@ -197,6 +198,9 @@ export function CreationScreen({ locale, onStart, onStartWithArchetype }: Props)
           <GradientText>{t(locale, "newLife")}</GradientText>
         </h1>
         <Subtitle>{t(locale, "subtitle")}</Subtitle>
+        <TutorialLink type="button" onClick={onTutorial}>
+          {t(locale, "howToPlay")}
+        </TutorialLink>
       </CreationHero>
 
       <CreationBlock>
@@ -347,6 +351,28 @@ const Subtitle = styled(TextPretty)`
   font-style: italic;
   font-size: 19px;
   margin-top: 8px;
+`
+
+const TutorialLink = styled.button`
+  margin-top: 12px;
+  background: none;
+  border: none;
+  padding: 6px 10px;
+  color: ${({ theme }) => theme.colors.gold};
+  font-family: ${({ theme }) => theme.fonts.display};
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    color 0.15s,
+    border-color 0.15s;
+  border-bottom: 1px solid transparent;
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.goldBright};
+    border-color: ${({ theme }) => theme.colors.gold};
+  }
 `
 
 const CreationBlock = styled.section`

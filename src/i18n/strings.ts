@@ -398,6 +398,11 @@ const en: StringMap = {
   minigameResultWin: "You win the game!",
   minigameResultLose: "They win the game.",
   minigameResultDraw: "A stalemate.",
+  howToPlay: "How to play",
+  tutorialTitle: "How to play",
+  tutorialNext: "Next",
+  tutorialDone: "Done",
+  tutorialPageCount: "Page {n} of {total}",
 }
 
 const es: StringMap = {
@@ -801,6 +806,11 @@ const es: StringMap = {
   minigameResultWin: "¡Ganás la partida!",
   minigameResultLose: "Pierden la partida.",
   minigameResultDraw: "Un empate.",
+  howToPlay: "Cómo jugar",
+  tutorialTitle: "Cómo jugar",
+  tutorialNext: "Siguiente",
+  tutorialDone: "Listo",
+  tutorialPageCount: "Página {n} de {total}",
 }
 
 const TABLES: Record<Locale, StringMap> = { en, es }

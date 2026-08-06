@@ -664,8 +664,9 @@ Phase 7 ordering: 7.1 (identity/regions) is the foundation — 7.3 (region varia
 
 Each phase is self-contained and shippable. No phase blocks any other — content can be authored in parallel with systems work.
 
-Remaining work by priority:
+Remaining work by priority — see `docs/roadmap.md` for the consolidated open list:
 
+0. ✅ **New-player Tutorial** — always-optional "How to play" modal (`TutorialModal.tsx` + `src/i18n/tutorial.ts`, 6 pages, en/es) — shipped 2026-08-06.
 1. 🟡 **1.2 (part)** — add `press_conference` minigame subtype (5 personality-tag events with `wantedTags`/`punishedTags` authored ✅)
 2. 🟡 **1.4 (part)** — more authored rest/recovery events using `staminaDelta` beyond the forced-recovery path
 3. 🟡 **3.2** — separate `rivals` table + parallel rival RNG stream

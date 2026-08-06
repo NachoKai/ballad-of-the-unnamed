@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { styled, keyframes } from "styled-components"
+import { CircleHelp } from "lucide-react"
 import type {
   AchievementContent,
   CharacterState,
@@ -22,6 +23,7 @@ import { AchievementsScreen } from "./components/AchievementsScreen"
 import { EndingScreen } from "./components/EndingScreen"
 import { LeaderboardScreen } from "./components/LeaderboardScreen"
 import { CollectionScreen } from "./components/CollectionScreen"
+import { TutorialModal } from "./components/TutorialModal"
 import { ShopModal } from "./components/ShopModal"
 import { Toasts, useAchievementToasts } from "./components/Toasts"
 import { LinkBtn } from "./components/ui/Button"
@@ -33,6 +35,7 @@ type Screen = "creation" | "game" | "ending" | "leaderboard" | "achievements" | 
 const RUN_KEY = "chronicle_run_id"
 const LOCALE_KEY = "chronicle_locale"
 const ACH_KEY = "chronicle_last_achievements"
+const TUTORIAL_SEEN_KEY = "chronicle_tutorial_seen"
 
 interface EndingData {
   endingType: EndingType
@@ -53,6 +56,11 @@ export default function App() {
   const [ending, setEnding] = useState<EndingData | null>(null)
   const [shopOpen, setShopOpen] = useState(false)
   const [canBuy, setCanBuy] = useState(false)
+  // Auto-show the tutorial on first visit only (no saved flag). Afterwards the
+  // modal is still reopenable any time via "How to play".
+  const [tutorialOpen, setTutorialOpen] = useState<boolean>(
+    () => !localStorage.getItem(TUTORIAL_SEEN_KEY),
+  )
   const [menuOpen, setMenuOpen] = useState(false)
   // Result of the final move of an interactive minigame (banner + next event).
   const [pendingMinigameResult, setPendingMinigameResult] = useState<MinigameMoveResponse | null>(
@@ -376,6 +384,13 @@ export default function App() {
                 {t(locale, "trophyHall")}
               </LinkBtn>
             )}
+            <HelpBtn
+              type="button"
+              onClick={() => setTutorialOpen(true)}
+              aria-label={t(locale, "howToPlay")}
+            >
+              <CircleHelp size={18} aria-hidden="true" />
+            </HelpBtn>
             <LocaleSwitch role="group" aria-label="language">
               <LocaleBtn type="button" $active={locale === "en"} onClick={() => changeLocale("en")}>
                 EN
@@ -433,6 +448,16 @@ export default function App() {
                   {t(locale, "trophyHall")}
                 </MobileLink>
               )}
+              <MobileLink
+                type="button"
+                role="menuitem"
+                onClick={() => {
+                  setMenuOpen(false)
+                  setTutorialOpen(true)
+                }}
+              >
+                {t(locale, "howToPlay")}
+              </MobileLink>
               <LocaleSwitch role="group" aria-label="language">
                 <LocaleBtn
                   type="button"
@@ -458,6 +483,7 @@ export default function App() {
             locale={locale}
             onStart={startRun}
             onStartWithArchetype={startRunWithArchetype}
+            onTutorial={() => setTutorialOpen(true)}
           />
         )}
 
@@ -527,6 +553,20 @@ export default function App() {
         )}
 
         <Toasts items={toasts} onExpire={dismissToast} />
+
+        {tutorialOpen && (
+          <TutorialModal
+            locale={locale}
+            onClose={() => {
+              try {
+                localStorage.setItem(TUTORIAL_SEEN_KEY, "1")
+              } catch {
+                /* storage unavailable — still allow dismissing */
+              }
+              setTutorialOpen(false)
+            }}
+          />
+        )}
       </AppShell>
     </>
   )
@@ -699,6 +739,27 @@ const MobileLink = styled.button`
   &:hover {
     color: ${({ theme }) => theme.colors.goldBright};
     border-color: ${({ theme }) => theme.colors.line2};
+  }
+`
+
+const HelpBtn = styled.button`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  background: transparent;
+  border: 1px solid ${({ theme }) => theme.colors.line2};
+  border-radius: ${({ theme }) => theme.radii.sm};
+  color: ${({ theme }) => theme.colors.muted};
+  cursor: pointer;
+  transition:
+    color 0.15s,
+    border-color 0.15s;
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.goldBright};
+    border-color: ${({ theme }) => theme.colors.gold};
   }
 `
 
