@@ -114,5 +114,198 @@
         }
       }
     ]
+  },
+  {
+    "id": "destiny_witchs_gift",
+    "type": "destiny",
+    "minAge": 24,
+    "maxAge": 65,
+    "weight": 3,
+    "narrative": {
+      "en": "Deep in the {slot:worldLocation}, a witch older than the forest offers a single gift: 'Eyes that see through any lie, or a hand that never misses, or a name the spirits will answer. Choose one. The other two will forget you forever — and one of them will have been the safer road.'",
+      "es": "En lo profundo de {slot:worldLocation}, una bruja más vieja que el bosque ofrece un único regalo: 'Ojos que ven a través de cualquier mentira, o una mano que nunca falla, o un nombre al que responderán los espíritus. Elegí uno. Los otros dos te olvidarán para siempre — y uno de ellos habrá sido el camino más seguro.'"
+    },
+    "choices": [
+      {
+        "id": "take_true_sight",
+        "label": {
+          "en": "Take the eyes that see through lies",
+          "es": "Tomar los ojos que ven a través de las mentiras"
+        },
+        "tag": "Strategic",
+        "rarity": "rare",
+        "statDeltas": {
+          "intelligence": 8
+        },
+        "narrative": {
+          "en": "The world sharpens until every falsehood glints like a loose thread. You will never be fooled again — but the truth is a heavy thing to carry daily.",
+          "es": "El mundo se afila hasta que cada falsedad brilla como un hilo suelto. Nunca más te engañarán — pero la verdad es una carga pesada para llevar a diario."
+        }
+      },
+      {
+        "id": "take_steady_hand",
+        "label": {
+          "en": "Take the hand that never misses",
+          "es": "Tomar la mano que nunca falla"
+        },
+        "tag": "Aggressive",
+        "rarity": "rare",
+        "statDeltas": {
+          "dexterity": 8
+        },
+        "narrative": {
+          "en": "Every throw, every strike, every caught coin lands true. The world is suddenly full of marks — and the witch watches you test your new gift with a knowing smile.",
+          "es": "Cada lanzamiento, cada golpe, cada moneda atrapada cae exacta. El mundo se llena de blancos de repente — y la bruja te observa probar tu nuevo don con una sonrisa sabia."
+        }
+      },
+      {
+        "id": "take_spirit_name",
+        "label": {
+          "en": "Take the name the spirits answer",
+          "es": "Tomar el nombre al que responden los espíritus"
+        },
+        "tag": "Humble",
+        "rarity": "rare",
+        "statDeltas": {
+          "charisma": 6,
+          "intelligence": 2
+        },
+        "unlocksEventPool": ["destiny_spirit_path"],
+        "narrative": {
+          "en": "The witch whispers your new name and the forest goes still, listening. Doors of the unseen will open for you now — though the spirits will also know where to find you.",
+          "es": "La bruja susurra tu nuevo nombre y el bosque se queda quieto, escuchando. Las puertas de lo invisible se abrirán para vos — aunque los espíritus también sabrán dónde encontrarte."
+        }
+      }
+    ]
+  },
+  {
+    "id": "destiny_ancestral_blade",
+    "type": "destiny",
+    "minAge": 20,
+    "maxAge": 55,
+    "weight": 3,
+    "narrative": {
+      "en": "Your grandmother's blade — the one the songs say was buried with its last wielder — is offered to you at {locationName} by a {npcRole} who claims the family bloodline called them to you. The steel hums when your hand nears the hilt. It is beautiful, hungry, and absolutely cursed.",
+      "es": "La espada de tu abuela — la que las canciones dicen que fue enterrada con su última portadora — te la ofrecen en {locationName} un {npcRole} que afirma que el linaje de tu familia los llamó hasta vos. El acero zumba cuando tu mano se acerca a la empuñadura. Es hermosa, hambrienta y absolutamente maldita."
+    },
+    "choices": [
+      {
+        "id": "draw_blade",
+        "label": {
+          "en": "Draw the blade and claim the power",
+          "es": "Desenvainar la espada y reclamar el poder"
+        },
+        "tag": "Aggressive",
+        "rarity": "rare",
+        "statDeltas": {
+          "strength": 6,
+          "constitution": 2
+        },
+        "fameDelta": 8,
+        "locksEventPool": ["destiny_blade_path"],
+        "narrative": {
+          "en": "The blade drinks your blood and remembers you. Power floods your arm — the power of every hand that held it, and every promise they broke. You are stronger. You are also, now, part of the story.",
+          "es": "La espada bebe tu sangre y te recuerda. El poder inunda tu brazo — el poder de cada mano que la sostuvo, y cada promesa que rompieron. Sos más fuerte. También sos, ahora, parte de la historia."
+        }
+      },
+      {
+        "id": "bind_earth",
+        "label": {
+          "en": "Bind the blade to the earth",
+          "es": "Sellar la espada a la tierra"
+        },
+        "tag": "Humble",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "charisma": 2
+        },
+        "healthDelta": 8,
+        "narrative": {
+          "en": "You drive the blade into the earth hilt-deep and speak the old binding. The hum fades to silence, and the ground keeps the secret. The ancestor's ghost, wherever it waits, nods at last.",
+          "es": "Clavás la espada en la tierra hasta la empuñadura y pronunciás el viejo sellado. El zumbido se apaga en silencio, y la tierra guarda el secreto. El fantasma del ancestro, dondequiera que espere, asiente por fin."
+        }
+      },
+      {
+        "id": "sell_rumor",
+        "label": {
+          "en": "Sell the rumor to the highest bidder",
+          "es": "Vender el rumor al mejor postor"
+        },
+        "tag": "Cocky",
+        "rarity": "uncommon",
+        "goldDelta": 300,
+        "liabilityDelta": 8,
+        "narrative": {
+          "en": "You don't touch the blade — you sell the rumor of it to three separate collectors and collect three times. The blade stays buried, and the buyers blame each other. Elegant.",
+          "es": "No tocás la espada — vendés el rumor de ella a tres coleccionistas distintos y cobrás tres veces. La espada queda enterrada, y los compradores se culpan entre sí. Elegante."
+        }
+      }
+    ]
+  },
+  {
+    "id": "destiny_faerie_bargain",
+    "type": "destiny",
+    "minAge": 26,
+    "maxAge": 60,
+    "weight": 3,
+    "narrative": {
+      "en": "A faerie of the old court appears on the road at {slot:worldLocation}, small and terrible, and smiles with too many teeth. 'Fortune, hero? I can make your name weigh gold in every market from here to the sea. All I ask is a promise — the shape of which we can discuss later. I am very reasonable.'",
+      "es": "Una hada de la corte antigua aparece en el camino en {slot:worldLocation}, pequeña y terrible, y sonríe con demasiados dientes. '¿Fortuna, héroe? Puedo hacer que tu nombre pese oro en cada mercado de aquí al mar. Solo pido una promesa — cuya forma podemos discutir después. Soy muy razonable.'"
+    },
+    "choices": [
+      {
+        "id": "accept_bargain",
+        "label": {
+          "en": "Accept the bargain",
+          "es": "Aceptar el trato"
+        },
+        "tag": "Cocky",
+        "rarity": "rare",
+        "goldDelta": 500,
+        "liabilityDelta": 10,
+        "fameDelta": 5,
+        "unlocksEventPool": ["destiny_faerie_path"],
+        "narrative": {
+          "en": "You shake on it, and gold rains into your purse from pockets that were empty a moment ago. The faerie laughs, delighted. Somewhere in the small print of the world, a debt is now written in your name.",
+          "es": "Cerrás el trato, y el oro llueve en tu bolsa desde bolsillos que estaban vacíos hace un momento. La hada ríe, encantada. En algún lado de la letra chica del mundo, ahora hay una deuda escrita a tu nombre."
+        }
+      },
+      {
+        "id": "refuse_twister",
+        "label": {
+          "en": "Refuse the word-twister",
+          "es": "Rechazar a la retorcida de palabras"
+        },
+        "tag": "Strategic",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "intelligence": 4
+        },
+        "narrative": {
+          "en": "'No promise,' you say, and the word lands like a dropped stone. The faerie's smile thins to a line. 'Very well, mortal. Enjoy your small, safe, quiet life.' The road is emptier when they're gone — and safer.",
+          "es": "'Ninguna promesa', decís, y la palabra cae como una piedra. La sonrisa de la hada se afina hasta una línea. 'Muy bien, mortal. Disfrutá tu vida pequeña, segura y tranquila.' El camino queda más vacío cuando se van — y más seguro."
+        }
+      },
+      {
+        "id": "counter_deal",
+        "label": {
+          "en": "Offer a different deal, plainly written",
+          "es": "Ofrecer un trato distinto, escrito con claridad"
+        },
+        "tag": "Humble",
+        "rarity": "rare",
+        "requiresStat": {
+          "stat": "charisma",
+          "min": 14
+        },
+        "statDeltas": {
+          "charisma": 4
+        },
+        "narrative": {
+          "en": "You offer a different bargain — one with a shape and an expiry date, written plainly. The faerie studies it with genuine surprise, then stamps it with a nail of light. 'Rare, a mortal who reads the fine print. Deal.'",
+          "es": "Ofrecés un trato distinto — uno con forma y fecha de vencimiento, escrito con claridad. La hada lo estudia con sorpresa genuina, y lo sella con una uña de luz. 'Raro, un mortal que lee la letra chica. Trato hecho.'"
+        }
+      }
+    ]
   }
 ]

@@ -563,5 +563,640 @@
         }
       }
     ]
+  },
+  {
+    "id": "clan_oath_signing",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 8,
+    "requiresNoClan": true,
+    "location": "bronzehammer",
+    "narrative": {
+      "en": "A herald of the Bronzehammer clan finds you at {locationName}. 'The hammer falls for those who swear to it. Three coins of signing gold, a roof, and a name that opens doors — for an oath you can never take back.'",
+      "es": "Un heraldo del clan Martillobronce te encuentra en {locationName}. 'El martillo cae por quienes le juran. Tres monedas de oro de entrada, un techo y un nombre que abre puertas — por un juramento que jamás se retracta.'"
+    },
+    "choices": [
+      {
+        "id": "swear_oath",
+        "label": {
+          "en": "Swear the oath and join Bronzehammer",
+          "es": "Jurar el juramento y unirte a Martillobronce"
+        },
+        "tag": "Professional",
+        "rarity": "uncommon",
+        "joinClanId": "bronzehammer",
+        "goldDelta": 60,
+        "statDeltas": {
+          "constitution": 1
+        },
+        "countersDelta": {
+          "clans_joined": 1
+        },
+        "narrative": {
+          "en": "The hammer strikes the anvil three times and the hall roars your name. You are Bronzehammer now — wealth 6, and a forge that never cools.",
+          "es": "El martillo golpea el yunque tres veces y el salón ruge tu nombre. Sos Martillobronce ahora — riqueza 6, y una forja que nunca se enfría."
+        }
+      },
+      {
+        "id": "ask_for_more",
+        "label": {
+          "en": "Press for more signing gold",
+          "es": "Exigir más oro de entrada"
+        },
+        "tag": "Cocky",
+        "rarity": "volatile",
+        "requiresStat": {
+          "stat": "charisma",
+          "min": 12
+        },
+        "statDeltas": {
+          "charisma": 1
+        },
+        "liabilityDelta": 4,
+        "narrative": {
+          "en": "The herald's smile thins but the counter comes — smaller, and colder. The clan remembers who haggled at the door. They will collect the difference in loyalty, later.",
+          "es": "La sonrisa del heraldo se afina pero llega la contraoferta — más pequeña, y más fría. El clan recuerda quién regateó en la puerta. Cobrarán la diferencia en lealtad, después."
+        }
+      },
+      {
+        "id": "stay_free",
+        "label": {
+          "en": "Thank them and stay free",
+          "es": "Agradecer y seguir libre"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": {
+          "intelligence": 1
+        },
+        "narrative": {
+          "en": "The herald bows. 'The road keeps its own,' they say, and the offer rides away. Freedom is its own kind of wealth — though it pays no stipend.",
+          "es": "El heraldo se inclina. 'El camino conserva a los suyos', dice, y la oferta se aleja. La libertad es su propia clase de riqueza — aunque no paga estipendio."
+        }
+      }
+    ]
+  },
+  {
+    "id": "clan_rivalry_patrol",
+    "minAge": 18,
+    "maxAge": 99,
+    "weight": 7,
+    "requiresClanId": "ironhold",
+    "location": "ironhold",
+    "narrative": {
+      "en": "Word comes down from the Guild hall: the contested mine road has seen raiders in Blacktide colors, and the Guild wants a patrol on the border. 'The hammer guards what it forges,' the foreman says, 'and right now that means the road.'",
+      "es": "Llega la palabra desde el salón del Gremio: el camino de la mina disputada ha visto asaltantes con colores de Marea Negra, y el Gremio quiere una patrulla en la frontera. 'El martillo guarda lo que forja', dice el capataz, 'y ahora mismo eso significa el camino.'"
+    },
+    "choices": [
+      {
+        "id": "lead_patrol",
+        "label": {
+          "en": "Lead the patrol to the contested ridge",
+          "es": "Liderar la patrulla hasta la cresta disputada"
+        },
+        "tag": "Leader",
+        "rarity": "rare",
+        "requiresStat": {
+          "stat": "strength",
+          "min": 13
+        },
+        "injuryRiskDelta": 0.1,
+        "statDeltas": {
+          "strength": 2
+        },
+        "reputationDelta": 4,
+        "reputationFaction": "ironhold",
+        "countersDelta": {
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "You take the ridge before the raiders can, and the skirmish that follows is short and one-sided. The Guild hears the story from three witnesses — and they all name you.",
+          "es": "Tomás la cresta antes que los asaltantes, y la escaramuza que sigue es corta y despareja. El Gremio escucha la historia de tres testigos — y todos te nombran."
+        }
+      },
+      {
+        "id": "negotiate_patrol",
+        "label": {
+          "en": "Negotiate a truce with the rival patrol",
+          "es": "Negociar una tregua con la patrulla rival"
+        },
+        "tag": "Humble",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "charisma": 2
+        },
+        "reputationDelta": 3,
+        "reputationFaction": "ironhold",
+        "narrative": {
+          "en": "You meet the rival captain on a rock mid-road and talk blades into words. The truce holds a season — long enough for both sides to pretend they won.",
+          "es": "Encontrás al capitán rival sobre una roca en mitad del camino y convertís hojas en palabras. La tregua dura una temporada — lo suficiente para que ambos lados finjan que ganaron."
+        }
+      },
+      {
+        "id": "night_watch",
+        "label": {
+          "en": "Volunteer for the night watch",
+          "es": "Ofrecerte para la guardia nocturna"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": {
+          "constitution": 2
+        },
+        "narrative": {
+          "en": "You walk the dark perimeter till the stars go pale. Nothing comes — but the patrol sleeps safe, and the Guild learns your name costs no gold.",
+          "es": "Caminás el perímetro oscuro hasta que las estrellas palidecen. No llega nada — pero la patrulla duerme a salvo, y el Gremio aprende que tu nombre no cuesta oro."
+        }
+      }
+    ]
+  },
+  {
+    "id": "clan_war_tribute",
+    "minAge": 18,
+    "maxAge": 99,
+    "weight": 6,
+    "requiresClanId": "greywater",
+    "location": "greywater",
+    "narrative": {
+      "en": "The harbor taxes are due and the town's war chest runs thin. The elders call the sworn to the hall: every blade contributes — coin, labor, or blood. 'The sea takes its share,' the harbormaster says. 'Now the town takes its own.'",
+      "es": "Los impuestos del puerto vencen y el cofre de guerra del pueblo está flaco. Los ancianos convocan a los jurados al salón: cada espada contribuye — monedas, trabajo o sangre. 'El mar toma su parte', dice el maestre de puerto. 'Ahora el pueblo toma la suya.'"
+    },
+    "choices": [
+      {
+        "id": "pay_tribute",
+        "label": {
+          "en": "Pay your share in gold",
+          "es": "Pagar tu parte en oro"
+        },
+        "tag": "Professional",
+        "rarity": "uncommon",
+        "goldDelta": -100,
+        "reputationDelta": 3,
+        "reputationFaction": "greywater",
+        "narrative": {
+          "en": "Your coins ring in the chest and the elders nod. In hard seasons, gold buys more than a blade ever could — and the town remembers who filled the chest.",
+          "es": "Tus monedas resuenan en el cofre y los ancianos asienten. En temporadas duras, el oro compra más que cualquier hoja — y el pueblo recuerda quién llenó el cofre."
+        }
+      },
+      {
+        "id": "serve_tribute",
+        "label": {
+          "en": "Work off the tribute as a laborer",
+          "es": "Pagar el tributo trabajando"
+        },
+        "tag": "Supportive",
+        "rarity": "common",
+        "staminaDelta": -15,
+        "reputationDelta": 3,
+        "reputationFaction": "greywater",
+        "narrative": {
+          "en": "You haul crates and mend nets till your back sings. The town's chest stays full, and your hands earn a kind of respect gold cannot counterfeit.",
+          "es": "Cargás cajones y remendás redes hasta que tu espalda canta. El cofre del pueblo sigue lleno, y tus manos ganan un respeto que el oro no puede falsificar."
+        }
+      },
+      {
+        "id": "argue_tribute",
+        "label": {
+          "en": "Argue the tribute is unfair",
+          "es": "Discutir que el tributo es injusto"
+        },
+        "tag": "Cocky",
+        "rarity": "volatile",
+        "requiresStat": {
+          "stat": "charisma",
+          "min": 13
+        },
+        "statDeltas": {
+          "charisma": 1
+        },
+        "reputationDelta": -2,
+        "reputationFaction": "greywater",
+        "narrative": {
+          "en": "The hall goes quiet as you speak. You win the point and lose the room — the tribute stands, and the elders' eyes are a degree colder.",
+          "es": "El salón se calla cuando hablás. Ganás el argumento y perdés a la sala — el tributo sigue en pie, y las miradas de los ancianos están un grado más frías."
+        }
+      }
+    ]
+  },
+  {
+    "id": "clan_poach_counter_offer",
+    "minAge": 18,
+    "maxAge": 99,
+    "weight": 6,
+    "requiresClanId": "greywater",
+    "excludesIfClanId": "blacktide",
+    "location": "greywater",
+    "narrative": {
+      "en": "A Blacktide corsair captain corners you at {locationName}. 'Greywater pays its people in promises and salt. The Blacktide pays in gold and shares of the plunder. Come watch the horizon with us — no oath required, only appetite.'",
+      "es": "Una capitana corsaria de Marea Negra te arrincona en {locationName}. 'Villa Aguagrís paga a los suyos con promesas y sal. Marea Negra paga con oro y partes del botín. Vení a mirar el horizonte con nosotros — sin juramentos, solo apetito.'"
+    },
+    "choices": [
+      {
+        "id": "hear_offer",
+        "label": {
+          "en": "Hear the offer out",
+          "es": "Escuchar la oferta hasta el final"
+        },
+        "tag": "Strategic",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "narrative": {
+          "en": "You listen to the whole pitch, weighing every clause. The offer is real — and that knowledge is worth something even if the gold stays on the table.",
+          "es": "Escuchás toda la propuesta, pesando cada cláusula. La oferta es real — y ese conocimiento vale algo aunque el oro quede sobre la mesa."
+        }
+      },
+      {
+        "id": "refuse_loyalty",
+        "label": {
+          "en": "Refuse — your word is already sworn",
+          "es": "Rechazar — tu palabra ya está jurada"
+        },
+        "tag": "Professional",
+        "rarity": "common",
+        "statDeltas": {
+          "charisma": 1
+        },
+        "reputationDelta": 4,
+        "reputationFaction": "greywater",
+        "narrative": {
+          "en": "The captain shrugs and saunters off. The story reaches the elders before nightfall, and the harbor's trust in you deepens by a full fathom.",
+          "es": "La capitana se encoge de hombros y se aleja con aire. La historia llega a los ancianos antes del anochecer, y la confianza del puerto en vos se profundiza una braza entera."
+        }
+      },
+      {
+        "id": "play_both",
+        "label": {
+          "en": "Accept — but keep your options open",
+          "es": "Aceptar — pero mantener tus opciones abiertas"
+        },
+        "tag": "Cocky",
+        "rarity": "volatile",
+        "requiresStat": {
+          "stat": "charisma",
+          "min": 13
+        },
+        "liabilityDelta": 8,
+        "statDeltas": {
+          "charisma": 2
+        },
+        "goldDelta": 80,
+        "narrative": {
+          "en": "The gold lands in your palm and the words 'for now' die on your tongue. Somewhere a ledger notes that you took corsair coin while wearing Greywater colors.",
+          "es": "El oro aterriza en tu palma y las palabras 'por ahora' mueren en tu lengua. En algún lado, un libro de cuentas anota que tomaste moneda corsaria con colores de Villa Aguagrís puestos."
+        }
+      }
+    ]
+  },
+  {
+    "id": "clan_elder_trial",
+    "minAge": 18,
+    "maxAge": 99,
+    "weight": 6,
+    "requiresClanId": "thornwood",
+    "location": "thornwood",
+    "narrative": {
+      "en": "The Elder of the Thornwood Wardens sets a branch before the assembled folk. 'The grove does not grant trust — it tests it. Show the Wardens what you can do, and the grove will remember.'",
+      "es": "El Anciano de los Guardianes de Espinar deja una rama ante los reunidos. 'El bosquecillo no otorga confianza — la pone a prueba. Mostrale a los Guardianes lo que sabés hacer, y el bosquecillo lo recordará.'"
+    },
+    "choices": [
+      {
+        "id": "meet_challenge",
+        "label": {
+          "en": "Meet the challenge blade to branch",
+          "es": "Enfrentar el desafío hoja contra rama"
+        },
+        "tag": "Aggressive",
+        "rarity": "rare",
+        "requiresStat": {
+          "stat": "strength",
+          "min": 13
+        },
+        "injuryRiskDelta": 0.1,
+        "statDeltas": {
+          "strength": 2
+        },
+        "reputationDelta": 4,
+        "reputationFaction": "thornwood",
+        "countersDelta": {
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "You move through the Elder's trial like water through stone. The Wardens' ranks part with a murmur of respect — the grove has a new name on its bark.",
+          "es": "Atravesás la prueba del Anciano como el agua atraviesa la piedra. Las filas de los Guardianes se abren con un murmullo de respeto — el bosquecillo tiene un nombre nuevo en su corteza."
+        }
+      },
+      {
+        "id": "solve_wits",
+        "label": {
+          "en": "Solve the trial with wits",
+          "es": "Resolver la prueba con ingenio"
+        },
+        "tag": "Strategic",
+        "rarity": "rare",
+        "requiresStat": {
+          "stat": "intelligence",
+          "min": 13
+        },
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "reputationDelta": 3,
+        "reputationFaction": "thornwood",
+        "narrative": {
+          "en": "The trial is a riddle wearing the shape of a fight, and you name the answer before the first blow. The Elder's eyes crinkle — the grove likes clever roots.",
+          "es": "La prueba es un acertijo disfrazado de pelea, y nombrás la respuesta antes del primer golpe. Los ojos del Anciano se arrugan — al bosquecillo le gustan las raíces inteligentes."
+        }
+      },
+      {
+        "id": "bow_out",
+        "label": {
+          "en": "Bow out with respect",
+          "es": "Retirarte con respeto"
+        },
+        "tag": "Humble",
+        "rarity": "common",
+        "statDeltas": {
+          "charisma": 1
+        },
+        "narrative": {
+          "en": "You decline the trial with a bow that costs nothing. The Wardens nod — knowing when not to draw is a lesson the grove itself teaches.",
+          "es": "Rechazás la prueba con una reverencia que no cuesta nada. Los Guardianes asienten — saber cuándo no desenvainar es una lección que el bosquecillo enseña por sí mismo."
+        }
+      }
+    ]
+  },
+  {
+    "id": "clan_feast_rank",
+    "minAge": 18,
+    "maxAge": 99,
+    "weight": 5,
+    "requiresClanId": "greywater",
+    "location": "greywater",
+    "narrative": {
+      "en": "The harbor feast is spread, and the seating follows rank like the tide follows the moon. A place near the head of the table stands empty — and every eye in the hall slides, briefly, to you.",
+      "es": "El banquete del puerto está servido, y los asientos siguen el rango como la marea sigue a la luna. Un lugar cerca de la cabecera de la mesa está vacío — y cada ojo del salón se desliza, brevemente, hacia vos."
+    },
+    "choices": [
+      {
+        "id": "low_seat",
+        "label": {
+          "en": "Take the low seat among the crew",
+          "es": "Tomar el asiento bajo entre la tripulación"
+        },
+        "tag": "Humble",
+        "rarity": "common",
+        "statDeltas": {
+          "charisma": 2
+        },
+        "narrative": {
+          "en": "You sit with the deckhands and tell stories till the lamps gutter. By the feast's end, the whole harbor knows you as the one who doesn't need a high chair to be seen.",
+          "es": "Te sentás con los grumetes y contás historias hasta que las lámparas parpadean. Al final del banquete, todo el puerto te conoce como quien no necesita una silla alta para que lo vean."
+        }
+      },
+      {
+        "id": "claim_seat",
+        "label": {
+          "en": "Claim your earned place at the head",
+          "es": "Reclamar tu lugar ganado en la cabecera"
+        },
+        "tag": "Leader",
+        "rarity": "rare",
+        "statDeltas": {
+          "charisma": 1
+        },
+        "fameDelta": 2,
+        "reputationDelta": 3,
+        "reputationFaction": "greywater",
+        "narrative": {
+          "en": "You walk to the empty seat and sit as if it were always yours. No one challenges it. The harbor respects a claim that doesn't tremble.",
+          "es": "Caminás hasta el asiento vacío y te sentás como si siempre hubiera sido tuyo. Nadie lo discute. El puerto respeta una reclamación que no tiembla."
+        }
+      },
+      {
+        "id": "toast_elders",
+        "label": {
+          "en": "Toast the elders and set the room laughing",
+          "es": "Brindar por los ancianos y hacer reír al salón"
+        },
+        "tag": "Funny",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "charisma": 1
+        },
+        "fameDelta": 2,
+        "narrative": {
+          "en": "Your toast is half praise, half punchline, and the hall roars. The elders pretend to scowl — but they're smiling behind the beard.",
+          "es": "Tu brindis es mitad elogio, mitad remate, y el salón ruge. Los ancianos fingen fruncir el ceño — pero sonríen detrás de la barba."
+        }
+      }
+    ]
+  },
+  {
+    "id": "clan_hunted_duel",
+    "minAge": 18,
+    "maxAge": 99,
+    "weight": 5,
+    "requiresHuntedBy": true,
+    "location": "road",
+    "narrative": {
+      "en": "The hunters from the clan you crossed find you in a narrow lane. The lead hunter steps forward, blade drawn. 'No running this time. One duel, and the debt is settled — one way or the other.'",
+      "es": "Los cazadores del clan que cruzaste te encuentran en un callejón angosto. La cazadora principal da un paso al frente, hoja en mano. 'Esta vez no hay huida. Un duelo, y la deuda queda saldada — de una forma u otra.'"
+    },
+    "choices": [
+      {
+        "id": "duel_hunter",
+        "label": {
+          "en": "Duel the lead hunter before the crowd",
+          "es": "Duelar a la cazadora principal ante la multitud"
+        },
+        "tag": "Aggressive",
+        "rarity": "rare",
+        "requiresStat": {
+          "stat": "strength",
+          "min": 14
+        },
+        "injuryRiskDelta": 0.15,
+        "healthDelta": -8,
+        "statDeltas": {
+          "strength": 2
+        },
+        "fameDelta": 3,
+        "countersDelta": {
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "The lane rings with steel. You take the hunter's blade low and end it fast — the crowd's roar follows you out of the city. The bounty hunters will think twice.",
+          "es": "El callejón resuena con acero. Bajás la hoja de la cazadora y terminás rápido — el rugido de la multitud te sigue fuera de la ciudad. Los cazarrecompensas lo pensarán dos veces."
+        }
+      },
+      {
+        "id": "lose_crowd",
+        "label": {
+          "en": "Lose them in the crowd",
+          "es": "Perderlos entre la multitud"
+        },
+        "tag": "Strategic",
+        "rarity": "uncommon",
+        "requiresStat": {
+          "stat": "dexterity",
+          "min": 13
+        },
+        "statDeltas": {
+          "dexterity": 2
+        },
+        "narrative": {
+          "en": "You melt into the market like a coin into a coffer, changing coats twice and voices once. The hunters split up, swearing — and find nothing.",
+          "es": "Te fundís en el mercado como una moneda en un cofre, cambiando de abrigo dos veces y de voz una. Los cazadores se separan, jurando — y no encuentran nada."
+        }
+      },
+      {
+        "id": "surrender_law",
+        "label": {
+          "en": "Surrender to the town guard",
+          "es": "Entregarte a la guardia del pueblo"
+        },
+        "tag": "Professional",
+        "rarity": "common",
+        "goldDelta": -50,
+        "liabilityDelta": -5,
+        "narrative": {
+          "en": "The guard takes you in 'for questioning' — which keeps the hunters at the gate and costs you a fine. The clan's hunt loses its scent, and your record grows a shade cleaner.",
+          "es": "La guardia te detiene 'para interrogarte' — lo que mantiene a los cazadores en la puerta y te cuesta una multa. La cacería del clan pierde el rastro, y tu expediente se limpia un tono."
+        }
+      }
+    ]
+  },
+  {
+    "id": "clan_solo_wanderer_blessing",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "requiresNoClan": true,
+    "location": "road",
+    "narrative": {
+      "en": "A hermit in a threadbare cloak stops you on the open road, staff tapping. 'You carry no banner and answer to no hall,' they say. 'That is rarer than you know. Let me give you something for the road ahead.'",
+      "es": "Un ermitaño con capa raída te detiene en el camino abierto, golpeando el suelo con su bastón. 'No llevás estandarte y no respondés a ningún salón', dice. 'Eso es más raro de lo que creés. Dejame darte algo para el camino que viene.'"
+    },
+    "choices": [
+      {
+        "id": "accept_blessing",
+        "label": {
+          "en": "Accept the blessing",
+          "es": "Aceptar la bendición"
+        },
+        "tag": "Humble",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "charisma": 1
+        },
+        "healthDelta": 5,
+        "narrative": {
+          "en": "Warmth passes from the hermit's palm to yours like a swallowed sun. For a week the road is kind, and the cold never quite finds your bones.",
+          "es": "Un calor pasa de la palma del ermitaño a la tuya como un sol tragado. Durante una semana el camino es amable, y el frío nunca encuentra del todo tus huesos."
+        }
+      },
+      {
+        "id": "ask_wisdom",
+        "label": {
+          "en": "Ask for road wisdom instead",
+          "es": "Pedir sabiduría de camino en su lugar"
+        },
+        "tag": "Strategic",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "narrative": {
+          "en": "The hermit speaks in riddles till dusk, and you leave with three of them solved and three more humming in your skull. The free road teaches those who listen.",
+          "es": "El ermitaño habla en acertijos hasta el anochecer, y partís con tres resueltos y tres más zumbando en tu cráneo. El camino libre enseña a quienes escuchan."
+        }
+      },
+      {
+        "id": "decline_blessing",
+        "label": {
+          "en": "Decline politely and walk on",
+          "es": "Rechazar con cortesía y seguir"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": {
+          "constitution": 1
+        },
+        "narrative": {
+          "en": "The hermit laughs and lets you pass. 'The self-made road is the loneliest — and the strongest.' Their blessing is a word, and you carry it anyway.",
+          "es": "El ermitaño se ríe y te deja pasar. 'El camino hecho a mano es el más solitario — y el más fuerte.' Su bendición es una palabra, y la llevás igual."
+        }
+      }
+    ]
+  },
+  {
+    "id": "clan_betrayal_aftermath",
+    "minAge": 18,
+    "maxAge": 99,
+    "weight": 6,
+    "requiresHuntedBy": true,
+    "location": "road",
+    "narrative": {
+      "en": "A crier reads a formal denunciation in the square: the clan you crossed declares your oath forfeit and your name writ in their book of shame. The crowd turns, curious, to the stranger in their midst.",
+      "es": "Un pregonero lee una denuncia formal en la plaza: el clan que cruzaste declara tu juramento perdido y tu nombre escrito en su libro de la vergüenza. La multitud se gira, curiosa, hacia la desconocida entre ellos."
+    },
+    "choices": [
+      {
+        "id": "face_accusation",
+        "label": {
+          "en": "Face the accusation head-on",
+          "es": "Enfrentar la acusación de frente"
+        },
+        "tag": "Leader",
+        "rarity": "rare",
+        "requiresStat": {
+          "stat": "charisma",
+          "min": 13
+        },
+        "statDeltas": {
+          "charisma": 2
+        },
+        "reputationDelta": -2,
+        "reputationFaction": "greywater",
+        "narrative": {
+          "en": "You step forward and answer the crier point by point, and the crowd's murmur turns your way. Not forgiven — but a name spoken boldly is harder to bury.",
+          "es": "Dás un paso al frente y respondés al pregonero punto por punto, y el murmullo de la multitud se vuelve hacia vos. No perdonado — pero un nombre dicho con audacia es más difícil de enterrar."
+        }
+      },
+      {
+        "id": "pay_restitution",
+        "label": {
+          "en": "Pay restitution through the crier",
+          "es": "Pagar reparación a través del pregonero"
+        },
+        "tag": "Professional",
+        "rarity": "uncommon",
+        "goldDelta": -150,
+        "liabilityDelta": -10,
+        "narrative": {
+          "en": "Gold changes hands in the open, and the denunciation is amended: '...debt acknowledged.' The book of shame keeps your name — but the ink is lighter now.",
+          "es": "El oro cambia de manos a la vista de todos, y la denuncia se enmienda: '...deuda reconocida.' El libro de la vergüenza conserva tu nombre — pero la tinta ahora es más clara."
+        }
+      },
+      {
+        "id": "embrace_hunted",
+        "label": {
+          "en": "Embrace the hunted life",
+          "es": "Abrazar la vida de perseguido"
+        },
+        "tag": "Aggressive",
+        "rarity": "volatile",
+        "liabilityDelta": 8,
+        "statDeltas": {
+          "dexterity": 2
+        },
+        "narrative": {
+          "en": "You raise a cup to the crier as they read. 'Put a bigger bounty on it,' you call — and the square laughs, half nervous. Some legends are written by the hunted.",
+          "es": "Alzás una copa hacia el pregonero mientras lee. 'Pongan una recompensa más grande', gritás — y la plaza se ríe, medio nerviosa. Algunas leyendas las escriben los perseguidos."
+        }
+      }
+    ]
   }
 ]

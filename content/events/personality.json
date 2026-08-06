@@ -345,5 +345,388 @@
         }
       }
     ]
+  },
+  {
+    "id": "personality_trial_by_choice",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 7,
+    "narrative": {
+      "en": "A {npcRole} blocks your path and drops a heavy pouch between you. 'Two roads, stranger. This pouch holds a season's wages — and behind me, a stranger who needs it more. The road you take tells me everything about you.'",
+      "es": "Un {npcRole} te corta el paso y deja una bolsa pesada entre ustedes. 'Dos caminos, forastera. Esta bolsa tiene el salario de una temporada — y detrás de mí, una desconocida que lo necesita más. El camino que tomes me lo dice todo sobre vos.'"
+    },
+    "choices": [
+      {
+        "id": "take_the_pouch",
+        "label": {
+          "en": "Take the pouch",
+          "es": "Quedarte con la bolsa"
+        },
+        "tag": "Aggressive",
+        "rarity": "volatile",
+        "wantedTags": {
+          "Cocky": 0.1,
+          "Aggressive": 0.08
+        },
+        "punishedTags": {
+          "Humble": -0.1
+        },
+        "goldDelta": 100,
+        "liabilityDelta": 8,
+        "statDeltas": {
+          "strength": 2
+        },
+        "narrative": {
+          "en": "The pouch is heavy and yours. The {npcRole} watches you go without a word — but the road behind you is suddenly full of eyes that have learned your measure.",
+          "es": "La bolsa es pesada y es tuya. El {npcRole} te ve partir sin decir palabra — pero el camino detrás de vos se llena de ojos que aprendieron tu medida."
+        }
+      },
+      {
+        "id": "leave_the_pouch",
+        "label": {
+          "en": "Leave it for the stranger",
+          "es": "Dejársela a la desconocida"
+        },
+        "tag": "Humble",
+        "rarity": "rare",
+        "wantedTags": {
+          "Humble": 0.12,
+          "Supportive": 0.08
+        },
+        "punishedTags": {
+          "Cocky": -0.08
+        },
+        "goldDelta": -100,
+        "statDeltas": {
+          "charisma": 3
+        },
+        "fameDelta": 3,
+        "countersDelta": {
+          "lives_saved": 1
+        },
+        "narrative": {
+          "en": "You set the pouch down and walk on. Behind you, a choked voice thanks the road itself. The {npcRole} bows — 'The world has few enough of your kind, and I will speak your name where it matters.'",
+          "es": "Dejás la bolsa y seguís camino. Detrás de vos, una voz ahogada le agradece al camino mismo. El {npcRole} se inclina — 'El mundo tiene pocas de tu clase, y hablaré tu nombre donde importa.'"
+        }
+      },
+      {
+        "id": "split_the_difference",
+        "label": {
+          "en": "Offer the stranger half",
+          "es": "Ofrecerle la mitad a la desconocida"
+        },
+        "tag": "Strategic",
+        "rarity": "uncommon",
+        "wantedTags": {
+          "Strategic": 0.1
+        },
+        "goldDelta": 50,
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "narrative": {
+          "en": "You split the pouch — half for the road's luck, half for the stranger's need. The {npcRole} studies you like a riddle with an answer they didn't expect.",
+          "es": "Partís la bolsa — mitad para la suerte del camino, mitad para la necesidad de la desconocida. El {npcRole} te estudia como un acertijo con una respuesta que no esperaba."
+        }
+      }
+    ]
+  },
+  {
+    "id": "personality_mentor_test",
+    "minAge": 20,
+    "maxAge": 99,
+    "weight": 6,
+    "narrative": {
+      "en": "Your old mentor, grey as a badger and twice as sharp, finds you at {locationName}. 'So. The road's been kind to you — too kind, maybe. Tell me, have the songs changed what's underneath the name?'",
+      "es": "Tu viejo mentor, gris como un tejón y el doble de filoso, te encuentra en {locationName}. 'Así que. El camino fue amable con vos — demasiado, quizás. Decime, ¿las canciones cambiaron lo que hay debajo del nombre?'"
+    },
+    "choices": [
+      {
+        "id": "answer_humble",
+        "label": {
+          "en": "Answer with humility",
+          "es": "Responder con humildad"
+        },
+        "tag": "Humble",
+        "rarity": "uncommon",
+        "wantedTags": {
+          "Humble": 0.15
+        },
+        "punishedTags": {
+          "Cocky": -0.1
+        },
+        "statDeltas": {
+          "charisma": 2
+        },
+        "narrative": {
+          "en": "'The songs sing about someone else half the time,' you say. The mentor's laugh is rusty with relief. 'Good. That one I recognize.'",
+          "es": "'Las canciones cantan sobre otra persona la mitad del tiempo', decís. La risa del mentor es oxidada de alivio. 'Bien. A ese sí lo reconozco.'"
+        }
+      },
+      {
+        "id": "answer_proud",
+        "label": {
+          "en": "Answer with pride",
+          "es": "Responder con orgullo"
+        },
+        "tag": "Cocky",
+        "rarity": "rare",
+        "wantedTags": {
+          "Cocky": 0.15
+        },
+        "statDeltas": {
+          "charisma": 2
+        },
+        "fameDelta": 2,
+        "narrative": {
+          "en": "You tell them exactly what the songs get right. The mentor studies you a long moment. 'The name's grown louder,' they say at last. 'Make sure the rest keeps up.'",
+          "es": "Les contás exactamente lo que las canciones aciertan. El mentor te estudia largo rato. 'El nombre creció en voz alta', dice por fin. 'Asegurate de que el resto esté a la altura.'"
+        }
+      },
+      {
+        "id": "answer_honest",
+        "label": {
+          "en": "Answer with plain honesty",
+          "es": "Responder con pura honestidad"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "wantedTags": {
+          "Stoic": 0.15
+        },
+        "statDeltas": {
+          "constitution": 1,
+          "intelligence": 1
+        },
+        "narrative": {
+          "en": "You answer without dressing it up — the wins, the losses, the nights you nearly quit. The mentor nods slowly. 'That's the truth I trained. It's still in there.'",
+          "es": "Respondés sin adornos — las victorias, las derrotas, las noches en que casi abandonaste. El mentor asiente despacio. 'Esa es la verdad que entrené. Todavía sigue ahí.'"
+        }
+      }
+    ]
+  },
+  {
+    "id": "personality_crowd_judgment",
+    "minAge": 18,
+    "maxAge": 99,
+    "weight": 6,
+    "narrative": {
+      "en": "A crowd at {regionVariant} has heard the ballads and wants proof. 'Show us the legend!' they cry. The square presses in, expectant, hungry for a story worth telling.",
+      "es": "Una multitud en {regionVariant} escuchó las baladas y quiere pruebas. '¡Mostranos a la leyenda!', gritan. La plaza se aprieta, expectante, hambrienta de una historia que valga la pena contar."
+    },
+    "choices": [
+      {
+        "id": "act_legend",
+        "label": {
+          "en": "Give them the legend",
+          "es": "Darles la leyenda"
+        },
+        "tag": "Leader",
+        "rarity": "rare",
+        "wantedTags": {
+          "Leader": 0.15,
+          "Confident": 0.1
+        },
+        "statDeltas": {
+          "charisma": 2
+        },
+        "fameDelta": 3,
+        "narrative": {
+          "en": "You give them the legend — a flourish, a tale, a promise kept in public. The square roars. Whether it was real or performed, nobody will ever be able to tell.",
+          "es": "Les das la leyenda — un florero, un relato, una promesa cumplida en público. La plaza ruge. Si fue real o actuado, nadie va a poder distinguirlo jamás."
+        }
+      },
+      {
+        "id": "deflect_humor",
+        "label": {
+          "en": "Deflect with humor",
+          "es": "Desviar con humor"
+        },
+        "tag": "Funny",
+        "rarity": "uncommon",
+        "wantedTags": {
+          "Funny": 0.15
+        },
+        "statDeltas": {
+          "charisma": 2
+        },
+        "fameDelta": 1,
+        "narrative": {
+          "en": "You deflect with a self-deprecating joke that lands harder than any boast. The crowd laughs, and the legend grows a dimple — more loved, less feared.",
+          "es": "Desviás con un chiste autodepreciativo que aterriza más fuerte que cualquier alarde. La multitud ríe, y la leyenda gana un hoyuelo — más querida, menos temida."
+        }
+      },
+      {
+        "id": "stay_silent",
+        "label": {
+          "en": "Stay silent and let them wonder",
+          "es": "Quedarte en silencio y dejar que se pregunten"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "wantedTags": {
+          "Stoic": 0.15
+        },
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "narrative": {
+          "en": "You stand in the middle of the square and say nothing, letting the silence answer for you. The crowd's noise dies into awe. A legend that doesn't perform is the rarest kind.",
+          "es": "Te parás en el medio de la plaza y no decís nada, dejando que el silencio responda por vos. El ruido de la multitud muere en asombro. La leyenda que no actúa es la más rara de todas."
+        }
+      }
+    ]
+  },
+  {
+    "id": "personality_old_enemy_truce",
+    "minAge": 20,
+    "maxAge": 99,
+    "weight": 5,
+    "narrative": {
+      "en": "Your old enemy, the one who swore your name into their revenge, waits at the crossroads with hands open and weapons off. 'Time has taken the edge off my anger,' they say. 'I'd rather bury the feud than be buried by it. What say you?'",
+      "es": "Tu viejo enemigo, el que juró tu nombre en su venganza, espera en la encrucijada con las manos abiertas y sin armas. 'El tiempo le sacó el filo a mi enojo', dice. 'Prefiero enterrar la enemistad a que ella me entierre a mí. ¿Vos qué decís?'"
+    },
+    "choices": [
+      {
+        "id": "take_truce",
+        "label": {
+          "en": "Take the truce",
+          "es": "Aceptar la tregua"
+        },
+        "tag": "Professional",
+        "rarity": "uncommon",
+        "wantedTags": {
+          "Professional": 0.15,
+          "Strategic": 0.1
+        },
+        "statDeltas": {
+          "intelligence": 1
+        },
+        "reputationDelta": 2,
+        "reputationFaction": "greywater",
+        "narrative": {
+          "en": "You clasp their hand, and the old oath dies between your palms. 'Truce,' you say. The road is long enough for both of you — and one fewer shadow is a gift.",
+          "es": "Estrechás su mano, y el viejo juramento muere entre sus palmas. 'Tregua', decís. El camino es largo para los dos — y una sombra menos es un regalo."
+        }
+      },
+      {
+        "id": "forgive_loudly",
+        "label": {
+          "en": "Forgive them, loudly and in public",
+          "es": "Perdonarlos, en voz alta y en público"
+        },
+        "tag": "Supportive",
+        "rarity": "uncommon",
+        "wantedTags": {
+          "Supportive": 0.15,
+          "Humble": 0.1
+        },
+        "statDeltas": {
+          "charisma": 1
+        },
+        "fameDelta": 2,
+        "narrative": {
+          "en": "You forgive them in front of the whole inn, loudly and without conditions. They blink, unprepared. The crowd whispers your name with a new kind of respect — the kind that ends feuds.",
+          "es": "Los perdonás frente a toda la posada, en voz alta y sin condiciones. Parpadean, sin preparación. La multitud susurra tu nombre con una clase nueva de respeto — la que termina enemistades."
+        }
+      },
+      {
+        "id": "keep_feud",
+        "label": {
+          "en": "Keep the feud alive",
+          "es": "Mantener viva la enemistad"
+        },
+        "tag": "Aggressive",
+        "rarity": "volatile",
+        "wantedTags": {
+          "Aggressive": 0.2
+        },
+        "statDeltas": {
+          "strength": 2
+        },
+        "liabilityDelta": 4,
+        "narrative": {
+          "en": "'Bury it yourself,' you say, and walk past. Their face closes like a door. The feud lives on, sharp as ever — and so does the part of you that thrives on it.",
+          "es": "'Enterrala vos solo', decís, y pasás de largo. Su cara se cierra como una puerta. La enemistad sigue viva, tan filosa como siempre — y también la parte tuya que se alimenta de ella."
+        }
+      }
+    ]
+  },
+  {
+    "id": "personality_legacy_question",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "narrative": {
+      "en": "A child tugs at your sleeve at {locationName}. 'When you're gone,' they ask, with the terrible directness of children, 'what will people remember you for?'",
+      "es": "Una niña te tira de la manga en {locationName}. 'Cuando te vayas', pregunta, con la terrible franqueza de los niños, '¿por qué te va a recordar la gente?'"
+    },
+    "choices": [
+      {
+        "id": "the_battles",
+        "label": {
+          "en": "The battles",
+          "es": "Las peleas"
+        },
+        "tag": "Aggressive",
+        "rarity": "rare",
+        "wantedTags": {
+          "Aggressive": 0.15,
+          "Confident": 0.1
+        },
+        "statDeltas": {
+          "strength": 2
+        },
+        "fameDelta": 3,
+        "narrative": {
+          "en": "'The fights,' you say. 'The ones I won when it mattered.' The child's eyes go wide, and you realize you've just signed up for a story you'll have to live up to.",
+          "es": "'Las peleas', decís. 'Las que gané cuando importaba.' Los ojos de la niña se abren, y te das cuenta de que acabas de firmar una historia a la que tendrás que estar a la altura."
+        }
+      },
+      {
+        "id": "the_saved",
+        "label": {
+          "en": "The people saved",
+          "es": "A la gente salvada"
+        },
+        "tag": "Supportive",
+        "rarity": "uncommon",
+        "wantedTags": {
+          "Supportive": 0.15,
+          "Humble": 0.1
+        },
+        "statDeltas": {
+          "charisma": 2
+        },
+        "countersDelta": {
+          "lives_saved": 1
+        },
+        "narrative": {
+          "en": "'The people I carried out,' you say. The child nods seriously, as if filing it away. Somewhere a door opens for the kind of person who answers that way.",
+          "es": "'A la gente que saqué de ahí', decís. La niña asiente con seriedad, como archivándolo. En algún lado se abre una puerta para la clase de persona que responde así."
+        }
+      },
+      {
+        "id": "the_story",
+        "label": {
+          "en": "The story itself",
+          "es": "La historia misma"
+        },
+        "tag": "Funny",
+        "rarity": "common",
+        "wantedTags": {
+          "Funny": 0.15,
+          "Leader": 0.1
+        },
+        "statDeltas": {
+          "charisma": 1
+        },
+        "fameDelta": 2,
+        "narrative": {
+          "en": "'The story itself,' you say, and spin it: a tale of a child asking a legend a question, and the legend telling the truth. The child laughs — and so will their children.",
+          "es": "'La historia misma', decís, y la tejés: un relato de una niña preguntándole a una leyenda, y la leyenda diciendo la verdad. La niña ríe — y también lo harán sus hijos."
+        }
+      }
+    ]
   }
 ]

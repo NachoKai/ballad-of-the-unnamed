@@ -4,6 +4,7 @@ import { styled } from "styled-components"
 import type { Gender, Locale, Origin, RunType } from "@shared/types"
 import { api, type ArchetypeView, type ClassInfo } from "../api"
 import { t } from "../i18n/strings"
+import { readUnlockedClasses } from "../lib/archetypeUnlocks"
 import { STAT_ABBR } from "../constants"
 import { AchIcon } from "./AchIcon"
 import { ArchetypeStep } from "./ArchetypeStep"
@@ -94,7 +95,12 @@ export function CreationScreen({ locale, onStart, onStartWithArchetype }: Props)
     setBusy(true)
     setError(null)
     try {
-      const res = await api.drawArchetypes({ classId, locale, gender })
+      const res = await api.drawArchetypes({
+        classId,
+        locale,
+        gender,
+        unlockedClasses: readUnlockedClasses(),
+      })
       setArchetypes(res.archetypes)
       setStep("archetype")
     } catch (err) {
@@ -121,8 +127,14 @@ export function CreationScreen({ locale, onStart, onStartWithArchetype }: Props)
     try {
       let archetypeId: string | null = null
       try {
-        const res = await api.drawArchetypes({ classId: cid, locale, gender: g })
-        if (res.archetypes.length > 0) archetypeId = pick(res.archetypes).id
+        const res = await api.drawArchetypes({
+          classId: cid,
+          locale,
+          gender: g,
+          unlockedClasses: readUnlockedClasses(),
+        })
+        const pool = res.archetypes.filter((a) => !a.locked)
+        if (pool.length > 0) archetypeId = pick(pool).id
       } catch (err) {
         console.error("Failed to draw archetypes:", err)
       }
@@ -171,6 +183,7 @@ export function CreationScreen({ locale, onStart, onStartWithArchetype }: Props)
           onPick={pickArchetype}
           onBack={goBack}
           busy={busy}
+          className={classes.find((c) => c.id === classId)?.name}
         />
         {error && <FormError>{error}</FormError>}
       </CreationScreenRoot>

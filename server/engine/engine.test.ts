@@ -22,11 +22,8 @@ import {
 } from "./engine.js"
 import { generateDistinctions, generateEpilogue, generateEpithet } from "./epilogue.js"
 import { evaluateAchievements } from "./achievements.js"
-import {
-  applyInteractiveMove,
-  createInteractiveState,
-  interactiveTier,
-} from "./minigames/index.js"
+import { applyInteractiveMove, createInteractiveState, interactiveTier } from "./minigames/index.js"
+import { MEMOTEST_CARD_COUNT } from "./minigames/memotest.js"
 import { loadContent } from "../content/registry.js"
 import {
   adjustAffinity,
@@ -45,6 +42,7 @@ import {
 } from "./helpers.js"
 import type {
   AchievementContent,
+  ArchetypeContent,
   CharacterState,
   EventContent,
   InteractiveMove,
@@ -194,6 +192,98 @@ describe("createCharacter", () => {
         registry: reg,
       }),
     ).toThrow("unknown archetype")
+  })
+
+  it("no two archetypes in a class share the same stat profile", () => {
+    for (const [cls, list] of Object.entries(reg.archetypes)) {
+      const seen = new Set<string>()
+      for (const a of list) {
+        const sig = Object.entries(a.statDeltas)
+          .sort((p, q) => p[0].localeCompare(q[0]))
+          .map(([k, v]) => `${k}:${v}`)
+          .join(",")
+        expect(seen.has(sig), `${cls} archetype ${a.id} duplicates a stat profile`).toBe(false)
+        seen.add(sig)
+      }
+    }
+  })
+
+  it("no two archetypes in a class share the same icon", () => {
+    for (const [cls, list] of Object.entries(reg.archetypes)) {
+      const seen = new Set<string>()
+      for (const a of list) {
+        expect(seen.has(a.icon), `${cls} archetype ${a.id} duplicates the ${a.icon} icon`).toBe(
+          false,
+        )
+        seen.add(a.icon)
+      }
+    }
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Hidden master archetypes (Phase 8.1)
+// ---------------------------------------------------------------------------
+describe("hidden master archetypes", () => {
+  const CLASSES = ["warrior", "wizard", "rogue", "ranger", "cleric", "bard"]
+  const total = (a: ArchetypeContent) => Object.values(a.statDeltas).reduce((s, v) => s + v, 0)
+
+  it("each class has exactly one hidden master archetype", () => {
+    for (const cls of CLASSES) {
+      const hidden = (reg.archetypes[cls] ?? []).filter((a) => a.hidden)
+      expect(hidden, `${cls} must have exactly one hidden archetype`).toHaveLength(1)
+    }
+  })
+
+  it("the master archetype is strictly stronger than every normal archetype of its class", () => {
+    for (const cls of CLASSES) {
+      const list = reg.archetypes[cls] ?? []
+      const master = list.find((a) => a.hidden)
+      if (!master) continue
+      const masterTotal = total(master)
+      for (const a of list) {
+        if (a.hidden) continue
+        expect(
+          total(a),
+          `${cls} normal archetype ${a.id} (${total(a)}) must total less than master ${master.id} (${masterTotal})`,
+        ).toBeLessThan(masterTotal)
+      }
+    }
+  })
+
+  it("hidden masters keep unique stat profiles and icons within their class", () => {
+    for (const cls of CLASSES) {
+      const list = reg.archetypes[cls] ?? []
+      const seen = new Set<string>()
+      const icons = new Set<string>()
+      for (const a of list) {
+        const sig = Object.entries(a.statDeltas)
+          .sort((p, q) => p[0].localeCompare(q[0]))
+          .map(([k, v]) => `${k}:${v}`)
+          .join(",")
+        expect(seen.has(sig), `${cls} archetype ${a.id} duplicates a stat profile`).toBe(false)
+        seen.add(sig)
+        expect(icons.has(a.icon), `${cls} archetype ${a.id} duplicates the ${a.icon} icon`).toBe(
+          false,
+        )
+        icons.add(a.icon)
+      }
+    }
+  })
+
+  it("createCharacter accepts an unlocked hidden master and applies its deltas", () => {
+    const c = createCharacter({
+      id: "m1",
+      name: "Warlord",
+      classId: "warrior",
+      archetypeId: "warlord",
+      locale: "en",
+      registry: reg,
+    })
+    expect(c.archetype).toBe("warlord")
+    // warrior base strength 8 + 8 = 16; intelligence 3 + 4 = 7
+    expect(c.strength).toBe(16)
+    expect(c.intelligence).toBe(7)
   })
 })
 
@@ -1730,9 +1820,9 @@ describe("shop & inventory", () => {
     const retinue = reg.shop.filter((i) => i.category === "retinue")
     const consumables = reg.shop.filter((i) => i.category === "consumable")
     const luxury = reg.shop.filter((i) => i.category === "luxury")
-    expect(retinue.length).toBe(5)
-    expect(consumables.length).toBe(5)
-    expect(luxury.length).toBe(6)
+    expect(retinue.length).toBe(10)
+    expect(consumables.length).toBe(10)
+    expect(luxury.length).toBe(12)
   })
 })
 
@@ -1926,8 +2016,7 @@ describe("hasPlayableChoice", () => {
       const picked = selectEvent(weak, reg, new Rng(seed))
       // Interactive minigames carry no choices but are always playable through
       // the move loop — selectEvent treats them as playable when eligible.
-      const playable =
-        picked.resolution?.type === "interactive" || hasPlayableChoice(picked, weak)
+      const playable = picked.resolution?.type === "interactive" || hasPlayableChoice(picked, weak)
       expect(playable).toBe(true)
     }
   })
@@ -2845,7 +2934,17 @@ function playTurn(c: CharacterState, rng: Rng, pick?: (ids: string[]) => string)
       const move: InteractiveMove =
         state.game === "tictactoe"
           ? { kind: "tictactoe", cell: (state.board ?? []).findIndex((x) => x === null) }
-          : { kind: "rps", choice: "rock" }
+          : state.game === "memotest"
+            ? {
+                kind: "memotest",
+                // Dumb auto-player: flip the first card that is neither matched
+                // nor already revealed. The engine judges pairs and hands the
+                // rival a turn on a miss — this always terminates.
+                card: Array.from({ length: MEMOTEST_CARD_COUNT }, (_, i) => i).find(
+                  (i) => !(state.matched ?? []).includes(i) && !(state.revealed ?? []).includes(i),
+                )!,
+              }
+            : { kind: "rps", choice: "rock" }
       over = applyInteractiveMove(state, move, primaryStat, rng).over
     }
     c.pendingMinigame = null

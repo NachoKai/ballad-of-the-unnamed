@@ -448,6 +448,11 @@ export interface ArchetypeContent {
   name: LocaleMap
   flavor: LocaleMap
   statDeltas: StatDeltas
+  // Hidden "master" archetypes: one per class, stronger than every normal
+  // archetype (+12 vs +8), invisible until the player finishes a run with the
+  // class. The server never serves them unlocked unless the client proves the
+  // class is in its unlock set (client-side localStorage — no accounts exist).
+  hidden?: boolean
 }
 
 export type ArchetypePool = Record<string, ArchetypeContent[]>

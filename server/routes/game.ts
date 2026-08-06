@@ -70,33 +70,63 @@ async function loadOwnedRun(req: Request): Promise<RunRecord | null> {
   return getRun(id)
 }
 
-// POST /api/game/archetype-draw  { classId, locale, gender }
+// POST /api/game/archetype-draw  { classId, locale, gender, unlockedClasses? }
+//
+// Hidden "master" archetypes (content flag `hidden: true`) are only served
+// fully to clients that prove the class is in their unlock set (the player
+// finished a run with that class — tracked client-side in localStorage, since
+// there are no accounts). Locked masters are still served, but masked as a
+// "???" card so players know they exist; their identity and stats stay hidden.
 gameRouter.post("/archetype-draw", (req: Request, res: Response) => {
   const classId = String(req.body?.classId ?? "")
   const locale = localeOf(req)
   const gender: Gender =
     req.body?.gender === "male" || req.body?.gender === "female" ? req.body.gender : "male"
+  const unlockedClasses: string[] = Array.isArray(req.body?.unlockedClasses)
+    ? req.body.unlockedClasses.filter((c: unknown): c is string => typeof c === "string")
+    : []
+  const unlocked = unlockedClasses.includes(classId)
   const pool = registry.archetypes[classId]
   if (!pool || pool.length === 0) {
     return res.status(400).json({ error: "no_archetypes_for_class" })
   }
-  // Deterministic per-session draw: pick 3 from the pool using a fresh RNG.
+  // Deterministic per-session draw: serve the WHOLE class pool in a seeded
+  // shuffle so the player can weigh every archetype (not just a 3-card hand).
   const rng = new Rng(hashSeed(classId + "_" + String(Date.now()) + Math.random()))
   const poolCopy = [...pool]
   const drawn: ArchetypeContent[] = []
-  for (let i = 0; i < 3 && poolCopy.length > 0; i++) {
+  while (poolCopy.length > 0) {
     const idx = rng.int(0, poolCopy.length - 1)
     drawn.push(poolCopy.splice(idx, 1)[0])
   }
   // Localize flavor text, inflecting the player-referential titles for gender.
-  const served = drawn.map((a) => ({
-    id: a.id,
-    icon: a.icon,
-    name: locale === "es" ? genderize(localize(a.name, locale), gender) : localize(a.name, locale),
-    flavor:
-      locale === "es" ? genderize(localize(a.flavor, locale), gender) : localize(a.flavor, locale),
-    statDeltas: a.statDeltas,
-  }))
+  // Locked masters are masked: a "???" name, no stats, a key icon — the client
+  // renders a distinct locked card with an unlock hint.
+  const served = drawn.map((a) => {
+    if (a.hidden && !unlocked) {
+      return {
+        id: a.id,
+        icon: "key-round",
+        name: "???",
+        flavor: "",
+        statDeltas: {},
+        locked: true,
+        isMaster: true,
+      }
+    }
+    return {
+      id: a.id,
+      icon: a.icon,
+      name:
+        locale === "es" ? genderize(localize(a.name, locale), gender) : localize(a.name, locale),
+      flavor:
+        locale === "es"
+          ? genderize(localize(a.flavor, locale), gender)
+          : localize(a.flavor, locale),
+      statDeltas: a.statDeltas,
+      isMaster: a.hidden === true,
+    }
+  })
   res.json({ archetypes: served })
 })
 
@@ -115,9 +145,21 @@ gameRouter.post("/new", async (req: Request, res: Response) => {
       req.body?.gender === "male" || req.body?.gender === "female" ? req.body.gender : "male"
     // origin dial: humble (poor start, underdog pool) or established.
     const origin = req.body?.origin === "established" ? "established" : "humble"
+    // Hidden master archetypes require the class's unlock (client-side set of
+    // classes with a finished run). Reject picks the client never unlocked.
+    const unlockedClasses: string[] = Array.isArray(req.body?.unlockedClasses)
+      ? req.body.unlockedClasses.filter((c: unknown): c is string => typeof c === "string")
+      : []
 
     if (!registry.classesById.has(classId)) {
       return res.status(400).json({ error: "invalid_class" })
+    }
+
+    if (archetypeId) {
+      const archetype = (registry.archetypes[classId] ?? []).find((a) => a.id === archetypeId)
+      if (archetype?.hidden && !unlockedClasses.includes(classId)) {
+        return res.status(400).json({ error: "locked_archetype" })
+      }
     }
 
     const seed = runType === "daily" ? todayDailySeed() : String(Date.now()) + Math.random()

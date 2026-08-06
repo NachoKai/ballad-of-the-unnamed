@@ -90,6 +90,96 @@
     }
   },
   {
+    "id": "armorer",
+    "category": "retinue",
+    "name": {
+      "en": "Armorer",
+      "es": "Armero"
+    },
+    "cost": 2400,
+    "effect": {
+      "type": "injuryRiskModifier",
+      "value": -0.08
+    },
+    "icon": "🛡️",
+    "flavor": {
+      "en": "Plates that turn a killing blow into a bruise.",
+      "es": "Placas que convierten un golpe mortal en un moretón."
+    }
+  },
+  {
+    "id": "quartermaster",
+    "category": "retinue",
+    "name": {
+      "en": "Quartermaster",
+      "es": "Intendente"
+    },
+    "cost": 2700,
+    "effect": {
+      "type": "fatigueModifier",
+      "value": -0.1
+    },
+    "icon": "🎒",
+    "flavor": {
+      "en": "Supplies that never run out, boots that never wear through.",
+      "es": "Vituallas que nunca se acaban, botas que nunca se gastan."
+    }
+  },
+  {
+    "id": "battle_surgeon",
+    "category": "retinue",
+    "name": {
+      "en": "Battle Surgeon",
+      "es": "Cirujano de guerra"
+    },
+    "cost": 2900,
+    "effect": {
+      "type": "injuryRiskModifier",
+      "value": -0.12
+    },
+    "icon": "🩺",
+    "flavor": {
+      "en": "He can patch a wound between two blows.",
+      "es": "Puede curar una herida entre dos golpes."
+    }
+  },
+  {
+    "id": "taskmaster",
+    "category": "retinue",
+    "name": {
+      "en": "Taskmaster",
+      "es": "Capataz"
+    },
+    "cost": 2500,
+    "effect": {
+      "type": "momentumRecoveryModifier",
+      "value": -0.15
+    },
+    "icon": "⛓️",
+    "flavor": {
+      "en": "A bad streak ends the day he raises his voice.",
+      "es": "Una racha mala termina el día que alza la voz."
+    }
+  },
+  {
+    "id": "royal_tutor",
+    "category": "retinue",
+    "name": {
+      "en": "Royal Tutor",
+      "es": "Tutor real"
+    },
+    "cost": 3100,
+    "effect": {
+      "type": "offerQualityModifier",
+      "value": 0.12
+    },
+    "icon": "📚",
+    "flavor": {
+      "en": "Teaches you which contracts to take and which to burn.",
+      "es": "Te enseña qué contratos aceptar y cuáles quemar."
+    }
+  },
+  {
     "id": "enchanted_boots",
     "category": "consumable",
     "name": {
@@ -173,6 +263,89 @@
     "duration": 1
   },
   {
+    "id": "wound_salve",
+    "category": "consumable",
+    "name": {
+      "en": "Wound Salve",
+      "es": "Ungüento para heridas"
+    },
+    "cost": 550,
+    "effect": null,
+    "icon": "🧴",
+    "flavor": {
+      "en": "Faster recovery between battles.",
+      "es": "Recuperación más rápida entre batallas."
+    },
+    "duration": 1
+  },
+  {
+    "id": "iron_rations",
+    "category": "consumable",
+    "name": {
+      "en": "Iron Rations",
+      "es": "Raciones de hierro"
+    },
+    "cost": 450,
+    "effect": null,
+    "icon": "🍖",
+    "flavor": {
+      "en": "Endurance for the long road ahead.",
+      "es": "Resistencia para el largo camino."
+    },
+    "duration": 1
+  },
+  {
+    "id": "guild_recommendation",
+    "category": "consumable",
+    "name": {
+      "en": "Guild Recommendation",
+      "es": "Carta de recomendación gremial"
+    },
+    "cost": 750,
+    "effect": null,
+    "icon": "📜",
+    "flavor": {
+      "en": "Better offers and warmer welcomes this season.",
+      "es": "Mejores ofertas y recibimientos más cálidos esta temporada."
+    },
+    "duration": 1
+  },
+  {
+    "id": "bone_setter",
+    "category": "consumable",
+    "name": {
+      "en": "Bone-Setter's Compact",
+      "es": "Pacto del curandero de huesos"
+    },
+    "cost": 650,
+    "effect": {
+      "type": "injuryRiskModifier",
+      "value": -0.08
+    },
+    "icon": "🦴",
+    "flavor": {
+      "en": "Fewer broken bones, faster mends, for two seasons.",
+      "es": "Menos huesos rotos, curaciones más rápidas, por dos temporadas."
+    },
+    "duration": 2
+  },
+  {
+    "id": "elixir_of_vigor",
+    "category": "consumable",
+    "name": {
+      "en": "Elixir of Vigor",
+      "es": "Elixir de vigor"
+    },
+    "cost": 600,
+    "effect": null,
+    "icon": "⚗️",
+    "flavor": {
+      "en": "A season without fatigue catching up to you.",
+      "es": "Una temporada sin que el cansancio te alcance."
+    },
+    "duration": 1
+  },
+  {
     "id": "warhorse",
     "category": "luxury",
     "name": {
@@ -186,10 +359,7 @@
       "en": "A trusty steed for the road ahead.",
       "es": "Un corcel fiel para el camino."
     },
-    "requiresArc": [
-      "adventurer",
-      "mercenary"
-    ]
+    "requiresArc": ["adventurer", "mercenary"]
   },
   {
     "id": "cottage",
@@ -205,10 +375,7 @@
       "en": "A quiet place to call your own.",
       "es": "Un lugar tranquilo para llamar hogar."
     },
-    "requiresArc": [
-      "adventurer",
-      "mercenary"
-    ]
+    "requiresArc": ["adventurer", "mercenary"]
   },
   {
     "id": "manor",
@@ -224,10 +391,7 @@
       "en": "Train in comfort between adventures.",
       "es": "Entrena cómodamente entre aventuras."
     },
-    "requiresArc": [
-      "kingdom_hero",
-      "legend"
-    ]
+    "requiresArc": ["kingdom_hero", "legend"]
   },
   {
     "id": "fortified_tower",
@@ -243,10 +407,7 @@
       "en": "A stronghold that speaks of your station.",
       "es": "Una fortaleza que habla de tu estatus."
     },
-    "requiresArc": [
-      "kingdom_hero",
-      "legend"
-    ]
+    "requiresArc": ["kingdom_hero", "legend"]
   },
   {
     "id": "personal_griffon",
@@ -262,10 +423,7 @@
       "en": "Soar above the petty concerns of the ground.",
       "es": "Vuela por encima de las preocupaciones terrenales."
     },
-    "requiresArc": [
-      "legend",
-      "old_hero"
-    ]
+    "requiresArc": ["legend", "old_hero"]
   },
   {
     "id": "floating_realm",
@@ -281,10 +439,103 @@
       "en": "A shard of sky you call your own.",
       "es": "Un fragmento de cielo que es solo tuyo."
     },
-    "requiresArc": [
-      "legend",
-      "old_hero"
-    ],
+    "requiresArc": ["legend", "old_hero"],
     "achievementTrigger": "jetset_life"
+  },
+  {
+    "id": "hunting_lodge",
+    "category": "luxury",
+    "name": {
+      "en": "Hunting Lodge",
+      "es": "Cabaña de caza"
+    },
+    "cost": 900,
+    "effect": null,
+    "icon": "🏕️",
+    "flavor": {
+      "en": "A private stretch of forest, and a roof over your head.",
+      "es": "Un tramo de bosque privado, y un techo sobre tu cabeza."
+    },
+    "requiresArc": ["adventurer", "mercenary"]
+  },
+  {
+    "id": "vault_box",
+    "category": "luxury",
+    "name": {
+      "en": "Vault Box",
+      "es": "Caja de bóveda"
+    },
+    "cost": 1600,
+    "effect": null,
+    "icon": "🔒",
+    "flavor": {
+      "en": "Gold that thieves, armies, and taxmen cannot reach.",
+      "es": "Oro al que ladrones, ejércitos y recaudadores no pueden llegar."
+    },
+    "requiresArc": ["adventurer", "mercenary"]
+  },
+  {
+    "id": "dueling_hall",
+    "category": "luxury",
+    "name": {
+      "en": "Dueling Hall",
+      "es": "Sala de duelo"
+    },
+    "cost": 3500,
+    "effect": null,
+    "icon": "⚔️",
+    "flavor": {
+      "en": "Sparring partners who keep your edge honest.",
+      "es": "Compañeros de esgrima que mantienen honesto tu filo."
+    },
+    "requiresArc": ["kingdom_hero", "legend"]
+  },
+  {
+    "id": "observatory",
+    "category": "luxury",
+    "name": {
+      "en": "Observatory",
+      "es": "Observatorio"
+    },
+    "cost": 4200,
+    "effect": null,
+    "icon": "🔭",
+    "flavor": {
+      "en": "A tower where the stars write your fortunes nightly.",
+      "es": "Una torre donde las estrellas escriben tus fortunas cada noche."
+    },
+    "requiresArc": ["kingdom_hero", "legend"]
+  },
+  {
+    "id": "sky_garden",
+    "category": "luxury",
+    "name": {
+      "en": "Sky Garden",
+      "es": "Jardín del cielo"
+    },
+    "cost": 9000,
+    "effect": null,
+    "icon": "🌿",
+    "flavor": {
+      "en": "A private paradise suspended above the petty world.",
+      "es": "Un paraíso privado suspendido sobre el mundo mezquino."
+    },
+    "requiresArc": ["legend", "old_hero"]
+  },
+  {
+    "id": "trophy_wing",
+    "category": "luxury",
+    "name": {
+      "en": "Trophy Wing",
+      "es": "Ala de trofeos"
+    },
+    "cost": 11000,
+    "effect": null,
+    "icon": "🏆",
+    "flavor": {
+      "en": "Every victory memorialized in marble and gold.",
+      "es": "Cada victoria inmortalizada en mármol y oro."
+    },
+    "requiresArc": ["legend", "old_hero"]
   }
 ]

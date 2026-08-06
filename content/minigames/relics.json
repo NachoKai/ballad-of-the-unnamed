@@ -7,7 +7,10 @@
     "maxAge": 99,
     "weight": 2,
     "primaryStat": "intelligence",
-    "opponent": { "en": "Keeper Sephra", "es": "La guardiana Sephra" },
+    "opponent": {
+      "en": "Keeper Sephra",
+      "es": "La guardiana Sephra"
+    },
     "narrative": {
       "en": "A ring of candlelight, and a ring of relics: dragon eggs, lost swords, tarnished crowns, phials of phoenix fire. Keeper Sephra of the Relic Shrine spreads sixteen tiles across the altar — every treasure hidden behind two. 'Find the pairs, stranger, and the shrine endows you. Miss, and I take my cut.'",
       "es": "Un anillo de velas y un anillo de reliquias: huevos de dragón, espadas perdidas, coronas empañadas, frascos de fuego de fénix. La guardiana Sephra del Santuario de Reliquias extiende dieciséis losetas sobre el altar — cada tesoro oculto tras dos. 'Encontrá los pares, forastero, y el santuario te recompensa. Si fallás, me quedo con mi parte.'"
@@ -16,7 +19,9 @@
       "type": "interactive",
       "game": "memotest",
       "baseWinChance": 0.5,
-      "statInfluence": { "intelligence": 0.012 },
+      "statInfluence": {
+        "intelligence": 0.012
+      },
       "statThreshold": 20,
       "rivalSkill": 0.5
     },
@@ -26,7 +31,10 @@
         "fameDelta": 7,
         "reputationDelta": 3,
         "reputationFaction": "arcanum",
-        "countersDelta": { "relic_memotest_wins": 1, "battles_won": 1 },
+        "countersDelta": {
+          "relic_memotest_wins": 1,
+          "battles_won": 1
+        },
         "narrative": {
           "en": "Every pair found, every relic matched in a blur of recall. Sephra bows low, the candle flames bowing with her. 'The shrine has not been read this clean in a generation.' She presses a pouch of gold into your hands and parts with her finest relic as a keepsake.",
           "es": "Cada par encontrado, cada reliquia emparejada en un destello de memoria. Sephra se inclina, y las llamas de las velas se inclinan con ella. 'El santuario no se leyó tan limpio en una generación.' Te mete una bolsa de oro en las manos y se despide con su mejor reliquia como recuerdo."
@@ -37,7 +45,10 @@
         "fameDelta": 3,
         "reputationDelta": 1,
         "reputationFaction": "arcanum",
-        "countersDelta": { "relic_memotest_wins": 1, "battles_won": 1 },
+        "countersDelta": {
+          "relic_memotest_wins": 1,
+          "battles_won": 1
+        },
         "narrative": {
           "en": "Your memory holds better than most pilgrims'. Sephra nods, satisfied, and pays out the shrine's bounty. 'The altar remembers those who honor it.'",
           "es": "Tu memoria aguanta mejor que la de la mayoría de los peregrinos. Sephra asiente, satisfecha, y paga la recompensa del santuario. 'El altar recuerda a quienes lo honran.'"
@@ -59,6 +70,81 @@
         "narrative": {
           "en": "Sephra's own memory is merciless — she claims pair after pair while yours slips away. She takes her toll from your purse and turns back to her candles, already forgetting you.",
           "es": "La memoria de Sephra es implacable — reclama par tras par mientras la tuya se te escapa. Cobra su peaje de tu bolsa y vuelve a sus velas, olvidándote ya."
+        }
+      }
+    }
+  },
+  {
+    "id": "relic_dragon_hoard_altar",
+    "type": "minigame",
+    "subtype": "interactive",
+    "minAge": 10,
+    "maxAge": 99,
+    "weight": 2,
+    "primaryStat": "intelligence",
+    "opponent": {
+      "en": "Keeper Aldous",
+      "es": "El guardián Aldous"
+    },
+    "narrative": {
+      "en": "Beneath the dragon's roost, Keeper Aldous tends an altar of shed scales and half-melted gold. He spreads twelve tiles across the stone: six treasures, each hidden twice. 'Find the pairs and the hoard remembers you, wanderer. Miss, and the hoard takes its tithe.'",
+      "es": "Bajo el nido del dragón, el guardián Aldous cuida un altar de escamas mudadas y oro a medio fundir. Extiende doce losetas sobre la piedra: seis tesoros, cada uno oculto dos veces. 'Encontrá los pares y el tesoro te recordará, caminante. Si fallás, el tesoro cobra su diezmo.'"
+    },
+    "resolution": {
+      "type": "interactive",
+      "game": "memotest",
+      "baseWinChance": 0.5,
+      "statInfluence": {
+        "intelligence": 0.012
+      },
+      "statThreshold": 20,
+      "rivalSkill": 0.5
+    },
+    "outcomes": {
+      "critical": {
+        "goldDelta": 260,
+        "fameDelta": 6,
+        "reputationDelta": 3,
+        "reputationFaction": "arcanum",
+        "countersDelta": {
+          "relic_memotest_wins": 1,
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "Every pair found, and the altar thrums with the dragon's old approval. Aldous bows, sweeping a scale to the floor in respect. 'The hoard has not favored a memory like yours in an age.' He presses a purse of gold and a single warm scale into your hands.",
+          "es": "Cada par encontrado, y el altar vibra con la vieja aprobación del dragón. Aldous se inclina y barre una escama hacia el suelo en señal de respeto. 'El tesoro no favorecía una memoria como la tuya desde hace una era.' Te mete una bolsa de oro y una única escama tibia en las manos."
+        }
+      },
+      "success": {
+        "goldDelta": 100,
+        "fameDelta": 3,
+        "reputationDelta": 1,
+        "reputationFaction": "arcanum",
+        "countersDelta": {
+          "relic_memotest_wins": 1,
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "Your memory clears the altar cleanly. Aldous nods, satisfied, and pays the hoard's bounty. 'The dragon's memory is long, wanderer — it will remember you.'",
+          "es": "Tu memoria despeja el altar con limpieza. Aldous asiente, satisfecho, y paga la recompensa del tesoro. 'La memoria del dragón es larga, caminante — te recordará.'"
+        }
+      },
+      "partial": {
+        "goldDelta": -20,
+        "countersReset": ["relic_memotest_streak"],
+        "narrative": {
+          "en": "The altar splits evenly — as many treasures yours as his. Aldous keeps his tithe with a thin smile. 'A draw wakes no dragon, wanderer.'",
+          "es": "El altar se divide parejo — tantos tesoros tuyos como suyos. Aldous se queda con su diezmo con una sonrisa tenue. 'Un empate no despierta dragones, caminante.'"
+        }
+      },
+      "fail": {
+        "goldDelta": -60,
+        "reputationDelta": -1,
+        "reputationFaction": "arcanum",
+        "countersReset": ["relic_memotest_streak"],
+        "narrative": {
+          "en": "Aldous's memory is a vault — he claims pair after pair while yours scatters. He takes his toll from your purse and returns to polishing his scales, already forgetting you walked the altar.",
+          "es": "La memoria de Aldous es una bóveda — reclama par tras par mientras la tuya se desparrama. Cobra su peaje de tu bolsa y vuelve a pulir sus escamas, olvidando ya que cruzaste el altar."
         }
       }
     }

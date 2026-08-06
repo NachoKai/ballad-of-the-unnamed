@@ -288,5 +288,295 @@
         }
       }
     ]
+  },
+  {
+    "id": "world_comet",
+    "type": "world",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 4,
+    "narrative": {
+      "en": "A green comet claws across the sky, visible for a week. Augurs argue its meaning; farmers plant by it; the superstitious bolt their doors. The world holds its breath.",
+      "es": "Un cometa verde araña el cielo, visible durante una semana. Los augures discuten su significado; los granjeros siembran según él; los supersticiosos atrancan sus puertas. El mundo contiene la respiración."
+    },
+    "worldEventHeadline": {
+      "en": "Comet Divides the Seers",
+      "es": "Un Cometa Divide a los Videntes"
+    },
+    "choices": [
+      {
+        "id": "acknowledge",
+        "rarity": "common",
+        "label": {
+          "en": "The world moves on",
+          "es": "El mundo sigue"
+        },
+        "narrative": {
+          "en": "Whatever it means, the sky does not wait for interpretation.",
+          "es": "Sea lo que sea que signifique, el cielo no espera interpretaciones."
+        }
+      }
+    ]
+  },
+  {
+    "id": "world_drought",
+    "type": "world",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 3,
+    "narrative": {
+      "en": "A three-year drought has cracked the heartland. Wells run to mud, the rivers shrink to threads, and the grain wagons arrive empty. The price of bread climbs with every moon.",
+      "es": "Una sequía de tres años agrietó el corazón de la tierra. Los pozos se vuelven barro, los ríos se encogen hasta ser hilos, y los carros de grano llegan vacíos. El precio del pan sube con cada luna."
+    },
+    "worldEventHeadline": {
+      "en": "Drought Grips the Heartland",
+      "es": "La Sequía Aprieta el Corazón del País"
+    },
+    "choices": [
+      {
+        "id": "acknowledge",
+        "rarity": "common",
+        "label": {
+          "en": "The world moves on",
+          "es": "El mundo sigue"
+        },
+        "narrative": {
+          "en": "The fields pray for rain. So do the merchants — for different reasons.",
+          "es": "Los campos rezan por lluvia. También los mercaderes — por razones distintas."
+        }
+      }
+    ]
+  },
+  {
+    "id": "world_refugee_caravan",
+    "type": "world",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 4,
+    "narrative": {
+      "en": "A town on the border has fallen, and its people take to the roads in a long, slow caravan. They carry what they could, and ask for what they cannot.",
+      "es": "Un pueblo de la frontera cayó, y su gente toma los caminos en una caravana larga y lenta. Llevan lo que pudieron, y piden lo que no pueden."
+    },
+    "worldEventHeadline": {
+      "en": "Refugees Flood the Roads",
+      "es": "Los Refugiados Inundan los Caminos"
+    },
+    "choices": [
+      {
+        "id": "acknowledge",
+        "rarity": "common",
+        "label": {
+          "en": "The world moves on",
+          "es": "El mundo sigue"
+        },
+        "narrative": {
+          "en": "Every kingdom's road tells the same story — someone's home, somewhere behind.",
+          "es": "El camino de cada reino cuenta la misma historia — el hogar de alguien, en algún punto detrás."
+        }
+      }
+    ]
+  },
+  {
+    "id": "world_crown_heir",
+    "type": "world",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 3,
+    "narrative": {
+      "en": "A royal heir is born at last, and the capital rings with bells and cannon-fire. For a week, taverns pour free ale in the heir's name. Courts across the realm recalculate.",
+      "es": "Por fin nace un heredero real, y la capital resuena con campanas y cañonazos. Durante una semana, las tabernas sirven cerveza gratis en nombre del heredero. Las cortes del reino recalculan."
+    },
+    "worldEventHeadline": {
+      "en": "Heir Born to the Throne",
+      "es": "Nace un Heredero al Trono"
+    },
+    "choices": [
+      {
+        "id": "acknowledge",
+        "rarity": "common",
+        "label": {
+          "en": "The world moves on",
+          "es": "El mundo sigue"
+        },
+        "narrative": {
+          "en": "A new thread in the tapestry of power. Time will tell its color.",
+          "es": "Un hilo nuevo en el tapiz del poder. El tiempo dirá su color."
+        }
+      }
+    ]
+  },
+  {
+    "id": "world_dragon_sighting",
+    "type": "world",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 4,
+    "narrative": {
+      "en": "Shepherds near {slot:worldLocation} swear they saw a dragon wheel over the peaks at dusk, huge and unhurried. No one burns fields or hoards gold yet — but everyone looks up more often.",
+      "es": "Los pastores cerca de {slot:worldLocation} juran que vieron un dragón girar sobre los picos al atardecer, enorme y sin apuro. Nadie quema campos ni atesora oro todavía — pero todos miran al cielo más seguido."
+    },
+    "worldEventHeadline": {
+      "en": "Dragon Sighted over {slot:worldLocation}",
+      "es": "Avistan un Dragón sobre {slot:worldLocation}"
+    },
+    "choices": [
+      {
+        "id": "acknowledge",
+        "rarity": "common",
+        "label": {
+          "en": "The world moves on",
+          "es": "El mundo sigue"
+        },
+        "narrative": {
+          "en": "Where there's smoke on the horizon, there's usually a story — or a fire.",
+          "es": "Donde hay humo en el horizonte, suele haber una historia — o un incendio."
+        }
+      }
+    ]
+  },
+  {
+    "id": "world_plague_cure",
+    "type": "world",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 3,
+    "narrative": {
+      "en": "A hedge healer in the southern marches claims to have brewed a cure for the plague. Half the realm scoffs; the other half queues at her door. The crown has sent observers.",
+      "es": "Una curandera de los páramos del sur afirma haber preparado una cura para la plaga. La mitad del reino se burla; la otra mitad hace cola en su puerta. La corona envió observadores."
+    },
+    "worldEventHeadline": {
+      "en": "Cure Claimed for the Plague",
+      "es": "Reclaman una Cura para la Plaga"
+    },
+    "choices": [
+      {
+        "id": "acknowledge",
+        "rarity": "common",
+        "label": {
+          "en": "The world moves on",
+          "es": "El mundo sigue"
+        },
+        "narrative": {
+          "en": "Miracles are like rumors — they grow in the telling.",
+          "es": "Los milagros son como los rumores — crecen al contarlos."
+        }
+      }
+    ]
+  },
+  {
+    "id": "world_guild_war",
+    "type": "world",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 4,
+    "narrative": {
+      "en": "The {slot:guildName} and the {slot:guildName} have declared open war over a disputed contract. Workshop windows break, warehouses burn, and the city guildhall has barred its doors.",
+      "es": "Los {slot:guildName} y los {slot:guildName} se declararon la guerra abierta por un contrato en disputa. Ventanas de talleres rotas, almacenes en llamas, y la sede gremial de la ciudad atrancó sus puertas."
+    },
+    "worldEventHeadline": {
+      "en": "Guild War Erupts",
+      "es": "Estalla una Guerra de Gremios"
+    },
+    "choices": [
+      {
+        "id": "acknowledge",
+        "rarity": "common",
+        "label": {
+          "en": "The world moves on",
+          "es": "El mundo sigue"
+        },
+        "narrative": {
+          "en": "Coin fights with coin, and the streets pay the difference.",
+          "es": "El dinero pelea con dinero, y las calles pagan la diferencia."
+        }
+      }
+    ]
+  },
+  {
+    "id": "world_border_dispute",
+    "type": "world",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 3,
+    "narrative": {
+      "en": "Two kingdoms have garrisoned the same mountain pass, each claiming it by an older map. Travelers wait at the frontier while the clerks argue genealogy and geography.",
+      "es": "Dos reinos guarnecieron el mismo paso de montaña, cada uno reclamándolo con un mapa más viejo. Los viajeros esperan en la frontera mientras los escribanos discuten genealogía y geografía."
+    },
+    "worldEventHeadline": {
+      "en": "Border Dispute Turns Hot",
+      "es": "La Disputa Fronteriza se Calienta"
+    },
+    "choices": [
+      {
+        "id": "acknowledge",
+        "rarity": "common",
+        "label": {
+          "en": "The world moves on",
+          "es": "El mundo sigue"
+        },
+        "narrative": {
+          "en": "Maps move slower than armies — but both are moving now.",
+          "es": "Los mapas se mueven más lento que los ejércitos — pero ahora ambos se mueven."
+        }
+      }
+    ]
+  },
+  {
+    "id": "world_starfall",
+    "type": "world",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 2,
+    "narrative": {
+      "en": "A star falls into {slot:worldLocation} with a sound like the world cracking a knuckle. Pilgrims are already walking toward the crater, carrying offerings and shovels.",
+      "es": "Una estrella cae en {slot:worldLocation} con un sonido como si el mundo se crujiera los nudillos. Los peregrinos ya caminan hacia el cráter, cargando ofrendas y palas."
+    },
+    "worldEventHeadline": {
+      "en": "Star Falls in {slot:worldLocation}",
+      "es": "Cae una Estrella en {slot:worldLocation}"
+    },
+    "choices": [
+      {
+        "id": "acknowledge",
+        "rarity": "common",
+        "label": {
+          "en": "The world moves on",
+          "es": "El mundo sigue"
+        },
+        "narrative": {
+          "en": "Every sky-sent stone is a prayer to someone.",
+          "es": "Cada piedra caída del cielo es una oración para alguien."
+        }
+      }
+    ]
+  },
+  {
+    "id": "world_bridge_collapse",
+    "type": "world",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 3,
+    "narrative": {
+      "en": "The great bridge over the river gorge — the one the songs call the kingdom's spine — has collapsed under a spring flood. Trade reroutes, ferries multiply, and stonemasons are suddenly the richest men alive.",
+      "es": "El gran puente sobre el desfiladero del río — el que las canciones llaman la espina del reino — se derrumbó bajo una crecida de primavera. El comercio se desvía, las barcazas se multiplican, y los canteros son de pronto los hombres más ricos del reino."
+    },
+    "worldEventHeadline": {
+      "en": "Great Bridge Collapses",
+      "es": "Se Derrumbe el Gran Puente"
+    },
+    "choices": [
+      {
+        "id": "acknowledge",
+        "rarity": "common",
+        "label": {
+          "en": "The world moves on",
+          "es": "El mundo sigue"
+        },
+        "narrative": {
+          "en": "A stone falls, and a thousand plans bend around the gap.",
+          "es": "Cae una piedra, y mil planes se doblan alrededor del hueco."
+        }
+      }
+    ]
   }
 ]

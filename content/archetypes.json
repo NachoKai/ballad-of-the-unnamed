@@ -74,6 +74,71 @@
       "statDeltas": {
         "intelligence": 8
       }
+    },
+    {
+      "id": "juggernaut",
+      "icon": "layers",
+      "name": {
+        "en": "Juggernaut",
+        "es": "Ariete"
+      },
+      "flavor": {
+        "en": "A wall of steel that does not know the word 'retreat'.",
+        "es": "Una muralla de acero que no conoce la palabra 'retirada'."
+      },
+      "statDeltas": {
+        "constitution": 5,
+        "strength": 3
+      }
+    },
+    {
+      "id": "gladiator",
+      "icon": "target",
+      "name": {
+        "en": "Gladiator",
+        "es": "Gladiador"
+      },
+      "flavor": {
+        "en": "The roar of the crowd is fuel for your blade.",
+        "es": "El rugido de la multitud es el combustible de tu espada."
+      },
+      "statDeltas": {
+        "strength": 6,
+        "charisma": 2
+      }
+    },
+    {
+      "id": "ironclad",
+      "icon": "hexagon",
+      "name": {
+        "en": "Ironclad",
+        "es": "Coraza de Hierro"
+      },
+      "flavor": {
+        "en": "Rumor says a blade has never drawn blood on you. You intend to keep it that way.",
+        "es": "El rumor dice que una hoja jamás te sacó sangre. Pensás mantenerlo así."
+      },
+      "statDeltas": {
+        "constitution": 6,
+        "strength": 2
+      }
+    },
+    {
+      "id": "warlord",
+      "icon": "sword",
+      "hidden": true,
+      "name": {
+        "en": "Warlord",
+        "es": "Caudillo"
+      },
+      "flavor": {
+        "en": "Kingdoms rise and fall on your orders. You command armies the way others command a horse.",
+        "es": "Los reinos se alzan y caen por tus órdenes. Comandás ejércitos como otros comandan un caballo."
+      },
+      "statDeltas": {
+        "strength": 8,
+        "intelligence": 4
+      }
     }
   ],
   "wizard": [
@@ -124,35 +189,100 @@
       }
     },
     {
-      "id": "diviner",
-      "icon": "eye",
+      "id": "geomancer",
+      "icon": "layers",
       "name": {
-        "en": "Diviner",
-        "es": "Vidente"
+        "en": "Geomancer",
+        "es": "Geomante"
       },
       "flavor": {
-        "en": "You see what others cannot — the threads of fate.",
-        "es": "Ves lo que otros no pueden — los hilos del destino."
+        "en": "The stone remembers what flesh forgets. So do you.",
+        "es": "La piedra recuerda lo que la carne olvida. Vos también."
       },
       "statDeltas": {
         "intelligence": 6,
-        "charisma": 2
+        "constitution": 2
       }
     },
     {
-      "id": "elementalist",
-      "icon": "wind",
+      "id": "stormcaller",
+      "icon": "zap",
       "name": {
-        "en": "Elementalist",
-        "es": "Elementalista"
+        "en": "Stormcaller",
+        "es": "Invocador de Tormentas"
       },
       "flavor": {
-        "en": "The elements are not your masters. You are theirs.",
-        "es": "Los elementos no son tus amos. Vos sos el suyo."
+        "en": "The sky answers when you raise your hand.",
+        "es": "El cielo responde cuando alzás la mano."
       },
       "statDeltas": {
-        "intelligence": 4,
-        "dexterity": 4
+        "intelligence": 6,
+        "dexterity": 2
+      }
+    },
+    {
+      "id": "abjurer",
+      "icon": "shield",
+      "name": {
+        "en": "Abjurer",
+        "es": "Abjurador"
+      },
+      "flavor": {
+        "en": "Your magic does not attack. It denies — spells, blades, even time itself.",
+        "es": "Tu magia no ataca. Niega — hechizos, espadas, hasta el tiempo mismo."
+      },
+      "statDeltas": {
+        "constitution": 6,
+        "intelligence": 2
+      }
+    },
+    {
+      "id": "chronomancer",
+      "icon": "clock",
+      "name": {
+        "en": "Chronomancer",
+        "es": "Cronomante"
+      },
+      "flavor": {
+        "en": "A stolen second is worth more than a kingdom.",
+        "es": "Un segundo robado vale más que un reino."
+      },
+      "statDeltas": {
+        "dexterity": 6,
+        "intelligence": 2
+      }
+    },
+    {
+      "id": "charlatan",
+      "icon": "message-circle",
+      "name": {
+        "en": "Charlatan",
+        "es": "Charlatán"
+      },
+      "flavor": {
+        "en": "Half your spells are tricks. The other half work. Nobody can tell which is which.",
+        "es": "La mitad de tus hechizos son trucos. La otra mitad funciona. Nadie sabe cuál es cuál."
+      },
+      "statDeltas": {
+        "charisma": 6,
+        "intelligence": 2
+      }
+    },
+    {
+      "id": "archmage",
+      "icon": "book-open",
+      "hidden": true,
+      "name": {
+        "en": "Archmage",
+        "es": "Archimago"
+      },
+      "flavor": {
+        "en": "No spell can elude you, no mystery resist you. The libraries whisper your name at midnight.",
+        "es": "Ningún hechizo puede eludirte, ningún misterio resistirte. Las bibliotecas susurran tu nombre a medianoche."
+      },
+      "statDeltas": {
+        "intelligence": 8,
+        "charisma": 4
       }
     }
   ],
@@ -170,22 +300,6 @@
       },
       "statDeltas": {
         "dexterity": 8
-      }
-    },
-    {
-      "id": "thief",
-      "icon": "hand",
-      "name": {
-        "en": "Thief",
-        "es": "Ladrón"
-      },
-      "flavor": {
-        "en": "Their purse is lighter, and you are already gone.",
-        "es": "Su bolsa es más liviana, y vos ya no estás."
-      },
-      "statDeltas": {
-        "dexterity": 6,
-        "intelligence": 2
       }
     },
     {
@@ -233,6 +347,87 @@
       "statDeltas": {
         "charisma": 8
       }
+    },
+    {
+      "id": "poisoner",
+      "icon": "flask-conical",
+      "name": {
+        "en": "Poisoner",
+        "es": "Envenenador"
+      },
+      "flavor": {
+        "en": "Death comes on a silver tray, and you are the caterer.",
+        "es": "La muerte llega en bandeja de plata, y vos sos el anfitrión."
+      },
+      "statDeltas": {
+        "intelligence": 6,
+        "dexterity": 2
+      }
+    },
+    {
+      "id": "trapmaster",
+      "icon": "layers",
+      "name": {
+        "en": "Trapmaster",
+        "es": "Maestro de Trampas"
+      },
+      "flavor": {
+        "en": "Every room is a riddle you have already answered.",
+        "es": "Cada sala es un acertijo que ya resolviste."
+      },
+      "statDeltas": {
+        "dexterity": 4,
+        "intelligence": 4
+      }
+    },
+    {
+      "id": "acrobat",
+      "icon": "person-running",
+      "name": {
+        "en": "Acrobat",
+        "es": "Acróbata"
+      },
+      "flavor": {
+        "en": "Gravity is a suggestion, and you never take suggestions.",
+        "es": "La gravedad es una sugerencia, y vos nunca seguís sugerencias."
+      },
+      "statDeltas": {
+        "dexterity": 6,
+        "constitution": 2
+      }
+    },
+    {
+      "id": "crime_lord",
+      "icon": "crown",
+      "name": {
+        "en": "Crime Lord",
+        "es": "Señor del Crimen"
+      },
+      "flavor": {
+        "en": "You do not pick pockets. You pick kingdoms.",
+        "es": "No robás bolsillos. Robás reinos."
+      },
+      "statDeltas": {
+        "charisma": 6,
+        "intelligence": 2
+      }
+    },
+    {
+      "id": "phantom",
+      "icon": "gem",
+      "hidden": true,
+      "name": {
+        "en": "Phantom",
+        "es": "Fantasma"
+      },
+      "flavor": {
+        "en": "The greatest heist of your life is the one history will never record.",
+        "es": "El mayor golpe de tu vida es el que la historia jamás registrará."
+      },
+      "statDeltas": {
+        "dexterity": 8,
+        "intelligence": 4
+      }
     }
   ],
   "ranger": [
@@ -267,22 +462,6 @@
       }
     },
     {
-      "id": "scout",
-      "icon": "footprints",
-      "name": {
-        "en": "Scout",
-        "es": "Explorador"
-      },
-      "flavor": {
-        "en": "The road remembers every step you take.",
-        "es": "El camino recuerda cada paso que das."
-      },
-      "statDeltas": {
-        "dexterity": 6,
-        "constitution": 2
-      }
-    },
-    {
       "id": "sniper",
       "icon": "crosshair",
       "name": {
@@ -311,6 +490,86 @@
       },
       "statDeltas": {
         "intelligence": 8
+      }
+    },
+    {
+      "id": "pathfinder",
+      "icon": "arrow-right",
+      "name": {
+        "en": "Pathfinder",
+        "es": "Abridor de Caminos"
+      },
+      "flavor": {
+        "en": "There is no road you cannot find, and no road that finds you.",
+        "es": "No hay camino que no encuentres, y ninguno que te encuentre a vos."
+      },
+      "statDeltas": {
+        "dexterity": 6,
+        "intelligence": 2
+      }
+    },
+    {
+      "id": "warden",
+      "icon": "shield",
+      "name": {
+        "en": "Warden",
+        "es": "Guardián del Bosque"
+      },
+      "flavor": {
+        "en": "The forest keeps its own laws. You enforce them.",
+        "es": "El bosque tiene sus propias leyes. Vos las hacés cumplir."
+      },
+      "statDeltas": {
+        "constitution": 6,
+        "dexterity": 2
+      }
+    },
+    {
+      "id": "beastcaller",
+      "icon": "megaphone",
+      "name": {
+        "en": "Beastcaller",
+        "es": "Llamador de Bestias"
+      },
+      "flavor": {
+        "en": "The wolves do not fear your spear. They follow it.",
+        "es": "Los lobos no temen tu lanza. La siguen."
+      },
+      "statDeltas": {
+        "charisma": 5,
+        "dexterity": 3
+      }
+    },
+    {
+      "id": "stoneborn",
+      "icon": "hexagon",
+      "name": {
+        "en": "Stoneborn",
+        "es": "Nacido de la Piedra"
+      },
+      "flavor": {
+        "en": "Mountains raised you. The cold is an old friend.",
+        "es": "Te criaron las montañas. El frío es un viejo amigo."
+      },
+      "statDeltas": {
+        "constitution": 8
+      }
+    },
+    {
+      "id": "beastlord",
+      "icon": "leaf",
+      "hidden": true,
+      "name": {
+        "en": "Beastlord",
+        "es": "Señor de las Bestias"
+      },
+      "flavor": {
+        "en": "The wild does not answer to kings. It answers to you — claw, wing, and howl.",
+        "es": "Lo salvaje no obedece a reyes. Te obedece a vos — garra, ala y aullido."
+      },
+      "statDeltas": {
+        "charisma": 6,
+        "dexterity": 6
       }
     }
   ],
@@ -390,6 +649,71 @@
         "intelligence": 6,
         "charisma": 2
       }
+    },
+    {
+      "id": "exorcist",
+      "icon": "ban",
+      "name": {
+        "en": "Exorcist",
+        "es": "Exorcista"
+      },
+      "flavor": {
+        "en": "You have stared into the dark, and the dark looked away first.",
+        "es": "Miraste a la oscuridad a los ojos, y la oscuridad desvió la mirada."
+      },
+      "statDeltas": {
+        "constitution": 6,
+        "intelligence": 2
+      }
+    },
+    {
+      "id": "crusader",
+      "icon": "swords",
+      "name": {
+        "en": "Crusader",
+        "es": "Cruzado"
+      },
+      "flavor": {
+        "en": "Your faith is a banner. Your blade is its shadow.",
+        "es": "Tu fe es un estandarte. Tu espada, su sombra."
+      },
+      "statDeltas": {
+        "strength": 6,
+        "constitution": 2
+      }
+    },
+    {
+      "id": "heretic",
+      "icon": "wand",
+      "name": {
+        "en": "Heretic",
+        "es": "Hereje"
+      },
+      "flavor": {
+        "en": "The temple calls it blasphemy. The village calls it miracle.",
+        "es": "El templo lo llama blasfemia. La aldea lo llama milagro."
+      },
+      "statDeltas": {
+        "charisma": 6,
+        "intelligence": 2
+      }
+    },
+    {
+      "id": "avatar",
+      "icon": "crown",
+      "hidden": true,
+      "name": {
+        "en": "Avatar",
+        "es": "Avatar"
+      },
+      "flavor": {
+        "en": "Where you walk, the gods walk. The faithful kneel unbidden; the wicked look away.",
+        "es": "Donde vos caminás, caminan los dioses. Los fieles se arrodillan sin que se lo pidan; los malvados desvían la mirada."
+      },
+      "statDeltas": {
+        "constitution": 8,
+        "charisma": 4
+      }
     }
   ],
   "bard": [
@@ -467,6 +791,71 @@
       },
       "statDeltas": {
         "intelligence": 8
+      }
+    },
+    {
+      "id": "griot",
+      "icon": "book-open",
+      "name": {
+        "en": "Griot",
+        "es": "Griot"
+      },
+      "flavor": {
+        "en": "You carry a people's memory in song and story.",
+        "es": "Llevás la memoria de un pueblo en canciones e historias."
+      },
+      "statDeltas": {
+        "charisma": 6,
+        "intelligence": 2
+      }
+    },
+    {
+      "id": "swashbuckler",
+      "icon": "swords",
+      "name": {
+        "en": "Swashbuckler",
+        "es": "Espadachín"
+      },
+      "flavor": {
+        "en": "A duel is a conversation. You always get the last word.",
+        "es": "Un duelo es una conversación. Vos siempre tenés la última palabra."
+      },
+      "statDeltas": {
+        "dexterity": 6,
+        "charisma": 2
+      }
+    },
+    {
+      "id": "dirgesinger",
+      "icon": "heart-pulse",
+      "name": {
+        "en": "Dirgesinger",
+        "es": "Cantor de Endechas"
+      },
+      "flavor": {
+        "en": "Your songs mourn the dead so loudly the living can't ignore them.",
+        "es": "Tus canciones lloran a los muertos tan fuerte que los vivos no pueden ignorarlas."
+      },
+      "statDeltas": {
+        "charisma": 4,
+        "constitution": 4
+      }
+    },
+    {
+      "id": "maestro",
+      "icon": "star",
+      "hidden": true,
+      "name": {
+        "en": "Maestro",
+        "es": "Maestro"
+      },
+      "flavor": {
+        "en": "One performance can topple a dynasty. Yours are booked for decades.",
+        "es": "Una sola actuación puede derribar una dinastía. Las tuyas tienen agenda para décadas."
+      },
+      "statDeltas": {
+        "charisma": 8,
+        "intelligence": 4
       }
     }
   ]

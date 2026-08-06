@@ -151,6 +151,154 @@
     {
       "en": "wandering monk",
       "es": "monje errante"
+    },
+    {
+      "en": "master forger",
+      "es": "maestro falsificador"
+    },
+    {
+      "en": "dockside laborer",
+      "es": "estibador del puerto"
+    },
+    {
+      "en": "candle-maker",
+      "es": "cerero"
+    },
+    {
+      "en": "toll-taker",
+      "es": "cobrador de peaje"
+    },
+    {
+      "en": "hedge alchemist",
+      "es": "alquimista de las bardas"
+    },
+    {
+      "en": "royal herald",
+      "es": "heraldo real"
+    },
+    {
+      "en": "disgraced champion",
+      "es": "campeón deshonrado"
+    },
+    {
+      "en": "fortune seeker",
+      "es": "buscador de fortuna"
+    },
+    {
+      "en": "shipwright",
+      "es": "carpintero de ribera"
+    },
+    {
+      "en": "salt diviner",
+      "es": "zahorí de la sal"
+    },
+    {
+      "en": "traveling tinker",
+      "es": "calderero ambulante"
+    },
+    {
+      "en": "dockside butcher",
+      "es": "carnicero del puerto"
+    },
+    {
+      "en": "muleteer",
+      "es": "mulero"
+    },
+    {
+      "en": "bone-cart driver",
+      "es": "carretero de huesos"
+    },
+    {
+      "en": "quartermaster",
+      "es": "intendente"
+    },
+    {
+      "en": "debt collector",
+      "es": "cobrador de deudas"
+    },
+    {
+      "en": "weapons smith",
+      "es": "herrero de armas"
+    },
+    {
+      "en": "silkspinner",
+      "es": "hilandera de seda"
+    },
+    {
+      "en": "steward of the gates",
+      "es": "mayordomo de las puertas"
+    },
+    {
+      "en": "keeper of the account books",
+      "es": "custodio de los libros de cuentas"
+    },
+    {
+      "en": "lamplighter-soldier",
+      "es": "candilero"
+    },
+    {
+      "en": "road warden",
+      "es": "guardia de caminos"
+    },
+    {
+      "en": "hangman",
+      "es": "verdugo"
+    },
+    {
+      "en": "moth charmer",
+      "es": "encantador de palomillas"
+    },
+    {
+      "en": "sexton",
+      "es": "sacristán"
+    },
+    {
+      "en": "guild ledger-keeper",
+      "es": "contable del gremio"
+    },
+    {
+      "en": "oathbreaker herald",
+      "es": "heraldo jurabalde"
+    },
+    {
+      "en": "cinder-cartman",
+      "es": "acarreto de cenizas"
+    },
+    {
+      "en": "glassblower",
+      "es": "vidriero"
+    },
+    {
+      "en": "skinner",
+      "es": "desollador"
+    },
+    {
+      "en": "harbor master",
+      "es": "capitán de puerto"
+    },
+    {
+      "en": "cadet of the watch",
+      "es": "cadete de la guardia"
+    },
+    {
+      "en": "pilgrim of the long road",
+      "es": "peregrino del largo camino"
+    },
+    {
+      "en": "soup vendor",
+      "es": "vendedor de sopas"
+    },
+    {
+      "en": "crone seamstress",
+      "es": "costurera anciana"
+    },
+    {
+      "en": "tide-worn fisherman",
+      "es": "pescador gastado por la marea"
+    },
+    {
+      "en": "itinerant seer",
+      "es": "vidente ambulante"
     }
   ],
   "npcName": [
@@ -313,6 +461,162 @@
     {
       "en": "Odessa",
       "es": "Odesa"
+    },
+    {
+      "en": "Ulric",
+      "es": "Ulric"
+    },
+    {
+      "en": "Amara",
+      "es": "Amara"
+    },
+    {
+      "en": "Cedric",
+      "es": "Cedric"
+    },
+    {
+      "en": "Dana",
+      "es": "Dana"
+    },
+    {
+      "en": "Eorik",
+      "es": "Eorik"
+    },
+    {
+      "en": "Freya",
+      "es": "Freya"
+    },
+    {
+      "en": "Garreth",
+      "es": "Garreth"
+    },
+    {
+      "en": "Halvar",
+      "es": "Halvar"
+    },
+    {
+      "en": "Ilya",
+      "es": "Ilya"
+    },
+    {
+      "en": "Joren",
+      "es": "Joren"
+    },
+    {
+      "en": "Kestrel",
+      "es": "Kestrel"
+    },
+    {
+      "en": "Leoric",
+      "es": "Leoric"
+    },
+    {
+      "en": "Maren",
+      "es": "Maren"
+    },
+    {
+      "en": "Nyle",
+      "es": "Nyle"
+    },
+    {
+      "en": "Oberon",
+      "es": "Oberon"
+    },
+    {
+      "en": "Pryce",
+      "es": "Pryce"
+    },
+    {
+      "en": "Quillan",
+      "es": "Quillan"
+    },
+    {
+      "en": "Rhea",
+      "es": "Rhea"
+    },
+    {
+      "en": "Sorren",
+      "es": "Sorren"
+    },
+    {
+      "en": "Tilda",
+      "es": "Tilda"
+    },
+    {
+      "en": "Vanya",
+      "es": "Vanya"
+    },
+    {
+      "en": "Wilhelm",
+      "es": "Wilhelm"
+    },
+    {
+      "en": "Xanthe",
+      "es": "Xanthe"
+    },
+    {
+      "en": "Yrsa",
+      "es": "Yrsa"
+    },
+    {
+      "en": "Zinnia",
+      "es": "Zinnia"
+    },
+    {
+      "en": "Bramble",
+      "es": "Bramble"
+    },
+    {
+      "en": "Corin",
+      "es": "Corin"
+    },
+    {
+      "en": "Drasa",
+      "es": "Drasa"
+    },
+    {
+      "en": "Edda",
+      "es": "Edda"
+    },
+    {
+      "en": "Fenra",
+      "es": "Fenra"
+    },
+    {
+      "en": "Godfrey",
+      "es": "Godfrey"
+    },
+    {
+      "en": "Helva",
+      "es": "Helva"
+    },
+    {
+      "en": "Jove",
+      "es": "Jove"
+    },
+    {
+      "en": "Lindell",
+      "es": "Lindell"
+    },
+    {
+      "en": "Marisol",
+      "es": "Marisol"
+    },
+    {
+      "en": "Nissa",
+      "es": "Nissa"
+    },
+    {
+      "en": "Osgood",
+      "es": "Osgood"
+    },
+    {
+      "en": "Pell",
+      "es": "Pell"
+    },
+    {
+      "en": "Solvane",
+      "es": "Solvane"
     }
   ],
   "locationName": [
@@ -435,6 +739,122 @@
     {
       "en": "the edge of a bottomless chasm",
       "es": "el borde de un abismo sin fondo"
+    },
+    {
+      "en": "a half-sunken bridge",
+      "es": "un puente medio hundido"
+    },
+    {
+      "en": "the last orchard",
+      "es": "el último huerto"
+    },
+    {
+      "en": "a silent churchyard",
+      "es": "un cementerio silencioso"
+    },
+    {
+      "en": "a chestnut grove",
+      "es": "un bosque de castaños"
+    },
+    {
+      "en": "the toll-house",
+      "es": "la casa de peaje"
+    },
+    {
+      "en": "a stranded mill",
+      "es": "un molino varado"
+    },
+    {
+      "en": "the under-market",
+      "es": "el mercado subterráneo"
+    },
+    {
+      "en": "a meadow at dusk",
+      "es": "una pradera al anochecer"
+    },
+    {
+      "en": "the archive cellar",
+      "es": "la bodega del archivo"
+    },
+    {
+      "en": "a flooded cistern",
+      "es": "una cisterna inundada"
+    },
+    {
+      "en": "the potter's quarter",
+      "es": "el barrio de los alfareros"
+    },
+    {
+      "en": "a cordwainer's workshop",
+      "es": "el taller de un zapatero"
+    },
+    {
+      "en": "the old temple's skeleton",
+      "es": "el esqueleto del viejo templo"
+    },
+    {
+      "en": "a salt-marsh causeway",
+      "es": "una calzada sobre las marismas"
+    },
+    {
+      "en": "the tar-pit shore",
+      "es": "la orilla de la laguna de brea"
+    },
+    {
+      "en": "a tinker's campfire",
+      "es": "la fogata de un calderero"
+    },
+    {
+      "en": "the bone-bridge",
+      "es": "el puente de huesos"
+    },
+    {
+      "en": "a wind-scoured ridge",
+      "es": "una cresta azotada por el viento"
+    },
+    {
+      "en": "the glasshouse",
+      "es": "el invernadero"
+    },
+    {
+      "en": "a war-wounded hospice",
+      "es": "un hospicio de heridos de guerra"
+    },
+    {
+      "en": "the abandoned lighthouse",
+      "es": "el faro abandonado"
+    },
+    {
+      "en": "a dredged canal",
+      "es": "un canal dragado"
+    },
+    {
+      "en": "the slaughterhouse yard",
+      "es": "el patio del matadero"
+    },
+    {
+      "en": "a roofless barn",
+      "es": "un granero sin techo"
+    },
+    {
+      "en": "the city's old aqueduct",
+      "es": "el acueducto viejo de la ciudad"
+    },
+    {
+      "en": "a seamstress's loft",
+      "es": "el altillo de una costurera"
+    },
+    {
+      "en": "the ember-filled hearth",
+      "es": "el hogar lleno de brasas"
+    },
+    {
+      "en": "a quiet cloister",
+      "es": "un claustro silencioso"
+    },
+    {
+      "en": "the raven-touched tower",
+      "es": "la torre marcada por los cuervos"
     }
   ],
   "worldLocation": [
@@ -485,6 +905,50 @@
     {
       "en": "the Iron Marsh",
       "es": "la Ciénaga de Hierro"
+    },
+    {
+      "en": "the Howling Plateau",
+      "es": "la Meseta Aullante"
+    },
+    {
+      "en": "the Mott Salt Wastes",
+      "es": "las Tierras Yermas de Sal Lívida"
+    },
+    {
+      "en": "the Silverwood",
+      "es": "el Bosque de Plata"
+    },
+    {
+      "en": "the Moon Cairn",
+      "es": "el Mojón de la Luna"
+    },
+    {
+      "en": "the Cinder Rift",
+      "es": "la Garganta de Brasas"
+    },
+    {
+      "en": "the Whispering Bog",
+      "es": "la Ciénaga Susurrante"
+    },
+    {
+      "en": "the Sunken City",
+      "es": "la Ciudad Sumergida"
+    },
+    {
+      "en": "the Ashfall Steppe",
+      "es": "la Estepa de Ceniza Caída"
+    },
+    {
+      "en": "the Crown of Thorns",
+      "es": "la Corona de Espinas"
+    },
+    {
+      "en": "the Veiled Fault",
+      "es": "la Falla Cubierta por el Velo"
+    },
+    {
+      "en": "the Saltglass Dunes",
+      "es": "las Dunas de Vidrio Salino"
     }
   ],
   "creatureName": [
@@ -607,6 +1071,126 @@
     {
       "en": "a will-o'-the-wisp",
       "es": "un fuego fatuo"
+    },
+    {
+      "en": "a dire wolverine",
+      "es": "un carnívolo"
+    },
+    {
+      "en": "a stone golem",
+      "es": "un gólem de piedra"
+    },
+    {
+      "en": "a wyvern's hatchling",
+      "es": "una cría de wyvern"
+    },
+    {
+      "en": "a manticore kit",
+      "es": "una cría de mantícora"
+    },
+    {
+      "en": "a necrotic hound",
+      "es": "un sabueso necrótico"
+    },
+    {
+      "en": "a miasma elemental",
+      "es": "un elemental de miasma"
+    },
+    {
+      "en": "a frost salamander",
+      "es": "una salamandra de escarcha"
+    },
+    {
+      "en": "a bone-bird phalanx",
+      "es": "una falange de pájaros óseos"
+    },
+    {
+      "en": "a bog-wight",
+      "es": "un espectro del manglar"
+    },
+    {
+      "en": "a cinder-moth swarm",
+      "es": "un enjambre de polillas de brasa"
+    },
+    {
+      "en": "a razorvine serpent",
+      "es": "una serpiente de zarzas cortantes"
+    },
+    {
+      "en": "a ghast anchorage attendant",
+      "es": "un espectro encadenado"
+    },
+    {
+      "en": "a shambling moss king",
+      "es": "un rey de musgo andante"
+    },
+    {
+      "en": "a tide-crab colony",
+      "es": "una colonia de cangrejos de marea"
+    },
+    {
+      "en": "a rabid boar",
+      "es": "un jabalí rabioso"
+    },
+    {
+      "en": "a giant scorpion",
+      "es": "un escorpión gigante"
+    },
+    {
+      "en": "a flock of harpies",
+      "es": "una bandada de arpías"
+    },
+    {
+      "en": "a slumbering wyrm",
+      "es": "una sierpe dormida"
+    },
+    {
+      "en": "a pack of jackals",
+      "es": "una manada de chacales"
+    },
+    {
+      "en": "a tainted unicorn",
+      "es": "un unicornio mancillado"
+    },
+    {
+      "en": "a swarm of locusts",
+      "es": "una plaga de langostas"
+    },
+    {
+      "en": "a ghostly hound",
+      "es": "un sabueso fantasmal"
+    },
+    {
+      "en": "a man-eating vulture",
+      "es": "un buitre devorador de hombres"
+    },
+    {
+      "en": "a crystal serpent",
+      "es": "una serpiente de cristal"
+    },
+    {
+      "en": "a maddened war elephant",
+      "es": "un elefante de guerra enloquecido"
+    },
+    {
+      "en": "a thorned hydra",
+      "es": "una hidra de espinas"
+    },
+    {
+      "en": "a howling banshee",
+      "es": "una banshee aullante"
+    },
+    {
+      "en": "a colossal snapping turtle",
+      "es": "una tortuga mordedora colosal"
+    },
+    {
+      "en": "a venomous basilisk",
+      "es": "un basilisco venenoso"
+    },
+    {
+      "en": "a burning wicker giant",
+      "es": "un gigante de mimbre en llamas"
     }
   ],
   "guildName": [
@@ -637,6 +1221,54 @@
     {
       "en": "The Sapphire Consortium",
       "es": "El Consorcio Zafiro"
+    },
+    {
+      "en": "the Amber Vault",
+      "es": "el Corralón del Ámbar"
+    },
+    {
+      "en": "the Pale Ledger",
+      "es": "el Libro de Nómina"
+    },
+    {
+      "en": "the Saltweaver",
+      "es": "la Tejedora de la Sal"
+    },
+    {
+      "en": "the Cormorant Company",
+      "es": "la Compañía del Cormorán"
+    },
+    {
+      "en": "the Second Veil",
+      "es": "el Segundo Velo"
+    },
+    {
+      "en": "the Rusted Compass",
+      "es": "el Compás Oxidado"
+    },
+    {
+      "en": "the Hundred Hands",
+      "es": "las Cien Manos"
+    },
+    {
+      "en": "the Marrow Syndicate",
+      "es": "el Sindicato del Tuétano"
+    },
+    {
+      "en": "the Cold Counsel",
+      "es": "el Consejo Frío"
+    },
+    {
+      "en": "the Last Lantern",
+      "es": "la Última Linterna"
+    },
+    {
+      "en": "the Gilded Fetch",
+      "es": "la Orden del Dorado"
+    },
+    {
+      "en": "the Patchwork Guild",
+      "es": "el Gremio del Remiendo"
     }
   ],
   "regionVariant": [
@@ -663,6 +1295,30 @@
     {
       "en": "the Isles' moonlit games",
       "es": "los juegos a la luz de la luna de las Islas"
+    },
+    {
+      "en": "the Vale's shepherd's market",
+      "es": "el mercado de pastores del Valle"
+    },
+    {
+      "en": "the Coastlands' storm-caller rite",
+      "es": "el rito del invocador de tormentas de las Tierras de la Costa"
+    },
+    {
+      "en": "the Highlands' clan moot",
+      "es": "la asamblea de clanes de las Tierras Altas"
+    },
+    {
+      "en": "the Wastelands' ember pilgrimage",
+      "es": "la peregrinación de la brasa de las Tierras Yermas"
+    },
+    {
+      "en": "the Capital's lantern procession",
+      "es": "la procesión de faroles de la Capital"
+    },
+    {
+      "en": "the Isles' storm-watch feast",
+      "es": "la fiesta de la vigía de tormentas de las Islas"
     }
   ]
 }

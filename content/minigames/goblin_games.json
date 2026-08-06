@@ -7,7 +7,10 @@
     "maxAge": 99,
     "weight": 2,
     "primaryStat": "intelligence",
-    "opponent": { "en": "Grimble the goblin", "es": "Grimble el goblin" },
+    "opponent": {
+      "en": "Grimble the goblin",
+      "es": "Grimble el goblin"
+    },
     "narrative": {
       "en": "A grubby goblin slaps the table and grins, showing every tooth. He lays out five grubby hand-signs: stone, parchment, dagger, salamander, mage. 'Beat me best of three and I'll split the spoils. Lose, and you pay the toll for crossing my bridge.'",
       "es": "Un goblin mugriento golpea la mesa y sonríe mostrando todos los dientes. Muestra cinco señales mugrientas: piedra, pergamino, daga, salamandra, mago. 'Ganame al mejor de tres y reparto el botín. Si perdés, pagás el peaje por cruzar mi puente.'"
@@ -17,7 +20,9 @@
       "game": "rps",
       "bestOf": 3,
       "baseWinChance": 0.5,
-      "statInfluence": { "intelligence": 0.012 },
+      "statInfluence": {
+        "intelligence": 0.012
+      },
       "statThreshold": 20,
       "rivalSkill": 0.6
     },
@@ -25,7 +30,10 @@
       "critical": {
         "goldDelta": 220,
         "fameDelta": 5,
-        "countersDelta": { "goblin_games_won": 1, "battles_won": 1 },
+        "countersDelta": {
+          "goblin_games_won": 1,
+          "battles_won": 1
+        },
         "narrative": {
           "en": "Grimble slaps his own forehead in disbelief. 'Nobody beats Grimble twice to nothing!' He counts out the coins slowly, as if parting with a limb.",
           "es": "Grimble se da una palmada en la frente, incrédulo. '¡Nadie le gana a Grimble dos a nada!' Cuenta las monedas despacio, como si se despidiera de un miembro."
@@ -34,7 +42,10 @@
       "success": {
         "goldDelta": 90,
         "fameDelta": 2,
-        "countersDelta": { "goblin_games_won": 1, "battles_won": 1 },
+        "countersDelta": {
+          "goblin_games_won": 1,
+          "battles_won": 1
+        },
         "narrative": {
           "en": "Best of three, and you take it. Grimble sulks, pays out, and mutters about 'counting signs.'",
           "es": "Al mejor de tres, y lo ganás. Grimble hace un puchero, paga y murmura sobre 'contar señales.'"
@@ -68,7 +79,10 @@
     "maxAge": 99,
     "weight": 2,
     "primaryStat": "intelligence",
-    "opponent": { "en": "Strategos Varen", "es": "La estratega Varen" },
+    "opponent": {
+      "en": "Strategos Varen",
+      "es": "La estratega Varen"
+    },
     "narrative": {
       "en": "Strategos Varen carves a nine-cell grid in the dirt with the point of a blade. 'Three in a row, like battle lines. Win clean and I'll fund your next campaign. Stalemate buys you nothing.'",
       "es": "La estratega Varen traza una cuadrícula de nueve casillas en la tierra con la punta de una hoja. 'Tres en línea, como líneas de batalla. Ganá limpio y financio tu próxima campaña. El empate no compra nada.'"
@@ -77,7 +91,9 @@
       "type": "interactive",
       "game": "tictactoe",
       "baseWinChance": 0.5,
-      "statInfluence": { "intelligence": 0.012 },
+      "statInfluence": {
+        "intelligence": 0.012
+      },
       "statThreshold": 20,
       "rivalSkill": 0.62
     },
@@ -87,7 +103,10 @@
         "fameDelta": 6,
         "reputationDelta": 3,
         "reputationFaction": "ironhold",
-        "countersDelta": { "battles_won": 1, "board_games_won": 1 },
+        "countersDelta": {
+          "battles_won": 1,
+          "board_games_won": 1
+        },
         "narrative": {
           "en": "Three swift lines, and the Strategos sweeps the grid clean in grudging respect. 'Not in twenty years has anyone run the board on me.' She presses a fat purse into your hand.",
           "es": "Tres líneas rápidas, y la estratega barre la cuadrícula con respeto a regañadientes. 'En veinte años nadie me corrió el tablero.' Te mete una bolsa repleta en la mano."
@@ -98,7 +117,10 @@
         "fameDelta": 3,
         "reputationDelta": 1,
         "reputationFaction": "ironhold",
-        "countersDelta": { "battles_won": 1, "board_games_won": 1 },
+        "countersDelta": {
+          "battles_won": 1,
+          "board_games_won": 1
+        },
         "narrative": {
           "en": "You close the line through her weakest flank. Varen nods slowly. 'A commander thinks a dozen moves deep. You think three. That will do.'",
           "es": "Cerrás la línea por su flanco más débil. Varen asiente despacio. 'Una comandante piensa doce jugadas por delante. Vos pensás tres. Eso alcanza.'"
@@ -119,6 +141,149 @@
         "narrative": {
           "en": "Varen threads three in a row through a gap you swore you'd sealed. 'Battle lines, friend. You forgot your rear guard.' She collects the stake and the lesson.",
           "es": "Varen enhebra tres en línea por un hueco que juraste haber sellado. 'Líneas de batalla, amiga. Olvidaste tu retaguardia.' Cobra la apuesta y la lección."
+        }
+      }
+    }
+  },
+  {
+    "id": "goblin_coin_hunt",
+    "type": "minigame",
+    "subtype": "interactive",
+    "minAge": 10,
+    "maxAge": 99,
+    "weight": 2,
+    "primaryStat": "intelligence",
+    "opponent": {
+      "en": "Snaggle the goblin",
+      "es": "Snaggle el goblin"
+    },
+    "narrative": {
+      "en": "Snaggle the goblin produces five dented coins and a set of grubby hand-signs. 'Best of five, outlander. Every round you win, a coin leaves my pouch. Every round you lose, a coin leaves yours. First to three wins the whole pile — and Snaggle never loses best of five.'",
+      "es": "Snaggle el goblin saca cinco monedas abolladas y un juego de señales mugrientas. 'Al mejor de cinco, forastera. Cada ronda que ganás, una moneda sale de mi bolsa. Cada ronda que perdés, una sale de la tuya. Primera en llegar a tres se lleva todo el montón — y Snaggle nunca pierde al mejor de cinco.'"
+    },
+    "resolution": {
+      "type": "interactive",
+      "game": "rps",
+      "bestOf": 5,
+      "baseWinChance": 0.5,
+      "statInfluence": {
+        "intelligence": 0.012
+      },
+      "statThreshold": 20,
+      "rivalSkill": 0.6
+    },
+    "outcomes": {
+      "critical": {
+        "goldDelta": 260,
+        "fameDelta": 6,
+        "countersDelta": {
+          "goblin_games_won": 1,
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "Three rounds to nothing, and Snaggle's face cycles through every shade of green a goblin can produce. He counts out the coins one by one, wailing softly.",
+          "es": "Tres rondas a cero, y la cara de Snaggle pasa por todos los tonos de verde que un goblin puede producir. Cuenta las monedas una por una, gimiendo bajito."
+        }
+      },
+      "success": {
+        "goldDelta": 110,
+        "fameDelta": 3,
+        "countersDelta": {
+          "goblin_games_won": 1,
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "Three rounds to two, and Snaggle slaps the coins on the table like they burn. 'Luck,' he hisses. 'Pure, rotten luck.'",
+          "es": "Tres rondas a dos, y Snaggle golpea las monedas sobre la mesa como si quemaran. 'Suerte', silba. 'Pura, podrida suerte.'"
+        }
+      },
+      "partial": {
+        "goldDelta": -40,
+        "countersReset": ["goblin_games_streak"],
+        "narrative": {
+          "en": "Two rounds apiece, and the last one slips away. Snaggle scoops the pile with a grin that splits his face. 'Close, outlander. Close pays the toll same as far.'",
+          "es": "Dos rondas cada una, y la última se te escapa. Snaggle barre el montón con una sonrisa que le parte la cara. 'Cerca, forastera. Cerca paga el peaje igual que lejos.'"
+        }
+      },
+      "fail": {
+        "goldDelta": -100,
+        "reputationDelta": -1,
+        "reputationFaction": "greywater",
+        "countersReset": ["goblin_games_streak"],
+        "narrative": {
+          "en": "Snaggle runs the table to three, dancing a little jig that no creature should be able to do. You hand over the coins and swear the goblin saw your tells the whole time.",
+          "es": "Snaggle barre la mesa hasta el tres, bailando un pasito que ninguna criatura debería poder hacer. Entregás las monedas y jurás que el goblin te vio las señales todo el tiempo."
+        }
+      }
+    }
+  },
+  {
+    "id": "goblin_shell_game",
+    "type": "minigame",
+    "subtype": "interactive",
+    "minAge": 10,
+    "maxAge": 99,
+    "weight": 2,
+    "primaryStat": "intelligence",
+    "opponent": {
+      "en": "Fidget the goblin",
+      "es": "Fidget el goblin"
+    },
+    "narrative": {
+      "en": "Fidget the goblin slaps eight cracked shells onto a flat rock, quick as a startled bird. 'Watch the beetle, outlander. Eight shells, four beetles, find the pairs and the winnings are yours. Miss a pair, and Fidget keeps the pot. Fidget has very fast hands.'",
+      "es": "Fidget el goblin golpea ocho conchas agrietadas contra una piedra plana, rápido como un pájaro asustado. 'Mirá el escarabajo, forastera. Ocho conchas, cuatro escarabajos, encontrá los pares y las ganancias son tuyas. Si perdés un par, Fidget se queda con la olla. Fidget tiene manos muy rápidas.'"
+    },
+    "resolution": {
+      "type": "interactive",
+      "game": "memotest",
+      "baseWinChance": 0.5,
+      "statInfluence": {
+        "intelligence": 0.012
+      },
+      "statThreshold": 20,
+      "rivalSkill": 0.55
+    },
+    "outcomes": {
+      "critical": {
+        "goldDelta": 200,
+        "fameDelta": 5,
+        "countersDelta": {
+          "goblin_games_won": 1,
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "Four pairs, four beetles, and Fidget's jaw drops so far his chin hits the rock. He counts out the coins with trembling fingers, muttering about 'fast hands losing to faster eyes.'",
+          "es": "Cuatro pares, cuatro escarabajos, y a Fidget se le cae la mandíbula hasta golpear la piedra. Cuenta las monedas con dedos temblorosos, murmurando sobre 'manos rápidas perdiendo contra ojos más rápidos.'"
+        }
+      },
+      "success": {
+        "goldDelta": 85,
+        "fameDelta": 2,
+        "countersDelta": {
+          "goblin_games_won": 1,
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "You find the pairs before Fidget's hands can scramble them. The goblin pays out with a theatrical sigh. 'Lucky eyes,' he grumbles, already setting up again.",
+          "es": "Encontrás los pares antes de que las manos de Fidget puedan revolverlos. El goblin paga con un suspiro teatral. 'Ojos con suerte', refunfuña, preparando de nuevo el juego."
+        }
+      },
+      "partial": {
+        "goldDelta": -25,
+        "countersReset": ["goblin_games_streak"],
+        "narrative": {
+          "en": "One pair slips past you and Fidget pounces on it like a hawk. 'Almost, outlander. Almost pays the shells, same as never.'",
+          "es": "Un par se te escapa y Fidget se abalanza sobre él como un halcón. 'Casi, forastera. Casi paga las conchas, igual que nunca.'"
+        }
+      },
+      "fail": {
+        "goldDelta": -70,
+        "reputationDelta": -1,
+        "reputationFaction": "greywater",
+        "countersReset": ["goblin_games_streak"],
+        "narrative": {
+          "en": "Fidget's hands blur across the rock and your memory can't keep up. He sweeps the pot, giggling in a register that belongs in a cave. You leave lighter and wiser.",
+          "es": "Las manos de Fidget se vuelven un borrón sobre la piedra y tu memoria no da abasto. Barre la olla, riendo en un registro que pertenece a una cueva. Te vas más liviano y más sabio."
         }
       }
     }

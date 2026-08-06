@@ -338,5 +338,448 @@
         }
       }
     ]
+  },
+  {
+    "id": "court_petition_line",
+    "minAge": 18,
+    "maxAge": 99,
+    "weight": 8,
+    "narrative": {
+      "en": "The antechamber of the Crownguard keep smells of wax and ambition. A {npcRole} in court dress studies you from the petition line. 'The seneschal sees one name a day. Today, that name will be mine — unless you have a better argument.'",
+      "es": "La antesala de la fortaleza de la Guardia de la Corona huele a cera y ambición. Un {npcRole} ataviado para la corte te estudia desde la fila de peticiones. 'El senescal recibe un nombre por día. Hoy, ese nombre será el mío — salvo que tengas un mejor argumento.'"
+    },
+    "choices": [
+      {
+        "id": "speak_first",
+        "label": {
+          "en": "Argue your cause with the seneschal",
+          "es": "Defender tu causa ante el senescal"
+        },
+        "tag": "Leader",
+        "rarity": "rare",
+        "requiresStat": {
+          "stat": "charisma",
+          "min": 12
+        },
+        "statDeltas": {
+          "charisma": 2
+        },
+        "fameDelta": 3,
+        "reputationDelta": 3,
+        "reputationFaction": "crownguard",
+        "narrative": {
+          "en": "Your case lands like a thrown gauntlet and the seneschal takes it up. The nobleman's face curdles. The keep has a new name on its tongue.",
+          "es": "Tu causa aterriza como un guante arrojado y el senescal la toma. La cara del noble se agria. La fortaleza tiene un nombre nuevo en la lengua."
+        }
+      },
+      {
+        "id": "defer_grace",
+        "label": {
+          "en": "Let them speak first — generosity pays",
+          "es": "Dejar que hablen primero — la generosidad paga"
+        },
+        "tag": "Humble",
+        "rarity": "common",
+        "statDeltas": {
+          "charisma": 1
+        },
+        "reputationDelta": 1,
+        "reputationFaction": "crownguard",
+        "narrative": {
+          "en": "You bow aside and the noble stumbles through their plea. The seneschal notices your courtesy — and remembers it when the doors close.",
+          "es": "Te hacés a un lado con una reverencia y el noble tropieza con su súplica. El senescal nota tu cortesía — y la recuerda cuando se cierran las puertas."
+        }
+      },
+      {
+        "id": "bribe_the_clerk",
+        "label": {
+          "en": "Slip the clerk a purse to move your name up",
+          "es": "Deslizar una bolsa al escribano para subir tu nombre"
+        },
+        "tag": "Cocky",
+        "rarity": "volatile",
+        "goldDelta": -50,
+        "liabilityDelta": 6,
+        "statDeltas": {
+          "intelligence": 1
+        },
+        "narrative": {
+          "en": "The clerk's quill skips your place in line. Nobody saw the purse pass — but clerks have long memories, and so do the debts you buy with coin.",
+          "es": "La pluma del escribano se saltea tu lugar en la fila. Nadie vio pasar la bolsa — pero los escribanos tienen memoria larga, y también las deudas que se compran con monedas."
+        }
+      }
+    ]
+  },
+  {
+    "id": "court_scandal_letter",
+    "minAge": 20,
+    "maxAge": 99,
+    "weight": 7,
+    "narrative": {
+      "en": "A sealed letter lands in your lap at court — a scandal about a rival noble of the Golden Lotus, damning enough to end a career. A whisper follows it: 'Burn it, sell it, or publish it. The court will remember your choice.'",
+      "es": "Una carta sellada aterriza en tu regazo en la corte — un escándalo sobre un noble rival del Loto Dorado, lo bastante condenatorio como para terminar una carrera. Un susurro la sigue: 'Quemala, vendela o publicala. La corte recordará tu elección.'"
+    },
+    "choices": [
+      {
+        "id": "burn_it",
+        "label": {
+          "en": "Burn it in the hearth",
+          "es": "Quemarla en el hogar"
+        },
+        "tag": "Humble",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "charisma": 2
+        },
+        "liabilityDelta": -4,
+        "reputationDelta": 3,
+        "reputationFaction": "golden_lotus",
+        "narrative": {
+          "en": "The paper curls to ash and you feed it to the fire yourself. The rival noble never knows how close they came. The court watches the smoke and nods.",
+          "es": "El papel se enrolla en ceniza y lo alimentás al fuego con tus propias manos. El noble rival nunca sabrá lo cerca que estuvo. La corte mira el humo y asiente."
+        }
+      },
+      {
+        "id": "publish_it",
+        "label": {
+          "en": "Publish it and watch the house fall",
+          "es": "Publicarla y ver caer a la casa"
+        },
+        "tag": "Cocky",
+        "rarity": "volatile",
+        "statDeltas": {
+          "charisma": 3
+        },
+        "fameDelta": 7,
+        "liabilityDelta": 8,
+        "reputationDelta": -4,
+        "reputationFaction": "golden_lotus",
+        "narrative": {
+          "en": "The scroll goes out at dawn and the house cracks by noon. Your name rides the scandal higher — and every noble in the city now wonders what else you hold.",
+          "es": "El pergamino sale al amanecer y la casa se quiebra al mediodía. Tu nombre cabalga el escándalo hacia arriba — y todo noble de la ciudad ahora se pregunta qué más guardás."
+        }
+      },
+      {
+        "id": "sell_it_back",
+        "label": {
+          "en": "Sell it back to the house's spymaster",
+          "es": "Vendérsela al maestro de espías de la casa"
+        },
+        "tag": "Strategic",
+        "rarity": "rare",
+        "requiresStat": {
+          "stat": "intelligence",
+          "min": 12
+        },
+        "goldDelta": 150,
+        "liabilityDelta": 6,
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "narrative": {
+          "en": "The spymaster pays in unmarked gold and burns the letter in front of you. You leave richer and watched — the house now owns a piece of your silence.",
+          "es": "El maestro de espías paga en oro sin marcar y quema la carta frente a vos. Salís más rica y vigilada — la casa ahora es dueña de un pedazo de tu silencio."
+        }
+      }
+    ]
+  },
+  {
+    "id": "court_duel_of_honor",
+    "minAge": 26,
+    "maxAge": 99,
+    "weight": 6,
+    "requiresArc": ["kingdom_hero", "legend"],
+    "narrative": {
+      "en": "A knight of the Nightfall Order throws a glove at your feet in the great hall. 'You questioned my house's honor before the assembly, adventurer. The code answers such questions in steel — at dawn, in the dueling yard.'",
+      "es": "Una caballera de la Orden del Ocaso arroja un guante a tus pies en el gran salón. 'Cuestionaste el honor de mi casa ante la asamblea, aventurera. El código responde esas preguntas en acero — al amanecer, en el campo de duelo.'"
+    },
+    "choices": [
+      {
+        "id": "accept_honor",
+        "label": {
+          "en": "Accept — dawn, in the dueling yard",
+          "es": "Aceptar — al amanecer, en el campo de duelo"
+        },
+        "tag": "Aggressive",
+        "rarity": "rare",
+        "requiresStat": {
+          "stat": "strength",
+          "min": 14
+        },
+        "statDeltas": {
+          "strength": 2,
+          "constitution": 1
+        },
+        "fameDelta": 6,
+        "reputationDelta": 3,
+        "reputationFaction": "crownguard",
+        "countersDelta": {
+          "duels_won": 1,
+          "battles_won": 1
+        },
+        "injuryRiskDelta": 0.18,
+        "narrative": {
+          "en": "First light, first blood — and the knight yields with a bow. The yard erupts. By evening every house knows that your honor is not a cheap thing to question.",
+          "es": "Primera luz, primera sangre — y la caballera se rinde con una reverencia. El campo estalla. Para la noche, toda casa sabe que tu honor no es cosa barata de cuestionar."
+        }
+      },
+      {
+        "id": "deflect_with_wit",
+        "label": {
+          "en": "Deflect it into a jest that spares the duel",
+          "es": "Desviarlo hacia una broma que evite el duelo"
+        },
+        "tag": "Humble",
+        "rarity": "rare",
+        "requiresStat": {
+          "stat": "charisma",
+          "min": 14
+        },
+        "statDeltas": {
+          "charisma": 2,
+          "intelligence": 1
+        },
+        "fameDelta": 3,
+        "reputationDelta": 2,
+        "reputationFaction": "crownguard",
+        "narrative": {
+          "en": "Your answer is so perfectly turned that the hall laughs — and the knight, grudgingly, laughs too. The glove is retrieved. The code is satisfied by wit, which is rarer than steel.",
+          "es": "Tu respuesta es tan perfectamente calibrada que el salón ríe — y la caballera, a regañadientes, ríe también. El guante se recupera. El código se satisface con ingenio, que es más raro que el acero."
+        }
+      },
+      {
+        "id": "apologize_publicly",
+        "label": {
+          "en": "Apologize publicly and swallow the cost",
+          "es": "Disculparte en público y tragar el costo"
+        },
+        "tag": "Professional",
+        "rarity": "common",
+        "statDeltas": {
+          "charisma": 1
+        },
+        "fameDelta": -2,
+        "narrative": {
+          "en": "You speak your apology before the assembly and the knight accepts it with a curt nod. The duel is averted, and the court files away that you bend when it costs less than breaking.",
+          "es": "Pronunciás tu disculpa ante la asamblea y la caballera la acepta con un gesto seco. El duelo se evita, y la corte archiva que te doblás cuando cuesta menos que quebrarte."
+        }
+      }
+    ]
+  },
+  {
+    "id": "court_heir_tutor",
+    "minAge": 24,
+    "maxAge": 99,
+    "weight": 6,
+    "narrative": {
+      "en": "The heir's tutor, gray and frayed, corners you in the gallery. 'The prince is sharp as a tack and twice as bored. He needs a tutor who has actually lived. A season of lessons — the Golden Lotus pays handsomely, and the heir's favor is worth more than gold.'",
+      "es": "El tutor del heredero, canoso y deshilachado, te acorrala en la galería. 'El príncipe es afilado como un alfiler y dos veces más aburrido. Necesita un tutor que de verdad haya vivido. Una temporada de lecciones — el Loto Dorado paga generosamente, y el favor del heredero vale más que el oro.'"
+    },
+    "choices": [
+      {
+        "id": "take_pupil",
+        "label": {
+          "en": "Take the prince as your pupil",
+          "es": "Tomar al príncipe como alumno"
+        },
+        "tag": "Supportive",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "charisma": 2,
+          "intelligence": 1
+        },
+        "reputationDelta": 3,
+        "reputationFaction": "golden_lotus",
+        "fameDelta": 3,
+        "narrative": {
+          "en": "You teach the prince how to read a crowd and when to draw a blade — and the lessons stick. By season's end the heir quotes you at council, and the Golden Lotus smiles on your name.",
+          "es": "Le enseñás al príncipe a leer una multitud y cuándo desenvainar — y las lecciones quedan. Para fin de temporada el heredero te cita en el consejo, y el Loto Dorado sonríe ante tu nombre."
+        }
+      },
+      {
+        "id": "decline_gracefully",
+        "label": {
+          "en": "Decline — a prince needs a courtier, not a wanderer",
+          "es": "Declinar — un príncipe necesita un cortesano, no una errante"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": {
+          "intelligence": 1
+        },
+        "narrative": {
+          "en": "You bow out with a compliment that leaves the tutor smiling anyway. Some doors are better left unopened — the road is your classroom.",
+          "es": "Te excusás con un cumplido que deja al tutor sonriendo igual. Algunas puertas es mejor no abrirlas — el camino es tu aula."
+        }
+      },
+      {
+        "id": "write_syllabus",
+        "label": {
+          "en": "Sell them a syllabus instead of your time",
+          "es": "Venderles un plan de estudios en lugar de tu tiempo"
+        },
+        "tag": "Strategic",
+        "rarity": "rare",
+        "goldDelta": 90,
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "narrative": {
+          "en": "You write a year of lessons in one long night — drills, readings, the good stories with the teeth left in. The tutor pays and the prince reads it twice. Money for ink, and no leash.",
+          "es": "Escribís un año de lecciones en una noche larga — ejercicios, lecturas, las buenas historias con los dientes puestos. El tutor paga y el príncipe lo lee dos veces. Dinero por tinta, y sin correa."
+        }
+      }
+    ]
+  },
+  {
+    "id": "court_masked_ball",
+    "minAge": 20,
+    "maxAge": 99,
+    "weight": 7,
+    "narrative": {
+      "en": "The Golden Lotus' masked ball fills the hall with silk and secret identities. A guest in a raven mask drifts toward you. 'Dance with me and I'll tell you which of these nobles is a spy,' they murmur. 'Or unmask me and win a different prize.'",
+      "es": "El baile de máscaras del Loto Dorado llena el salón de seda e identidades secretas. Un invitado con máscara de cuervo se desliza hacia vos. 'Bailá conmigo y te digo cuál de estos nobles es un espía', murmura. 'O desenmascarame y ganá otro premio.'"
+    },
+    "choices": [
+      {
+        "id": "dance_raven",
+        "label": {
+          "en": "Dance with the raven mask",
+          "es": "Bailar con la máscara de cuervo"
+        },
+        "tag": "Funny",
+        "rarity": "uncommon",
+        "requiresStat": {
+          "stat": "charisma",
+          "min": 12
+        },
+        "statDeltas": {
+          "charisma": 2
+        },
+        "fameDelta": 4,
+        "reputationDelta": 2,
+        "reputationFaction": "golden_lotus",
+        "narrative": {
+          "en": "Three dances, two whispers, one spy named — and the raven mask vanishes into the crowd before you can thank them. The court notices the newcomer who danced with the raven and came away smiling.",
+          "es": "Tres bailes, dos susurros, un espía nombrado — y la máscara de cuervo se desvanece entre la multitud antes de que puedas agradecerle. La corte nota a la novata que bailó con el cuervo y se fue sonriendo."
+        }
+      },
+      {
+        "id": "unmask_spymaster",
+        "label": {
+          "en": "Unmask them when they least expect it",
+          "es": "Desenmascararlos cuando menos lo esperan"
+        },
+        "tag": "Strategic",
+        "rarity": "rare",
+        "requiresStat": {
+          "stat": "intelligence",
+          "min": 14
+        },
+        "statDeltas": {
+          "intelligence": 2,
+          "dexterity": 1
+        },
+        "goldDelta": 100,
+        "liabilityDelta": 6,
+        "narrative": {
+          "en": "One deft motion and the raven mask comes away — the city's spymaster, red-faced before the assembly. They laugh it off as a wager, but their eyes promise a reckoning. The gold in your palm is hush money, and you take it.",
+          "es": "Un movimiento diestro y la máscara de cuervo cae — la maestra de espías de la ciudad, roja ante la asamblea. Lo disimula como una apuesta, pero sus ojos prometen un ajuste de cuentas. El oro en tu palma es dinero del silencio, y lo tomás."
+        }
+      },
+      {
+        "id": "watch_gallery",
+        "label": {
+          "en": "Watch from the gallery and read the room",
+          "es": "Observar desde la galería y leer la sala"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "narrative": {
+          "en": "You take a glass and a shadowed seat and let the ball play out before you. By midnight you know who owes whom, who hates whom, and which secrets are for sale. Knowledge is the real prize of the evening.",
+          "es": "Tomás una copa y un asiento en sombras y dejás que el baile se desarrolle ante vos. Para la medianoche sabés quién le debe a quién, quién odia a quién y qué secretos están en venta. El conocimiento es el premio real de la velada."
+        }
+      }
+    ]
+  },
+  {
+    "id": "court_royal_decree",
+    "minAge": 20,
+    "maxAge": 99,
+    "weight": 5,
+    "requiresForeign": true,
+    "narrative": {
+      "en": "A royal decree is nailed to the gate: all foreign adventurers plying trade in the capital owe a war tax on their earnings — retroactive to the season's start. A herald reads it twice, and every outsider's face goes hard.",
+      "es": "Un decreto real se clava en la puerta: todos los aventureros forasteros que comercian en la capital deben un impuesto de guerra sobre sus ganancias — retroactivo al inicio de la temporada. Un heraldo lo lee dos veces, y la cara de cada outsider se endurece."
+    },
+    "choices": [
+      {
+        "id": "pay_tax",
+        "label": {
+          "en": "Pay the tax and stay in the capital's good graces",
+          "es": "Pagar el impuesto y conservar el favor de la capital"
+        },
+        "tag": "Professional",
+        "rarity": "common",
+        "goldDelta": -60,
+        "statDeltas": {
+          "charisma": 1
+        },
+        "reputationDelta": 2,
+        "reputationFaction": "golden_lotus",
+        "narrative": {
+          "en": "You pay in full and the tax clerk stamps your papers with an almost-human courtesy. The decree may hate outsiders, but the ledger loves those who settle.",
+          "es": "Pagás todo y el escribano estampa tus papeles con una cortesía casi humana. El decreto podrá odiar a los forasteros, pero el libro mayor adora a quienes saldan."
+        }
+      },
+      {
+        "id": "appeal_eloquence",
+        "label": {
+          "en": "Appeal to the council with eloquence",
+          "es": "Apelar al consejo con elocuencia"
+        },
+        "tag": "Humble",
+        "rarity": "rare",
+        "requiresStat": {
+          "stat": "charisma",
+          "min": 13
+        },
+        "statDeltas": {
+          "charisma": 2,
+          "intelligence": 1
+        },
+        "fameDelta": 2,
+        "reputationDelta": 2,
+        "reputationFaction": "golden_lotus",
+        "narrative": {
+          "en": "You stand before the council and speak of the services outsiders render the city — the contracts honored, the monsters killed, the taxes already paid in blood. The decree is quietly amended for those who can prove their deeds. The clerk glares; the city murmurs your name.",
+          "es": "Te parás ante el consejo y hablás de los servicios que los forasteros le rinden a la ciudad — los contratos cumplidos, los monstruos muertos, los impuestos ya pagados en sangre. El decreto se enmienda en silencio para quienes pueden probar sus hazañas. El escribano fulmina; la ciudad murmura tu nombre."
+        }
+      },
+      {
+        "id": "flee_capital",
+        "label": {
+          "en": "Leave the capital before the collectors find you",
+          "es": "Salir de la capital antes de que te encuentren los cobradores"
+        },
+        "tag": "Strategic",
+        "rarity": "uncommon",
+        "requiresStat": {
+          "stat": "dexterity",
+          "min": 12
+        },
+        "statDeltas": {
+          "dexterity": 2
+        },
+        "liabilityDelta": 4,
+        "narrative": {
+          "en": "You're past the western gate before the ink dries on the decree. The capital will remember your name as one that slipped its tax — and the road is wide and free.",
+          "es": "Pasás la puerta oeste antes de que se seque la tinta del decreto. La capital recordará tu nombre como uno que esquivó su impuesto — y el camino es ancho y libre."
+        }
+      }
+    ]
   }
 ]

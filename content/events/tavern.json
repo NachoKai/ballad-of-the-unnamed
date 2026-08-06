@@ -279,5 +279,287 @@
         }
       }
     ]
+  },
+  {
+    "id": "tavern_bouncer_hand",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 8,
+    "location": "greywater",
+    "narrative": {
+      "en": "The door of {locationName} swings shut behind you and a hand like a ham lands on your shoulder. A {npcRole} named {npcName} leans in, grinning. 'The house rule is you buy a round when you walk in. The house rule is also that I'm the one who collects.'",
+      "es": "La puerta de {locationName} se cierra detrás de vos y una mano como un jamón aterriza en tu hombro. Un {npcRole} llamado {npcName} se acerca, sonriendo. 'La regla de la casa es que comprás una ronda al entrar. La regla de la casa también es que yo soy quien cobra.'"
+    },
+    "choices": [
+      {
+        "id": "buy_round",
+        "label": {
+          "en": "Buy the round and make a friend",
+          "es": "Pagar la ronda y hacer un amigo"
+        },
+        "tag": "Professional",
+        "rarity": "common",
+        "goldDelta": -25,
+        "statDeltas": { "charisma": 1 },
+        "reputationDelta": 2,
+        "reputationFaction": "greywater",
+        "narrative": {
+          "en": "{npcName} bellows for ale and the room drinks your health. For a night, you are the most popular stranger in Greywater.",
+          "es": "{npcName} pide cerveza a gritos y la sala brinda por tu salud. Por una noche, sos la forastera más popular de Villa Aguagrís."
+        }
+      },
+      {
+        "id": "slip_the_coin",
+        "label": {
+          "en": "Slip a silver coin and walk past",
+          "es": "Deslizar una moneda de plata y seguir de largo"
+        },
+        "tag": "Strategic",
+        "rarity": "uncommon",
+        "goldDelta": -10,
+        "statDeltas": { "intelligence": 1 },
+        "narrative": {
+          "en": "The coin vanishes into {npcName}'s palm faster than a rumor. 'Smart one,' they murmur, and the way clears.",
+          "es": "La moneda desaparece en la palma de {npcName} más rápido que un rumor. 'Listo', murmuran, y el paso se abre."
+        }
+      },
+      {
+        "id": "call_the_bluff",
+        "label": { "en": "Call their bluff", "es": "Irte de farol" },
+        "tag": "Aggressive",
+        "rarity": "volatile",
+        "requiresStat": { "stat": "strength", "min": 12 },
+        "statDeltas": { "strength": 2 },
+        "tradeoffDeltas": { "charisma": -1 },
+        "injuryRiskDelta": 0.12,
+        "narrative": {
+          "en": "For a long second the room holds its breath. Then {npcName} laughs and claps you on the back hard enough to bruise. You bought no round — but the house remembers your spine.",
+          "es": "Por un segundo largo la sala contiene la respiración. Entonces {npcName} ríe y te da una palmada en la espalda que deja moretón. No compraste ronda — pero la casa recuerda tu coraje."
+        }
+      }
+    ]
+  },
+  {
+    "id": "tavern_war_tales",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 7,
+    "narrative": {
+      "en": "Three old soldiers have claimed the corner table and are telling war stories loud enough for the whole tavern to hear. One catches your eye and waves a mug. 'You look like you've got one worth telling, stranger.'",
+      "es": "Tres viejos soldados se apoderaron de la mesa del rincón y cuentan historias de guerra tan fuerte que toda la taberna las oye. Uno te mira y alza su jarro. 'Parecés de los que tienen una historia que vale la pena contar, forastera.'"
+    },
+    "choices": [
+      {
+        "id": "tell_yours",
+        "label": { "en": "Tell your own battle tale", "es": "Contar tu propia batalla" },
+        "tag": "Funny",
+        "rarity": "uncommon",
+        "statDeltas": { "charisma": 2 },
+        "fameDelta": 2,
+        "countersDelta": { "battles_won": 1 },
+        "narrative": {
+          "en": "You spin your story with a grin, and the soldiers roar. By the last word the whole tavern is hanging on you. Names like yours travel.",
+          "es": "Contás tu historia con una sonrisa, y los soldados rugen. Para la última palabra, toda la taberna pende de tus labios. Los nombres como el tuyo viajan."
+        }
+      },
+      {
+        "id": "listen_and_learn",
+        "label": {
+          "en": "Listen and learn from their campaigns",
+          "es": "Escuchar y aprender de sus campañas"
+        },
+        "tag": "Strategic",
+        "rarity": "uncommon",
+        "statDeltas": { "intelligence": 2 },
+        "reputationDelta": 2,
+        "reputationFaction": "ironhold",
+        "narrative": {
+          "en": "You ask sharp questions and they answer with maps drawn in spilled ale. Old soldiers love an eager student — and Ironhold hears of your name.",
+          "es": "Hacés preguntas afiladas y responden con mapas dibujados en cerveza derramada. A los viejos soldados les encanta un estudiante aplicado — y Fuertehierro oye tu nombre."
+        }
+      },
+      {
+        "id": "buy_the_liar",
+        "label": {
+          "en": "Buy a round for the worst liar among them",
+          "es": "Invitar una ronda al peor mentiroso de todos"
+        },
+        "tag": "Supportive",
+        "rarity": "common",
+        "goldDelta": -15,
+        "statDeltas": { "charisma": 1 },
+        "narrative": {
+          "en": "You point out the soldier whose dragon grew bigger with every telling and buy them a drink. The table erupts in laughter and love. You've made four friends for the price of one ale.",
+          "es": "Señalás al soldado cuyo dragón crecía con cada relato y le pagás una bebida. La mesa estalla en risas y cariño. Hiciste cuatro amigos por el precio de una cerveza."
+        }
+      }
+    ]
+  },
+  {
+    "id": "tavern_stray_coin",
+    "minAge": 12,
+    "maxAge": 99,
+    "weight": 6,
+    "narrative": {
+      "en": "A thin gutter child shadows you for two streets and finally tugs your sleeve outside {locationName}. 'Mister, the foreman took my mother's wages and says she owes him double. I just need a little coin to get the ledger back.'",
+      "es": "Un niño flaco del arroyo te sigue por dos calles y por fin te tira de la manga fuera de {locationName}. 'Señor, el capataz se quedó con el salario de mi madre y dice que ella le debe el doble. Solo necesito un poco de plata para recuperar el libro de cuentas.'"
+    },
+    "choices": [
+      {
+        "id": "hand_over_coin",
+        "label": { "en": "Hand over a handful of coin", "es": "Entregarle un puñado de monedas" },
+        "tag": "Humble",
+        "rarity": "uncommon",
+        "goldDelta": -40,
+        "statDeltas": { "charisma": 2 },
+        "countersDelta": { "lives_saved": 1 },
+        "narrative": {
+          "en": "The child's eyes go wide, then hard with purpose. 'I won't forget this.' Whether the story was true or not, you've bought a life — or a lesson. Either way, the coin is gone and the night is warmer.",
+          "es": "Los ojos del niño se abren, y luego se endurecen con propósito. 'No voy a olvidar esto.' Sea la historia verdadera o no, compraste una vida — o una lección. De cualquier modo, la moneda se fue y la noche es más cálida."
+        }
+      },
+      {
+        "id": "turn_away",
+        "label": {
+          "en": "Turn away and keep your coin",
+          "es": "Darte la vuelta y guardar tu moneda"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": { "intelligence": 1 },
+        "narrative": {
+          "en": "You've heard a hundred stories like this one, and you've learned to count the cost. The child's face falls, and you tell yourself the ledger story was probably a lie. Probably.",
+          "es": "Oíste cien historias como esta, y aprendiste a contar el costo. La cara del niño se cae, y te decís que la historia del libro de cuentas seguramente era mentira. Seguramente."
+        }
+      },
+      {
+        "id": "find_the_thief",
+        "label": {
+          "en": "Go confront the foreman yourself",
+          "es": "Ir a encarar al capataz vos mismo"
+        },
+        "tag": "Aggressive",
+        "rarity": "volatile",
+        "requiresStat": { "stat": "dexterity", "min": 12 },
+        "statDeltas": { "dexterity": 2 },
+        "goldDelta": 30,
+        "injuryRiskDelta": 0.15,
+        "liabilityDelta": 4,
+        "narrative": {
+          "en": "You find the foreman at the docks and lean in close. The ledger changes hands — quietly, and with interest. The child gets their mother's wages, and you get a new enemy who knows your face.",
+          "es": "Encontrás al capataz en los muelles y te acercás mucho. El libro de cuentas cambia de manos — en silencio, y con intereses. El niño recupera el salario de su madre, y vos ganás un enemigo nuevo que conoce tu cara."
+        }
+      }
+    ]
+  },
+  {
+    "id": "tavern_healer_surgeon",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "narrative": {
+      "en": "A traveling surgeon with steady hands and a heavy satchel sits down across from you at {locationName}. 'I saw you favor that shoulder at the door. Old wound, new trouble. I can fix it — for a price, or for a story worth the telling.'",
+      "es": "Un cirujano viajero con manos firmes y un maletín pesado se sienta frente a vos en {locationName}. 'Te vi cuidando ese hombro en la puerta. Herida vieja, problemas nuevos. Puedo arreglarla — por un precio, o por una historia que valga la pena contar.'"
+    },
+    "choices": [
+      {
+        "id": "pay_for_treatment",
+        "label": { "en": "Pay for the treatment", "es": "Pagar por el tratamiento" },
+        "tag": "Professional",
+        "rarity": "uncommon",
+        "goldDelta": -50,
+        "healthDelta": 12,
+        "statDeltas": { "constitution": 1 },
+        "narrative": {
+          "en": "The surgeon works quickly and cleanly, and the old ache drains away like water. 'That'll hold for years, stranger. Spend it well.'",
+          "es": "El cirujano trabaja rápido y limpio, y el viejo dolor se drena como agua. 'Eso aguanta años, forastera. Gastalo bien.'"
+        }
+      },
+      {
+        "id": "trade_a_story",
+        "label": {
+          "en": "Trade a road story for the treatment",
+          "es": "Cambiar una historia de camino por el tratamiento"
+        },
+        "tag": "Funny",
+        "rarity": "uncommon",
+        "goldDelta": -10,
+        "healthDelta": 8,
+        "statDeltas": { "charisma": 2 },
+        "narrative": {
+          "en": "You tell the story of the duel you almost lost and the goose you definitely did lose, and the surgeon laughs so hard they nearly drop the needle. 'Best payment I've had in a year.'",
+          "es": "Contás la historia del duelo que casi perdés y la oca que seguro perdiste, y el cirujano ríe tan fuerte que casi se le cae la aguja. 'El mejor pago que tuve en un año.'"
+        }
+      },
+      {
+        "id": "refuse",
+        "label": { "en": "Refuse — you'll manage", "es": "Negarte — te las arreglás" },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": { "constitution": 1 },
+        "narrative": {
+          "en": "You shrug and order another drink. The surgeon packs their satchel and leaves a small vial on the table anyway. 'For the road. No charge.'",
+          "es": "Te encogés de hombros y pedís otra bebida. El cirujano guarda su maletín y deja igual un pequeño frasco sobre la mesa. 'Para el camino. Sin cargo.'"
+        }
+      }
+    ]
+  },
+  {
+    "id": "tavern_ghost_story",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "narrative": {
+      "en": "A {npcRole} named {npcName} leans across the bar at {locationName} and grins. 'They say this tavern's haunted — the old innkeeper who died counting his gold. I don't believe it. You look like the sort who could prove me wrong, one way or another.'",
+      "es": "Un {npcRole} llamado {npcName} se inclina sobre la barra de {locationName} y sonríe. 'Dicen que esta taberna está embrujada — el viejo posadero que murió contando su oro. No lo creo. Parecés de los que podrían demostrarme lo contrario, de un modo u otro.'"
+    },
+    "choices": [
+      {
+        "id": "play_along",
+        "label": {
+          "en": "Play along with the haunting",
+          "es": "Seguirle la corriente al fantasma"
+        },
+        "tag": "Funny",
+        "rarity": "uncommon",
+        "statDeltas": { "charisma": 2 },
+        "fameDelta": 2,
+        "narrative": {
+          "en": "You drop your voice to a whisper and tell the room the innkeeper's story in the dark. Half the tavern is hooked, and by midnight they're arguing about whether you actually saw him. {npcName} buys you a drink out of sheer respect.",
+          "es": "Bajás la voz a un susurro y le contás al salón la historia del posadero en la oscuridad. Media taberna queda enganchada, y para la medianoche discuten si de verdad lo viste. {npcName} te invita una bebida por puro respeto."
+        }
+      },
+      {
+        "id": "investigate_cellar",
+        "label": {
+          "en": "Investigate the cellar for the old gold",
+          "es": "Investigar la bodega por el viejo oro"
+        },
+        "tag": "Strategic",
+        "rarity": "rare",
+        "requiresStat": { "stat": "intelligence", "min": 10 },
+        "statDeltas": { "intelligence": 2 },
+        "goldDelta": 40,
+        "injuryRiskDelta": 0.08,
+        "narrative": {
+          "en": "You find the loose brick behind the ale casks and the small hoard inside — the innkeeper's last secret. You leave the gold where a bit of it can return to the house's keeping and pocket the rest. {npcName} raises an eyebrow and says nothing.",
+          "es": "Encontrás el ladrillo suelto detrás de los barriles y el pequeño tesoro adentro — el último secreto del posadero. Dejás el oro donde un poco pueda volver a la casa y guardás el resto. {npcName} alza una ceja y no dice nada."
+        }
+      },
+      {
+        "id": "laugh_it_off",
+        "label": {
+          "en": "Laugh it off and order another round",
+          "es": "Reírte y pedir otra ronda"
+        },
+        "tag": "Cocky",
+        "rarity": "common",
+        "statDeltas": { "constitution": 1 },
+        "narrative": {
+          "en": "'Ghosts are for people who drink alone,' you say, and the room laughs with you. The chill that runs down your spine a moment later is, you insist, just the draft.",
+          "es": "'Los fantasmas son para quienes beben solos', decís, y la sala se ríe con vos. El escalofrío que te recorre un momento después es, insistís, solo la corriente."
+        }
+      }
+    ]
   }
 ]

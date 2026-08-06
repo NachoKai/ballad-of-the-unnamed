@@ -88,9 +88,7 @@
       "partial": {
         "goldDelta": 30,
         "injuryRiskDelta": 0.1,
-        "countersReset": [
-          "heist_streak"
-        ],
+        "countersReset": ["heist_streak"],
         "narrative": {
           "en": "You trigger a minor ward. You escape singed, pockets half-full, with guards on your tail.",
           "es": "Activás un sello menor. Escapás chamuscado, los bolsillos a medio llenar, con guardias pisándote los talones."
@@ -101,9 +99,7 @@
         "reputationFaction": "arcanum",
         "liabilityDelta": 12,
         "injuryRiskDelta": 0.3,
-        "countersReset": [
-          "heist_streak"
-        ],
+        "countersReset": ["heist_streak"],
         "narrative": {
           "en": "The vault seals behind you. Magic binds your limbs as the Arcanum's wardens close in. They know your face now — this will cost you, and not just in gold.",
           "es": "La bóveda se sella detrás de vos. La magia atrapa tus miembros mientras los guardianes del Arcanum se acercan. Ahora conocen tu cara — esto te va a costar, y no solo en oro."
@@ -200,9 +196,7 @@
       "partial": {
         "goldDelta": -15,
         "injuryRiskDelta": 0.05,
-        "countersReset": [
-          "drinking_streak"
-        ],
+        "countersReset": ["drinking_streak"],
         "narrative": {
           "en": "You manage to finish, barely. You split the tab and stagger home with your pride dented.",
           "es": "Lográs terminar, apenas. Dividen la cuenta y volvés tambaleándote con el orgullo abollado."
@@ -212,9 +206,7 @@
         "goldDelta": -30,
         "reputationDelta": -1,
         "injuryRiskDelta": 0.15,
-        "countersReset": [
-          "drinking_streak"
-        ],
+        "countersReset": ["drinking_streak"],
         "narrative": {
           "en": "The room spins. You slide off the stool and wake up face-down outside, missing a pouch and your dignity.",
           "es": "La habitación da vueltas. Resbalás del taburete y despertás boca abajo afuera, sin una bolsa y sin dignidad."
@@ -310,9 +302,7 @@
       "partial": {
         "healthDelta": -5,
         "injuryRiskDelta": 0.1,
-        "countersReset": [
-          "chase_streak"
-        ],
+        "countersReset": ["chase_streak"],
         "narrative": {
           "en": "You slip on wet cobbles and twist your ankle. A street vendor trips them, and you both limp away empty-handed.",
           "es": "Resbalás en los adoquines mojados y te torcés el tobillo. Un vendedor callejero los hace tropezar, y ambos se van cojeando con las manos vacías."
@@ -321,9 +311,7 @@
       "fail": {
         "fameDelta": -2,
         "injuryRiskDelta": 0.2,
-        "countersReset": [
-          "chase_streak"
-        ],
+        "countersReset": ["chase_streak"],
         "narrative": {
           "en": "They vanish into the sewers. You stand at the grate, gasping, as the echoes of their laughter fade below.",
           "es": "Desaparecen en las alcantarillas. Te quedás frente a la reja, jadeando, mientras los ecos de su risa se apagan allá abajo."
@@ -418,9 +406,7 @@
       },
       "partial": {
         "goldDelta": -30,
-        "countersReset": [
-          "gamble_streak"
-        ],
+        "countersReset": ["gamble_streak"],
         "narrative": {
           "en": "You win a few rounds but lose more. You walk away near even — wiser, if poorer.",
           "es": "Ganás algunas rondas pero perdés más. Te vas casi empatado — más sabio, si acaso más pobre."
@@ -429,9 +415,7 @@
       "fail": {
         "goldDelta": -100,
         "reputationDelta": -1,
-        "countersReset": [
-          "gamble_streak"
-        ],
+        "countersReset": ["gamble_streak"],
         "narrative": {
           "en": "The dealer was three moves ahead. You clean out your pockets and slink out into the rain, cleaned out.",
           "es": "La crupier iba tres movimientos adelante. Vacías tus bolsillos y te escabullís bajo la lluvia, pelado."
@@ -531,9 +515,7 @@
       "partial": {
         "healthDelta": -8,
         "injuryRiskDelta": 0.12,
-        "countersReset": [
-          "survival_streak"
-        ],
+        "countersReset": ["survival_streak"],
         "narrative": {
           "en": "You endure, but barely. Cold and hunger gnaw at you. The Thornwood let you live — this time.",
           "es": "Aguantás, pero apenas. El frío y el hambre te carcomen. El Espinar te dejó vivir — esta vez."
@@ -542,9 +524,7 @@
       "fail": {
         "healthDelta": -15,
         "injuryRiskDelta": 0.3,
-        "countersReset": [
-          "survival_streak"
-        ],
+        "countersReset": ["survival_streak"],
         "narrative": {
           "en": "The night takes everything. You stumble out at dawn, frostbitten and lost, owing your life to a Thornwood patrol.",
           "es": "La noche se lo lleva todo. Salís tambaleante al amanecer, congelado y perdido, debiéndole la vida a una patrulla de Espinar."
@@ -646,9 +626,7 @@
         "goldDelta": 20,
         "reputationDelta": -1,
         "reputationFaction": "crownguard",
-        "countersReset": [
-          "courtly_streak"
-        ],
+        "countersReset": ["courtly_streak"],
         "narrative": {
           "en": "You hold your ground but fail to sway the room. A minor concession is granted — barely enough.",
           "es": "Mantenés tu posición pero no lográs convencer a la sala. Te conceden una concesión menor — apenas suficiente."
@@ -658,9 +636,7 @@
         "reputationDelta": -4,
         "reputationFaction": "crownguard",
         "fameDelta": -2,
-        "countersReset": [
-          "courtly_streak"
-        ],
+        "countersReset": ["courtly_streak"],
         "narrative": {
           "en": "You misread the room badly. The seneschal's stare could cut glass. You're escorted out before you make things worse.",
           "es": "Malinterpretás la sala por completo. La mirada del senescal podría cortar vidrio. Te escoltan fuera antes de que empeores las cosas."
@@ -762,9 +738,7 @@
       "partial": {
         "goldDelta": 20,
         "injuryRiskDelta": 0.08,
-        "countersReset": [
-          "smithing_streak"
-        ],
+        "countersReset": ["smithing_streak"],
         "narrative": {
           "en": "The steel cools too fast and your edge chips. You salvage what you can, but the Guild's eyes say 'next time.'",
           "es": "El acero se enfría muy rápido y el filo se astilla. Salvá lo que podés, pero la mirada del Gremio dice 'la próxima.'"
@@ -775,9 +749,7 @@
         "reputationDelta": -2,
         "reputationFaction": "ironhold",
         "injuryRiskDelta": 0.15,
-        "countersReset": [
-          "smithing_streak"
-        ],
+        "countersReset": ["smithing_streak"],
         "narrative": {
           "en": "Your hammer lands wrong. The billet twists into scrap. You leave the forge to the sound of pitying murmurs.",
           "es": "Tu martillo cae mal. El tocho se retuerce en chatarra. Dejás la forja entre murmullos de lástima."
@@ -873,9 +845,7 @@
       },
       "partial": {
         "fameDelta": -1,
-        "countersReset": [
-          "archery_streak"
-        ],
+        "countersReset": ["archery_streak"],
         "narrative": {
           "en": "You flinch on the last shot. It strays wide. The crowd sighs, and you step back with a shrug.",
           "es": "Parpadeás en el último tiro. Se desvía. La multitud suspira, y retrocedés con un encogimiento de hombros."
@@ -884,9 +854,7 @@
       "fail": {
         "fameDelta": -3,
         "goldDelta": -10,
-        "countersReset": [
-          "archery_streak"
-        ],
+        "countersReset": ["archery_streak"],
         "narrative": {
           "en": "The bowstring snaps on your second pull. Your shots go wild. You slink off as the next contender takes the line.",
           "es": "La cuerda del arco se rompe en tu segundo tiro. Tus flechas se pierden. Te escabullís mientras la siguiente contendiente toma la línea."
@@ -1178,9 +1146,7 @@
       },
       "partial": {
         "goldDelta": 10,
-        "countersReset": [
-          "fishing_streak"
-        ],
+        "countersReset": ["fishing_streak"],
         "narrative": {
           "en": "You land a minnow just as the sun rises. It wins a pity copper and the dock's softest laughter.",
           "es": "Atrapás un pececito justo cuando sale el sol. Gana un cobre por lástima y la risa más suave del muelle."
@@ -1189,9 +1155,7 @@
       "fail": {
         "goldDelta": -15,
         "fameDelta": -1,
-        "countersReset": [
-          "fishing_streak"
-        ],
+        "countersReset": ["fishing_streak"],
         "narrative": {
           "en": "The line snaps on your one big bite. You reel in nothing but a broken hook and a crowd that saw the whole thing.",
           "es": "La línea se corta en tu única mordida grande. Recogés nada más que un anzuelo roto y una multitud que vio todo."
@@ -1598,9 +1562,7 @@
       "partial": {
         "healthDelta": -5,
         "injuryRiskDelta": 0.1,
-        "countersReset": [
-          "hunt_streak"
-        ],
+        "countersReset": ["hunt_streak"],
         "narrative": {
           "en": "The shot grazes — the stag bolts into the deep wood, leaving you with a torn sleeve from the brambles and no bounty.",
           "es": "El disparo roza — el ciervo dispara hacia el bosque profundo, dejándote con la manga rota por las zarzas y sin recompensa."
@@ -1610,9 +1572,7 @@
         "fameDelta": -2,
         "reputationDelta": -1,
         "reputationFaction": "thornwood",
-        "countersReset": [
-          "hunt_streak"
-        ],
+        "countersReset": ["hunt_streak"],
         "narrative": {
           "en": "Your bowstring snaps in the cold. The stag is gone before you can nock another arrow. The wardens' disappointment is worse than the lost bounty.",
           "es": "La cuerda de tu arco se rompe con el frío. El ciervo se va antes de que puedas enganchar otra flecha. La decepción de las guardias es peor que la recompensa perdida."
@@ -1714,6 +1674,1670 @@
         "narrative": {
           "en": "The symbols blur. You flip tablet after tablet in a panic, but nothing matches. The torch dies, and you stumble out into the night, empty-handed.",
           "es": "Los símbolos se vuelven borrosos. Volteás tableta tras tableta en pánico, pero nada coincide. La antorcha se apaga, y salís tropezando a la noche, con las manos vacías."
+        }
+      }
+    }
+  },
+  {
+    "id": "treasure_hunt_map",
+    "type": "minigame",
+    "subtype": "hunting",
+    "minAge": 14,
+    "maxAge": 99,
+    "weight": 6,
+    "primaryStat": "dexterity",
+    "narrative": {
+      "en": "An old map, half-eaten by rain, leads into the thorn country. The X is marked where the creek bends twice. Somewhere out there, a merchant's lost strongbox waits — and so do the wolves.",
+      "es": "Un mapa viejo, medio comido por la lluvia, lleva al país de las espinas. La X está marcada donde el arroyo dobla dos veces. En algún lugar ahí afuera, el cofre perdido de un mercader espera — y también los lobos."
+    },
+    "cards": [
+      {
+        "id": "follow_fresh_tracks",
+        "icon": "footprints",
+        "label": {
+          "en": "Follow the fresh tracks",
+          "es": "Seguir las huellas frescas"
+        }
+      },
+      {
+        "id": "read_wind",
+        "icon": "wind",
+        "label": {
+          "en": "Keep downwind of the treeline",
+          "es": "Mantenerse a favor del viento del bosque"
+        }
+      },
+      {
+        "id": "high_ground_scan",
+        "icon": "binoculars",
+        "label": {
+          "en": "Scan from the high ground",
+          "es": "Escudriñar desde el terreno alto"
+        }
+      },
+      {
+        "id": "back_to_camp",
+        "icon": "tent",
+        "label": {
+          "en": "Turn back to camp",
+          "es": "Volver al campamento"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.42,
+      "statInfluence": {
+        "dexterity": 0.012,
+        "intelligence": 0.005
+      },
+      "cardModifiers": {
+        "high_ground_scan": {
+          "winChanceDelta": 0.08
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "dexterity": 2
+        },
+        "goldDelta": 200,
+        "fameDelta": 5,
+        "countersDelta": {
+          "hunts_won": 1,
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "You read the land like a letter and find the strongbox before the wolves even scent you. Gold, dry and glinting, in the hollow of an old oak.",
+          "es": "Leés la tierra como una carta y encontrás el cofre antes de que los lobos siquiera te huelan. Oro, seco y brillante, en el hueco de un viejo roble."
+        }
+      },
+      "success": {
+        "goldDelta": 80,
+        "fameDelta": 2,
+        "countersDelta": {
+          "hunts_won": 1
+        },
+        "narrative": {
+          "en": "You find the spot by dusk — the box is half-empty and half-rusted, but the coins that remain pay for the journey twice over.",
+          "es": "Encontrás el lugar al anochecer — el cofre está medio vacío y medio oxidado, pero las monedas que quedan pagan el viaje dos veces."
+        }
+      },
+      "partial": {
+        "healthDelta": -5,
+        "injuryRiskDelta": 0.1,
+        "countersReset": ["hunt_streak"],
+        "narrative": {
+          "en": "A branch catches your leg and the wolves catch your scent. You pull free with a torn cloak and a scratch, and the strongbox stays buried.",
+          "es": "Una rama te atrapa la pierna y los lobos te huelen. Te soltás con la capa rota y un rasguño, y el cofre sigue enterrado."
+        }
+      },
+      "fail": {
+        "goldDelta": -20,
+        "fameDelta": -1,
+        "countersReset": ["hunt_streak"],
+        "narrative": {
+          "en": "The map was a forgery — the X leads to a den of angry badgers. You retreat with dignity as the only trophy.",
+          "es": "El mapa era falso — la X lleva a una madriguera de tejones enojados. Retrocedés con la dignidad como único trofeo."
+        }
+      }
+    }
+  },
+  {
+    "id": "wrestling_ring",
+    "type": "minigame",
+    "subtype": "brawl",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "primaryStat": "strength",
+    "narrative": {
+      "en": "The tavern's champion throws his coat in the ring — a circle of rope on the sawdust floor. 'Rules are simple: shoulders down, or tap out. Winner buys nothing and gets everything.'",
+      "es": "El campeón de la taberna tira su abrigo al ruedo — un círculo de soga sobre el piso de aserrín. 'Las reglas son simples: espaldas al suelo, o tocás la lona. El ganador no paga nada y se lleva todo.'"
+    },
+    "cards": [
+      {
+        "id": "lock_grip",
+        "icon": "hand",
+        "label": {
+          "en": "Lock grips and test their strength",
+          "es": "Trabar los agarres y probar su fuerza"
+        }
+      },
+      {
+        "id": "shoulder_barge",
+        "icon": "person-running",
+        "label": {
+          "en": "Drive them with a shoulder barge",
+          "es": "Empujarlos con una embestida de hombro"
+        }
+      },
+      {
+        "id": "counter_throw",
+        "icon": "refresh-cw",
+        "label": {
+          "en": "Counter their throw",
+          "es": "Contrarrestar su derribo"
+        }
+      },
+      {
+        "id": "tap_out",
+        "icon": "hand-coins",
+        "label": {
+          "en": "Tap out before it gets ugly",
+          "es": "Tocar la lona antes de que se ponga feo"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.42,
+      "statInfluence": {
+        "strength": 0.012,
+        "constitution": 0.006
+      },
+      "cardModifiers": {
+        "counter_throw": {
+          "winChanceDelta": 0.08,
+          "critChanceDelta": 0.04
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "strength": 2
+        },
+        "goldDelta": 150,
+        "fameDelta": 4,
+        "countersDelta": {
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "You let them charge, sidestep, and plant them in the sawdust with a throw the whole tavern feels. The champion concedes from the floor, grinning.",
+          "es": "Los dejás cargar, esquivás, y los plantás en el aserrín con un derribo que siente toda la taberna. El campeón se rinde desde el piso, sonriendo."
+        }
+      },
+      "success": {
+        "goldDelta": 50,
+        "fameDelta": 2,
+        "countersDelta": {
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "A hard, honest match that ends with shoulders down and your hand raised. The tavern buys you a round it won't let you refuse.",
+          "es": "Una pelea dura y honesta que termina con espaldas al suelo y tu mano alzada. La taberna te invita una ronda que no te deja rechazar."
+        }
+      },
+      "partial": {
+        "healthDelta": -6,
+        "injuryRiskDelta": 0.1,
+        "narrative": {
+          "en": "You hold them off but can't finish it. A draw by mutual exhaustion — the crowd boos, then drinks to the both of you anyway.",
+          "es": "Los aguantás pero no podés rematarlo. Empate por agotamiento mutuo — la multitud abuchea, y después bebe por los dos igual."
+        }
+      },
+      "fail": {
+        "healthDelta": -12,
+        "fameDelta": -2,
+        "injuryRiskDelta": 0.15,
+        "narrative": {
+          "en": "The champion reads your stance like a book and drops you hard. You tap out to the roar of the room, vowing a rematch nobody believes.",
+          "es": "El campeón lee tu postura como un libro y te tira fuerte. Tocás la lona entre el rugido del salón, jurando una revancha que nadie cree."
+        }
+      }
+    }
+  },
+  {
+    "id": "thieves_market",
+    "type": "minigame",
+    "subtype": "heist",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "primaryStat": "dexterity",
+    "narrative": {
+      "en": "The night market sprawls in the shadow of the old clock tower — stalls, pickpockets, and one very fat merchant's purse swinging by his belt. The mark is leaving at midnight.",
+      "es": "El mercado nocturno se extiende a la sombra de la vieja torre del reloj — puestos, carteristas, y la bolsa muy gorda de un mercader colgando de su cinturón. El objetivo se va a la medianoche."
+    },
+    "cards": [
+      {
+        "id": "lift_purse",
+        "icon": "hand",
+        "label": {
+          "en": "Lift the purse in the crowd",
+          "es": "Alzar la bolsa entre la multitud"
+        }
+      },
+      {
+        "id": "swap_goods",
+        "icon": "shopping-basket",
+        "label": {
+          "en": "Swap his crate for an empty one",
+          "es": "Cambiar su cajón por uno vacío"
+        }
+      },
+      {
+        "id": "slip_shadow",
+        "icon": "eye-off",
+        "label": {
+          "en": "Slip through the shadows",
+          "es": "Escabullirte por las sombras"
+        }
+      },
+      {
+        "id": "leave_early",
+        "icon": "door-open",
+        "label": {
+          "en": "Leave before the bell",
+          "es": "Irte antes de la campana"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.4,
+      "statInfluence": {
+        "dexterity": 0.012,
+        "charisma": 0.004
+      },
+      "cardModifiers": {
+        "slip_shadow": {
+          "winChanceDelta": 0.09
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "dexterity": 2
+        },
+        "goldDelta": 220,
+        "fameDelta": 4,
+        "countersDelta": {
+          "heists_won": 1,
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "The purse, the crate, and a ring off his finger too — all gone before he feels the night air. The market never sees you, only the aftermath.",
+          "es": "La bolsa, el cajón y hasta un anillo de su dedo — todo se va antes de que sienta el aire de la noche. El mercado nunca te ve, solo las consecuencias."
+        }
+      },
+      "success": {
+        "goldDelta": 90,
+        "fameDelta": 1,
+        "countersDelta": {
+          "heists_won": 1
+        },
+        "narrative": {
+          "en": "You get the purse and a clean exit. The merchant won't notice until the toll booth, which is exactly the plan.",
+          "es": "Conseguís la bolsa y una salida limpia. El mercader no se dará cuenta hasta el peaje, que es exactamente el plan."
+        }
+      },
+      "partial": {
+        "goldDelta": 20,
+        "liabilityDelta": 3,
+        "countersReset": ["heist_streak"],
+        "narrative": {
+          "en": "A stallkeeper spots you mid-reach. You pay them off with a handful of the take, and the rest of the night smells like watchmen.",
+          "es": "Una vendedora te ve a medio robo. La sobornás con un puñado del botín, y el resto de la noche huele a guardias."
+        }
+      },
+      "fail": {
+        "goldDelta": -40,
+        "liabilityDelta": 10,
+        "countersReset": ["heist_streak"],
+        "narrative": {
+          "en": "The purse is a decoy — weighted with stones. The merchant's real guard steps out of a stall with a cudgel. You run, lighter on pride.",
+          "es": "La bolsa es un señuelo — llena de piedras. El guardia de verdad del mercader sale de un puesto con una cachiporra. Corrés, más liviano en orgullo."
+        }
+      }
+    }
+  },
+  {
+    "id": "keg_race",
+    "type": "minigame",
+    "subtype": "timing_bar",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "primaryStat": "dexterity",
+    "narrative": {
+      "en": "The festival's keg race runs down the main street — a rolling barrel, a narrow lane of cheering drunks, and a finish line by the fountain. The trick is in the timing.",
+      "es": "La carrera de barriles de la feria corre por la calle principal — un barril rodante, un callejón de borrachos que festejan, y una meta junto a la fuente. El truco está en el tiempo."
+    },
+    "cards": [
+      {
+        "id": "roll_steady",
+        "icon": "beer",
+        "label": {
+          "en": "Roll steady and even",
+          "es": "Rodar firme y parejo"
+        }
+      },
+      {
+        "id": "hop_barrels",
+        "icon": "person-running",
+        "label": {
+          "en": "Hop the spilled barrels",
+          "es": "Saltar los barriles volcados"
+        }
+      },
+      {
+        "id": "full_sprint",
+        "icon": "flame",
+        "label": {
+          "en": "Full sprint to the fountain",
+          "es": "Esprintar a fondo hasta la fuente"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "timing_bar",
+      "baseWinChance": 0.35,
+      "statInfluence": {
+        "dexterity": 0.015,
+        "strength": 0.005
+      },
+      "statThreshold": 20,
+      "cardModifiers": {
+        "hop_barrels": {
+          "winChanceDelta": 0.08,
+          "critChanceDelta": 0.03
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "dexterity": 3
+        },
+        "goldDelta": 120,
+        "fameDelta": 5,
+        "countersDelta": {
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "You time the jumps like a dancer and cross the line a full barrel ahead. The crowd carries you to the fountain and dunks you — the good kind of dunk.",
+          "es": "Sincronizás los saltos como un bailarín y cruzás la meta un barril entero adelante. La multitud te lleva a la fuente y te sumerge — la sumergida buena."
+        }
+      },
+      "success": {
+        "statDeltas": {
+          "dexterity": 1
+        },
+        "goldDelta": 40,
+        "fameDelta": 2,
+        "countersDelta": {
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "You cross second, close enough to claim a prize and far enough to claim dignity. The fountain splash is cold but quick.",
+          "es": "Cruzas segundo, lo bastante cerca para reclamar un premio y lo bastante lejos para conservar la dignidad. La salpicada de la fuente es fría pero rápida."
+        }
+      },
+      "partial": {
+        "healthDelta": -5,
+        "goldDelta": -10,
+        "narrative": {
+          "en": "You clip a barrel mid-jump and eat cobblestones. You finish the race on foot, bruised, as the crowd cheers someone else.",
+          "es": "Chocás un barril a medio salto y besás los adoquines. Terminás la carrera a pie, magullado, mientras la multitud aplaude a otro."
+        }
+      },
+      "fail": {
+        "healthDelta": -10,
+        "fameDelta": -1,
+        "goldDelta": -20,
+        "narrative": {
+          "en": "The barrel rolls over your foot and the race is over before it starts. You hop to the sideline, which the crowd finds funnier than the race itself.",
+          "es": "El barril te pasa por encima del pie y la carrera termina antes de empezar. Saltás hasta el costado, lo que la multitud encuentra más gracioso que la carrera misma."
+        }
+      }
+    }
+  },
+  {
+    "id": "card_shark_showdown",
+    "type": "minigame",
+    "subtype": "gambling",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "primaryStat": "intelligence",
+    "narrative": {
+      "en": "A silver-haired card shark finds your table and deals a fresh hand. 'One game, stranger. Winner takes the pot and the seat. Loser buys the round and learns a lesson.'",
+      "es": "Una tiburona de cartas de pelo plateado se sienta en tu mesa y reparte una mano nueva. 'Una partida, forastera. El ganador se lleva el pozo y el asiento. El perdedor paga la ronda y aprende una lección.'"
+    },
+    "cards": [
+      {
+        "id": "read_tells",
+        "icon": "eye",
+        "label": {
+          "en": "Read the shark's tells",
+          "es": "Leer las señales de la tiburona"
+        }
+      },
+      {
+        "id": "count_discards",
+        "icon": "layers",
+        "label": {
+          "en": "Count the discards",
+          "es": "Contar los descartes"
+        }
+      },
+      {
+        "id": "bait_raise",
+        "icon": "sparkles",
+        "label": {
+          "en": "Bait them with a raise",
+          "es": "Provocarlos con una subida"
+        }
+      },
+      {
+        "id": "fold_quick",
+        "icon": "hand",
+        "label": {
+          "en": "Fold and live to deal again",
+          "es": "Irse al mazo y vivir para repartir otra vez"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.4,
+      "statInfluence": {
+        "intelligence": 0.012,
+        "charisma": 0.005
+      },
+      "cardModifiers": {
+        "read_tells": {
+          "winChanceDelta": 0.09,
+          "critChanceDelta": 0.04
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "goldDelta": 350,
+        "fameDelta": 4,
+        "countersDelta": {
+          "gambles_won": 1
+        },
+        "narrative": {
+          "en": "You call their bluff with the deck in your favor, and the shark's silver composure cracks. They slide the pot across and tip their hat — a genuine, grudging salute.",
+          "es": "Le ganás al farol con la baraja a tu favor, y la compostura plateada de la tiburona se quiebra. Desliza el pozo hacia vos y se saca el sombrero — un saludo genuino y a regañadientes."
+        }
+      },
+      "success": {
+        "goldDelta": 120,
+        "countersDelta": {
+          "gambles_won": 1
+        },
+        "narrative": {
+          "en": "You read the table well enough to take the hand and the seat. The shark nods once — enough respect to mean it.",
+          "es": "Leés la mesa lo bastante bien para llevarte la mano y el asiento. La tiburona asiente una vez — suficiente respeto como para que sea de verdad."
+        }
+      },
+      "partial": {
+        "goldDelta": -40,
+        "countersReset": ["gamble_streak"],
+        "narrative": {
+          "en": "The hand goes back and forth before slipping away. You break even-ish and keep the seat, which is more than most can say against a shark.",
+          "es": "La mano va y viene antes de escaparse. Terminás más o menos igual y conservás el asiento, que es más de lo que la mayoría puede decir contra una tiburona."
+        }
+      },
+      "fail": {
+        "goldDelta": -120,
+        "countersReset": ["gamble_streak"],
+        "narrative": {
+          "en": "The shark was three levels deep. Your bluff evaporates, the pot empties, and the table's laughter follows you to the bar.",
+          "es": "La tiburona iba tres niveles adelante. Tu farol se evapora, el pozo se vacía, y la risa de la mesa te sigue hasta la barra."
+        }
+      }
+    }
+  },
+  {
+    "id": "poison_tasting",
+    "type": "minigame",
+    "subtype": "grid_gamble",
+    "minAge": 18,
+    "maxAge": 99,
+    "weight": 5,
+    "primaryStat": "constitution",
+    "narrative": {
+      "en": "The feast master presents nine identical goblets. Three hold sweet wine; the rest hold something that bites. 'A toast to the guest of honor,' he says, sliding one toward you. 'Pick your cup — or the evening picks for you.'",
+      "es": "El maestro de la fiesta presenta nueve copas idénticas. Tres contienen vino dulce; el resto, algo que muerde. 'Un brindis por la invitada de honor', dice, deslizando una hacia vos. 'Elegí tu copa — o que la noche elija por vos.'"
+    },
+    "cards": [
+      {
+        "id": "first_three",
+        "icon": "hand",
+        "label": {
+          "en": "Take from the first three",
+          "es": "Tomar de las tres primeras"
+        }
+      },
+      {
+        "id": "middle_row",
+        "icon": "circle",
+        "label": {
+          "en": "Reach for the middle row",
+          "es": "Alcanzar la fila del medio"
+        }
+      },
+      {
+        "id": "hosts_choice",
+        "icon": "crown",
+        "label": {
+          "en": "Take the host's own cup",
+          "es": "Tomar la copa del propio anfitrión"
+        }
+      },
+      {
+        "id": "decline_toast",
+        "icon": "door-open",
+        "label": {
+          "en": "Politely decline the toast",
+          "es": "Declinar el brindis con cortesía"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "grid_gamble",
+      "baseWinChance": 0.33,
+      "statInfluence": {},
+      "cardModifiers": {
+        "decline_toast": {
+          "winChanceDelta": 0
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "goldDelta": 350,
+        "fameDelta": 6,
+        "reputationDelta": 3,
+        "reputationFaction": "golden_lotus",
+        "countersDelta": {
+          "gambles_won": 1
+        },
+        "narrative": {
+          "en": "Sweet wine, every drop. The feast master's smile freezes — then he bows. 'The fates favor bold guests.' A purse appears beside your cup, and the hall drinks to your nerve.",
+          "es": "Vino dulce, hasta la última gota. La sonrisa del maestro de la fiesta se congela — luego se inclina. 'Los hados favorecen a los invitados audaces.' Una bolsa aparece junto a tu copa, y el salón brinda por tu coraje."
+        }
+      },
+      "success": {
+        "goldDelta": 120,
+        "countersDelta": {
+          "gambles_won": 1
+        },
+        "narrative": {
+          "en": "Your cup holds wine — thin, but drinkable. The feast master nods once, disappointed you survived his joke. You pocket the small prize.",
+          "es": "Tu copa tiene vino — flojo, pero bebible. El maestro de la fiesta asiente una vez, decepcionado de que sobrevivieras a su broma. Guardás el premio pequeño."
+        }
+      },
+      "partial": {
+        "goldDelta": 20,
+        "narrative": {
+          "en": "The wine is vinegar-sweet and your throat burns politely. A consolation coin lands on the table with a sound like pity.",
+          "es": "El vino es agridulce y tu garganta arde con cortesía. Una moneda de consolación aterriza en la mesa con un sonido parecido a la lástima."
+        }
+      },
+      "fail": {
+        "goldDelta": -60,
+        "fameDelta": -2,
+        "liabilityDelta": 5,
+        "narrative": {
+          "en": "Something bites, and hard. The hall's laughter rings in your ears as you're helped — gently, but publicly — to a chair. The feast master files your face away for next season.",
+          "es": "Algo muerde, y fuerte. La risa del salón resuena en tus oídos mientras te ayudan — con suavidad, pero en público — a llegar a una silla. El maestro de la fiesta archiva tu cara para la próxima temporada."
+        }
+      }
+    }
+  },
+  {
+    "id": "eagle_eye",
+    "type": "minigame",
+    "subtype": "archery",
+    "minAge": 14,
+    "maxAge": 99,
+    "weight": 5,
+    "primaryStat": "dexterity",
+    "narrative": {
+      "en": "The fair's marksman raises the bet: a coin balanced on a post at fifty paces. 'Hit the coin and keep it. Miss, and you buy my supper.' The wind whispers between you and the target.",
+      "es": "El tirador de la feria sube la apuesta: una moneda en equilibrio sobre un poste a cincuenta pasos. 'Dale a la moneda y quedátela. Si fallás, me pagás la cena.' El viento susurra entre vos y el blanco."
+    },
+    "cards": [
+      {
+        "id": "steady_breath",
+        "icon": "wind",
+        "label": {
+          "en": "Breathe and steady the shot",
+          "es": "Respirar y estabilizar el tiro"
+        }
+      },
+      {
+        "id": "judge_distance",
+        "icon": "ruler",
+        "label": {
+          "en": "Judge the distance precisely",
+          "es": "Calcular la distancia con precisión"
+        }
+      },
+      {
+        "id": "wind_compensation",
+        "icon": "navigation",
+        "label": {
+          "en": "Compensate for the wind",
+          "es": "Compensar el viento"
+        }
+      },
+      {
+        "id": "pack_up",
+        "icon": "door-open",
+        "label": {
+          "en": "Decline and keep your coin",
+          "es": "Declinar y guardar tu moneda"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.42,
+      "statInfluence": {
+        "dexterity": 0.015
+      },
+      "cardModifiers": {
+        "wind_compensation": {
+          "winChanceDelta": 0.08,
+          "critChanceDelta": 0.04
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "dexterity": 2
+        },
+        "goldDelta": 160,
+        "fameDelta": 5,
+        "countersDelta": {
+          "archery_won": 1,
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "The arrow splits the coin clean off the post. The marksman blinks, then hands you the whole purse with a slow clap. The fair will talk about this one for years.",
+          "es": "La flecha parte la moneda y la saca del poste. El tirador parpadea, y después te entrega toda la bolsa con un aplauso lento. En la feria hablarán de esto por años."
+        }
+      },
+      "success": {
+        "goldDelta": 60,
+        "fameDelta": 2,
+        "countersDelta": {
+          "archery_won": 1
+        },
+        "narrative": {
+          "en": "The shot clips the post and sends the coin spinning into the grass. Close counts in this game — the marksman pays out with a grumble.",
+          "es": "El disparo roza el poste y manda la moneda a girar por el pasto. Lo cercano cuenta en este juego — el tirador paga refunfuñando."
+        }
+      },
+      "partial": {
+        "fameDelta": -1,
+        "countersReset": ["archery_streak"],
+        "narrative": {
+          "en": "The arrow thuds a hand's width wide. The marksman clucks and reclaims the coin with a theatrical sigh.",
+          "es": "La flecha se clava a un palmo del blanco. El tirador chasquea la lengua y recupera la moneda con un suspiro teatral."
+        }
+      },
+      "fail": {
+        "goldDelta": -15,
+        "fameDelta": -1,
+        "countersReset": ["archery_streak"],
+        "narrative": {
+          "en": "Your shot goes wide and nearly hits the pie stall. You pay for the marksman's supper and a pie, to smooth things over.",
+          "es": "Tu tiro se va ancho y casi le da al puesto de tartas. Pagás la cena del tirador y una tarta, para suavizar las cosas."
+        }
+      }
+    }
+  },
+  {
+    "id": "bridge_builder",
+    "type": "minigame",
+    "subtype": "smithing",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "primaryStat": "intelligence",
+    "narrative": {
+      "en": "The spring flood took the ford, and the guilds have made a wager: first to throw a sound bridge across the gap wins the season's contract. Your crew looks to you for the plan.",
+      "es": "La crecida de primavera se llevó el vado, y los gremios hicieron una apuesta: el primero en tender un puente sólido sobre el hueco gana el contrato de la temporada. Tu cuadrilla espera tu plan."
+    },
+    "cards": [
+      {
+        "id": "measure_span",
+        "icon": "ruler",
+        "label": {
+          "en": "Measure the span twice",
+          "es": "Medir el claro dos veces"
+        }
+      },
+      {
+        "id": "bind_joints",
+        "icon": "layers",
+        "label": {
+          "en": "Bind the joints with iron",
+          "es": "Unir las juntas con hierro"
+        }
+      },
+      {
+        "id": "test_load",
+        "icon": "weight",
+        "label": {
+          "en": "Test the load before crossing",
+          "es": "Probar la carga antes de cruzar"
+        }
+      },
+      {
+        "id": "reinforce_now",
+        "icon": "shield",
+        "label": {
+          "en": "Reinforce before the deadline",
+          "es": "Reforzar antes del plazo"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.42,
+      "statInfluence": {
+        "intelligence": 0.012,
+        "strength": 0.005
+      },
+      "cardModifiers": {
+        "bind_joints": {
+          "winChanceDelta": 0.08
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "goldDelta": 200,
+        "fameDelta": 5,
+        "reputationDelta": 3,
+        "reputationFaction": "ironhold",
+        "countersDelta": {
+          "smithing_won": 1,
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "The bridge holds a loaded wagon and a marching song. The rival guild's foreman shakes your hand across the span — the contract, and the respect, are yours.",
+          "es": "El puente aguanta un carro cargado y una canción de marcha. El capataz del gremio rival te estrecha la mano en el centro del tramo — el contrato, y el respeto, son tuyos."
+        }
+      },
+      "success": {
+        "goldDelta": 80,
+        "fameDelta": 2,
+        "reputationDelta": 1,
+        "reputationFaction": "ironhold",
+        "countersDelta": {
+          "smithing_won": 1
+        },
+        "narrative": {
+          "en": "Your bridge stands, slightly crooked and entirely functional. The guilds pay out and promise to never mention the wobble.",
+          "es": "Tu puente se mantiene, levemente torcido y totalmente funcional. Los gremios pagan y prometen no mencionar jamás el bamboleo."
+        }
+      },
+      "partial": {
+        "goldDelta": 20,
+        "countersReset": ["smithing_streak"],
+        "narrative": {
+          "en": "The bridge sags in the middle but survives inspection. Half contract, half apology — you take what they give and call it a draw.",
+          "es": "El puente se hunde en el medio pero sobrevive a la inspección. Medio contrato, media disculpa — tomás lo que dan y lo llamás empate."
+        }
+      },
+      "fail": {
+        "goldDelta": -20,
+        "healthDelta": -5,
+        "countersReset": ["smithing_streak"],
+        "narrative": {
+          "en": "The span collapses with a groan and a splash. You fish your hat out of the river as the rival guild claps slowly from the far bank.",
+          "es": "El tramo se derrumba con un gemido y un chapuzón. Sacás tu sombrero del río mientras el gremio rival aplaude despacio desde la orilla opuesta."
+        }
+      }
+    }
+  },
+  {
+    "id": "royal_audience",
+    "type": "minigame",
+    "subtype": "court",
+    "minAge": 18,
+    "maxAge": 99,
+    "weight": 6,
+    "primaryStat": "charisma",
+    "narrative": {
+      "en": "The throne room stretches a hundred marble steps to the Crown. Every petition today has failed. The seneschal calls your name — and the whole court turns to watch.",
+      "es": "La sala del trono se extiende cien escalones de mármol hasta la Corona. Toda petición de hoy ha fallado. El senescal pronuncia tu nombre — y toda la corte se gira para mirar."
+    },
+    "cards": [
+      {
+        "id": "bow_low",
+        "icon": "crown",
+        "label": {
+          "en": "Bow low and speak with deference",
+          "es": "Inclinarte profundo y hablar con deferencia"
+        }
+      },
+      {
+        "id": "speak_plain",
+        "icon": "message-circle",
+        "label": {
+          "en": "Speak plainly and without ornament",
+          "es": "Hablar claro y sin adornos"
+        }
+      },
+      {
+        "id": "present_boon",
+        "icon": "gift",
+        "label": {
+          "en": "Present a boon for the Crown",
+          "es": "Presentar un don para la Corona"
+        }
+      },
+      {
+        "id": "withdraw_gracefully",
+        "icon": "door-open",
+        "label": {
+          "en": "Withdraw before the question",
+          "es": "Retirarte antes de la pregunta"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.4,
+      "statInfluence": {
+        "charisma": 0.012,
+        "intelligence": 0.005
+      },
+      "cardModifiers": {
+        "present_boon": {
+          "winChanceDelta": 0.1
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "charisma": 2
+        },
+        "goldDelta": 250,
+        "fameDelta": 6,
+        "reputationDelta": 4,
+        "reputationFaction": "crownguard",
+        "countersDelta": {
+          "courtly_won": 1,
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "The Crown sets down the petition and laughs — a real laugh, the kind the court hasn't heard in a season. Your request is granted, with interest. The court files your name under 'worth watching.'",
+          "es": "La Corona deja la petición y se ríe — una risa real, de las que la corte no escuchaba en una temporada. Tu pedido es concedido, con intereses. La corte archiva tu nombre bajo 'vale la pena observar.'"
+        }
+      },
+      "success": {
+        "goldDelta": 90,
+        "fameDelta": 3,
+        "reputationDelta": 2,
+        "reputationFaction": "crownguard",
+        "countersDelta": {
+          "courtly_won": 1
+        },
+        "narrative": {
+          "en": "The Crown nods once, and the seal comes down on your petition. A measured victory — but the first granted today, and everyone noticed.",
+          "es": "La Corona asiente una vez, y el sello cae sobre tu petición. Una victoria mesurada — pero la primera concedida hoy, y todos lo notaron."
+        }
+      },
+      "partial": {
+        "goldDelta": 20,
+        "reputationDelta": -1,
+        "reputationFaction": "crownguard",
+        "countersReset": ["courtly_streak"],
+        "narrative": {
+          "en": "Your words land a half-beat late and the Crown's attention wanders. A minor concession is tossed your way like a coin to a street singer.",
+          "es": "Tus palabras llegan medio tiempo tarde y la atención de la Corona se va. Te tiran una concesión menor como una moneda a un cantor callejero."
+        }
+      },
+      "fail": {
+        "fameDelta": -2,
+        "reputationDelta": -3,
+        "reputationFaction": "crownguard",
+        "countersReset": ["courtly_streak"],
+        "narrative": {
+          "en": "You fumble the honorific and the Crown's gaze goes flat. The petition is denied without a second glance, and the court's whispers follow you down the marble steps.",
+          "es": "Tropezás con el tratamiento y la mirada de la Corona se aplana. La petición es negada sin un segundo vistazo, y los susurros de la corte te siguen escalones abajo."
+        }
+      }
+    }
+  },
+  {
+    "id": "desert_survival",
+    "type": "minigame",
+    "subtype": "survival",
+    "minAge": 14,
+    "maxAge": 99,
+    "weight": 6,
+    "primaryStat": "constitution",
+    "narrative": {
+      "en": "The dunes stretch to a horizon that never arrives. Your water skin hangs half-empty, and the sun is a nail in the sky. The desert keeps a ledger, and it doesn't balance for the careless.",
+      "es": "Las dunas se extienden hasta un horizonte que nunca llega. Tu odre cuelga medio vacío, y el sol es un clavo en el cielo. El desierto lleva un libro de cuentas, y no cuadra para los descuidados."
+    },
+    "cards": [
+      {
+        "id": "find_shade",
+        "icon": "tent",
+        "label": {
+          "en": "Find shade and wait out the heat",
+          "es": "Buscar sombra y esperar a que pase el calor"
+        }
+      },
+      {
+        "id": "ration_water",
+        "icon": "droplets",
+        "label": {
+          "en": "Ration the water to sips",
+          "es": "Racionar el agua en sorbos"
+        }
+      },
+      {
+        "id": "signal_ridgeline",
+        "icon": "binoculars",
+        "label": {
+          "en": "Climb and signal from the ridge",
+          "es": "Trepar y hacer señales desde la cresta"
+        }
+      },
+      {
+        "id": "night_walk",
+        "icon": "moon",
+        "label": {
+          "en": "Walk by night, rest by day",
+          "es": "Caminar de noche, descansar de día"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.42,
+      "statInfluence": {
+        "constitution": 0.012,
+        "intelligence": 0.005
+      },
+      "cardModifiers": {
+        "find_shade": {
+          "winChanceDelta": 0.08
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "constitution": 2
+        },
+        "goldDelta": 60,
+        "fameDelta": 4,
+        "countersDelta": {
+          "survivals_won": 1,
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "You read the desert like a seasoned trader and walk out of the waste with water to spare and a route worth selling. A caravan shares its fire and its tales with you that night.",
+          "es": "Leés el desierto como un comerciante curtido y salís del yermo con agua de sobra y una ruta que vale vender. Una caravana comparte su fuego y sus historias con vos esa noche."
+        }
+      },
+      "success": {
+        "fameDelta": 1,
+        "goldDelta": 20,
+        "countersDelta": {
+          "survivals_won": 1
+        },
+        "narrative": {
+          "en": "You reach the well by dusk, dry-lipped but upright. The desert let you pass, and you mark the route in your memory like a coin in a purse.",
+          "es": "Llegás al pozo al anochecer, con los labios secos pero de pie. El desierto te dejó pasar, y marcás la ruta en tu memoria como una moneda en la bolsa."
+        }
+      },
+      "partial": {
+        "healthDelta": -8,
+        "countersReset": ["survival_streak"],
+        "narrative": {
+          "en": "You stagger out half-dehydrated, guided by a scavenger's mercy and a half-remembered map. The desert collects its toll in days of recovery.",
+          "es": "Salís tambaleante y medio deshidratado, guiado por la piedad de un buscador y un mapa medio recordado. El desierto cobra su peaje en días de recuperación."
+        }
+      },
+      "fail": {
+        "healthDelta": -15,
+        "countersReset": ["survival_streak"],
+        "narrative": {
+          "en": "The sun wins. You collapse at the base of a dune and wake in a trader's cart, saved by strangers who charge you for the rescue with interest.",
+          "es": "El sol gana. Te desplomás al pie de una duna y despertás en un carro de comerciantes, salvado por desconocidos que te cobran el rescate con intereses."
+        }
+      }
+    }
+  },
+  {
+    "id": "night_chase",
+    "type": "minigame",
+    "subtype": "chase",
+    "minAge": 14,
+    "maxAge": 99,
+    "weight": 6,
+    "primaryStat": "dexterity",
+    "narrative": {
+      "en": "The courier's satchel — with your payment inside — has just been snatched and the thief is already three rooftops gone. The night market below is a maze of stalls, carts, and candles.",
+      "es": "La bolsa del mensajero — con tu pago adentro — acaba de ser robada y el ladrón ya va tres techos adelante. El mercado nocturno de abajo es un laberinto de puestos, carros y velas."
+    },
+    "cards": [
+      {
+        "id": "follow_rooftops",
+        "icon": "building-2",
+        "label": {
+          "en": "Pursue across the rooftops",
+          "es": "Perseguir por los techos"
+        }
+      },
+      {
+        "id": "cut_through_square",
+        "icon": "person-running",
+        "label": {
+          "en": "Cut through the square below",
+          "es": "Atajar por la plaza de abajo"
+        }
+      },
+      {
+        "id": "lose_in_crowd",
+        "icon": "shopping-basket",
+        "label": {
+          "en": "Blend into the crowd and stalk",
+          "es": "Fundirte en la multitud y seguir"
+        }
+      },
+      {
+        "id": "give_up",
+        "icon": "door-open",
+        "label": {
+          "en": "Let it go — not worth the chase",
+          "es": "Dejarlo ir — no vale la persecución"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.45,
+      "statInfluence": {
+        "dexterity": 0.015
+      },
+      "cardModifiers": {
+        "follow_rooftops": {
+          "winChanceDelta": 0.08
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "dexterity": 2
+        },
+        "goldDelta": 180,
+        "fameDelta": 5,
+        "countersDelta": {
+          "chases_won": 1,
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "You close the gap in two leaps and take the satchel back with the thief's hand still on it. The market applauds from below, and your payment is returned with a bonus for the show.",
+          "es": "Cerrás la distancia en dos saltos y recuperás la bolsa con la mano del ladrón todavía encima. El mercado aplaude desde abajo, y tu pago vuelve con un extra por el espectáculo."
+        }
+      },
+      "success": {
+        "goldDelta": 70,
+        "fameDelta": 2,
+        "countersDelta": {
+          "chases_won": 1
+        },
+        "narrative": {
+          "en": "You corner the thief at a dead-end alley behind the bakery. The satchel drops, the thief scrambles, and the payment is yours again.",
+          "es": "Acorralás al ladrón en un callejón sin salida detrás de la panadería. La bolsa cae, el ladrón trepa, y el pago vuelve a ser tuyo."
+        }
+      },
+      "partial": {
+        "healthDelta": -5,
+        "countersReset": ["chase_streak"],
+        "narrative": {
+          "en": "You catch a heel on a gutter and lose a step. The thief vanishes into a tavern's back door, and the satchel goes with them.",
+          "es": "Se te traba el talón en un canal y perdés un paso. El ladrón desaparece por la puerta trasera de una taberna, y la bolsa se va con él."
+        }
+      },
+      "fail": {
+        "fameDelta": -2,
+        "countersReset": ["chase_streak"],
+        "narrative": {
+          "en": "The thief knows this quarter better than you know your own name. They melt into the dark, and your payment is a story about the one that got away.",
+          "es": "El ladrón conoce este barrio mejor que vos tu propio nombre. Se funde en la oscuridad, y tu pago es una historia sobre el que se escapó."
+        }
+      }
+    }
+  },
+  {
+    "id": "bard_duel_song",
+    "type": "minigame",
+    "subtype": "court",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "primaryStat": "charisma",
+    "narrative": {
+      "en": "The rival bard strikes a chord that silences the hall and offers a challenge: 'Two verses, one song, and the truth of who sings it best.' The lute passes to you. The room leans in.",
+      "es": "La bardo rival toca un acorde que silencia el salón y lanza el desafío: 'Dos versos, una canción, y que la verdad diga quién la canta mejor.' El laúd pasa a tus manos. La sala se inclina."
+    },
+    "cards": [
+      {
+        "id": "weave_verse",
+        "icon": "scroll-text",
+        "label": {
+          "en": "Weave a verse of your own road",
+          "es": "Tejer un verso de tu propio camino"
+        }
+      },
+      {
+        "id": "drop_cadence",
+        "icon": "music",
+        "label": {
+          "en": "Drop the cadence and hold the note",
+          "es": "Bajar la cadencia y sostener la nota"
+        }
+      },
+      {
+        "id": "counter_rhyme",
+        "icon": "message-circle",
+        "label": {
+          "en": "Answer their rhyme with a better one",
+          "es": "Responder su rima con una mejor"
+        }
+      },
+      {
+        "id": "step_back",
+        "icon": "door-open",
+        "label": {
+          "en": "Concede the stage gracefully",
+          "es": "Ceder el escenario con elegancia"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.42,
+      "statInfluence": {
+        "charisma": 0.012,
+        "intelligence": 0.005
+      },
+      "cardModifiers": {
+        "counter_rhyme": {
+          "winChanceDelta": 0.08,
+          "critChanceDelta": 0.05
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "charisma": 2
+        },
+        "goldDelta": 100,
+        "fameDelta": 6,
+        "countersDelta": {
+          "courtly_won": 1,
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "Your closing verse lands like a thunderclap, and the rival bard actually bows. The hall is yours — they'll sing your song, not hers, for the rest of the season.",
+          "es": "Tu verso final aterriza como un trueno, y la bardo rival se inclina de verdad. El salón es tuyo — cantarán tu canción, no la de ella, por el resto de la temporada."
+        }
+      },
+      "success": {
+        "goldDelta": 40,
+        "fameDelta": 2,
+        "countersDelta": {
+          "courtly_won": 1
+        },
+        "narrative": {
+          "en": "The hall claps harder for you than for her, and the night's coin purse finds your belt. A clean win, sung on pitch.",
+          "es": "El salón aplaude más fuerte para vos que para ella, y la bolsa de la noche encuentra tu cinturón. Una victoria limpia, cantada en tono."
+        }
+      },
+      "partial": {
+        "fameDelta": -1,
+        "countersReset": ["courtly_streak"],
+        "narrative": {
+          "en": "The duel ends in a draw by applause — close enough that nobody can say who won. The hall drinks to both of you, which is its own kind of victory.",
+          "es": "El duelo termina en empate por aplausos — lo bastante cerca para que nadie pueda decir quién ganó. El salón bebe por los dos, que es su propia clase de victoria."
+        }
+      },
+      "fail": {
+        "fameDelta": -3,
+        "countersReset": ["courtly_streak"],
+        "narrative": {
+          "en": "Your voice cracks on the high note and the crowd's sympathy is worse than mockery. The rival bard graciously offers a lesson — which stings more than defeat.",
+          "es": "Tu voz se quiebra en la nota alta y la lástima de la multitud es peor que la burla. La bardo rival ofrece con elegancia una lección — que duele más que la derrota."
+        }
+      }
+    }
+  },
+  {
+    "id": "mushroom_foraging",
+    "type": "minigame",
+    "subtype": "memory_match",
+    "minAge": 14,
+    "maxAge": 99,
+    "weight": 5,
+    "primaryStat": "intelligence",
+    "narrative": {
+      "en": "The apothecary's list names six mushrooms: three priceless, three fatal, and all of them look identical in the twilight. The forest floor is a test you must not fail.",
+      "es": "La lista del boticario nombra seis hongos: tres invaluables, tres fatales, y todos se ven idénticos al crepúsculo. El suelo del bosque es una prueba que no podés fallar."
+    },
+    "cards": [
+      {
+        "id": "study_patch",
+        "icon": "eye",
+        "label": {
+          "en": "Study the patch before picking",
+          "es": "Estudiar el sector antes de cosechar"
+        }
+      },
+      {
+        "id": "compare_gills",
+        "icon": "layers",
+        "label": {
+          "en": "Compare gills and stems closely",
+          "es": "Comparar láminas y tallos de cerca"
+        }
+      },
+      {
+        "id": "note_markings",
+        "icon": "scroll-text",
+        "label": {
+          "en": "Note the markings on each cap",
+          "es": "Anotar las marcas de cada sombrerillo"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "memory_match",
+      "baseWinChance": 0.38,
+      "statInfluence": {
+        "intelligence": 0.012,
+        "dexterity": 0.004
+      },
+      "statThreshold": 20,
+      "bonusLives": 1,
+      "cardModifiers": {
+        "note_markings": {
+          "winChanceDelta": 0.06,
+          "critChanceDelta": 0.04
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "intelligence": 3
+        },
+        "goldDelta": 120,
+        "fameDelta": 3,
+        "countersDelta": {
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "Every cap sorted, every pair right. The apothecary pays double and asks where you trained — you claim a very patient mushroom.",
+          "es": "Cada sombrerillo clasificado, cada par correcto. El boticario paga el doble y pregunta dónde entrenaste — decís que con un hongo muy paciente."
+        }
+      },
+      "success": {
+        "goldDelta": 50,
+        "countersDelta": {
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "You fill the basket with the right pairs and leave the fatal ones to the twilight. The apothecary pays the listed price with a nod.",
+          "es": "Llenás la canasta con los pares correctos y dejás los fatales al crepúsculo. El boticario paga el precio de la lista con un asentimiento."
+        }
+      },
+      "partial": {
+        "healthDelta": -4,
+        "narrative": {
+          "en": "Two pairs slip past you in the gloom. The basket holds enough to pay, but you spend the night watching your fingers for tingles.",
+          "es": "Dos pares se te escapan en la penumbra. La canasta guarda lo suficiente para pagar, pero pasás la noche vigilando tus dedos por si hormiguean."
+        }
+      },
+      "fail": {
+        "healthDelta": -8,
+        "goldDelta": -10,
+        "narrative": {
+          "en": "A fatal pair sneaks into the basket. The apothecary's face goes gray as he identifies it, and you spend the night in his care, learning the mushroom's name by heart.",
+          "es": "Un par fatal se cuela en la canasta. La cara del boticario se pone gris al identificarlo, y pasás la noche bajo su cuidado, aprendiéndote el nombre del hongo de memoria."
+        }
+      }
+    }
+  },
+  {
+    "id": "river_race",
+    "type": "minigame",
+    "subtype": "timing_bar",
+    "minAge": 14,
+    "maxAge": 99,
+    "weight": 5,
+    "primaryStat": "dexterity",
+    "narrative": {
+      "en": "Two rafts at the head of the rapids, a flagman with a horn, and a prize purse on the far bank. The river reads nobody's intentions — it only keeps time.",
+      "es": "Dos balsas en la cabecera de los rápidos, un abanderado con cuerno y una bolsa de premio en la orilla opuesta. El río no lee las intenciones de nadie — solo lleva el tiempo."
+    },
+    "cards": [
+      {
+        "id": "paddle_hard",
+        "icon": "waves",
+        "label": {
+          "en": "Paddle hard through the channel",
+          "es": "Remar fuerte por el canal"
+        }
+      },
+      {
+        "id": "read_rapids",
+        "icon": "eye",
+        "label": {
+          "en": "Read the rapids ahead",
+          "es": "Leer los rápidos que vienen"
+        }
+      },
+      {
+        "id": "hug_banks",
+        "icon": "navigation",
+        "label": {
+          "en": "Hug the bank and ride the eddies",
+          "es": "Pegarte a la orilla y montar los remolinos"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "timing_bar",
+      "baseWinChance": 0.35,
+      "statInfluence": {
+        "dexterity": 0.015,
+        "constitution": 0.005
+      },
+      "statThreshold": 20,
+      "cardModifiers": {
+        "read_rapids": {
+          "winChanceDelta": 0.08,
+          "critChanceDelta": 0.03
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "dexterity": 3
+        },
+        "goldDelta": 130,
+        "fameDelta": 4,
+        "countersDelta": {
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "You thread the rapids like a needle, hit the eddy at the perfect instant, and beach the raft a full length ahead. The flagman waves the purse your way.",
+          "es": "Enhebrás los rápidos como una aguja, entrás al remolino en el instante perfecto y varás la balsa un largo entero adelante. El abanderado te agita la bolsa en tu dirección."
+        }
+      },
+      "success": {
+        "statDeltas": {
+          "dexterity": 1
+        },
+        "goldDelta": 50,
+        "fameDelta": 2,
+        "countersDelta": {
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "You cross clean, a half-length ahead and fully dry — a feat the old riverhands discuss with grudging respect at the tavern.",
+          "es": "Cruzas limpio, medio largo adelante y completamente seco — una hazaña que los viejos del río comentan con respeto a regañadientes en la taberna."
+        }
+      },
+      "partial": {
+        "healthDelta": -6,
+        "goldDelta": -10,
+        "narrative": {
+          "en": "A wave slaps you off balance and you finish second, soaked and spitting water. The purse goes to the other raft — but you keep your pride, mostly.",
+          "es": "Una ola te saca del equilibrio y terminás segundo, empapado y escupiendo agua. La bolsa va para la otra balsa — pero conservás el orgullo, más o menos."
+        }
+      },
+      "fail": {
+        "healthDelta": -12,
+        "goldDelta": -25,
+        "narrative": {
+          "en": "The raft flips mid-rapids and the river takes your oar, your purse, and your dignity. You drag yourself to the bank and watch the winner collect.",
+          "es": "La balsa se da vuelta a mitad de los rápidos y el río se lleva tu remo, tu bolsa y tu dignidad. Te arrastrás hasta la orilla y mirás al ganador cobrar."
+        }
+      }
+    }
+  },
+  {
+    "id": "lockpicking_contest",
+    "type": "minigame",
+    "subtype": "heist",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "primaryStat": "dexterity",
+    "narrative": {
+      "en": "The Thieves' Guild is holding a quiet contest in a candlelit cellar: five locks on a bench, each one harder than the last. 'Open three, and we talk. Open all five, and we listen.'",
+      "es": "El Gremio de Ladrones organiza un concurso silencioso en un sótano iluminado por velas: cinco cerraduras en un banco, cada una más difícil que la anterior. 'Abrí tres, y hablamos. Abrí las cinco, y escuchamos.'"
+    },
+    "cards": [
+      {
+        "id": "tension_rake",
+        "icon": "lock",
+        "label": {
+          "en": "Rake the easy locks fast",
+          "es": "Forzar las cerraduras fáciles rápido"
+        }
+      },
+      {
+        "id": "listen_pins",
+        "icon": "ear",
+        "label": {
+          "en": "Listen for the pins' fall",
+          "es": "Escuchar caer los pistones"
+        }
+      },
+      {
+        "id": "bypass_wax",
+        "icon": "flask-conical",
+        "label": {
+          "en": "Bypass the last lock with wax",
+          "es": "Bypassear la última cerradura con cera"
+        }
+      },
+      {
+        "id": "walk_away",
+        "icon": "door-open",
+        "label": {
+          "en": "Take the offer and walk away",
+          "es": "Tomar la oferta y retirarte"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.4,
+      "statInfluence": {
+        "dexterity": 0.012,
+        "intelligence": 0.006
+      },
+      "cardModifiers": {
+        "listen_pins": {
+          "winChanceDelta": 0.09,
+          "critChanceDelta": 0.04
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "dexterity": 2
+        },
+        "goldDelta": 180,
+        "fameDelta": 4,
+        "countersDelta": {
+          "heists_won": 1,
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "All five locks fall open in a single quiet sweep. The Guild Master pushes a pouch across the bench and says three words: 'We are listening.'",
+          "es": "Las cinco cerraduras se abren en una sola pasada silenciosa. La Maestra del Gremio desliza una bolsa por el banco y dice tres palabras: 'Estamos escuchando.'"
+        }
+      },
+      "success": {
+        "goldDelta": 70,
+        "fameDelta": 1,
+        "countersDelta": {
+          "heists_won": 1
+        },
+        "narrative": {
+          "en": "Three locks open clean, and the fourth takes a long minute of sweat. The Guild pays the prize and files your name where names are kept.",
+          "es": "Tres cerraduras se abren limpias, y la cuarta toma un minuto largo de transpiración. El Gremio paga el premio y archiva tu nombre donde se guardan los nombres."
+        }
+      },
+      "partial": {
+        "goldDelta": 15,
+        "countersReset": ["heist_streak"],
+        "narrative": {
+          "en": "The third lock defeats you. The Guild pays a consolation coin and watches you leave with an expression that says they've seen your face now.",
+          "es": "La tercera cerradura te vence. El Gremio paga una moneda de consolación y te ve partir con una expresión que dice que ya vieron tu cara."
+        }
+      },
+      "fail": {
+        "goldDelta": -30,
+        "liabilityDelta": 6,
+        "countersReset": ["heist_streak"],
+        "narrative": {
+          "en": "The second lock springs a trap — a puff of red dye and a bell that rings through the cellar. You leave marked, stained, and owing the Guild a favor.",
+          "es": "La segunda cerradura activa una trampa — una bocanada de tinte rojo y una campana que resuena por el sótano. Partís marcado, teñido y debiéndole un favor al Gremio."
+        }
+      }
+    }
+  },
+  {
+    "id": "feast_of_strength",
+    "type": "minigame",
+    "subtype": "drinking",
+    "minAge": 18,
+    "maxAge": 99,
+    "weight": 6,
+    "primaryStat": "constitution",
+    "narrative": {
+      "en": "The harvest feast's strongest drinker is crowned at midnight, and the current champion — a mountain of a woman — eyes you across the table. 'Stein's full. The question is whether you are.'",
+      "es": "A la bebedora más fuerte de la fiesta de la cosecha se la corona a la medianoche, y la campeona actual — una mujer montañosa — te mira desde el otro lado de la mesa. 'La jarra está llena. La pregunta es si vos también.'"
+    },
+    "cards": [
+      {
+        "id": "match_mug",
+        "icon": "beer",
+        "label": {
+          "en": "Match her mug for mug",
+          "es": "Igualar su jarra por jarra"
+        }
+      },
+      {
+        "id": "spin_tale",
+        "icon": "message-circle",
+        "label": {
+          "en": "Spin a tale to slow her pace",
+          "es": "Tejer un relato para frenar su ritmo"
+        }
+      },
+      {
+        "id": "pour_heavy",
+        "icon": "hand",
+        "label": {
+          "en": "Pour yours heavy and hers light",
+          "es": "Servir la tuya llena y la suya flaca"
+        }
+      },
+      {
+        "id": "bow_out",
+        "icon": "door-open",
+        "label": {
+          "en": "Bow out before the second stein",
+          "es": "Retirarte antes del segundo jarro"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.42,
+      "statInfluence": {
+        "constitution": 0.012,
+        "charisma": 0.004
+      },
+      "cardModifiers": {
+        "spin_tale": {
+          "winChanceDelta": 0.07
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "constitution": 2
+        },
+        "goldDelta": 90,
+        "fameDelta": 4,
+        "countersDelta": {
+          "drinks_won": 1,
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "She sets down the stein at the seventh round and salutes you with a grin wider than the table. The harvest crown goes on your head, and the feast roars.",
+          "es": "Baja la jarra en la séptima ronda y te saluda con una sonrisa más ancha que la mesa. La corona de la cosecha va a tu cabeza, y la fiesta ruge."
+        }
+      },
+      "success": {
+        "goldDelta": 35,
+        "fameDelta": 2,
+        "countersDelta": {
+          "drinks_won": 1
+        },
+        "narrative": {
+          "en": "You outlast her by a single stein and take the crown with a bow. The crowd carries you around the fire once, out of pure respect.",
+          "es": "La vencés por un solo jarro y tomás la corona con una reverencia. La multitud te da una vuelta alrededor del fuego, por puro respeto."
+        }
+      },
+      "partial": {
+        "goldDelta": -15,
+        "countersReset": ["drinking_streak"],
+        "narrative": {
+          "en": "The seventh stein does you in. You finish, barely, and the champion pats your shoulder like a brother — the crown stays hers, the story stays yours.",
+          "es": "El séptimo jarro te vence. Terminás, apenas, y la campeona te palmea el hombro como a un hermano — la corona sigue suya, la historia sigue tuya."
+        }
+      },
+      "fail": {
+        "goldDelta": -25,
+        "fameDelta": -1,
+        "countersReset": ["drinking_streak"],
+        "narrative": {
+          "en": "The feast spins sideways. You wake by the pigpen with a mouthful of hay and a headache the size of the harvest moon.",
+          "es": "La fiesta gira de costado. Despertás junto a la pocilga con un bocado de paja y un dolor de cabeza del tamaño de la luna de la cosecha."
         }
       }
     }

@@ -69,9 +69,7 @@
         "countersDelta": {
           "fights_fled": 1
         },
-        "countersReset": [
-          "never_fled_flag"
-        ],
+        "countersReset": ["never_fled_flag"],
         "narrative": {
           "en": "You drop a purse to slow them and vanish into the trees.",
           "es": "Soltás una bolsa para frenarlos y desaparecés entre los árboles."
@@ -366,6 +364,436 @@
         "narrative": {
           "en": "You unburden yourself to a stranger on a dark road. They listen to every word, then nod. 'The truth is a lighter load — but it travels.' By morning, half the region has heard your story.",
           "es": "Le contás todo a un desconocido en un camino oscuro. Escuchan cada palabra y luego asienten. 'La verdad es una carga más liviana — pero viaja.' Para la mañana, media región ha oído tu historia."
+        }
+      }
+    ]
+  },
+  {
+    "id": "road_caravan_ambush",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 8,
+    "narrative": {
+      "en": "Bows sing on the ridgeline and arrows rake the caravan ahead of you. A {npcRole} from the guard screams for help as {creatureName} and a dozen raiders pour down the slope.",
+      "es": "Los arcos cantan en la cresta y las flechas barren la caravana frente a vos. Un {npcRole} de la guardia grita pidiendo ayuda mientras {creatureName} y una docena de asaltantes bajan por la ladera."
+    },
+    "choices": [
+      {
+        "id": "charge_in",
+        "label": {
+          "en": "Charge the flank",
+          "es": "Cargar contra el flanco"
+        },
+        "tag": "Aggressive",
+        "rarity": "rare",
+        "requiresStat": {
+          "stat": "strength",
+          "min": 12
+        },
+        "statDeltas": {
+          "strength": 2,
+          "constitution": 1
+        },
+        "goldDelta": 80,
+        "reputationDelta": 3,
+        "reputationFaction": "greywater",
+        "countersDelta": {
+          "battles_won": 1,
+          "lives_saved": 1
+        },
+        "injuryRiskDelta": 0.15,
+        "narrative": {
+          "en": "You hit the raiders' line like a thrown stone. The caravan escapes whole, and the merchants press a purse into your bloodied hands. The road will speak of this.",
+          "es": "Golpeás la línea de asaltantes como una piedra lanzada. La caravana escapa entera, y los mercaderes te meten una bolsa en las manos ensangrentadas. El camino hablará de esto."
+        }
+      },
+      {
+        "id": "loose_arrow",
+        "label": {
+          "en": "Pick them off from cover",
+          "es": "Bajarlos desde la cobertura"
+        },
+        "tag": "Strategic",
+        "rarity": "uncommon",
+        "requiresStat": {
+          "stat": "dexterity",
+          "min": 12
+        },
+        "statDeltas": {
+          "dexterity": 2
+        },
+        "goldDelta": 50,
+        "countersDelta": {
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "Three arrows, three raiders down. The rest break and run. A guard captain nods at you and tosses a coin purse — 'Worth every copper, stranger.'",
+          "es": "Tres flechas, tres asaltantes caídos. El resto se da a la fuga. Un capitán de la guardia asiente hacia vos y te lanza una bolsa — 'Vale cada cobre, forastera.'"
+        }
+      },
+      {
+        "id": "drive_the_wagon",
+        "label": {
+          "en": "Drive the lead wagon to safety",
+          "es": "Llevar la carreta delantera a un lugar seguro"
+        },
+        "tag": "Supportive",
+        "rarity": "common",
+        "statDeltas": {
+          "constitution": 1
+        },
+        "goldDelta": 30,
+        "reputationDelta": 1,
+        "reputationFaction": "greywater",
+        "narrative": {
+          "en": "Whip cracking, you thread the wagon through the chaos. Children safe, goods saved. The merchants' thanks follow you down the road.",
+          "es": "Látigo restallando, enhebrás la carreta entre el caos. Niños a salvo, mercancía salvada. El agradecimiento de los mercaderes te sigue por el camino."
+        }
+      }
+    ]
+  },
+  {
+    "id": "road_waystation_merchant",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 7,
+    "requiresRegion": "vale",
+    "narrative": {
+      "en": "At a waystation near {locationName}, a nervous merchant pulls you aside and shows you a sealed chest. 'Carry this past the border post for me — past the toll-takers who watch everything — and I'll pay you double what the road pays.'",
+      "es": "En una posta cerca de {locationName}, un mercader nervioso te lleva aparte y te muestra un cofre sellado. 'Llevá esto más allá del puesto fronterizo por mí — más allá de los cobradores de peaje que observan todo — y te pago el doble de lo que paga el camino.'"
+    },
+    "choices": [
+      {
+        "id": "take_the_job",
+        "label": {
+          "en": "Take the chest and the coin",
+          "es": "Tomar el cofre y la moneda"
+        },
+        "tag": "Strategic",
+        "rarity": "uncommon",
+        "goldDelta": 120,
+        "liabilityDelta": 6,
+        "statDeltas": {
+          "intelligence": 1
+        },
+        "narrative": {
+          "en": "The chest is heavier than it looks. You get it past the post without a word, and the merchant's relief is worth more than the gold. Whatever was in it, your name is now on it.",
+          "es": "El cofre pesa más de lo que parece. Lo pasás por el puesto sin una palabra, y el alivio del mercader vale más que el oro. Sea lo que sea que había dentro, tu nombre ahora está pegado a él."
+        }
+      },
+      {
+        "id": "refuse",
+        "label": {
+          "en": "Refuse — you don't smuggle for strangers",
+          "es": "Negarte — no contrabandeás para desconocidos"
+        },
+        "tag": "Professional",
+        "rarity": "common",
+        "statDeltas": {
+          "charisma": 1
+        },
+        "narrative": {
+          "en": "The merchant's smile goes brittle. 'Suit yourself.' You watch them find a shabbier traveler with hungrier eyes. The road stays clean — for now.",
+          "es": "La sonrisa del mercader se vuelve frágil. 'Como quieras.' Lo ves encontrar a un viajero más harapiento con ojos más hambrientos. El camino sigue limpio — por ahora."
+        }
+      },
+      {
+        "id": "peek_inside",
+        "label": {
+          "en": "Pry the chest open and take what's inside",
+          "es": "Forzar el cofre y quedarte con lo que hay dentro"
+        },
+        "tag": "Cocky",
+        "rarity": "volatile",
+        "requiresStat": {
+          "stat": "dexterity",
+          "min": 12
+        },
+        "goldDelta": 200,
+        "liabilityDelta": 12,
+        "injuryRiskDelta": 0.1,
+        "statDeltas": {
+          "dexterity": 2
+        },
+        "narrative": {
+          "en": "Inside: stamped bars, more than the merchant's story suggested. You take your share and leave the rest, and the merchant is already gone when the chest is found lighter. Someone, somewhere, will ask questions with your description.",
+          "es": "Adentro: lingotes sellados, más de lo que sugería la historia del mercader. Tomás tu parte y dejás el resto, y el mercader ya se fue cuando encuentran el cofre más liviano. Alguien, en algún lugar, hará preguntas con tu descripción."
+        }
+      }
+    ]
+  },
+  {
+    "id": "road_broken_wagon",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 7,
+    "narrative": {
+      "en": "A wagon lies on its side at {locationName}, its wheel shattered. A {npcRole} named {npcName} kicks the wreckage and swears at the sky. 'Two days to the nearest smith, and a cargo that will not wait.'",
+      "es": "Una carreta yace de costado en {locationName}, con una rueda hecha pedazos. Un {npcRole} llamado {npcName} patea los restos y maldice al cielo. 'Dos días hasta la herrería más cercana, y una carga que no puede esperar.'"
+    },
+    "choices": [
+      {
+        "id": "help_fix",
+        "label": {
+          "en": "Help patch the wheel and get them rolling",
+          "es": "Ayudar a remendar la rueda y ponerlos en marcha"
+        },
+        "tag": "Supportive",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "constitution": 2
+        },
+        "reputationDelta": 2,
+        "reputationFaction": "greywater",
+        "staminaDelta": -15,
+        "countersDelta": {
+          "lives_saved": 1
+        },
+        "narrative": {
+          "en": "You brace the axle with green wood and rope, and the wagon rolls again before sunset. {npcName} presses a coin into your palm and a name into the road's memory.",
+          "es": "Apuntalás el eje con madera verde y soga, y la carreta vuelve a rodar antes del atardecer. {npcName} te mete una moneda en la palma y un nombre en la memoria del camino."
+        }
+      },
+      {
+        "id": "trade_cargo",
+        "label": {
+          "en": "Offer to buy a crate at a discount",
+          "es": "Ofrecer comprar una caja con descuento"
+        },
+        "tag": "Strategic",
+        "rarity": "rare",
+        "goldDelta": -60,
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "narrative": {
+          "en": "You pick the crate with the sturdiest straps and name a price. {npcName} takes it — the load is getting lighter either way. Later, when you open it, the profit is quiet and satisfying.",
+          "es": "Elegís la caja con las correas más firmes y ponés un precio. {npcName} acepta — la carga se aligera de todos modos. Después, cuando la abrís, la ganancia es silenciosa y satisfactoria."
+        }
+      },
+      {
+        "id": "keep_walking",
+        "label": {
+          "en": "Keep walking — not your cargo",
+          "es": "Seguir caminando — no es tu carga"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": {
+          "intelligence": 1
+        },
+        "narrative": {
+          "en": "You pass the wreckage and leave it behind. The road is long, and every stopped traveler is a story that isn't yours. {npcName} watches you go without a word.",
+          "es": "Pasás los restos y los dejás atrás. El camino es largo, y cada viajero detenido es una historia que no es la tuya. {npcName} te mira partir sin decir palabra."
+        }
+      }
+    ]
+  },
+  {
+    "id": "road_holy_procession",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "narrative": {
+      "en": "A Luminari procession blocks the road ahead, banners glowing with soft light. A priest steps forward. 'The light walks this road today, traveler. Kneel and be blessed — or stand and be seen.'",
+      "es": "Una procesión de los Luminari bloquea el camino, con estandartes que brillan con luz suave. Un sacerdote se adelanta. 'La luz camina por este camino hoy, viajera. Arrodillate y recibí la bendición — o quedate de pie y sé vista.'"
+    },
+    "choices": [
+      {
+        "id": "kneel_and_pass",
+        "label": {
+          "en": "Kneel, be blessed, and pass freely",
+          "es": "Arrodillarte, recibir la bendición y pasar libre"
+        },
+        "tag": "Humble",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "charisma": 2
+        },
+        "healthDelta": 5,
+        "reputationDelta": 2,
+        "reputationFaction": "luminari",
+        "narrative": {
+          "en": "The priest lays a warm hand on your brow and speaks words older than the road. You rise lighter, and the procession parts around you like water.",
+          "es": "El sacerdote posa una mano cálida en tu frente y pronuncia palabras más viejas que el camino. Te levantás más liviana, y la procesión se abre a tu alrededor como el agua."
+        }
+      },
+      {
+        "id": "walk_past_politely",
+        "label": {
+          "en": "Walk past with a courteous nod",
+          "es": "Pasar con un asentimiento cortés"
+        },
+        "tag": "Professional",
+        "rarity": "common",
+        "statDeltas": {
+          "intelligence": 1
+        },
+        "narrative": {
+          "en": "You bow your head in courtesy but keep your feet moving. The priest lets you pass without comment. The light does not compel — it only remembers.",
+          "es": "Inclinás la cabeza con cortesía pero no detenés el paso. El sacerdote te deja pasar sin comentarios. La luz no obliga — solo recuerda."
+        }
+      },
+      {
+        "id": "mock_the_faith",
+        "label": {
+          "en": "Mock the procession's pageantry",
+          "es": "Burlarte del boato de la procesión"
+        },
+        "tag": "Cocky",
+        "rarity": "volatile",
+        "statDeltas": {
+          "charisma": 2
+        },
+        "fameDelta": 3,
+        "reputationDelta": -4,
+        "reputationFaction": "luminari",
+        "liabilityDelta": 3,
+        "narrative": {
+          "en": "Your jibe lands and the crowd gasps — some laugh, some glare. The priest's smile does not waver. 'The light forgives, traveler. The faithful remember.' The story of the disrespectful stranger will outrun you.",
+          "es": "Tu pulla aterriza y la multitud jadea — algunos ríen, otros fulminan con la mirada. La sonrisa del sacerdote no titubea. 'La luz perdona, viajera. Los fieles recuerdan.' La historia de la forastera irrespetuosa te alcanzará."
+        }
+      }
+    ]
+  },
+  {
+    "id": "road_wildfire",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "narrative": {
+      "en": "Smoke pours over the ridge and a wall of flame races toward the village below. {creatureName} streams past you in panic. The bell in the village tower begins to ring, frantic and thin.",
+      "es": "El humo se derrama sobre la cresta y una pared de fuego corre hacia la aldea de abajo. {creatureName} pasa a tu lado en estampida. La campana de la torre de la aldea empieza a sonar, frenética y fina."
+    },
+    "choices": [
+      {
+        "id": "raise_alarm",
+        "label": {
+          "en": "Ride ahead and raise the alarm",
+          "es": "Galopar adelante y dar la alarma"
+        },
+        "tag": "Leader",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "charisma": 2
+        },
+        "staminaDelta": -20,
+        "countersDelta": {
+          "lives_saved": 1
+        },
+        "reputationDelta": 3,
+        "reputationFaction": "thornwood",
+        "narrative": {
+          "en": "You beat the fire to the village and the evacuation starts in time. By the time the flames crest the hill, the streets are empty and the bell rings for the saved, not the lost. The Thornwood wardens mark your name.",
+          "es": "Le ganás la carrera al fuego y la evacuación empieza a tiempo. Cuando las llamas coronan la colina, las calles están vacías y la campana suena por los salvados, no por los perdidos. Las guardias de Espinar anotan tu nombre."
+        }
+      },
+      {
+        "id": "fight_fireline",
+        "label": {
+          "en": "Join the fire line and cut the break",
+          "es": "Sumarte a la línea de fuego y cortar el cortafuegos"
+        },
+        "tag": "Aggressive",
+        "rarity": "rare",
+        "requiresStat": {
+          "stat": "constitution",
+          "min": 12
+        },
+        "statDeltas": {
+          "constitution": 3
+        },
+        "healthDelta": -10,
+        "injuryRiskDelta": 0.15,
+        "countersDelta": {
+          "lives_saved": 1
+        },
+        "narrative": {
+          "en": "Axe and ash, you help carve the break that turns the fire's flank. You collapse at the last line, scorched and coughing — but the village stands. They carry you to the well and call you stubborn.",
+          "es": "Hacha y ceniza, ayudás a cavar el cortafuegos que dobla el flanco del incendio. Colapsás en la última línea, chamuscada y tosiendo — pero la aldea sigue en pie. Te llevan al pozo y te llaman testaruda."
+        }
+      },
+      {
+        "id": "take_shortcut",
+        "label": {
+          "en": "Circle around and take the high road",
+          "es": "Dar la vuelta y tomar el camino alto"
+        },
+        "tag": "Strategic",
+        "rarity": "common",
+        "statDeltas": {
+          "dexterity": 1
+        },
+        "narrative": {
+          "en": "The fire is not yours to fight, and the village has its own bell and its own hands. You circle to high ground and watch the smoke from a distance, dry-eyed and moving on.",
+          "es": "El fuego no es tuyo para combatirlo, y la aldea tiene su propia campana y sus propias manos. Dás la vuelta hacia terreno alto y mirás el humo desde lejos, con los ojos secos y siguiendo camino."
+        }
+      }
+    ]
+  },
+  {
+    "id": "road_riddle_stone",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "narrative": {
+      "en": "A standing stone blocks the road at {locationName}, and a {npcRole} sits cross-legged before it. 'The stone asks a riddle of every traveler who passes. Answer true and it opens. Answer wrong, and you buy the next pilgrim's toll.'",
+      "es": "Una piedra erguida bloquea el camino en {locationName}, y un {npcRole} se sienta con las piernas cruzadas frente a ella. 'La piedra le hace un acertijo a cada viajero que pasa. Si respondés bien, se abre. Si respondés mal, pagás el peaje del próximo peregrino.'"
+    },
+    "choices": [
+      {
+        "id": "answer_riddle",
+        "label": {
+          "en": "Answer the stone's riddle",
+          "es": "Responder el acertijo de la piedra"
+        },
+        "tag": "Strategic",
+        "rarity": "rare",
+        "requiresStat": {
+          "stat": "intelligence",
+          "min": 12
+        },
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "goldDelta": 50,
+        "fameDelta": 2,
+        "narrative": {
+          "en": "'What has a mouth but never eats, a bed but never sleeps, and a bank but never saves?' — 'A river,' you say, and the stone groans open. Inside: a small hoard and a very impressed {npcRole}.",
+          "es": "'¿Qué tiene boca pero nunca come, cama pero nunca duerme, y orilla pero nunca ahorra?' — 'Un río', decís, y la piedra gime y se abre. Adentro: un pequeño tesoro y un {npcRole} muy impresionado."
+        }
+      },
+      {
+        "id": "offer_gold",
+        "label": {
+          "en": "Offer gold instead of an answer",
+          "es": "Ofrecer oro en lugar de una respuesta"
+        },
+        "tag": "Cocky",
+        "rarity": "uncommon",
+        "goldDelta": -40,
+        "statDeltas": {
+          "charisma": 1
+        },
+        "narrative": {
+          "en": "You place a pouch on the stone and step around it. The {npcRole} shrugs and pockets the toll. 'The stone accepts all currencies, traveler.' The road opens either way.",
+          "es": "Ponés una bolsa sobre la piedra y la rodeás. El {npcRole} se encoge de hombros y guarda el peaje. 'La piedra acepta todas las monedas, viajera.' El camino se abre de todos modos."
+        }
+      },
+      {
+        "id": "walk_around",
+        "label": {
+          "en": "Walk around the stone through the brush",
+          "es": "Rodear la piedra por la maleza"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": {
+          "constitution": 1
+        },
+        "narrative": {
+          "en": "The brush is scratchy and the detour costs you an hour, but you neither answer nor pay. The {npcRole} calls after you: 'The stone remembers those who refuse it.'",
+          "es": "La maleza raspa y el desvío te cuesta una hora, pero ni respondés ni pagás. El {npcRole} te grita desde atrás: 'La piedra recuerda a quienes la rechazan.'"
         }
       }
     ]

@@ -699,5 +699,710 @@
         }
       }
     }
+  },
+  {
+    "id": "election_fishing_rights",
+    "type": "minigame",
+    "subtype": "election",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 8,
+    "isCapstone": true,
+    "capstoneKind": "election",
+    "primaryStat": "charisma",
+    "narrative": {
+      "en": "The coast towns are at each other's throats over the season's fishing rights, and the council wants a name to settle it. Every claimant has a fleet behind them — but one of these fleets sails under a flag that isn't theirs.",
+      "es": "Los pueblos de la costa están a matarse por los derechos de pesca de la temporada, y el consejo quiere un nombre que lo resuelva. Cada pretendiente tiene una flota detrás — pero una de esas flotas navega bajo una bandera que no es suya."
+    },
+    "cards": [
+      {
+        "id": "rights_old_family",
+        "icon": "anchor",
+        "trap": true,
+        "label": {
+          "en": "Back the old family's claim",
+          "es": "Respaldar el reclamo de la vieja familia"
+        }
+      },
+      {
+        "id": "rights_captains",
+        "icon": "sailboat",
+        "label": {
+          "en": "Back the captains' guild",
+          "es": "Respaldar al gremio de capitanes"
+        }
+      },
+      {
+        "id": "rights_commons",
+        "icon": "fish",
+        "label": {
+          "en": "Open the waters to the commons",
+          "es": "Abrir las aguas a la gente común"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.42,
+      "statInfluence": {
+        "charisma": 0.012,
+        "intelligence": 0.004
+      },
+      "cardModifiers": {
+        "rights_captains": {
+          "winChanceDelta": 0.05
+        },
+        "rights_commons": {
+          "winChanceDelta": 0.1
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "charisma": 2
+        },
+        "fameDelta": 6,
+        "reputationDelta": 3,
+        "verdict": {
+          "en": "GREAT +3",
+          "es": "GRAN +3"
+        },
+        "gradeDelta": 3,
+        "narrative": {
+          "en": "The waters open under your ruling, and every net in the fleet comes up silver. The council carves your name into the harbor stone — the season's fisheries will speak of you for years.",
+          "es": "Las aguas se abren bajo tu fallo, y cada red de la flota vuelve plateada. El consejo graba tu nombre en la piedra del puerto — las pesquerías de la temporada hablarán de vos durante años."
+        }
+      },
+      "success": {
+        "fameDelta": 3,
+        "reputationDelta": 1,
+        "verdict": {
+          "en": "GOOD +1",
+          "es": "BUENA +1"
+        },
+        "gradeDelta": 1,
+        "narrative": {
+          "en": "The ruling holds, the fleets grumble but obey, and the season's catch feeds the towns. The harbormaster nods to you with something close to respect.",
+          "es": "El fallo se sostiene, las flotas refunfuñan pero obedecen, y la pesca de la temporada alimenta a los pueblos. El capitán del puerto te saluda con algo parecido al respeto."
+        }
+      },
+      "partial": {
+        "fameDelta": 1,
+        "reputationDelta": -1,
+        "verdict": {
+          "en": "MIXED 0",
+          "es": "MIXTA 0"
+        },
+        "gradeDelta": 0,
+        "narrative": {
+          "en": "The council waters the ruling down until nobody is happy. The fleets fish the same contested grounds, and both sides blame the name that couldn't choose.",
+          "es": "El consejo diluye el fallo hasta que nadie queda contento. Las flotas pescan en los mismos caladeros disputados, y ambos bandos culpan al nombre que no supo decidir."
+        }
+      },
+      "fail": {
+        "reputationDelta": -3,
+        "fameDelta": -2,
+        "verdict": {
+          "en": "BAD −4",
+          "es": "MALA −4"
+        },
+        "gradeDelta": -4,
+        "narrative": {
+          "en": "The false flag you backed is denounced at the quayside, and the fleets turn on your ruling. The harbor master files a complaint against you that will follow the fishing season to its bitter end.",
+          "es": "La bandera falsa que respaldaste es denunciada en el muelle, y las flotas se vuelven contra tu fallo. El capitán del puerto presenta una queja contra vos que seguirá a la temporada de pesca hasta su amargo final."
+        }
+      }
+    }
+  },
+  {
+    "id": "election_sanction_reform",
+    "type": "minigame",
+    "subtype": "election",
+    "minAge": 18,
+    "maxAge": 99,
+    "weight": 9,
+    "isCapstone": true,
+    "capstoneKind": "election",
+    "primaryStat": "intelligence",
+    "narrative": {
+      "en": "The old trade sanctions are bleeding the city dry, and the merchants' assembly must rewrite them before the winter fairs. Three factions have plans for the tariffs — and one plan has already been bought twice over.",
+      "es": "Las viejas sanciones comerciales están desangrando a la ciudad, y la asamblea de mercaderes debe reescribirlas antes de las ferias de invierno. Tres facciones tienen planes para los aranceles — y uno de esos planes ya fue comprado dos veces."
+    },
+    "cards": [
+      {
+        "id": "sanctions_cartel",
+        "icon": "hand-coins",
+        "trap": true,
+        "label": {
+          "en": "Back the cartel's tariff plan",
+          "es": "Respaldar el plan arancelario del cártel"
+        }
+      },
+      {
+        "id": "sanctions_fair",
+        "icon": "scale",
+        "label": {
+          "en": "Back the fair-trade charter",
+          "es": "Respaldar la carta de comercio justo"
+        }
+      },
+      {
+        "id": "sanctions_open",
+        "icon": "door-open",
+        "label": {
+          "en": "Back the open-roads faction",
+          "es": "Respaldar a la facción de los caminos abiertos"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.44,
+      "statInfluence": {
+        "intelligence": 0.012,
+        "charisma": 0.004
+      },
+      "cardModifiers": {
+        "sanctions_fair": {
+          "winChanceDelta": 0.05
+        },
+        "sanctions_open": {
+          "winChanceDelta": 0.1
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "goldDelta": 180,
+        "fameDelta": 5,
+        "reputationDelta": 3,
+        "verdict": {
+          "en": "GREAT +3",
+          "es": "GRAN +3"
+        },
+        "gradeDelta": 3,
+        "narrative": {
+          "en": "The winter fairs swell with caravans that hadn't dared the old roads. The assembly quotes your tariff tables for a decade, and the city's merchants toast the season you saved.",
+          "es": "Las ferias de invierno se llenan de caravanas que no se habían atrevido con los viejos caminos. La asamblea cita tus tablas arancelarias durante una década, y los mercaderes de la ciudad brindan por la temporada que salvaste."
+        }
+      },
+      "success": {
+        "goldDelta": 70,
+        "fameDelta": 3,
+        "reputationDelta": 1,
+        "verdict": {
+          "en": "GOOD +1",
+          "es": "BUENA +1"
+        },
+        "gradeDelta": 1,
+        "narrative": {
+          "en": "The sanctions are rewritten and trade limps back to life. The counting houses note your name among the season's quiet winners.",
+          "es": "Las sanciones se reescriben y el comercio vuelve a la vida renqueando. Las casas de contabilidad anotan tu nombre entre las ganadoras silenciosas de la temporada."
+        }
+      },
+      "partial": {
+        "goldDelta": 30,
+        "fameDelta": 1,
+        "reputationDelta": -1,
+        "verdict": {
+          "en": "MIXED 0",
+          "es": "MIXTA 0"
+        },
+        "gradeDelta": 0,
+        "narrative": {
+          "en": "The assembly passes a patchwork of all three plans, pleasing no one fully. The fairs limp by on half-open roads, and the cartel remembers who almost backed them.",
+          "es": "La asamblea aprueba un remiendo de los tres planes, sin complacer del todo a nadie. Las ferias pasan renqueando por caminos a medio abrir, y el cártel recuerda quién casi los respaldó."
+        }
+      },
+      "fail": {
+        "goldDelta": -80,
+        "fameDelta": -2,
+        "reputationDelta": -3,
+        "liabilityDelta": 2,
+        "verdict": {
+          "en": "BAD −4",
+          "es": "MALA −4"
+        },
+        "gradeDelta": -4,
+        "narrative": {
+          "en": "The double-bought plan surfaces at the signing, and the assembly's fury lands on your name. The customs house opens a ledger on you, and every merchant on the road learns to ask what your endorsement costs.",
+          "es": "El plan comprado dos veces sale a la luz en la firma, y la furia de la asamblea cae sobre tu nombre. La aduana abre un libro de cuentas sobre vos, y cada mercader del camino aprende a preguntar cuánto cuesta tu aval."
+        }
+      }
+    }
+  },
+  {
+    "id": "election_war_veterans",
+    "type": "minigame",
+    "subtype": "election",
+    "minAge": 18,
+    "maxAge": 99,
+    "weight": 8,
+    "isCapstone": true,
+    "capstoneKind": "election",
+    "primaryStat": "charisma",
+    "narrative": {
+      "en": "The war is over and the veterans are home, but the pension fund sits empty. The council must choose how to fill it — and one of the proposed endowments carries a debt that will outlive the season.",
+      "es": "La guerra terminó y los veteranos volvieron a casa, pero el fondo de pensiones está vacío. El consejo debe decidir cómo llenarlo — y uno de los legados propuestos arrastra una deuda que sobrevivirá a la temporada."
+    },
+    "cards": [
+      {
+        "id": "veterans_warlord",
+        "icon": "swords",
+        "trap": true,
+        "label": {
+          "en": "Take the warlord's endowment",
+          "es": "Aceptar el legado del señor de la guerra"
+        }
+      },
+      {
+        "id": "veterans_tithe",
+        "icon": "coins",
+        "label": {
+          "en": "Tithe the guilds a season",
+          "es": "Pedir un diezmo de temporada a los gremios"
+        }
+      },
+      {
+        "id": "veterans_lottery",
+        "icon": "ticket",
+        "label": {
+          "en": "Hold the veterans' lottery",
+          "es": "Organizar la lotería de los veteranos"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.42,
+      "statInfluence": {
+        "charisma": 0.012,
+        "intelligence": 0.004
+      },
+      "cardModifiers": {
+        "veterans_tithe": {
+          "winChanceDelta": 0.05
+        },
+        "veterans_lottery": {
+          "winChanceDelta": 0.1
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "charisma": 2
+        },
+        "fameDelta": 6,
+        "reputationDelta": 4,
+        "verdict": {
+          "en": "GREAT +3",
+          "es": "GRAN +3"
+        },
+        "gradeDelta": 3,
+        "narrative": {
+          "en": "The fund fills to the brim and the veterans' hall rings with toasts in your name. Old soldiers who never spoke to anyone now tell the story of the season you paid for their peace.",
+          "es": "El fondo se llena hasta el borde y la sala de veteranos resuena con brindis en tu nombre. Soldados viejos que nunca hablaban con nadie ahora cuentan la historia de la temporada en que pagaste su paz."
+        }
+      },
+      "success": {
+        "fameDelta": 3,
+        "reputationDelta": 2,
+        "verdict": {
+          "en": "GOOD +1",
+          "es": "BUENA +1"
+        },
+        "gradeDelta": 1,
+        "narrative": {
+          "en": "The pensions are paid on time and the veterans' square stays quiet. A few old soldiers raise their cups to you at the season's end — a small honor, honestly earned.",
+          "es": "Las pensiones se pagan a tiempo y la plaza de los veteranos sigue tranquila. Algunos soldados viejos alzan sus copas hacia vos al final de la temporada — un honor pequeño, ganado con honestidad."
+        }
+      },
+      "partial": {
+        "fameDelta": 1,
+        "reputationDelta": -1,
+        "verdict": {
+          "en": "MIXED 0",
+          "es": "MIXTA 0"
+        },
+        "gradeDelta": 0,
+        "narrative": {
+          "en": "The fund fills halfway and the veterans split between gratitude and grievance. The council credits you with the idea and blames you for the shortfall.",
+          "es": "El fondo se llena a medias y los veteranos se dividen entre agradecimiento y reclamos. El consejo te atribuye la idea y te culpa del déficit."
+        }
+      },
+      "fail": {
+        "reputationDelta": -4,
+        "fameDelta": -2,
+        "liabilityDelta": 1,
+        "verdict": {
+          "en": "BAD −4",
+          "es": "MALA −4"
+        },
+        "gradeDelta": -4,
+        "narrative": {
+          "en": "The warlord's debt comes due in the middle of the season, and the pension fund empties twice. The veterans march on the council house — and your name is painted on the banner they carry.",
+          "es": "La deuda del señor de la guerra vence a mitad de temporada, y el fondo de pensiones se vacía dos veces. Los veteranos marchan sobre la casa del consejo — y tu nombre está pintado en el estandarte que llevan."
+        }
+      }
+    }
+  },
+  {
+    "id": "election_bridge_toll",
+    "type": "minigame",
+    "subtype": "election",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 8,
+    "isCapstone": true,
+    "capstoneKind": "election",
+    "primaryStat": "intelligence",
+    "narrative": {
+      "en": "The great bridge's charter expires, and the city must choose who holds the tolls for the next decade. Three houses bid for the right — but one bid is backed by coins that were never minted.",
+      "es": "La carta del gran puente vence, y la ciudad debe elegir quién tendrá los peajes durante la próxima década. Tres casas pujan por el derecho — pero una oferta está respaldada por monedas que nunca se acuñaron."
+    },
+    "cards": [
+      {
+        "id": "toll_gold_house",
+        "icon": "banknote",
+        "trap": true,
+        "label": {
+          "en": "Grant it to the gold house",
+          "es": "Otorgárselo a la casa del oro"
+        }
+      },
+      {
+        "id": "toll_wardens",
+        "icon": "shield",
+        "label": {
+          "en": "Grant it to the bridge wardens",
+          "es": "Otorgárselo a las guardias del puente"
+        }
+      },
+      {
+        "id": "toll_city",
+        "icon": "landmark",
+        "label": {
+          "en": "Fold the tolls into the city's coffers",
+          "es": "Incorporar los peajes a las arcas de la ciudad"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.44,
+      "statInfluence": {
+        "intelligence": 0.012,
+        "charisma": 0.004
+      },
+      "cardModifiers": {
+        "toll_wardens": {
+          "winChanceDelta": 0.05
+        },
+        "toll_city": {
+          "winChanceDelta": 0.1
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "goldDelta": 200,
+        "fameDelta": 5,
+        "reputationDelta": 3,
+        "verdict": {
+          "en": "GREAT +3",
+          "es": "GRAN +3"
+        },
+        "gradeDelta": 3,
+        "narrative": {
+          "en": "The tolls go to the city and the bridge is repaired by season's end, free to cross for a generation. The charter names you as its architect, and every traveler who crosses debt-free owes you a nod.",
+          "es": "Los peajes van a la ciudad y el puente queda reparado antes de que termine la temporada, libre de peaje por una generación. La carta te nombra su arquitecta, y cada viajera que cruza sin pagar te debe un gesto."
+        }
+      },
+      "success": {
+        "goldDelta": 80,
+        "fameDelta": 3,
+        "reputationDelta": 1,
+        "verdict": {
+          "en": "GOOD +1",
+          "es": "BUENA +1"
+        },
+        "gradeDelta": 1,
+        "narrative": {
+          "en": "The bridge stays open and the tolls flow to a steady keeper. The city's ledgers close in the black, and your judgment is cited in the charter's margins.",
+          "es": "El puente sigue abierto y los peajes fluyen hacia un custodio estable. Los libros de la ciudad cierran en negro, y citan tu criterio en los márgenes de la carta."
+        }
+      },
+      "partial": {
+        "goldDelta": 30,
+        "fameDelta": 1,
+        "reputationDelta": -1,
+        "verdict": {
+          "en": "MIXED 0",
+          "es": "MIXTA 0"
+        },
+        "gradeDelta": 0,
+        "narrative": {
+          "en": "The charter splits the tolls three ways, and the bridge falls into the gaps between masters. Repairs lag, merchants grumble, and the council looks for a scapegoat with your name on it.",
+          "es": "La carta divide los peajes en tres partes, y el puente cae en los huecos entre dueños. Las reparaciones se atrasan, los mercaderes refunfuñan, y el consejo busca un chivo expiatorio con tu nombre."
+        }
+      },
+      "fail": {
+        "goldDelta": -80,
+        "fameDelta": -2,
+        "reputationDelta": -3,
+        "verdict": {
+          "en": "BAD −4",
+          "es": "MALA −4"
+        },
+        "gradeDelta": -4,
+        "narrative": {
+          "en": "The forged coins surface when the first tolls come due, and the bridge charter is voided in disgrace — with your endorsement stamped on the voided page. The mint's auditors follow your name all winter.",
+          "es": "Las monedas falsas salen a la luz cuando vence el primer peaje, y la carta del puente se anula en desgracia — con tu aval estampado en la página anulada. Los auditores de la ceca siguen tu nombre todo el invierno."
+        }
+      }
+    }
+  },
+  {
+    "id": "election_harvest_lands",
+    "type": "minigame",
+    "subtype": "election",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 8,
+    "isCapstone": true,
+    "capstoneKind": "election",
+    "primaryStat": "charisma",
+    "narrative": {
+      "en": "The old lord's lands fall vacant, and the region must decide who works them next season. Three claimants stand before the granary council — and one of them holds a deed that was signed by a ghost.",
+      "es": "Las tierras del viejo señor quedan vacantes, y la región debe decidir quién las trabajará la próxima temporada. Tres pretendientes se presentan ante el consejo del granero — y uno de ellos tiene una escritura firmada por un fantasma."
+    },
+    "cards": [
+      {
+        "id": "lands_deed_holder",
+        "icon": "scroll",
+        "trap": true,
+        "label": {
+          "en": "Honor the deed holder",
+          "es": "Honrar al dueño de la escritura"
+        }
+      },
+      {
+        "id": "lands_commons",
+        "icon": "wheat",
+        "label": {
+          "en": "Open the lands to the commons",
+          "es": "Abrir las tierras a la gente común"
+        }
+      },
+      {
+        "id": "lands_overseers",
+        "icon": "users",
+        "label": {
+          "en": "Give them to the village overseers",
+          "es": "Entregárselas a las capataces de la aldea"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.42,
+      "statInfluence": {
+        "charisma": 0.012,
+        "intelligence": 0.004
+      },
+      "cardModifiers": {
+        "lands_commons": {
+          "winChanceDelta": 0.05
+        },
+        "lands_overseers": {
+          "winChanceDelta": 0.1
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "charisma": 2,
+          "constitution": 1
+        },
+        "goldDelta": 120,
+        "fameDelta": 6,
+        "reputationDelta": 3,
+        "verdict": {
+          "en": "GREAT +3",
+          "es": "GRAN +3"
+        },
+        "gradeDelta": 3,
+        "narrative": {
+          "en": "The harvest is the fullest the region has seen, and the granaries groan with it. The village elders carve your name into the threshing floor, where every season's grain will grind over it.",
+          "es": "La cosecha es la más abundante que ha visto la región, y los graneros crujen con ella. Los ancianos de la aldea graban tu nombre en el suelo de la era, donde el grano de cada temporada pasará por encima."
+        }
+      },
+      "success": {
+        "goldDelta": 50,
+        "fameDelta": 3,
+        "reputationDelta": 1,
+        "verdict": {
+          "en": "GOOD +1",
+          "es": "BUENA +1"
+        },
+        "gradeDelta": 1,
+        "narrative": {
+          "en": "The fields are worked and the tables are full. The region keeps your name in the harvest prayers, quietly and gratefully.",
+          "es": "Los campos se trabajan y las mesas están llenas. La región guarda tu nombre en las oraciones de la cosecha, en silencio y con gratitud."
+        }
+      },
+      "partial": {
+        "goldDelta": 30,
+        "fameDelta": 1,
+        "reputationDelta": -1,
+        "verdict": {
+          "en": "MIXED 0",
+          "es": "MIXTA 0"
+        },
+        "gradeDelta": 0,
+        "narrative": {
+          "en": "The land is split between claimants and the fields suffer from divided care. The granary council notes your ruling was fair — and notes, just as carefully, that fair isn't always full.",
+          "es": "La tierra se reparte entre pretendientes y los campos sufren por el cuidado dividido. El consejo del granero anota que tu fallo fue justo — y anota, con igual cuidado, que lo justo no siempre está lleno."
+        }
+      },
+      "fail": {
+        "goldDelta": -60,
+        "fameDelta": -2,
+        "reputationDelta": -3,
+        "verdict": {
+          "en": "BAD −4",
+          "es": "MALA −4"
+        },
+        "gradeDelta": -4,
+        "narrative": {
+          "en": "The ghost deed is denounced at the harvest feast, and the fields stand half-sown all season. Every empty row is blamed on your judgment, and the hungry winter will remember your name.",
+          "es": "La escritura fantasma es denunciada en la fiesta de la cosecha, y los campos quedan a medio sembrar toda la temporada. Cada surco vacío se le achaca a tu criterio, y el invierno hambriento recordará tu nombre."
+        }
+      }
+    }
+  },
+  {
+    "id": "election_cleric_choir",
+    "type": "minigame",
+    "subtype": "election",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 8,
+    "isCapstone": true,
+    "capstoneKind": "election",
+    "primaryStat": "charisma",
+    "narrative": {
+      "en": "The choir's lead voice retires at the turning of the season, and the temple must name the next. Three voices audition for the high seat — but one voice has been singing a hymn that isn't in the canon.",
+      "es": "La voz principal del coro se retira en el giro de la temporada, y el templo debe nombrar a la siguiente. Tres voces hacen la prueba para el asiento alto — pero una voz ha estado cantando un himno que no está en el canon."
+    },
+    "cards": [
+      {
+        "id": "choir_patron",
+        "icon": "crown",
+        "trap": true,
+        "label": {
+          "en": "Back the patron's favorite voice",
+          "es": "Respaldar a la voz favorita del patrón"
+        }
+      },
+      {
+        "id": "choir_tradition",
+        "icon": "book-open",
+        "label": {
+          "en": "Back the voice of tradition",
+          "es": "Respaldar a la voz de la tradición"
+        }
+      },
+      {
+        "id": "choir_new_song",
+        "icon": "music",
+        "label": {
+          "en": "Back the voice of the new song",
+          "es": "Respaldar a la voz del canto nuevo"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.42,
+      "statInfluence": {
+        "charisma": 0.012,
+        "intelligence": 0.004
+      },
+      "cardModifiers": {
+        "choir_tradition": {
+          "winChanceDelta": 0.05
+        },
+        "choir_new_song": {
+          "winChanceDelta": 0.1
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "charisma": 2
+        },
+        "fameDelta": 6,
+        "reputationDelta": 3,
+        "verdict": {
+          "en": "GREAT +3",
+          "es": "GRAN +3"
+        },
+        "gradeDelta": 3,
+        "narrative": {
+          "en": "The new voice lifts the temple into a season of song, and pilgrims travel to hear the choir that bears your mark. The high priest blesses your name from the pulpit — a blessing the faithful carry like a coin.",
+          "es": "La nueva voz eleva al templo hacia una temporada de canto, y las peregrinas viajan para oír al coro que lleva tu sello. El sumo sacerdote bendice tu nombre desde el púlpito — una bendición que los fieles llevan como una moneda."
+        }
+      },
+      "success": {
+        "fameDelta": 3,
+        "reputationDelta": 2,
+        "verdict": {
+          "en": "GOOD +1",
+          "es": "BUENA +1"
+        },
+        "gradeDelta": 1,
+        "narrative": {
+          "en": "The choir finds its voice and the temple fills again. The congregation hums the new melody in the market, and your judgment is remembered with a warm nod.",
+          "es": "El coro encuentra su voz y el templo vuelve a llenarse. La congregación tararea la nueva melodía en el mercado, y recuerdan tu criterio con un gesto cálido."
+        }
+      },
+      "partial": {
+        "fameDelta": 1,
+        "reputationDelta": -1,
+        "verdict": {
+          "en": "MIXED 0",
+          "es": "MIXTA 0"
+        },
+        "gradeDelta": 0,
+        "narrative": {
+          "en": "The choir elects a safe voice that neither inspires nor offends. The temple keeps its rituals, and the congregation keeps waiting — for a song, or for a name to blame.",
+          "es": "El coro elige una voz segura que ni inspira ni ofende. El templo conserva sus rituales, y la congregación sigue esperando — una canción, o un nombre al que culpar."
+        }
+      },
+      "fail": {
+        "fameDelta": -2,
+        "reputationDelta": -4,
+        "verdict": {
+          "en": "BAD −4",
+          "es": "MALA −4"
+        },
+        "gradeDelta": -4,
+        "narrative": {
+          "en": "The forbidden hymn is sung at the high feast, and the temple denounces the voice — and the hand that raised it. The choir falls silent every time you pass, and the canon is scrubbed of your name.",
+          "es": "El himno prohibido se canta en la gran fiesta, y el templo denuncia a la voz — y a la mano que la elevó. El coro enmudece cada vez que pasás, y el canon se limpia de tu nombre."
+        }
+      }
+    }
   }
 ]

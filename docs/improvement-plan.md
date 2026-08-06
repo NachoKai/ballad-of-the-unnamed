@@ -2,7 +2,7 @@
 
 > Based on: `docs/fantasy-cyoa-rpg-spec.md` (810 lines), `docs/el-idolo-reference-notes.md` (253 lines), and full codebase audit.
 >
-> Current state: core game loop works end-to-end (creation → events → death/retirement → leaderboard). 68 events, 29 minigames, 69 achievements, 6 classes, bilingual EN/ES, deterministic RNG, server-authoritative, deployed on Neon + Vite + Express.
+> Current state: core game loop works end-to-end (creation → events → death/retirement → leaderboard). 136 events, 72 minigames, 69 achievements, 6 classes, bilingual EN/ES, deterministic RNG, server-authoritative, deployed on Neon + Vite + Express.
 
 ## Status Legend
 
@@ -405,18 +405,18 @@ Goal: Enough variety for 20+ runs before repetition sets in.
 
 **Spec ref**: — (volume targets)
 
-Status: current counts as of audit — Events **68**/60, Minigames **29**/25, Achievements **69**/50, Archetypes **30**/30+, World events **10**/20+, Clans 25 factions all region-tagged (9 authored clan events exercising join/leave/betray), NPC relationships system in place with 2 authored recurring NPCs (`ser_aldric`, `wanderer_of_the_homeland`). Target numbers in the table below are the Phase 5 goals. **2026-07-30: content expansion shipped — 17 new events (9 clan + 8 rest/recovery), 8 new minigames, 8 new achievement tiers. 2026-08-01 audit: added 10 world events, 5 region-variant events, 5 foreign/outsider events, 5 personality events, 3 destiny events. 2026-08-01 bugfix pass (B7-B12): +1 region event (`region_wastelands_cinder`), +11 achievements (`jetset_life` + 10 counter achievements). 2026-08-02: +3 minigames (Season-End Capstone debates/elections), +2 achievements.**
+Status: current counts as of audit — Events **136**/60, Minigames **72**/25, Achievements **69**/50, Archetypes **54**/30+ (9 per class: 8 normal + 1 hidden master), World events **20**/20+, Clans 25 factions all region-tagged (18 authored clan events exercising join/leave/betray), NPC relationships system in place with 2 authored recurring NPCs (`ser_aldric`, `wanderer_of_the_homeland`). Target numbers in the table below are the Phase 5 goals. **2026-07-30: content expansion shipped — 17 new events (9 clan + 8 rest/recovery), 8 new minigames, 8 new achievement tiers. 2026-08-01 audit: added 10 world events, 5 region-variant events, 5 foreign/outsider events, 5 personality events, 3 destiny events. 2026-08-01 bugfix pass (B7-B12): +1 region event (`region_wastelands_cinder`), +11 achievements (`jetset_life` + 10 counter achievements). 2026-08-02: +3 minigames (Season-End Capstone debates/elections), +2 achievements. 2026-08-05: content expansion shipped — doubled all content volumes (events 68→136, minigames 36→72, slots 163→327, archetypes 30→60, shop 16→32) per `docs/superpowers/plans/2026-08-05-content-expansion.md`.**
 
-| Category                                        | Current       | Phase 5 Target                                 |
-| ----------------------------------------------- | ------------- | ---------------------------------------------- |
-| Events (tavern/road/dungeon/court + new themes) | 68            | 80+                                            |
-| Minigames (duels + activities)                  | 29            | 25+                                            |
-| Achievements                                    | 69            | 60+                                            |
-| Slot pool entries                               | ~152          | 300+                                           |
-| Archetypes                                      | 30            | 30+ (5-8 per class)                            |
-| World events                                    | 10            | 20+                                            |
-| Clans                                           | 25 (factions) | 10+ joinable with perks (9 clan events now ✅) |
-| NPC relationships                               | 2             | 15+ recurring NPCs                             |
+| Category                                        | Current       | Phase 5 Target                                  |
+| ----------------------------------------------- | ------------- | ----------------------------------------------- |
+| Events (tavern/road/dungeon/court + new themes) | 136           | 80+                                             |
+| Minigames (duels + activities)                  | 72            | 25+                                             |
+| Achievements                                    | 69            | 60+                                             |
+| Slot pool entries                               | 327           | 300+                                            |
+| Archetypes                                      | 54            | 30+ (5-8 per class)                             |
+| World events                                    | 20            | 20+                                             |
+| Clans                                           | 25 (factions) | 10+ joinable with perks (18 clan events now ✅) |
+| NPC relationships                               | 2             | 15+ recurring NPCs                              |
 
 **Key principle**: Composability over raw count. Each authored event template + slot pools + age/class/fame gating produces many distinct felt variants. A few hundred templates should produce thousands of unique-feeling runs.
 
@@ -619,6 +619,33 @@ No new build work — daily mode (`runType: "daily"`, `todayDailySeed`) already 
 
 ---
 
+## Phase 8
+
+Goal: Ideas requested by the player that are not yet scoped into a phase. Each item stands on its own and can be picked up independently.
+
+### 8.1 Hidden "Master" Archetypes — unlock by completing a run per class ✅
+
+**Status (2026-08-05): fully implemented.** Six hidden master archetypes authored in `content/archetypes.json` (`warlord`/`archmage`/`phantom`/`beastlord`/`avatar`/`maestro`, flagged `hidden: true`, +12 stats vs +8 for every normal archetype). Each class was trimmed to 9 archetypes total (8 normal + 1 hidden), removing the 2 most redundant/weakest per class (warmaster, wanderer, diviner, elementalist, thief, double_agent, scout, skywatcher, prophet, guardian_saint, trickster, harbinger). `POST /archetype-draw` accepts an `unlockedClasses` body param and masks locked masters as "???" cards (key icon, no stats) while serving unlocked ones in full; `POST /new` rejects a hidden archetype pick for a non-unlocked class (400 `locked_archetype`). Unlock state is per-browser `localStorage` (`botu_unlocked_archetypes`, helper in `src/lib/archetypeUnlocks.ts`), stamped in `App.tsx` when a run ends — first finish per class fires a "🔓 New archetype unlocked!" toast. `ArchetypeStep.tsx` renders the locked card with an unlock hint and gold-accented unlocked masters with a "Master Archetype" badge. Regression tests: content constraints (one hidden per class, strictly stronger, unique profiles/icons) in `server/engine/engine.test.ts` + route filtering/guard tests in `server/routes/game.test.ts`.
+
+**Spec ref**: §Starting archetype roll (p50-64) | **Requested by**: player (2026-08-05)
+
+One **hidden archetype per class** (6 total), each **stronger than every normal archetype** of its class. It is invisible in the archetype picker until the player **finishes a run with that class**; once unlocked it appears and stays unlocked (per browser) for all future runs of that class.
+
+**Design**:
+
+- Add a `hidden: true` flag to one new archetype per class in `content/archetypes.json` (a 9th entry per class, on top of the current 8). The existing regression test "no two archetypes in a class share the same stat profile" still applies — the master archetype's profile must be unique within its class (it naturally will be: it's strictly stronger).
+- **More stats than the rest**: normal archetypes total +8 (e.g. `{strength: 8}` or `{constitution: 5, strength: 3}`). The hidden master archetype should total **+12** (e.g. `{strength: 8, constitution: 4}`) — a real power spike without doubling, kept below game-breaking.
+- **Unlock condition**: finish (die, retire, or complete) a run with that class. No auth exists — runs are owned by possession of the run id — so track unlocks **client-side in `localStorage`** (key e.g. `botu_unlocked_archetypes`, a JSON array of class ids) and stamp it in `EndingScreen`/`App.tsx` when a run ends (the finished `character.class` is already in the response).
+- **Server flow**: `POST /api/game/archetype-draw` gains an `unlockedClasses?: string[]` body param (sent from the client's localStorage). It serves the normal pool **plus** the hidden archetype only for classes present in `unlockedClasses`. The draw currently serves the whole pool (10) — hidden ones are simply filtered out unless unlocked.
+- **UI**: in `ArchetypeStep.tsx`, locked master archetypes render as a distinct **"???" card** (e.g. `key-round` icon, "Finish a run as [class] to unlock" tooltip) so players know they exist — or are entirely absent until unlocked. Recommended: show the locked card with a lock icon for discoverability (a classic unlock hook), and a `🔓 New archetype unlocked!` toast on the ending screen when a run finishes.
+- **Client-side only, no server persistence**: unlock state is per-browser (localStorage), consistent with the game's no-account architecture and the existing `playerRuns` (name-based) model. If real accounts ever arrive, move the unlock set to a `characters`-linked table keyed by finished class.
+
+**Files touched (when implemented)**: `content/archetypes.json` (6 new entries), `server/routes/game.ts` (`unlockedClasses` param + hidden filtering), `shared/types.ts` (`hidden?: boolean` on `ArchetypeContent`), `src/components/ArchetypeStep.tsx` (locked-card UI), `src/App.tsx`/`EndingScreen.tsx` (localStorage stamp + unlock toast), `server/engine/engine.test.ts` (hidden flag + unlock filtering tests).
+
+**Verification**: fresh browser shows 8 normal + 1 locked "???" card per class; finish a warrior run → toast fires, warrior's master archetype appears on every subsequent warrior run; a hidden archetype is never served before its class is in `unlockedClasses`; hidden archetypes keep unique stat profiles (regression test stays green).
+
+---
+
 ## Implementation Order Summary
 
 ```
@@ -627,9 +654,10 @@ Phase 1 (Identity): 1.1 ✅, 1.2 🟡, 1.3 ✅, 1.4 ✅ — 1 week
 Phase 2 (Economy):  2.1 ✅, 2.2 ✅, 2.3 ✅, 2.4 ✅ — 1.5 weeks
 Phase 3 (Social):   3.1 ✅, 3.2 🟡, 3.3 ✅, 3.4 ✅, 3.5 ✅ — 2 weeks
 Phase 4 (Legacy):   4.1 ✅, 4.2 ✅, 4.3 ✅, 4.4 ✅ — 1 week
-Phase 5 (Content):  5.1 🟡 (68/80 events, 29/25 minigames, 69/60+ achievements), 5.2 ✅, 5.3 ✅, 5.4 ✅ — ongoing
+Phase 5 (Content):  5.1 🟡 (136/80+ events, 72/25+ minigames, 69/60+ achievements), 5.2 ✅, 5.3 ✅, 5.4 ✅ — ongoing
 Phase 6 (Optional): 6.1 ⬜ Analytics — if/when needed
 Phase 7 (New ideas): 7.1 ✅, 7.2 ✅, 7.3 ✅, 7.4 ✅, 7.5 ✅, 7.6 ✅, 7.7 ✅, 7.8 ✅ (tests) — shipped
+Phase 8 (Backlog):  8.1 ✅ Hidden master archetypes (per-class unlock) — shipped 2026-08-05
 ```
 
 Phase 7 ordering: 7.1 (identity/regions) is the foundation — 7.3 (region variants) and 7.7 (home-faction epithets) depend on its region concept. 7.2 (origin + bench) is independent but touches the same `createCharacter`/`joinClan` code as 7.1, so do it right after. 7.4 (tournaments) then 7.5 (honors) chain together. 7.6 (negotiation) and 7.8 (tests) are standalone. 7.8's determinism tests should land with the first seeded-draw change (7.4 or 7.6), not last.
@@ -641,9 +669,10 @@ Remaining work by priority:
 1. 🟡 **1.2 (part)** — add `press_conference` minigame subtype (5 personality-tag events with `wantedTags`/`punishedTags` authored ✅)
 2. 🟡 **1.4 (part)** — more authored rest/recovery events using `staminaDelta` beyond the forced-recovery path
 3. 🟡 **3.2** — separate `rivals` table + parallel rival RNG stream
-4. 🟡 **5.1** — content volume targets (events 68/80, world 10/20+, NPC relationships 2/15+)
+4. 🟡 **5.1** — content volume targets (events 136/80+, world 20/20+ ✅, NPC relationships 2/15+)
 5. 🟡 **5.4 (part)** — per-encounter completion tracking (overall % now implemented)
 6. ⬜ **6.1** — analytics (optional)
+7. ✅ **8.1** — hidden master archetypes, one per class, unlocked by finishing a run with that class (shipped 2026-08-05)
 
 > Phase 7 is fully shipped as of 2026-08-02: 7.1 homeland/outsider ✅, 7.2 origin + bench ✅, 7.3 region-gated variants ✅, 7.4 tournaments ✅, 7.5 prestige-gated honors ✅, 7.6 negotiation dial ✅, 7.7 class-partitioned epithets ✅, 7.8 determinism tests ✅.
 

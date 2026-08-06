@@ -25,11 +25,22 @@ export function useAchievementToasts(locale: Locale, t: (k: string) => string) {
     setToasts((prev) => [...prev, ...items])
   }
 
+  // Custom (non-achievement) toasts — e.g. "New archetype unlocked!" on the
+  // ending screen. Same card, no "Achievement unlocked" prefix.
+  function pushCustom(items: { icon: string; title: string; desc: string }[]) {
+    if (items.length === 0) return
+    const withIds = items.map((item) => ({
+      ...item,
+      id: `${item.title}-${Date.now()}-${Math.random()}`,
+    }))
+    setToasts((prev) => [...prev, ...withIds])
+  }
+
   function remove(id: string) {
     setToasts((prev) => prev.filter((x) => x.id !== id))
   }
 
-  return { toasts, push, remove }
+  return { toasts, push, pushCustom, remove }
 }
 
 export function Toasts({

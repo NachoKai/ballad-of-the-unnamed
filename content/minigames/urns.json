@@ -76,9 +76,7 @@
       },
       "partial": {
         "goldDelta": 20,
-        "countersReset": [
-          "urn_streak"
-        ],
+        "countersReset": ["urn_streak"],
         "narrative": {
           "en": "The urn holds little more than dust and a single tarnished coin. The keeper shrugs: 'Not every urn keeps its promise.'",
           "es": "La urna guarda poco más que polvo y una sola moneda oxidada. El custodio se encoge de hombros: 'No toda urna cumple su promesa.'"
@@ -88,12 +86,105 @@
         "goldDelta": -30,
         "injuryRiskDelta": 0.15,
         "liabilityDelta": 8,
-        "countersReset": [
-          "urn_streak"
-        ],
+        "countersReset": ["urn_streak"],
         "narrative": {
           "en": "ANULADA. A needle-trap springs from the urn the instant you touch its seal. The keeper's face goes cold: 'The curse always finds its hand.' You shake off the venom and the sting of your own luck.",
           "es": "ANULADA. Una trampa de agujas salta de la urna apenas tocás su sello. La cara del custodio se endurece: 'La maldición siempre encuentra su mano.' Sacudís el veneno y el escozor de tu propia suerte."
+        }
+      }
+    }
+  },
+  {
+    "id": "urn_two_sisters",
+    "type": "minigame",
+    "subtype": "urn",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "primaryStat": "intelligence",
+    "narrative": {
+      "en": "In the shrine of the Twin Sisters, two legends share one altar: the Veiled Sister hoards her dowry in an urn of black clay, the Laughing Sister pays out to whoever calls her name. The third urn is silent — and the priestess warns you that one of the three carries a blessing that bites.",
+      "es": "En el santuario de las Hermanas Gemelas, dos leyendas comparten un altar: la Hermana Velada atesora su dote en una urna de arcilla negra, la Hermana Risueña paga a quien pronuncie su nombre. La tercera urna está en silencio — y la sacerdotisa te advierte que una de las tres guarda una bendición que muerde."
+    },
+    "cards": [
+      {
+        "id": "urn_veiled",
+        "icon": "moon",
+        "label": {
+          "en": "Urn of the Veiled Sister",
+          "es": "Urna de la Hermana Velada"
+        }
+      },
+      {
+        "id": "urn_laughing",
+        "icon": "sun",
+        "label": {
+          "en": "Urn of the Laughing Sister",
+          "es": "Urna de la Hermana Risueña"
+        },
+        "trap": true
+      },
+      {
+        "id": "urn_silent",
+        "icon": "bell",
+        "label": {
+          "en": "The Silent Urn",
+          "es": "La Urna Silenciosa"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "grid_gamble",
+      "baseWinChance": 0.4,
+      "statInfluence": {},
+      "cardModifiers": {
+        "urn_veiled": {
+          "winChanceDelta": 0.05
+        },
+        "urn_silent": {
+          "winChanceDelta": 0.1
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "goldDelta": 320,
+        "fameDelta": 6,
+        "countersDelta": {
+          "urns_opened": 1
+        },
+        "narrative": {
+          "en": "The urn opens to reveal the Veiled Sister's full dowry: silver coins, a pearl girdle, and a betrothal ring of old gold. The priestess gasps — the sisters have chosen to bless your name.",
+          "es": "La urna se abre y revela la dote completa de la Hermana Velada: monedas de plata, un cinturón de perlas y un anillo de bodas de oro antiguo. La sacerdotisa jadea — las hermanas han elegido bendecir tu nombre."
+        }
+      },
+      "success": {
+        "goldDelta": 100,
+        "fameDelta": 2,
+        "countersDelta": {
+          "urns_opened": 1
+        },
+        "narrative": {
+          "en": "A tidy handful of the Laughing Sister's coins, warm as if just minted. The priestess nods: a fair urn, fairly earned.",
+          "es": "Un puñado prolijo de las monedas de la Hermana Risueña, tibias como recién acuñadas. La sacerdotisa asiente: una urna justa, ganada con justicia."
+        }
+      },
+      "partial": {
+        "goldDelta": 20,
+        "countersReset": ["urn_streak"],
+        "narrative": {
+          "en": "The urn holds only dust and a single dull coin. The priestess shrugs: 'The sisters keep their promises — they never promised the urn would be heavy.'",
+          "es": "La urna guarda solo polvo y una única moneda opaca. La sacerdotisa se encoge de hombros: 'Las hermanas cumplen sus promesas — nunca prometieron que la urna pesara.'"
+        }
+      },
+      "fail": {
+        "goldDelta": -30,
+        "injuryRiskDelta": 0.15,
+        "liabilityDelta": 8,
+        "countersReset": ["urn_streak"],
+        "narrative": {
+          "en": "ANULADA. The silent urn explodes in a spray of blessed salt the instant your fingers touch its rim — a trap laid for the greedy. The priestess's face hardens: 'The Laughing Sister laughs last.' You shake out your burning palms and your empty purse.",
+          "es": "ANULADA. La urna silenciosa estalla en una nube de sal bendita apenas tus dedos tocan su borde — una trampa para los codiciosos. La cara de la sacerdotisa se endurece: 'La Hermana Risueña ríe al final.' Sacudís tus palmas ardientes y tu bolsa vacía."
         }
       }
     }

@@ -444,5 +444,520 @@
         }
       }
     ]
+  },
+  {
+    "id": "rest_night_shelter_orphanage",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "location": "road",
+    "narrative": {
+      "en": "The orphanage's matron sizes you up at {locationName}. 'We have a straw pallet and a bowl of broth for anyone who tells the children a story that ends well. The pallet is yours either way.'",
+      "es": "La directora del orfanato te mide en {locationName}. 'Tenemos un jergón de paja y un plato de caldo para cualquiera que les cuente a los niños una historia que termine bien. El jergón es tuyo igual.'"
+    },
+    "choices": [
+      {
+        "id": "tell_hero_tale",
+        "label": {
+          "en": "Tell a tale of your own road",
+          "es": "Contar una historia de tu propio camino"
+        },
+        "tag": "Funny",
+        "rarity": "uncommon",
+        "staminaDelta": 35,
+        "statDeltas": {
+          "charisma": 2
+        },
+        "fameDelta": 2,
+        "countersDelta": {
+          "lives_saved": 1
+        },
+        "narrative": {
+          "en": "The children hang on every word, and the matron's eyes soften. You sleep the sleep of the righteous, and a small hand has slipped a lucky stone into your pack.",
+          "es": "Los niños se cuelgan de cada palabra, y los ojos de la directora se suavizan. Dormís el sueño de los justos, y una mano pequeña deslizó una piedra de la suerte en tu mochila."
+        }
+      },
+      {
+        "id": "help_with_chores",
+        "label": {
+          "en": "Mend the roof before resting",
+          "es": "Arreglar el techo antes de descansar"
+        },
+        "tag": "Supportive",
+        "rarity": "common",
+        "staminaDelta": 22,
+        "statDeltas": {
+          "constitution": 1
+        },
+        "reputationDelta": 2,
+        "reputationFaction": "luminari",
+        "narrative": {
+          "en": "You patch the leaky roof by dusk. The matron feeds you twice and mutters a prayer over your sleeping form.",
+          "es": "Remendás el techo con goteras al anochecer. La directora te da de comer dos veces y murmura una oración sobre tu forma dormida."
+        }
+      },
+      {
+        "id": "pay_for_the_pallet",
+        "label": {
+          "en": "Leave coin for the children's fund",
+          "es": "Dejar monedas para el fondo de los niños"
+        },
+        "tag": "Humble",
+        "rarity": "rare",
+        "goldDelta": -40,
+        "staminaDelta": 30,
+        "statDeltas": {
+          "charisma": 1
+        },
+        "narrative": {
+          "en": "The matron tries to refuse, then takes the coins with wet eyes. 'The Luminari keep a book of kind strangers,' she says. 'Your name goes in it twice.'",
+          "es": "La directora intenta negarse, luego toma las monedas con los ojos llorosos. 'Los Luminari llevan un libro de desconocidos bondadosos', dice. 'Tu nombre entra dos veces.'"
+        }
+      }
+    ]
+  },
+  {
+    "id": "rest_bathhouse_soak",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "location": "road",
+    "narrative": {
+      "en": "Steam rolls out of {locationName} as the bathhouse keeper counts coins. 'Soap, hot water, and no questions,' she says. 'The day's dirt comes off with the day.'",
+      "es": "El vapor sale a raudales de {locationName} mientras la dueña de la casa de baños cuenta monedas. 'Jabón, agua caliente y sin preguntas', dice. 'La mugre del día se va con el día.'"
+    },
+    "choices": [
+      {
+        "id": "soak_full",
+        "label": {
+          "en": "Pay for the full soak and steam",
+          "es": "Pagar por el remojón completo y el vapor"
+        },
+        "tag": "Humble",
+        "rarity": "uncommon",
+        "goldDelta": -15,
+        "staminaDelta": 45,
+        "healthDelta": 5,
+        "statDeltas": {
+          "constitution": 1
+        },
+        "narrative": {
+          "en": "The water is so hot your thoughts dissolve in it. You emerge pink, wrinkled, and ten years younger, ready to face the road again.",
+          "es": "El agua está tan caliente que tus pensamientos se disuelven en ella. Salís rosado, arrugado y diez años más joven, listo para volver a enfrentar el camino."
+        }
+      },
+      {
+        "id": "rinse_quick",
+        "label": {
+          "en": "Take a quick rinse",
+          "es": "Darte un enjuague rápido"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "staminaDelta": 15,
+        "statDeltas": {
+          "constitution": 1
+        },
+        "narrative": {
+          "en": "Cold water, a scrap of soap, and you're out the door. Not luxurious — but the road dust stops crawling on your skin.",
+          "es": "Agua fría, un pedazo de jabón y salís por la puerta. No es lujoso — pero el polvo del camino deja de arrastrarse sobre tu piel."
+        }
+      },
+      {
+        "id": "skip_bath",
+        "label": {
+          "en": "Skip the bath and keep your coin",
+          "es": "Saltearte el baño y guardar tus monedas"
+        },
+        "tag": "Professional",
+        "rarity": "common",
+        "statDeltas": {
+          "intelligence": 1
+        },
+        "narrative": {
+          "en": "You weigh coin against comfort and choose coin. The road will wash you eventually — or you'll wash it off you.",
+          "es": "Pesás la moneda contra la comodidad y elegís la moneda. El camino te va a lavar eventualmente — o vos te lavás con él."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rest_herbalist_remedy",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "location": "thornwood",
+    "narrative": {
+      "en": "A {npcRole} crouches over a mortar at the edge of {locationName}, grinding something that smells like pine and lightning. 'You're running on splinters and spite,' they say. 'Sit. I'll brew you whole.'",
+      "es": "Un {npcRole} se agacha sobre un mortero al borde de {locationName}, moliendo algo que huele a pino y a relámpago. 'Estás andando a astillas y rencor', dice. 'Sentate. Te preparo algo que te deje entero.'"
+    },
+    "choices": [
+      {
+        "id": "buy_remedy",
+        "label": {
+          "en": "Pay for the restorative",
+          "es": "Pagar por el restaurador"
+        },
+        "tag": "Professional",
+        "rarity": "uncommon",
+        "goldDelta": -25,
+        "staminaDelta": 40,
+        "healthDelta": 6,
+        "narrative": {
+          "en": "The draught tastes of bark and bitterness, but warmth floods your limbs an hour later. You pay gladly and leave stronger than you came.",
+          "es": "La pócima sabe a corteza y amargura, pero una hora después el calor inunda tus miembros. Pagás de buena gana y partís más fuerte de lo que llegaste."
+        }
+      },
+      {
+        "id": "trade_labor",
+        "label": {
+          "en": "Trade a day of labor for the brew",
+          "es": "Cambiar un día de trabajo por la poción"
+        },
+        "tag": "Supportive",
+        "rarity": "common",
+        "staminaDelta": 25,
+        "statDeltas": {
+          "constitution": 1
+        },
+        "reputationDelta": 2,
+        "reputationFaction": "thornwood",
+        "narrative": {
+          "en": "You split wood till your arms sing, and they brew you the strongest cup of their life. The Wardens' folk remember those who work the land honestly.",
+          "es": "Partís leña hasta que tus brazos cantan, y te preparan la infusión más fuerte de su vida. La gente de los Guardianes recuerda a quienes trabajan la tierra con honestidad."
+        }
+      },
+      {
+        "id": "lore_swap",
+        "label": {
+          "en": "Trade your own road remedies",
+          "es": "Intercambiar tus propios remedios de camino"
+        },
+        "tag": "Strategic",
+        "rarity": "rare",
+        "staminaDelta": 20,
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "narrative": {
+          "en": "You trade recipes the way merchants trade coin — and both of you walk away richer. They press a sachet into your hand: 'For the next time the world bites.'",
+          "es": "Intercambiás recetas como los mercaderes intercambian monedas — y los dos se van más ricos. Te meten un saquito en la mano: 'Para la próxima vez que el mundo te muerda.'"
+        }
+      }
+    ]
+  },
+  {
+    "id": "rest_monastery_meal",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "location": "road",
+    "narrative": {
+      "en": "The gates of a hilltop monastery stand open at dusk. A monk in grey gestures at a long table. 'We eat in silence, and the silence feeds as much as the bread. You are welcome either way.'",
+      "es": "Las puertas de un monasterio en la colina están abiertas al anochecer. Un monje de gris señala una mesa larga. 'Comemos en silencio, y el silencio alimenta tanto como el pan. Sos bienvenido igual.'"
+    },
+    "choices": [
+      {
+        "id": "silence_meal",
+        "label": {
+          "en": "Join the silent meal",
+          "es": "Unirte a la comida silenciosa"
+        },
+        "tag": "Humble",
+        "rarity": "uncommon",
+        "staminaDelta": 35,
+        "statDeltas": {
+          "charisma": 1
+        },
+        "narrative": {
+          "en": "Bread, broth, and the sound of sixty people breathing. When the meal ends you feel strangely light — as if a weight you carried was never yours.",
+          "es": "Pan, caldo y el sonido de sesenta personas respirando. Cuando la comida termina te sentís extrañamente liviano — como si un peso que cargabas nunca hubiera sido tuyo."
+        }
+      },
+      {
+        "id": "donate_meal",
+        "label": {
+          "en": "Donate and eat quickly",
+          "es": "Donar y comer rápido"
+        },
+        "tag": "Professional",
+        "rarity": "common",
+        "goldDelta": -20,
+        "staminaDelta": 30,
+        "narrative": {
+          "en": "You leave a generous coin in the alms bowl, eat your fill, and bow out before the silence can interrogate you. A fair trade.",
+          "es": "Dejás una moneda generosa en la limosna, comés hasta saciarte y te despedís antes de que el silencio pueda interrogarte. Un trato justo."
+        }
+      },
+      {
+        "id": "debate_abbot",
+        "label": {
+          "en": "Challenge the abbot to debate",
+          "es": "Desafiar al abad a debatir"
+        },
+        "tag": "Cocky",
+        "rarity": "rare",
+        "requiresStat": {
+          "stat": "intelligence",
+          "min": 12
+        },
+        "staminaDelta": 15,
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "narrative": {
+          "en": "You argue theology with the abbot until the candles burn low. He laughs at the end and pours you the last of the wine: 'Come back when you've read more — you're worth arguing with.'",
+          "es": "Discutís teología con el abad hasta que las velas se consumen. Se ríe al final y te sirve el último del vino: 'Volvé cuando hayas leído más — vale la pena discutir con vos.'"
+        }
+      }
+    ]
+  },
+  {
+    "id": "rest_fisherman_sunrise",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "location": "greywater",
+    "narrative": {
+      "en": "A fisherman hauls his nets onto the dock at first light, silver fish spilling across the planks. He waves. 'The sea gives more than it takes, most days. Sit — there's coffee and a story in it.'",
+      "es": "Un pescador arrastra sus redes hasta el muelle al primer amanecer, peces plateados derramándose sobre las tablas. Te saluda con la mano. 'El mar da más de lo que quita, casi siempre. Sentate — hay café y una historia de por medio.'"
+    },
+    "choices": [
+      {
+        "id": "haul_nets",
+        "label": {
+          "en": "Help haul the nets",
+          "es": "Ayudar a arrastrar las redes"
+        },
+        "tag": "Supportive",
+        "rarity": "common",
+        "staminaDelta": 28,
+        "statDeltas": {
+          "constitution": 1
+        },
+        "narrative": {
+          "en": "Your hands learn the salt-rough rhythm of the work. By the time the nets hang clean, you've earned breakfast twice over and a creak-free pair of shoulders.",
+          "es": "Tus manos aprenden el ritmo áspero y salado del trabajo. Para cuando las redes cuelgan limpias, te ganaste el desayuno dos veces y unos hombros sin crujidos."
+        }
+      },
+      {
+        "id": "eat_catch",
+        "label": {
+          "en": "Eat your fill and rest",
+          "es": "Comer hasta saciarte y descansar"
+        },
+        "tag": "Humble",
+        "rarity": "uncommon",
+        "staminaDelta": 40,
+        "healthDelta": 4,
+        "narrative": {
+          "en": "Fish grilled over driftwood, bread hard as a board, and coffee that could wake the dead. You sleep on the dock like a king with a full belly.",
+          "es": "Pescado a la brasa sobre leña de deriva, pan duro como una tabla y café que podría despertar a los muertos. Dormís en el muelle como un rey con la panza llena."
+        }
+      },
+      {
+        "id": "learn_knot",
+        "label": {
+          "en": "Trade a knot for a recipe",
+          "es": "Cambiar un nudo por una receta"
+        },
+        "tag": "Strategic",
+        "rarity": "rare",
+        "staminaDelta": 20,
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "narrative": {
+          "en": "You teach him the caravan hitch; he teaches you the fisherman's loop and a curing brine that keeps meat good on long crossings. Useful knowledge, well bartered.",
+          "es": "Le enseñás el nudo de caravana; él te enseña la lazada de pescador y una salmuera de curado que conserva la carne en cruces largos. Conocimiento útil, bien intercambiado."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rest_quiet_grove_meditation",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "location": "thornwood",
+    "narrative": {
+      "en": "Moss hangs like green velvet in this grove, and the only sound is water dripping somewhere unseen. A worn stone bench waits beneath an old oak. The quiet is so deep you can hear your own heartbeat disagreeing with you.",
+      "es": "El musgo cuelga como terciopelo verde en este claro, y el único sonido es agua goteando en algún lugar invisible. Un banco de piedra gastado espera bajo un viejo roble. El silencio es tan profundo que podés oír a tu propio corazón en desacuerdo con vos."
+    },
+    "choices": [
+      {
+        "id": "meditate_dusk",
+        "label": {
+          "en": "Meditate until dusk",
+          "es": "Meditar hasta el anochecer"
+        },
+        "tag": "Stoic",
+        "rarity": "uncommon",
+        "staminaDelta": 30,
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "narrative": {
+          "en": "You watch your thoughts like a falconer watches the sky. By dusk, the loudest voice in your head has gone quiet, and the road ahead seems simpler than it did.",
+          "es": "Observás tus pensamientos como un cetrero observa el cielo. Al anochecer, la voz más ruidosa de tu cabeza se calló, y el camino por delante parece más simple de lo que era."
+        }
+      },
+      {
+        "id": "nap_oak",
+        "label": {
+          "en": "Nap under the old oak",
+          "es": "Siestear bajo el viejo roble"
+        },
+        "tag": "Humble",
+        "rarity": "common",
+        "staminaDelta": 45,
+        "narrative": {
+          "en": "You fall asleep to the sound of your own breathing and wake with leaves in your hair and a strange peace in your chest. The grove kept you safe while you weren't watching.",
+          "es": "Te dormís al sonido de tu propia respiración y despertás con hojas en el pelo y una paz extraña en el pecho. El claro te cuidó mientras no estabas mirando."
+        }
+      },
+      {
+        "id": "carve_ward",
+        "label": {
+          "en": "Carve a ward into a young tree",
+          "es": "Tallar un amuleto en un árbol joven"
+        },
+        "tag": "Supportive",
+        "rarity": "rare",
+        "staminaDelta": 25,
+        "statDeltas": {
+          "charisma": 2
+        },
+        "narrative": {
+          "en": "You leave a small sigil of protection on a sapling — a gift to whoever walks this way next. The grove hums its approval, and you feel a little more connected to the world.",
+          "es": "Dejás un pequeño sigilo de protección en un retoño — un regalo para quien pase por este camino después. El claro zumba su aprobación, y te sentís un poco más conectado con el mundo."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rest_guard_post_nap",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "location": "road",
+    "narrative": {
+      "en": "A guard stamps his boots by a watch-post fire near {locationName}. 'Long night ahead,' he says. 'Bunk's dry and nobody's used it. I'd take it myself, but somebody's got to watch for things that don't respect a fire.'",
+      "es": "Un guardia patea sus botas junto al fuego de un puesto de vigilancia cerca de {locationName}. 'Noche larga por delante', dice. 'La litera está seca y nadie la usó. La tomaría yo, pero alguien tiene que vigilar a las cosas que no respetan un fuego.'"
+    },
+    "choices": [
+      {
+        "id": "take_bunk",
+        "label": {
+          "en": "Take the bunk gratefully",
+          "es": "Aceptar la litera agradecido"
+        },
+        "tag": "Professional",
+        "rarity": "common",
+        "staminaDelta": 35,
+        "narrative": {
+          "en": "You sleep with one ear open, the way the road teaches. When you wake, the guard is gone and a tin cup of hot tea waits on the post — still steaming.",
+          "es": "Dormís con un oído alerta, como enseña el camino. Cuando despertás, el guardia se fue y una taza de té caliente espera en el poste — todavía humeante."
+        }
+      },
+      {
+        "id": "keep_company",
+        "label": {
+          "en": "Keep them company on watch",
+          "es": "Hacerle compañía en la guardia"
+        },
+        "tag": "Funny",
+        "rarity": "uncommon",
+        "staminaDelta": 20,
+        "statDeltas": {
+          "charisma": 2
+        },
+        "narrative": {
+          "en": "You trade terrible jokes and worse stories till the stars wheel. By dawn you've made a friend and a contact — and the watch felt half as long.",
+          "es": "Intercambiás chistes malos e historias peores hasta que las estrellas giran. Al amanecer hiciste un amigo y un contacto — y la guardia se sintió la mitad de larga."
+        }
+      },
+      {
+        "id": "press_on_night",
+        "label": {
+          "en": "Thank them and press on by moonlight",
+          "es": "Agradecerles y seguir a la luz de la luna"
+        },
+        "tag": "Aggressive",
+        "rarity": "volatile",
+        "requiresStat": {
+          "stat": "constitution",
+          "min": 12
+        },
+        "staminaDelta": -5,
+        "statDeltas": {
+          "dexterity": 2
+        },
+        "narrative": {
+          "en": "You trade comfort for distance. The moon lays a silver road ahead of you, and you take it at a march. The guard's 'mad fool' follows you down the slope, almost admiring.",
+          "es": "Cambiás comodidad por distancia. La luna tiende un camino plateado frente a vos, y lo tomás a paso de marcha. El 'loco insensato' del guardia te sigue cuesta abajo, casi con admiración."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rest_storm_cellar",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "location": "whispering_reed",
+    "narrative": {
+      "en": "The sky cracks open and rain comes down like a judgment. A farmer waves you toward a root-cellar door. 'Get in! The storm's got teeth tonight, and the cellar's got room for one more.'",
+      "es": "El cielo se parte y la lluvia cae como un juicio. Un granjero te hace señas hacia la puerta de un sótano de raíces. '¡Entrá! La tormenta tiene dientes esta noche, y el sótano tiene lugar para uno más.'"
+    },
+    "choices": [
+      {
+        "id": "share_rations",
+        "label": {
+          "en": "Share your rations with the family",
+          "es": "Compartir tus raciones con la familia"
+        },
+        "tag": "Supportive",
+        "rarity": "uncommon",
+        "staminaDelta": 30,
+        "reputationDelta": 2,
+        "reputationFaction": "whispering_reed",
+        "narrative": {
+          "en": "You break bread with strangers under a leaking roof, and the storm sounds like music. They press a bundle of dried herbs into your hands: 'For the road. And for remembering us.'",
+          "es": "Compartís pan con desconocidos bajo un techo con goteras, y la tormenta suena como música. Te meten un atado de hierbas secas en las manos: 'Para el camino. Y para acordarte de nosotros.'"
+        }
+      },
+      {
+        "id": "sleep_storm",
+        "label": {
+          "en": "Sleep through the storm",
+          "es": "Dormir durante la tormenta"
+        },
+        "tag": "Humble",
+        "rarity": "common",
+        "staminaDelta": 40,
+        "narrative": {
+          "en": "Thunder becomes a lullaby, and the smell of wet earth becomes a pillow. You wake to a clean sky and a farm that smells of new life.",
+          "es": "El trueno se convierte en canción de cuna, y el olor a tierra mojada en almohada. Despertás con un cielo limpio y una granja que huele a vida nueva."
+        }
+      },
+      {
+        "id": "shore_door",
+        "label": {
+          "en": "Help shore up the cellar door",
+          "es": "Ayudar a reforzar la puerta del sótano"
+        },
+        "tag": "Strategic",
+        "rarity": "rare",
+        "staminaDelta": 25,
+        "statDeltas": {
+          "constitution": 1
+        },
+        "narrative": {
+          "en": "You brace the door against the wind with the farmer, plank by plank, working in the shouting dark. When the storm passes, he shakes your hand like you saved the farm — maybe you did.",
+          "es": "Sostenés la puerta contra el viento junto al granjero, tabla por tabla, trabajando en la oscuridad a los gritos. Cuando la tormenta pasa, te estrecha la mano como si hubieras salvado la granja — quizá lo hiciste."
+        }
+      }
+    ]
   }
 ]

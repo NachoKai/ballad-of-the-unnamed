@@ -336,5 +336,338 @@
         }
       }
     ]
+  },
+  {
+    "id": "foreign_local_champion_challenge",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 7,
+    "requiresForeign": true,
+    "narrative": {
+      "en": "At {regionVariant}, a local champion spots your foreign blade and grins. 'A name for the arena, outlander! Beat me and the crowd forgets you're not from here — lose, and they'll never let you forget.'",
+      "es": "En {regionVariant}, una campeona local ve tu hoja forastera y sonríe. '¡Un nombre para la arena, forastera! Ganame y la multitud olvida que no sos de aquí — perdé, y jamás te dejarán olvidarlo.'"
+    },
+    "choices": [
+      {
+        "id": "accept_challenge",
+        "label": {
+          "en": "Accept the challenge",
+          "es": "Aceptar el desafío"
+        },
+        "tag": "Aggressive",
+        "rarity": "rare",
+        "requiresStat": {
+          "stat": "strength",
+          "min": 13
+        },
+        "statDeltas": {
+          "strength": 2
+        },
+        "fameDelta": 4,
+        "reputationDelta": 2,
+        "reputationFaction": "greywater",
+        "countersDelta": {
+          "battles_won": 1
+        },
+        "injuryRiskDelta": 0.15,
+        "narrative": {
+          "en": "The crowd's roar is a wall of sound. When the champion yields, they chant your name — foreign syllables and all. For one night, the outsider is a hero here.",
+          "es": "El rugido de la multitud es un muro de sonido. Cuando la campeona cede, corean tu nombre — sílabas forasteras incluidas. Por una noche, la outsider es una héroe aquí."
+        }
+      },
+      {
+        "id": "buy_them_a_drink",
+        "label": {
+          "en": "Buy the champion a drink instead",
+          "es": "Invitarle una bebida a la campeona"
+        },
+        "tag": "Funny",
+        "rarity": "uncommon",
+        "goldDelta": -20,
+        "statDeltas": {
+          "charisma": 2
+        },
+        "fameDelta": 1,
+        "narrative": {
+          "en": "The champion laughs and claps your shoulder. 'Smart, for an outsider.' By the second round they're telling you which nobles to avoid — and the arena forgets your accent.",
+          "es": "La campeona ríe y te palmea el hombro. 'Lista, para ser forastera.' Para la segunda ronda ya te está contando qué nobles evitar — y la arena olvida tu acento."
+        }
+      },
+      {
+        "id": "decline_gracefully",
+        "label": {
+          "en": "Decline with a bow and a compliment",
+          "es": "Declinar con una reverencia y un elogio"
+        },
+        "tag": "Humble",
+        "rarity": "common",
+        "statDeltas": {
+          "charisma": 1
+        },
+        "narrative": {
+          "en": "You bow and name the champion's skill honestly. They're disarmed — and the crowd cheers the gesture louder than any bout. The outlander who knows when to yield wins twice.",
+          "es": "Te inclinás y nombrás con honestidad la destreza de la campeona. Quedan desarmados — y la multitud aplaude el gesto más fuerte que cualquier combate. La forastera que sabe cuándo ceder gana dos veces."
+        }
+      }
+    ]
+  },
+  {
+    "id": "foreign_strange_customs",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "requiresForeign": true,
+    "narrative": {
+      "en": "You say something that lands wrong. The room goes still, and the silence has a name: you just insulted the local dead. An elder explains the custom with patient eyes — the price of ignorance is a choice, not a scolding.",
+      "es": "Decís algo que cae mal. La sala se queda quieta, y el silencio tiene un nombre: acabas de insultar a los muertos locales. Un anciano te explica la costumbre con ojos pacientes — el precio de la ignorancia es una elección, no un reto."
+    },
+    "choices": [
+      {
+        "id": "apologize_sincerely",
+        "label": {
+          "en": "Apologize and learn the custom",
+          "es": "Disculparte y aprender la costumbre"
+        },
+        "tag": "Humble",
+        "rarity": "uncommon",
+        "requiresStat": {
+          "stat": "charisma",
+          "min": 12
+        },
+        "statDeltas": {
+          "charisma": 2
+        },
+        "reputationDelta": 3,
+        "reputationFaction": "ironhold",
+        "narrative": {
+          "en": "You bow the way the elder shows you and speak the apology until you mean it. The room thaws slowly, then all at once — and the outsider who learns is forgiven.",
+          "es": "Te inclinás como te enseña el anciano y repetís la disculpa hasta que la sentís de verdad. La sala se descongela despacio, y de golpe — y al forastero que aprende se lo perdona."
+        }
+      },
+      {
+        "id": "pay_custom_fine",
+        "label": {
+          "en": "Pay the customary fine",
+          "es": "Pagar la multa de costumbre"
+        },
+        "tag": "Professional",
+        "rarity": "common",
+        "goldDelta": -50,
+        "narrative": {
+          "en": "Coin, placed in the offering bowl, says what you cannot yet say in their tongue. The elder nods — the fine is paid, and the lesson is filed.",
+          "es": "La moneda, puesta en el cuenco de las ofrendas, dice lo que todavía no podés decir en su lengua. El anciano asiente — la multa está paga, y la lección, archivada."
+        }
+      },
+      {
+        "id": "double_down",
+        "label": {
+          "en": "Double down on your own customs",
+          "es": "Redoblar la apuesta por tus propias costumbres"
+        },
+        "tag": "Cocky",
+        "rarity": "volatile",
+        "statDeltas": {
+          "charisma": 1
+        },
+        "reputationDelta": -2,
+        "reputationFaction": "ironhold",
+        "fameDelta": 2,
+        "narrative": {
+          "en": "You double down with a grin and a toast to your own customs, louder and prouder. Half the room laughs with you, half burns. Either way, they will remember you.",
+          "es": "Redoblás la apuesta con una sonrisa y un brindis por tus propias costumbres, más fuerte y más orgulloso. La mitad de la sala se ríe con vos, la otra hierve. Igual te van a recordar."
+        }
+      }
+    ]
+  },
+  {
+    "id": "foreign_merchant_discount",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "requiresForeign": true,
+    "narrative": {
+      "en": "The merchant at {locationName} quotes a price and watches your accent like a hawk. 'Outsider price,' the trader behind you mutters. 'Double the local rate, and they'll call it charity.'",
+      "es": "La mercader en {locationName} dice un precio y vigila tu acento como un halcón. 'Precio de forastero', murmura el comerciante detrás de vos. 'El doble de la tarifa local, y lo llaman caridad.'"
+    },
+    "choices": [
+      {
+        "id": "haggle_hard",
+        "label": {
+          "en": "Haggle the price down hard",
+          "es": "Bajar el precio con un regateo duro"
+        },
+        "tag": "Cocky",
+        "rarity": "rare",
+        "requiresStat": {
+          "stat": "charisma",
+          "min": 12
+        },
+        "statDeltas": {
+          "charisma": 1
+        },
+        "goldDelta": -20,
+        "narrative": {
+          "en": "You talk the price down through haggling so sharp it draws blood. The merchant grumbles, but the deal is yours — at a rate no local would blush at.",
+          "es": "Bajás el precio con un regateo tan filoso que saca sangre. La mercader refunfuña, pero el trato es tuyo — a una tarifa de la que ningún local se sonrojaría."
+        }
+      },
+      {
+        "id": "pay_tax",
+        "label": {
+          "en": "Pay the outsider price without blinking",
+          "es": "Pagar el precio de forastero sin pestañear"
+        },
+        "tag": "Professional",
+        "rarity": "common",
+        "goldDelta": -60,
+        "narrative": {
+          "en": "You pay the outsider price without blinking. The merchant looks almost disappointed. Some battles aren't worth the breath — and this market has eyes on you.",
+          "es": "Pagás el precio de forastero sin pestañear. La mercader parece casi decepcionada. Algunas batallas no valen el aliento — y este mercado tiene ojos puestos en vos."
+        }
+      },
+      {
+        "id": "trade_story",
+        "label": {
+          "en": "Trade a story for the difference",
+          "es": "Cambiar una historia por la diferencia"
+        },
+        "tag": "Funny",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "charisma": 2
+        },
+        "fameDelta": 1,
+        "narrative": {
+          "en": "You offer a story instead of a haggle, and the merchant's laughter opens the purse. By the time the tale ends, the goods are wrapped and the price is fair.",
+          "es": "Ofrecés una historia en lugar de un regateo, y la risa de la mercader abre la bolsa. Para cuando el cuento termina, la mercancía está envuelta y el precio es justo."
+        }
+      }
+    ]
+  },
+  {
+    "id": "foreign_ship_captain_berth",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "requiresForeign": true,
+    "narrative": {
+      "en": "A weathered captain at the docks studies your travel-worn boots. 'I sail past your home waters in a season. A berth, a hammock, and no questions — for sixty gold, or a season of honest work. Your choice, outlander.'",
+      "es": "Una capitana curtida en los muelles estudia tus botas gastadas por el viaje. 'Navego por aguas cercanas a tu tierra en una temporada. Un camarote, una hamaca y sin preguntas — por sesenta de oro, o una temporada de trabajo honesto. Elegí, forastera.'"
+    },
+    "choices": [
+      {
+        "id": "take_berth",
+        "label": {
+          "en": "Pay for the berth and sail",
+          "es": "Pagar por el camarote y navegar"
+        },
+        "tag": "Professional",
+        "rarity": "uncommon",
+        "goldDelta": -60,
+        "staminaDelta": 20,
+        "narrative": {
+          "en": "You pay for the hammock and let the sea rock you toward home. For the first time in weeks, you sleep without one eye open.",
+          "es": "Pagás por la hamaca y dejás que el mar te meza hacia casa. Por primera vez en semanas, dormís sin un ojo abierto."
+        }
+      },
+      {
+        "id": "work_passage",
+        "label": {
+          "en": "Work the passage instead",
+          "es": "Trabajar el pasaje en su lugar"
+        },
+        "tag": "Supportive",
+        "rarity": "common",
+        "staminaDelta": -15,
+        "statDeltas": {
+          "constitution": 2
+        },
+        "narrative": {
+          "en": "You haul lines and scrub decks till your hands crack. The crew respects a worker, and the captain promises the last watch of the voyage is yours.",
+          "es": "Cargás cabos y fregás cubiertas hasta que las manos se te agrietan. La tripulación respeta a quien trabaja, y la capitana te promete la última guardia del viaje."
+        }
+      },
+      {
+        "id": "stay_ashore",
+        "label": {
+          "en": "Stay ashore and keep your freedom",
+          "es": "Quedarte en tierra y conservar tu libertad"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": {
+          "intelligence": 1
+        },
+        "narrative": {
+          "en": "You watch the ship sail without you. Home can wait — the road here still owes you answers, and you mean to collect.",
+          "es": "Mirás el barco partir sin vos. Tu tierra puede esperar — el camino de aquí todavía te debe respuestas, y pensás cobrarlas."
+        }
+      }
+    ]
+  },
+  {
+    "id": "foreign_home_festival",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "requiresForeign": true,
+    "narrative": {
+      "en": "A peddler's cart displays a small woven charm in the shape of your homeland's festival emblem. You haven't seen one in years. Tonight, somewhere far away, your people are lighting the lanterns.",
+      "es": "El carro de un vendedor muestra un pequeño amuleto tejido con la forma del emblema del festival de tu tierra. Hacía años que no veías uno. Esta noche, en algún lugar lejano, los tuyos encienden los faroles."
+    },
+    "choices": [
+      {
+        "id": "toast_home",
+        "label": {
+          "en": "Toast home from afar",
+          "es": "Brindar por tu tierra desde lejos"
+        },
+        "tag": "Humble",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "charisma": 2
+        },
+        "fameDelta": 1,
+        "narrative": {
+          "en": "You buy the charm, raise a cup to the east, and drink to the people who light the lanterns without you. The ache is real — but so is the joy that they're still there.",
+          "es": "Comprás el amuleto, alzás una copa hacia el este y brindás por la gente que enciende los faroles sin vos. El dolor es real — pero también la alegría de que sigan ahí."
+        }
+      },
+      {
+        "id": "teach_festival",
+        "label": {
+          "en": "Teach the locals your festival",
+          "es": "Enseñarles tu festival a los locales"
+        },
+        "tag": "Funny",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "charisma": 1
+        },
+        "fameDelta": 2,
+        "reputationDelta": 2,
+        "reputationFaction": "ironhold",
+        "narrative": {
+          "en": "You teach the locals your festival's dance in the inn's common room, and by midnight half the town is doing it wrong and loving it. Your homeland just gained a colony of bad dancers.",
+          "es": "Le enseñás a los locales el baile de tu festival en la sala común de la posada, y para la medianoche medio pueblo lo baila mal y lo ama. Tu tierra acaba de ganar una colonia de malos bailarines."
+        }
+      },
+      {
+        "id": "mourn_quietly",
+        "label": {
+          "en": "Keep the charm and mourn quietly",
+          "es": "Guardar el amuleto y llorar en silencio"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "narrative": {
+          "en": "You keep the charm and let the festival pass uncelebrated. Memory is a private lantern — no need for witnesses.",
+          "es": "Guardás el amuleto y dejás pasar el festival sin celebrarlo. La memoria es un farol privado — no necesita testigos."
+        }
+      }
+    ]
   }
 ]

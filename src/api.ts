@@ -38,6 +38,11 @@ export interface ArchetypeView {
   name: string
   flavor: string
   statDeltas: Record<string, number>
+  // Hidden "master" archetypes: `locked` when the player hasn't finished a run
+  // with this class yet (the card renders as "???"), `isMaster` when served
+  // fully — either unlocked or still locked (so the client can style masters).
+  locked?: boolean
+  isMaster?: boolean
 }
 
 export interface NewRunResponse {
@@ -140,7 +145,12 @@ export const api = {
   classes: (locale: Locale) =>
     jfetch<{ classes: ClassInfo[]; dailySeed: string }>(`/api/meta/classes?locale=${locale}`),
 
-  drawArchetypes: (input: { classId: string; locale: Locale; gender: Gender }) =>
+  drawArchetypes: (input: {
+    classId: string
+    locale: Locale
+    gender: Gender
+    unlockedClasses?: string[]
+  }) =>
     jfetch<{ archetypes: ArchetypeView[] }>("/api/game/archetype-draw", {
       method: "POST",
       body: JSON.stringify(input),
@@ -154,6 +164,7 @@ export const api = {
     origin?: Origin
     runType: RunType
     locale: Locale
+    unlockedClasses?: string[]
   }) =>
     jfetch<NewRunResponse>("/api/game/new", {
       method: "POST",

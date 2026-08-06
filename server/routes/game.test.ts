@@ -121,6 +121,34 @@ async function postChoose(run: CharacterState, pendingEvent: EventContent, cardI
   return jsonPromise
 }
 
+// Drive POST /archetype-draw (no store interaction — synchronous route).
+async function postDraw(classId: string, unlockedClasses?: string[]) {
+  let statusCode = 200
+  let resolveJson!: (v: { statusCode: number; body: unknown }) => void
+  const res = {
+    status(code: number) {
+      statusCode = code
+      return this
+    },
+    json(body: unknown) {
+      resolveJson({ statusCode, body })
+      return this
+    },
+  } as unknown as Response
+
+  const jsonPromise = new Promise<{ statusCode: number; body: unknown }>((r) => {
+    resolveJson = r
+  })
+  const req = {
+    method: "POST",
+    url: "/archetype-draw",
+    body: { classId, locale: "en", gender: "male", unlockedClasses },
+    query: {},
+  } as unknown as Request
+  gameRouter(req, res, () => {})
+  return jsonPromise
+}
+
 // Drive POST /minigame-move with a synthetic pending interactive event on the
 // run (the real interactive minigame content ships in Task 8).
 async function postMinigameMove(run: CharacterState, pendingEvent: EventContent, move: unknown) {
@@ -308,6 +336,142 @@ describe("POST /minigame-move · interactive minigame moves", () => {
     expect(statusCode).toBe(400)
     const res = body as { error: string }
     expect(res.error).toBe("no_interactive_minigame")
+  })
+})
+
+describe("POST /archetype-draw · hidden master filtering", () => {
+  it("serves every archetype, with locked masters masked as ??? cards", async () => {
+    const { statusCode, body } = await postDraw("warrior")
+    expect(statusCode).toBe(200)
+    const res = body as {
+      archetypes: {
+        id: string
+        locked?: boolean
+        name: string
+        statDeltas: Record<string, number>
+      }[]
+    }
+    expect(res.archetypes).toHaveLength(9) // 8 normal + 1 hidden master
+    const warlord = res.archetypes.find((a) => a.id === "warlord")!
+    expect(warlord.locked).toBe(true)
+    expect(warlord.name).toBe("???")
+    expect(warlord.statDeltas).toEqual({})
+    // Normal archetypes are served in full, never flagged locked.
+    const berserker = res.archetypes.find((a) => a.id === "berserker")!
+    expect(berserker.locked).toBeUndefined()
+    expect(berserker.name).toBe("Berserker")
+    expect(berserker.statDeltas).toEqual({ strength: 8 })
+  })
+
+  it("serves the master archetype in full once its class is unlocked", async () => {
+    const { statusCode, body } = await postDraw("warrior", ["warrior"])
+    expect(statusCode).toBe(200)
+    const res = body as {
+      archetypes: {
+        id: string
+        locked?: boolean
+        isMaster?: boolean
+        statDeltas: Record<string, number>
+      }[]
+    }
+    const warlord = res.archetypes.find((a) => a.id === "warlord")!
+    expect(warlord.locked).toBeUndefined()
+    expect(warlord.isMaster).toBe(true)
+    expect(warlord.statDeltas).toEqual({ strength: 8, intelligence: 4 })
+  })
+
+  it("a hidden archetype is never served unlocked for a class outside unlockedClasses", async () => {
+    for (const cls of ["wizard", "rogue", "ranger", "cleric", "bard"]) {
+      const { body } = await postDraw(cls, ["warrior"]) // only warrior is unlocked
+      const res = body as { archetypes: { id: string; locked?: boolean; isMaster?: boolean }[] }
+      const master = res.archetypes.find((a) => a.isMaster)!
+      expect(master, `${cls} must have a master archetype`).toBeTruthy()
+      expect(master.locked).toBe(true)
+      // the class's normal archetypes still come through pickable
+      expect(res.archetypes.filter((a) => !a.isMaster).every((a) => !a.locked)).toBe(true)
+    }
+  })
+})
+
+describe("POST /new · locked master archetype guard", () => {
+  it("rejects creating a run with a hidden archetype whose class is not unlocked", async () => {
+    let statusCode = 200
+    let resolveJson!: (v: { statusCode: number; body: unknown }) => void
+    const res = {
+      status(code: number) {
+        statusCode = code
+        return this
+      },
+      json(body: unknown) {
+        resolveJson({ statusCode, body })
+        return this
+      },
+    } as unknown as Response
+
+    const jsonPromise = new Promise<{ statusCode: number; body: unknown }>((r) => {
+      resolveJson = r
+    })
+    const req = {
+      method: "POST",
+      url: "/new",
+      body: { name: "X", classId: "warrior", archetypeId: "warlord", locale: "en", gender: "male" },
+      query: {},
+    } as unknown as Request
+    gameRouter(req, res, () => {})
+    const { statusCode: code, body } = await jsonPromise
+    expect(code).toBe(400)
+    expect((body as { error: string }).error).toBe("locked_archetype")
+  })
+
+  it("accepts a master archetype when the class is in unlockedClasses", async () => {
+    let statusCode = 200
+    let resolveJson!: (v: { statusCode: number; body: unknown }) => void
+    const res = {
+      status(code: number) {
+        statusCode = code
+        return this
+      },
+      json(body: unknown) {
+        resolveJson({ statusCode, body })
+        return this
+      },
+      cookie() {
+        return this
+      },
+    } as unknown as Response
+    store.createRun.mockResolvedValue({
+      id: "run-unlocked",
+      runType: "standard",
+      seed: "s",
+      rngState: 1,
+      locale: "en",
+      character: null,
+      pendingEvent: null,
+      finished: false,
+    })
+    store.saveRun.mockResolvedValue(undefined)
+
+    const jsonPromise = new Promise<{ statusCode: number; body: unknown }>((r) => {
+      resolveJson = r
+    })
+    const req = {
+      method: "POST",
+      url: "/new",
+      body: {
+        name: "X",
+        classId: "warrior",
+        archetypeId: "warlord",
+        unlockedClasses: ["warrior"],
+        locale: "en",
+        gender: "male",
+      },
+      query: {},
+    } as unknown as Request
+    gameRouter(req, res, () => {})
+    const { statusCode: code, body } = await jsonPromise
+    expect(code).toBe(200)
+    const result = body as { character: { archetype: string | null } }
+    expect(result.character.archetype).toBe("warlord")
   })
 })
 

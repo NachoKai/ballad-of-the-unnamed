@@ -142,5 +142,135 @@
         }
       }
     }
+  },
+  {
+    "id": "debate_old_versus_new",
+    "type": "minigame",
+    "subtype": "debate",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 8,
+    "isCapstone": true,
+    "capstoneKind": "debate",
+    "primaryStat": "charisma",
+    "narrative": {
+      "en": "The old guildhall and the new academy are at war over the season's charter, and the court has called you to arbitrate the public debate. Two schools of thought, one floor, and a crowd that wants a winner. Choose your side — or rather, your stance.",
+      "es": "El viejo gremio y la nueva academia están en guerra por la carta de la temporada, y la corte te ha llamado a arbitrar el debate público. Dos escuelas de pensamiento, un mismo estrado y una multitud que quiere una ganadora. Elegí tu bando — o mejor, tu postura."
+    },
+    "cards": [
+      {
+        "id": "stance_old_guild",
+        "icon": "scroll",
+        "trap": true,
+        "label": {
+          "en": "Champion the old guild's ways",
+          "es": "Defender las costumbres del viejo gremio"
+        }
+      },
+      {
+        "id": "stance_bridge",
+        "icon": "handshake",
+        "tag": "Strategic",
+        "wantedTags": {
+          "Strategic": 1,
+          "Professional": 0.5
+        },
+        "punishedTags": {
+          "Aggressive": 0.5
+        },
+        "label": {
+          "en": "Argue for a bridge between both",
+          "es": "Argumentar por un puente entre ambos"
+        }
+      },
+      {
+        "id": "stance_academy",
+        "icon": "sun",
+        "tag": "Confident",
+        "wantedTags": {
+          "Confident": 1,
+          "Cocky": 0.5
+        },
+        "punishedTags": {
+          "Humble": 0.5
+        },
+        "label": {
+          "en": "Champion the academy's new learning",
+          "es": "Defender el nuevo saber de la academia"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.42,
+      "statInfluence": {
+        "charisma": 0.012,
+        "intelligence": 0.004
+      },
+      "cardModifiers": {
+        "stance_bridge": {
+          "winChanceDelta": 0.05
+        },
+        "stance_academy": {
+          "winChanceDelta": 0.1
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "charisma": 2
+        },
+        "fameDelta": 6,
+        "reputationDelta": 3,
+        "verdict": {
+          "en": "GREAT +3",
+          "es": "GRAN +3"
+        },
+        "gradeDelta": 3,
+        "narrative": {
+          "en": "Your arbitration lands like a charter signed in fire. Both halls concede, the crowd roars, and the season's charter is written with your name as its seal. {rivalName} watches from the gallery, measuring you anew.",
+          "es": "Tu arbitraje cae como una carta firmada a fuego. Ambos salones ceden, la multitud ruge, y la carta de la temporada se escribe con tu nombre como sello. {rivalName} observa desde la galería, midiéndote de nuevo."
+        }
+      },
+      "success": {
+        "fameDelta": 3,
+        "reputationDelta": 1,
+        "verdict": {
+          "en": "GOOD +1",
+          "es": "BUENA +1"
+        },
+        "gradeDelta": 1,
+        "narrative": {
+          "en": "The debate closes with your stance quoted in both halls. Not everyone agrees, but everyone agrees you argued well — and in this court, that is a win.",
+          "es": "El debate cierra con tu postura citada en ambos salones. No todos están de acuerdo, pero todos coinciden en que argumentaste bien — y en esta corte, eso es una victoria."
+        }
+      },
+      "partial": {
+        "reputationDelta": -1,
+        "verdict": {
+          "en": "MIXED 0",
+          "es": "MIXTA 0"
+        },
+        "gradeDelta": 0,
+        "narrative": {
+          "en": "The debate dissolves into the same old quarrel, and your arbitration is drowned in both sides' noise. The charter limps through unchanged, and the crowd remembers only that someone tried.",
+          "es": "El debate se disuelve en la vieja disputa, y tu arbitraje se ahoga en el ruido de ambos bandos. La carta pasa renqueando sin cambios, y la multitud recuerda solo que alguien lo intentó."
+        }
+      },
+      "fail": {
+        "reputationDelta": -3,
+        "fameDelta": -2,
+        "verdict": {
+          "en": "BAD −4",
+          "es": "MALA −4"
+        },
+        "gradeDelta": -4,
+        "narrative": {
+          "en": "The stance you chose is exposed as bought, and both halls turn on you at once. The court's laughter follows you out, and {rivalName} tells the story all winter — with embellishments.",
+          "es": "La postura que elegiste queda expuesta como comprada, y ambos salones se vuelven contra vos a la vez. La risa de la corte te sigue hasta afuera, y {rivalName} cuenta la historia todo el invierno — con adornos."
+        }
+      }
+    }
   }
 ]

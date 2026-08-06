@@ -416,5 +416,447 @@
         }
       }
     ]
+  },
+  {
+    "id": "region_vale_flood",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 7,
+    "requiresRegion": "vale",
+    "narrative": {
+      "en": "Spring melts the snows early and the river forgets its banks. At {regionVariant}, the water is already lapping at the mill doors, and a {npcRole} calls for every able hand.",
+      "es": "La primavera derrite las nieves temprano y el río olvida sus orillas. En {regionVariant}, el agua ya lame las puertas del molino, y un {npcRole} pide todas las manos disponibles."
+    },
+    "choices": [
+      {
+        "id": "sandbag_line",
+        "label": {
+          "en": "Join the sandbag line",
+          "es": "Sumarte a la cadena de sacos de arena"
+        },
+        "tag": "Supportive",
+        "rarity": "uncommon",
+        "staminaDelta": -20,
+        "statDeltas": {
+          "constitution": 2
+        },
+        "reputationDelta": 3,
+        "reputationFaction": "greywater",
+        "countersDelta": {
+          "lives_saved": 1
+        },
+        "narrative": {
+          "en": "Mud to the elbows, backs against the water — and the mill holds. The village elder presses a token of the Vale's gratitude into your palm.",
+          "es": "Barro hasta los codos, espaldas contra el agua — y el molino aguanta. El anciano de la aldea te mete un símbolo del agradecimiento del Valle en la palma."
+        }
+      },
+      {
+        "id": "ferry_people",
+        "label": {
+          "en": "Ferry the stranded to high ground",
+          "es": "Llevar a los varados a terreno alto"
+        },
+        "tag": "Leader",
+        "rarity": "rare",
+        "requiresStat": {
+          "stat": "strength",
+          "min": 12
+        },
+        "staminaDelta": -25,
+        "statDeltas": {
+          "strength": 2
+        },
+        "fameDelta": 3,
+        "reputationDelta": 2,
+        "reputationFaction": "greywater",
+        "narrative": {
+          "en": "Boat after boat, until the last child is dry. The Vale will tell this story at every flood to come — and your name rides on the telling.",
+          "es": "Bote tras bote, hasta que el último niño está a salvo. El Valle contará esta historia en cada inundación futura — y tu nombre cabalga en el relato."
+        }
+      },
+      {
+        "id": "save_your_own",
+        "label": {
+          "en": "Secure your own gear and keep dry",
+          "es": "Asegurar tu propio equipo y quedarte seco"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": {
+          "intelligence": 1
+        },
+        "narrative": {
+          "en": "You watch the flood from the ridge, dry and wise. The village remembers those who helped — and quietly, those who didn't.",
+          "es": "Mirás la inundación desde la cresta, seco y sabio. La aldea recuerda a quienes ayudaron — y en silencio, a quienes no."
+        }
+      }
+    ]
+  },
+  {
+    "id": "region_coast_pirate_raid",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 7,
+    "requiresRegion": "coast",
+    "narrative": {
+      "en": "Black sails round the headland at {regionVariant} and the dock bells start to scream. The pirates are coming in on the tide, and every merchant on the quay is grabbing for their goods — or their courage.",
+      "es": "Velas negras doblan el cabo en {regionVariant} y las campanas del muelle empiezan a gritar. Los piratas entran con la marea, y cada mercader del malecón busca sus mercancías — o su coraje."
+    },
+    "choices": [
+      {
+        "id": "fight_them_off",
+        "label": {
+          "en": "Fight the raiders off the docks",
+          "es": "Enfrentar a los asaltantes en los muelles"
+        },
+        "tag": "Aggressive",
+        "rarity": "rare",
+        "requiresStat": {
+          "stat": "strength",
+          "min": 13
+        },
+        "statDeltas": {
+          "strength": 2
+        },
+        "injuryRiskDelta": 0.15,
+        "fameDelta": 3,
+        "countersDelta": {
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "You meet the boarding party at the gangplank and hold the line till the tide turns against them. The dockyard burns a little — but the pirates don't land.",
+          "es": "Encontrás al grupo de abordaje en la plancha y sostenés la línea hasta que la marea se vuelve contra ellos. El astillero arde un poco — pero los piratas no desembarcan."
+        }
+      },
+      {
+        "id": "hide_goods",
+        "label": {
+          "en": "Hide the merchants' goods below the quay",
+          "es": "Esconder las mercancías bajo el malecón"
+        },
+        "tag": "Strategic",
+        "rarity": "uncommon",
+        "requiresStat": {
+          "stat": "dexterity",
+          "min": 12
+        },
+        "statDeltas": {
+          "dexterity": 2
+        },
+        "goldDelta": 60,
+        "narrative": {
+          "en": "You spirit the merchants' crates into the fish cellars before the pirates even reach the quay. They leave with empty holds — and the merchants pay in full for the save.",
+          "es": "Metés los cajones de los mercaderes en las bodegas de pescado antes de que los piratas lleguen al malecón. Se van con las bodegas vacías — y los mercaderes pagan completo por el rescate."
+        }
+      },
+      {
+        "id": "sound_alarm",
+        "label": {
+          "en": "Sound the alarm and rally the dockhands",
+          "es": "Tocar la alarma y reunir a los estibadores"
+        },
+        "tag": "Leader",
+        "rarity": "uncommon",
+        "requiresStat": {
+          "stat": "charisma",
+          "min": 12
+        },
+        "statDeltas": {
+          "charisma": 2
+        },
+        "fameDelta": 2,
+        "reputationDelta": 3,
+        "reputationFaction": "greywater",
+        "narrative": {
+          "en": "You rally the dockhands into a defense line with nothing but your voice and a borrowed pike. They hold. The harbor will remember the one who organized the chaos.",
+          "es": "Reunís a los estibadores en una línea de defensa con nada más que tu voz y una pica prestada. Aguantan. El puerto recordará a quien organizó el caos."
+        }
+      },
+      {
+        "id": "pay_ransom",
+        "label": {
+          "en": "Pay the raiders to spare the docks",
+          "es": "Pagarles a los asaltantes para que perdonen los muelles"
+        },
+        "tag": "Professional",
+        "rarity": "common",
+        "goldDelta": -80,
+        "narrative": {
+          "en": "You meet the pirate captain at the waterline with coin instead of steel. The raid becomes a tax — smaller than a war. The merchants grumble, but the docks survive.",
+          "es": "Encontrás a la capitana pirata en la línea del agua con monedas en lugar de acero. La incursión se vuelve un impuesto — más chico que una guerra. Los mercaderes refunfuñan, pero los muelles sobreviven."
+        }
+      }
+    ]
+  },
+  {
+    "id": "region_highlands_avalanche",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "requiresRegion": "highlands",
+    "narrative": {
+      "en": "The mountain shrugs and the pass fills with snow in a heartbeat. At {regionVariant}, the herdsmen stare at the buried road — and somewhere beneath it, a caravan's bells are still ringing.",
+      "es": "La montaña se encoge de hombros y el paso se llena de nieve en un latido. En {regionVariant}, los pastores miran el camino enterrado — y en algún lugar debajo, las campanas de una caravana todavía suenan."
+    },
+    "choices": [
+      {
+        "id": "dig_survivors",
+        "label": {
+          "en": "Dig for survivors in the snow",
+          "es": "Cavar en la nieve en busca de sobrevivientes"
+        },
+        "tag": "Supportive",
+        "rarity": "uncommon",
+        "staminaDelta": -15,
+        "statDeltas": {
+          "constitution": 2
+        },
+        "countersDelta": {
+          "lives_saved": 1
+        },
+        "narrative": {
+          "en": "You dig with your bare hands till your nails crack. Three travelers come out breathing. The highlands don't forget a shovel that worked.",
+          "es": "Cavás con las manos desnudas hasta que las uñas se te parten. Tres viajeros salen respirando. Las tierras altas no olvidan una pala que trabajó."
+        }
+      },
+      {
+        "id": "long_route",
+        "label": {
+          "en": "Take the long route around",
+          "es": "Tomar el rodeo largo"
+        },
+        "tag": "Strategic",
+        "rarity": "common",
+        "staminaDelta": -15,
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "narrative": {
+          "en": "You read the snow and walk the long, safe way around. The pass waits for spring — but you don't. Dead time, well spent.",
+          "es": "Leés la nieve y caminás el rodeo largo y seguro. El paso espera la primavera — pero vos no. Tiempo muerto, bien gastado."
+        }
+      },
+      {
+        "id": "ski_debris",
+        "label": {
+          "en": "Cross the debris field at speed",
+          "es": "Cruzar el campo de escombros a toda velocidad"
+        },
+        "tag": "Aggressive",
+        "rarity": "volatile",
+        "requiresStat": {
+          "stat": "dexterity",
+          "min": 14
+        },
+        "staminaDelta": -10,
+        "statDeltas": {
+          "dexterity": 2
+        },
+        "injuryRiskDelta": 0.15,
+        "fameDelta": 2,
+        "narrative": {
+          "en": "You cross the debris field on a broken shutter, all speed and nerve. The herdsmen watch you fly past and decide they're hallucinating.",
+          "es": "Cruzáis el campo de escombros sobre una contraventana rota, pura velocidad y nervio. Los pastores te ven volar y deciden que están alucinando."
+        }
+      }
+    ]
+  },
+  {
+    "id": "region_wastelands_artifact",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "requiresRegion": "wastelands",
+    "narrative": {
+      "en": "Half-buried in the cinder fields of {regionVariant}, a scorched artifact glows with a dull, patient light. The ash around it is untouched by wind — as if the waste itself is holding its breath.",
+      "es": "A medio enterrar en los campos de ceniza de {regionVariant}, un artefacto quemado brilla con una luz apagada y paciente. La ceniza a su alrededor está intacta, sin viento — como si el yermo contuviera el aliento."
+    },
+    "choices": [
+      {
+        "id": "pry_free",
+        "label": {
+          "en": "Pry it free and pocket it",
+          "es": "Sacarlo a palanca y guardártelo"
+        },
+        "tag": "Cocky",
+        "rarity": "uncommon",
+        "goldDelta": 120,
+        "liabilityDelta": 5,
+        "statDeltas": {
+          "charisma": 1
+        },
+        "narrative": {
+          "en": "You lever the thing free with a crowbar and pocket it fast. It's warm — too warm. In the right market, warmth like that buys a lot. In the wrong one, it buys a curse.",
+          "es": "Hacés palanca con una barra y te lo guardás rápido. Está caliente — demasiado. En el mercado correcto, ese calor compra mucho. En el incorrecto, compra una maldición."
+        }
+      },
+      {
+        "id": "study_safely",
+        "label": {
+          "en": "Study it from a safe distance",
+          "es": "Estudiarlo desde una distancia segura"
+        },
+        "tag": "Strategic",
+        "rarity": "rare",
+        "requiresStat": {
+          "stat": "intelligence",
+          "min": 12
+        },
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "narrative": {
+          "en": "You sit a safe distance away and study it for a day and a night. By the time you leave, you understand the pattern of its glow — and that understanding is worth more than the artifact.",
+          "es": "Te sentás a distancia segura y lo estudiás un día y una noche. Para cuando partís, entendés el patrón de su brillo — y ese entendimiento vale más que el artefacto."
+        }
+      },
+      {
+        "id": "leave_ash",
+        "label": {
+          "en": "Leave it to the ash",
+          "es": "Dejárselo a la ceniza"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": {
+          "constitution": 1
+        },
+        "narrative": {
+          "en": "Some things belong to the places that made them. You walk on, and the ash settles back over the glow like a lid. The waste keeps its secret.",
+          "es": "Algunas cosas pertenecen a los lugares que las hicieron. Seguís caminando, y la ceniza vuelve a cubrir el brillo como una tapa. El yermo guarda su secreto."
+        }
+      }
+    ]
+  },
+  {
+    "id": "region_capital_festival",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 7,
+    "requiresRegion": "capital",
+    "narrative": {
+      "en": "The capital is dressed in gold and lantern-light for {regionVariant}. Every noble, guild, and gossip in the realm is on the same streets tonight — and every one of them is worth knowing, or avoiding.",
+      "es": "La capital se viste de oro y luz de faroles para {regionVariant}. Cada noble, gremio y chismoso del reino está en las mismas calles esta noche — y cada uno vale la pena conocerlo, o evitarlo."
+    },
+    "choices": [
+      {
+        "id": "join_parade",
+        "label": {
+          "en": "Join the parade and make them roar",
+          "es": "Sumarte al desfile y hacerlos rugir"
+        },
+        "tag": "Funny",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "charisma": 2
+        },
+        "fameDelta": 3,
+        "narrative": {
+          "en": "You fall in with the parade and make the crowd roar with a well-timed flourish. By the end of the avenue, half the capital knows your face — and likes it.",
+          "es": "Te sumás al desfile y hacés rugir a la multitud con un floreo bien sincronizado. Para el final de la avenida, media capital conoce tu cara — y le gusta."
+        }
+      },
+      {
+        "id": "network_stands",
+        "label": {
+          "en": "Work the grandstands and trade favors",
+          "es": "Trabajar las tribunas e intercambiar favores"
+        },
+        "tag": "Strategic",
+        "rarity": "rare",
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "reputationDelta": 3,
+        "reputationFaction": "golden_lotus",
+        "narrative": {
+          "en": "You work the grandstands like a market, trading names and favors with the silk-and-ledger crowd. The Golden Lotus marks you as someone worth remembering.",
+          "es": "Trabajás las tribunas como un mercado, intercambiando nombres y favores con la multitud de seda y libros de cuentas. El Loto Dorado te marca como alguien a quien recordar."
+        }
+      },
+      {
+        "id": "watch_tavern",
+        "label": {
+          "en": "Watch from a tavern window",
+          "es": "Mirar desde la ventana de una taberna"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "staminaDelta": 20,
+        "narrative": {
+          "en": "You watch the festival from a tavern window, mug in hand. The music drifts in, loud and far away. Rest is a kind of celebration too.",
+          "es": "Mirás el festival desde la ventana de una taberna, jarra en mano. La música entra, fuerte y lejana. Descansar también es una forma de celebrar."
+        }
+      }
+    ]
+  },
+  {
+    "id": "region_isles_tide_temple",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "requiresRegion": "isles",
+    "narrative": {
+      "en": "The tide falls at {regionVariant} and the sea gives back a drowned temple for a few hours. Its doors gape open, dripping, older than the isles' memory. The faithful gather — and so do the curious.",
+      "es": "La marea baja en {regionVariant} y el mar devuelve un templo ahogado por unas horas. Sus puertas se abren, chorreando, más viejas que la memoria de las islas. Los fieles se reúnen — y también los curiosos."
+    },
+    "choices": [
+      {
+        "id": "explore_aisle",
+        "label": {
+          "en": "Explore the sunken aisle",
+          "es": "Explorar la nave hundida"
+        },
+        "tag": "Strategic",
+        "rarity": "rare",
+        "requiresStat": {
+          "stat": "intelligence",
+          "min": 12
+        },
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "goldDelta": 90,
+        "narrative": {
+          "en": "You wade the sunken aisle and come out with a reliquary that slipped from a drowned priest's hands. The sea's museum just donated to your cause.",
+          "es": "Vadeás la nave hundida y salís con un relicario que se le escurrió de las manos a un sacerdote ahogado. El museo del mar acaba de donar a tu causa."
+        }
+      },
+      {
+        "id": "guard_entrance",
+        "label": {
+          "en": "Guard the entrance for the faithful",
+          "es": "Guardar la entrada para los fieles"
+        },
+        "tag": "Supportive",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "charisma": 1
+        },
+        "reputationDelta": 3,
+        "reputationFaction": "ivy_circle",
+        "narrative": {
+          "en": "You stand at the door so the faithful can pray undisturbed. The Ivy Circle notes your devotion — and their garden of favors grows one more stem.",
+          "es": "Te parás en la puerta para que los fieles puedan rezar sin molestias. El Círculo de la Hiedra anota tu devoción — y su jardín de favores crece un tallo más."
+        }
+      },
+      {
+        "id": "pray_altar",
+        "label": {
+          "en": "Kneel at the old altar",
+          "es": "Arrodillarte en el altar viejo"
+        },
+        "tag": "Humble",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "charisma": 1
+        },
+        "healthDelta": 5,
+        "narrative": {
+          "en": "You kneel at the old altar and let the salt water rinse the road from your bones. Whatever the temple was to its people, it gives you a moment of stillness worth more than gold.",
+          "es": "Te arrodillás en el altar viejo y dejás que el agua salada lave el camino de tus huesos. Lo que sea que el templo fuera para su gente, te da un momento de quietud que vale más que el oro."
+        }
+      }
+    ]
   }
 ]

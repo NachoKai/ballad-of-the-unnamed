@@ -15,6 +15,7 @@ import type {
 import { type AchievementView, api, type MinigameMoveResponse } from "./api"
 import { makeT, t } from "./i18n/strings"
 import { t as resolveLocaleMap } from "@shared/i18n"
+import { readUnlockedClasses, stampUnlockedClass } from "./lib/archetypeUnlocks"
 import { CreationScreen } from "./components/CreationScreen"
 import { GameScreen } from "./components/GameScreen"
 import { AchievementsScreen } from "./components/AchievementsScreen"
@@ -70,6 +71,7 @@ export default function App() {
   const {
     toasts,
     push: pushToasts,
+    pushCustom: pushCustomToast,
     remove: dismissToast,
   } = useAchievementToasts(locale, (k) => makeT(locale)(k))
 
@@ -132,7 +134,15 @@ export default function App() {
     runType: RunType,
     origin: Origin,
   ) {
-    const res = await api.newRun({ name, gender, classId, origin, runType, locale })
+    const res = await api.newRun({
+      name,
+      gender,
+      classId,
+      origin,
+      runType,
+      locale,
+      unlockedClasses: readUnlockedClasses(),
+    })
     setRunId(res.runId)
     setCanBuy(false)
     localStorage.setItem(RUN_KEY, res.runId)
@@ -159,6 +169,7 @@ export default function App() {
       origin,
       runType,
       locale,
+      unlockedClasses: readUnlockedClasses(),
     })
     setRunId(res.runId)
     setCanBuy(false)
@@ -201,6 +212,17 @@ export default function App() {
 
     if (res.ended && res.endingType) {
       localStorage.removeItem(RUN_KEY)
+      // Hidden master archetypes: finishing a run with a class unlocks its
+      // master archetype on this browser (first finish per class only).
+      if (stampUnlockedClass(res.character.class)) {
+        pushCustomToast([
+          {
+            icon: "key-round",
+            title: t(locale, "newArchetypeUnlocked"),
+            desc: `${t(locale, `class_${res.character.class}`)} · ${t(locale, "masterArchetype")}`,
+          },
+        ])
+      }
       const fresh = res.newAchievements.map((a) => ({
         id: a.id,
         icon: a.icon,
@@ -269,6 +291,15 @@ export default function App() {
 
     if (res.ended && res.endingType) {
       localStorage.removeItem(RUN_KEY)
+      if (res.character && stampUnlockedClass(res.character.class)) {
+        pushCustomToast([
+          {
+            icon: "key-round",
+            title: t(locale, "newArchetypeUnlocked"),
+            desc: `${t(locale, `class_${res.character.class}`)} · ${t(locale, "masterArchetype")}`,
+          },
+        ])
+      }
       const fresh = (res.newAchievements ?? []).map((a) => ({
         id: a.id,
         icon: a.icon,

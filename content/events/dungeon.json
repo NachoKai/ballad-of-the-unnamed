@@ -268,5 +268,395 @@
         }
       }
     ]
+  },
+  {
+    "id": "dungeon_bridge_guardian",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 8,
+    "narrative": {
+      "en": "A chasm splits the crypt, spanned by a rope bridge that sags with age. On the far side, {creatureName} crouches over a pile of rusted arms — and it has already seen you.",
+      "es": "Un abismo parte la cripta, cruzado por un puente de sogas que se comba con los años. Al otro lado, {creatureName} se agacha sobre una pila de armas oxidadas — y ya te vio."
+    },
+    "choices": [
+      {
+        "id": "cross_quietly",
+        "label": {
+          "en": "Cross the bridge quietly",
+          "es": "Cruzar el puente en silencio"
+        },
+        "tag": "Strategic",
+        "rarity": "uncommon",
+        "requiresStat": {
+          "stat": "dexterity",
+          "min": 12
+        },
+        "statDeltas": {
+          "dexterity": 2
+        },
+        "goldDelta": 60,
+        "injuryRiskDelta": 0.08,
+        "narrative": {
+          "en": "You move like mist across the rotten planks. The creature never lifts its head. You slip past its hoard with a prize clutched to your chest.",
+          "es": "Cruzáis las tablas podridas como niebla. La criatura nunca levanta la cabeza. Pasás junto a su tesoro con un premio apretado contra el pecho."
+        }
+      },
+      {
+        "id": "fight_for_passing",
+        "label": {
+          "en": "Cut it down",
+          "es": "Tumbarlo a golpes"
+        },
+        "tag": "Aggressive",
+        "rarity": "rare",
+        "requiresStat": {
+          "stat": "strength",
+          "min": 14
+        },
+        "statDeltas": {
+          "strength": 2,
+          "constitution": 1
+        },
+        "goldDelta": 90,
+        "reputationDelta": 2,
+        "reputationFaction": "bronzehammer",
+        "countersDelta": {
+          "battles_won": 1,
+          "monsters_killed": 1
+        },
+        "injuryRiskDelta": 0.2,
+        "narrative": {
+          "en": "Steel sings in the dark. When the echoes die, the creature is still and the hoard is yours. The Bronzehammer clan will hear of this blade.",
+          "es": "El acero canta en la oscuridad. Cuando mueren los ecos, la criatura está quieta y el tesoro es tuyo. El clan Martillobronce oirá hablar de esta espada."
+        }
+      },
+      {
+        "id": "retreat_and_map",
+        "label": {
+          "en": "Note the way and fall back",
+          "es": "Anotar el paso y retroceder"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": {
+          "intelligence": 1
+        },
+        "narrative": {
+          "en": "You memorize the bridge's weaknesses and melt back into the dark. Some doors open tomorrow. Some fights are not today's.",
+          "es": "Memorizás las debilidades del puente y te fundís de vuelta en la oscuridad. Algunas puertas se abren mañana. Algunas peleas no son las de hoy."
+        }
+      }
+    ]
+  },
+  {
+    "id": "dungeon_booby_trap_hall",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 7,
+    "narrative": {
+      "en": "The corridor ahead is a checkerboard of pressure plates, each one wired to something sharp, heavy, or poisonous. The old architect's mark is scratched into the lintel: 'Only the patient walk this hall twice.'",
+      "es": "El pasillo de adelante es un tablero de damas de placas de presión, cada una conectada a algo afilado, pesado o venenoso. La marca del viejo arquitecto está raspada en el dintel: 'Solo los pacientes caminan dos veces por este salón.'"
+    },
+    "choices": [
+      {
+        "id": "disarm_methodically",
+        "label": {
+          "en": "Disarm each plate methodically",
+          "es": "Desactivar cada placa metódicamente"
+        },
+        "tag": "Strategic",
+        "rarity": "uncommon",
+        "requiresStat": {
+          "stat": "intelligence",
+          "min": 12
+        },
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "goldDelta": 80,
+        "narrative": {
+          "en": "One wire at a time, you unmake the architect's work. By the far door, a spring-locked cache yields its coin to someone who respects craft.",
+          "es": "Cable por cable, deshacés la obra del arquitecto. Junto a la puerta lejana, una caja con resorte entrega sus monedas a alguien que respeta el oficio."
+        }
+      },
+      {
+        "id": "sprint_it",
+        "label": {
+          "en": "Sprint it before the plates reset",
+          "es": "Cruzarlo corriendo antes de que las placas se reinicien"
+        },
+        "tag": "Aggressive",
+        "rarity": "rare",
+        "requiresStat": {
+          "stat": "dexterity",
+          "min": 14
+        },
+        "statDeltas": {
+          "dexterity": 3
+        },
+        "healthDelta": -8,
+        "injuryRiskDelta": 0.2,
+        "narrative": {
+          "en": "You run the gauntlet like a rumor — half the plates sing behind you. You make it out bleeding but grinning, and richer by what the fast are allowed.",
+          "es": "Cruzáis la pasarela como un rumor — la mitad de las placas cantan detrás de vos. Salís sangrando pero sonriendo, y más rico por lo que se les permite a los veloces."
+        }
+      },
+      {
+        "id": "crawl_wall",
+        "label": {
+          "en": "Crawl along the wall on the pressure-free ledge",
+          "es": "Avanzar pegado a la pared por el borde sin placas"
+        },
+        "tag": "Humble",
+        "rarity": "common",
+        "statDeltas": {
+          "constitution": 2
+        },
+        "narrative": {
+          "en": "Slow, ugly, and safe — you shuffle along the ledge the architect never bothered to trap. The hall stays silent, and so do you.",
+          "es": "Lento, feo y seguro — te arrastrás por el borde que el arquitecto nunca se molestó en trampear. El salón sigue en silencio, y vos también."
+        }
+      }
+    ]
+  },
+  {
+    "id": "dungeon_archivist_ghost",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "narrative": {
+      "en": "In a sealed reading room, a ghost in archivist's robes glares at you over a floating ledger. 'You disturbed my indexes, trespasser. Either you help me complete the catalog of this crypt, or you leave — and I will know you left a page unturned.'",
+      "es": "En una sala de lectura sellada, el fantasma de un archivero te fulmina por encima de un libro mayor flotante. 'Perturbaste mis índices, intrusa. O me ayudás a completar el catálogo de esta cripta, o te vas — y sabré que dejaste una página sin tocar.'"
+    },
+    "choices": [
+      {
+        "id": "help_catalog",
+        "label": {
+          "en": "Help complete the catalog",
+          "es": "Ayudar a completar el catálogo"
+        },
+        "tag": "Strategic",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "intelligence": 3
+        },
+        "fameDelta": 2,
+        "narrative": {
+          "en": "You read aloud from memory and the ghost's quill flies. When the last entry lands, the archivist bows — and a forgotten vault door sighs open for its cataloger.",
+          "es": "Leés en voz alta de memoria y la pluma del fantasma vuela. Cuando cae la última entrada, el archivero se inclina — y una puerta de bóveda olvidada se abre suspirando para su catalogadora."
+        }
+      },
+      {
+        "id": "bargain_secret",
+        "label": {
+          "en": "Bargain: your best secret for its vault",
+          "es": "Negociar: tu mejor secreto por su bóveda"
+        },
+        "tag": "Cocky",
+        "rarity": "volatile",
+        "goldDelta": 150,
+        "liabilityDelta": 8,
+        "statDeltas": {
+          "charisma": 2
+        },
+        "narrative": {
+          "en": "The ghost listens to your secret and smiles with all its dead teeth. It keeps the vault — but points you to a lesser cache first. Secrets are currency, and you've just spent one on a ghost's tip.",
+          "es": "El fantasma escucha tu secreto y sonríe con todos sus dientes muertos. Se queda con la bóveda — pero primero te señala un cofre menor. Los secretos son moneda, y acabás de gastar uno en una pista de un fantasma."
+        }
+      },
+      {
+        "id": "leave_dust",
+        "label": {
+          "en": "Leave it to its dust",
+          "es": "Dejarlo con su polvo"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": {
+          "constitution": 1
+        },
+        "narrative": {
+          "en": "You back out of the reading room, and the ghost returns to its indexes without a word. Some doors stay shut, and that is also a kind of treasure.",
+          "es": "Salís de espaldas de la sala de lectura, y el fantasma vuelve a sus índices sin decir palabra. Algunas puertas quedan cerradas, y eso también es una clase de tesoro."
+        }
+      }
+    ]
+  },
+  {
+    "id": "dungeon_old_treasure",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "narrative": {
+      "en": "A sarcophagus of black stone stands in the chamber's heart, its lid carved with a warning in a script you half-know: 'Who opens me buys what he buries.' Gold glints through a crack.",
+      "es": "Un sarcófago de piedra negra se alza en el corazón de la cámara, con la tapa tallada con una advertencia en una escritura que conocés a medias: 'Quien me abre compra lo que entierra.' El oro brilla por una grieta."
+    },
+    "choices": [
+      {
+        "id": "pry_open",
+        "label": {
+          "en": "Pry the lid open",
+          "es": "Hacer palanca y abrir la tapa"
+        },
+        "tag": "Cocky",
+        "rarity": "rare",
+        "requiresStat": {
+          "stat": "strength",
+          "min": 12
+        },
+        "statDeltas": {
+          "strength": 2
+        },
+        "goldDelta": 200,
+        "liabilityDelta": 6,
+        "injuryRiskDelta": 0.15,
+        "narrative": {
+          "en": "The lid grinds open and the gold spills out — along with a breath of something older than the stone. You take the coin and leave before the occupant finishes waking.",
+          "es": "La tapa se abre rechinando y el oro se derrama — junto con un aliento de algo más viejo que la piedra. Tomás la moneda y te vas antes de que el ocupante termine de despertar."
+        }
+      },
+      {
+        "id": "read_runes",
+        "label": {
+          "en": "Decipher the warning runes fully",
+          "es": "Descifrar las runas de advertencia por completo"
+        },
+        "tag": "Strategic",
+        "rarity": "uncommon",
+        "requiresStat": {
+          "stat": "intelligence",
+          "min": 12
+        },
+        "statDeltas": {
+          "intelligence": 3
+        },
+        "goldDelta": 80,
+        "narrative": {
+          "en": "The full warning names the price — and the loophole. You open the sarcophagus the way the inscription forbids and take the gold that was never buried with the dead.",
+          "es": "La advertencia completa nombra el precio — y el resquicio. Abrís el sarcófago de la forma que la inscripción prohíbe y tomás el oro que nunca fue enterrado con los muertos."
+        }
+      },
+      {
+        "id": "walk_away",
+        "label": {
+          "en": "Walk away from the crack of gold",
+          "es": "Alejarte de la grieta de oro"
+        },
+        "tag": "Humble",
+        "rarity": "common",
+        "statDeltas": {
+          "intelligence": 1
+        },
+        "narrative": {
+          "en": "You read 'Who opens me buys what he buries' and decide the dead can keep their bargain. Some gold is cheaper left behind.",
+          "es": "Leés 'Quien me abre compra lo que entierra' y decidís que los muertos pueden quedarse con su trato. Algún oro es más barato dejarlo atrás."
+        }
+      }
+    ]
+  },
+  {
+    "id": "dungeon_rival_ambush",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "involvesRival": true,
+    "location": "dungeon",
+    "narrative": {
+      "en": "You step into the treasury chamber and the door grinds shut behind you. {rivalName} stands among the urns, blade already drawn. 'I knew you'd follow the map,' they say. 'I made sure it led here.'",
+      "es": "Entrás en la cámara del tesoro y la puerta rechina al cerrarse detrás de vos. {rivalName} está entre las urnas, con la hoja ya desenvainada. 'Sabía que seguirías el mapa', dice. 'Me aseguré de que llevara hasta aquí.'"
+    },
+    "choices": [
+      {
+        "id": "fight_head_on",
+        "label": {
+          "en": "Fight them head-on in the narrow hall",
+          "es": "Enfrentarlos de frente en el pasillo angosto"
+        },
+        "tag": "Aggressive",
+        "rarity": "rare",
+        "requiresStat": {
+          "stat": "strength",
+          "min": 13
+        },
+        "statDeltas": {
+          "strength": 2,
+          "constitution": 1
+        },
+        "fameDelta": 5,
+        "reputationDelta": 3,
+        "countersDelta": {
+          "battles_won": 1,
+          "duels_won": 1
+        },
+        "injuryRiskDelta": 0.18,
+        "narrative": {
+          "en": "Blades ring off the urns. {rivalName} yields ground, snarling — and takes the back exit with a parting cut. You keep the treasury, and the scorecard flips your way.",
+          "es": "Las hojas repican contra las urnas. {rivalName} cede terreno, gruñendo — y toma la salida trasera con un corte de despedida. Te quedás con el tesoro, y el marcador se inclina a tu favor."
+        }
+      },
+      {
+        "id": "talk_down",
+        "label": {
+          "en": "Talk them into splitting the haul",
+          "es": "Convencerlos de dividir el botín"
+        },
+        "tag": "Humble",
+        "rarity": "rare",
+        "requiresStat": {
+          "stat": "charisma",
+          "min": 13
+        },
+        "statDeltas": {
+          "charisma": 2,
+          "intelligence": 1
+        },
+        "goldDelta": 60,
+        "fameDelta": 2,
+        "narrative": {
+          "en": "You lay out the split so cleanly that {rivalName} almost laughs. 'Fine,' they say, sheathing the blade. 'But next time, no map — and no witnesses.'",
+          "es": "Exponés el reparto tan limpio que {rivalName} casi se ríe. 'Está bien', dice, envainando la hoja. 'Pero la próxima, sin mapa — y sin testigos.'"
+        }
+      },
+      {
+        "id": "slip_away",
+        "label": {
+          "en": "Slip out through the false wall",
+          "es": "Escabullirte por la pared falsa"
+        },
+        "tag": "Strategic",
+        "rarity": "rare",
+        "requiresStat": {
+          "stat": "dexterity",
+          "min": 13
+        },
+        "statDeltas": {
+          "dexterity": 2,
+          "intelligence": 1
+        },
+        "countersDelta": {
+          "fights_fled": 1
+        },
+        "narrative": {
+          "en": "You find the false wall the map's margin hinted at and vanish through it. {rivalName} finds an empty chamber and a mocking echo. You keep your skin and your mystery — and let them keep the empty urns.",
+          "es": "Encontrás la pared falsa que insinuaba el margen del mapa y desaparecés por ella. {rivalName} encuentra una cámara vacía y un eco burlón. Conservás tu piel y tu misterio — y les dejás las urnas vacías."
+        }
+      },
+      {
+        "id": "yield_the_room",
+        "label": {
+          "en": "Yield the room and walk out empty",
+          "es": "Ceder la sala y salir con las manos vacías"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": {
+          "constitution": 1
+        },
+        "narrative": {
+          "en": "You sheathe your blade and step aside. {rivalName} watches you pass with narrowed eyes, unsure whether you're broken or simply wise. The treasury can wait; the rivalry just sharpened.",
+          "es": "Envainás tu hoja y te hacés a un lado. {rivalName} te ve pasar con los ojos entrecerrados, sin saber si estás rota o simplemente sabia. El tesoro puede esperar; la rivalidad acaba de afilarse."
+        }
+      }
+    ]
   }
 ]
