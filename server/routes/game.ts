@@ -536,7 +536,7 @@ gameRouter.post("/minigame-move", async (req: Request, res: Response) => {
 
     const state = c.pendingMinigame
     const locale = c.locale
-    const before = interactiveView(state, locale)
+    const before = interactiveView(state, locale, c.gold)
     // Reject moves after the match is already over: applyInteractiveMove has no
     // guard against post-over moves (rps keeps counting wins, ttt throws on a
     // full board), so the current view's over flag is the authoritative gate.
@@ -552,7 +552,7 @@ gameRouter.post("/minigame-move", async (req: Request, res: Response) => {
         status: "playing",
         minigame: {
           game: state.game,
-          view: interactiveView(state, locale),
+          view: interactiveView(state, locale, c.gold),
         },
         feedback: null,
       })
@@ -562,7 +562,7 @@ gameRouter.post("/minigame-move", async (req: Request, res: Response) => {
     // rides along so the client can render the completed board under the
     // result banner (the last move's state is never sent as a "playing" frame).
     const tier = interactiveTier(state)
-    const finalView = interactiveView(state, locale)
+    const finalView = interactiveView(state, locale, c.gold)
     c.pendingMinigame = null
     run.character = c
     const outcome = applyMinigameOutcome(c, ev, tier, registry, rng)

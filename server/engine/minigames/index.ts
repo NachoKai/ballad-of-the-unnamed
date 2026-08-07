@@ -32,6 +32,8 @@ import {
   rivalMemotestTurn,
 } from "./memotest.js"
 import { answerPressTarget, createPressState, pressOver, pressResult } from "./pressConference.js"
+import { circusResult, circusSpin, circusTier, createCircusState } from "./circusWheel.js"
+import { GAME_CONFIG } from "../../../shared/config.js"
 
 // Higher player primary stat ⇒ lower rival skill ⇒ easier opponent. Clamped so
 // the game stays a real contest for every character.
@@ -54,6 +56,10 @@ export function createInteractiveState(ev: EventContent): PendingMinigameState {
   if (game === "tictactoe") return createTicTacToeState(ev.id)
   if (game === "memotest") return createMemotestState(ev.id)
   if (game === "press_conference") return createPressState(ev.id, ev.questions ?? [])
+  if (game === "circus_wheel") {
+    const wheel = ev.wheel ?? { cost: 50, segments: [] }
+    return createCircusState(ev.id, wheel)
+  }
   return createRpsState(ev.id, ev.resolution?.bestOf ?? 3)
 }
 
@@ -66,6 +72,7 @@ function ticTacToeResult(board: TicTacToeCell[]): "playing" | "player_win" | "ri
 export function interactiveView(
   state: PendingMinigameState,
   locale: "en" | "es" = "en",
+  gold = 0,
 ): ServedInteractiveState {
   if (state.game === "tictactoe") {
     const board = state.board ?? Array(9).fill(null)
@@ -113,6 +120,46 @@ export function interactiveView(
         : null,
       over: memotestOver(state),
       result: memotestResult(state),
+    }
+  }
+  if (state.game === "circus_wheel") {
+    const w = state.wheel ?? {
+      segments: [],
+      cost: 0,
+      spins: [],
+      freeSpins: 0,
+      net: 0,
+      hitJackpot: false,
+      over: false,
+    }
+    const over = w.over
+    return {
+      game: "circus_wheel",
+      // labels are authored bilingual; localize here so the wheel reads right.
+      segments: w.segments.map((s) => ({
+        id: s.id,
+        icon: s.icon,
+        kind: s.kind,
+        amount: s.amount,
+        healthCost: s.healthCost,
+        label: s.label[locale] ?? s.label.en,
+      })),
+      cost: w.cost,
+      gold,
+      spins: w.spins.length,
+      freeSpins: w.freeSpins,
+      net: w.net,
+      hitJackpot: w.hitJackpot,
+      log: w.spins,
+      lastSpin:
+        w.spins.length > 0
+          ? {
+              segment: w.spins[w.spins.length - 1],
+              mystery: w.mysteryResults?.[w.spins.length - 1],
+            }
+          : null,
+      over,
+      result: over ? circusResult(state) : "playing",
     }
   }
   if (state.game === "press_conference") {
@@ -257,6 +304,66 @@ export function applyInteractiveMove(
     return res
   }
 
+  if (state.game === "circus_wheel") {
+    if (move.kind !== "circus_wheel") throw new Error("invalid move for circus_wheel")
+    const w = state.wheel
+    if (!w) throw new Error("invalid move for circus_wheel")
+    if (move.action === "leave") {
+      // Cash out: the night ends; the outcome tier reviews how it went. All
+      // gold was already applied per spin, so the outcome is pure narrative.
+      w.over = true
+      res.over = true
+      return res
+    }
+    if (move.action !== "spin") throw new Error("invalid move for circus_wheel")
+    if (!c) throw new Error("circus_wheel needs the character")
+    // Pay for the spin: a banked free spin covers it, otherwise gold does.
+    // The character's gold moves in real time so a mid-night cash-out is exact.
+    if (w.freeSpins > 0) {
+      w.freeSpins -= 1
+    } else {
+      if (c.gold < w.cost) throw new Error("invalid move for circus_wheel: no funds")
+      c.gold -= w.cost
+      w.net -= w.cost
+    }
+    const { segment: idx, mystery } = circusSpin(state, rng)
+    const seg = w.segments[idx]
+    // Pay the prize out in real time: gold/jackpot landings — and a mystery
+    // box's treasure side — credit the character immediately, so a mid-night
+    // cash-out is exact and the served view's `gold` always matches the
+    // character (net = prizes − costs).
+    if (
+      seg.kind === "gold" ||
+      seg.kind === "jackpot" ||
+      (seg.kind === "mystery" && mystery === "prize")
+    ) {
+      c.gold += seg.amount ?? 0
+    }
+    // Fame segment: the crowd's cheer lands on the spot.
+    if (seg.kind === "fame") c.fame += seg.amount ?? 0
+    // Mystery box trap side: a real injury. Clamped at 0 — the cash-out death
+    // roll (applyMinigameOutcome) catches a box that proves lethal.
+    if (seg.kind === "mystery" && mystery === "injury") {
+      c.health = Math.max(0, c.health - (seg.healthCost ?? 10))
+    }
+    // Object prize: grant the real shop item into the character's inventory
+    // (mirrors the /buy route's handling of a duration-1 consumable).
+    if (seg.kind === "item" && seg.itemId) {
+      const existing = c.inventory.find((inv) => inv.itemId === seg.itemId)
+      if (existing) {
+        existing.qty += 1
+      } else {
+        c.inventory.push({
+          itemId: seg.itemId,
+          qty: 1,
+          expiresAtTurn: c.turn + GAME_CONFIG.seasonLength,
+        })
+      }
+    }
+    res.over = false
+    return res
+  }
+
   if (move.kind !== "rps") throw new Error("invalid move for rps")
   const rivalChoice = rivalRpsMove(state, rivalSkillFor(primaryStat, rivalRes), rng)
   const roundResult = judgeRound(move.choice, rivalChoice)
@@ -300,6 +407,7 @@ export function interactiveTier(state: PendingMinigameState): OutcomeTier {
     }
     return correct >= 2 ? "success" : "partial"
   }
+  if (state.game === "circus_wheel") return circusTier(state)
   const pw = state.playerWins ?? 0
   const rw = state.rivalWins ?? 0
   if (pw === 2 && rw === 0) return "critical"
@@ -318,7 +426,7 @@ export function prepareInteractiveServe(
   if (!c.pendingMinigame || c.pendingMinigame.eventId !== ev.id) {
     c.pendingMinigame = createInteractiveState(ev)
   }
-  return interactiveView(c.pendingMinigame, locale)
+  return interactiveView(c.pendingMinigame, locale, c.gold)
 }
 
 export function interactiveOpponentName(

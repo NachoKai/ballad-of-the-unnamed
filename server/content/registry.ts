@@ -157,10 +157,52 @@ export function loadContent(): ContentRegistry {
           mg.resolution.game === "tictactoe" ||
             mg.resolution.game === "rps" ||
             mg.resolution.game === "memotest" ||
-            mg.resolution.game === "press_conference",
+            mg.resolution.game === "press_conference" ||
+            mg.resolution.game === "circus_wheel",
           `minigame ${mg.id} invalid interactive game`,
         )
         assert(mg.primaryStat, `minigame ${mg.id} interactive needs primaryStat`)
+        if (mg.resolution.game === "circus_wheel") {
+          assert(
+            mg.wheel && mg.wheel.segments.length >= 2,
+            `minigame ${mg.id} circus_wheel needs wheel segments`,
+          )
+          assert(mg.wheel.cost > 0, `minigame ${mg.id} circus_wheel needs a positive cost`)
+          for (const seg of mg.wheel.segments) {
+            validateLocaleMap(seg.label, `minigame ${mg.id} wheel segment ${seg.id} label`)
+            assert(
+              ["gold", "jackpot", "nothing", "freespin", "item", "fame", "mystery"].includes(
+                seg.kind,
+              ),
+              `minigame ${mg.id} wheel segment ${seg.id} invalid kind`,
+            )
+            if (seg.kind === "item") {
+              assert(seg.itemId, `minigame ${mg.id} wheel segment ${seg.id} item needs itemId`)
+            }
+            if (["gold", "jackpot", "fame"].includes(seg.kind)) {
+              assert(
+                typeof seg.amount === "number" && seg.amount > 0,
+                `minigame ${mg.id} wheel segment ${seg.id} needs amount`,
+              )
+            }
+            if (seg.kind === "mystery") {
+              assert(
+                typeof seg.amount === "number" && seg.amount > 0,
+                `minigame ${mg.id} wheel segment ${seg.id} mystery needs amount`,
+              )
+              assert(
+                typeof seg.healthCost === "number" && seg.healthCost > 0,
+                `minigame ${mg.id} wheel segment ${seg.id} mystery needs healthCost`,
+              )
+              if (seg.chance !== undefined) {
+                assert(
+                  typeof seg.chance === "number" && seg.chance >= 0 && seg.chance <= 1,
+                  `minigame ${mg.id} wheel segment ${seg.id} mystery chance must be 0..1`,
+                )
+              }
+            }
+          }
+        }
         if (mg.resolution.game === "press_conference") {
           assert(
             Array.isArray(mg.questions) && mg.questions.length > 0,

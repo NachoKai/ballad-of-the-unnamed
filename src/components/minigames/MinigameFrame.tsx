@@ -10,6 +10,7 @@ import { TicTacToeGame } from "./TicTacToeGame"
 import { RpsGame } from "./RpsGame"
 import { MemotestGame, type MemotestPeek } from "./MemotestGame"
 import { PressConferenceGame } from "./PressConferenceGame"
+import { CircusWheelGame } from "./CircusWheelGame"
 import { HowToModal } from "./HowToModal"
 
 interface Props {
@@ -91,6 +92,25 @@ export function MinigameFrame({ locale, event, onMove, onFinished, finishedResul
         </Frame>
       )
     }
+    // The circus wheel has no win/draw/lose banner — the outcome narrative
+    // reviews the night, and the wheel shows the final tally under it.
+    if (finalView.game === "circus_wheel") {
+      return (
+        <Frame>
+          <CircusWheelGame
+            locale={locale}
+            view={finalView}
+            busy
+            onSpin={() => {}}
+            onLeave={() => {}}
+          />
+          {finishedResult.narrative && <Narrative>{finishedResult.narrative}</Narrative>}
+          <ContinueBtn type="button" onClick={onFinished}>
+            {t(locale, "minigameContinue")}
+          </ContinueBtn>
+        </Frame>
+      )
+    }
     const won = finalView.result === "player_win"
     const draw = finalView.result === "draw"
     const tone = won ? "win" : draw ? "draw" : "lose"
@@ -167,6 +187,14 @@ export function MinigameFrame({ locale, event, onMove, onFinished, finishedResul
           view={view}
           busy={busy}
           onAnswer={(i) => handle({ kind: "press_conference", card: i })}
+        />
+      ) : view.game === "circus_wheel" ? (
+        <CircusWheelGame
+          locale={locale}
+          view={view}
+          busy={busy}
+          onSpin={() => handle({ kind: "circus_wheel", action: "spin" })}
+          onLeave={() => handle({ kind: "circus_wheel", action: "leave" })}
         />
       ) : (
         <RpsGame

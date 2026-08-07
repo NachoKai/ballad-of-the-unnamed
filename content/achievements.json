@@ -19,6 +19,24 @@
       }
     },
     {
+      "id": "wheel_of_fortune",
+      "icon": "star",
+      "rarity": "uncommon",
+      "condition": {
+        "type": "counter_gte",
+        "key": "circus_jackpots",
+        "value": 1
+      },
+      "name": {
+        "en": "Wheel of Fortune",
+        "es": "Rueda de la Fortuna"
+      },
+      "description": {
+        "en": "Win the circus wheel's jackpot.",
+        "es": "Ganá el pozo de la rueda del circo."
+      }
+    },
+    {
       "id": "duelist",
       "icon": "swords",
       "rarity": "uncommon",

@@ -25,7 +25,9 @@ export function HowToModal({ locale, game, onClose }: Props) {
       ? "memHowTitle"
       : game === "press_conference"
         ? "pressHowTitle"
-        : "tttHowTitle"
+        : game === "circus_wheel"
+          ? "wheelHowTitle"
+          : "tttHowTitle"
   return (
     <Overlay onClick={onClose}>
       <Modal onClick={(e) => e.stopPropagation()}>
@@ -56,6 +58,10 @@ export function HowToModal({ locale, game, onClose }: Props) {
           ) : game === "press_conference" ? (
             <>
               <Intro>{t(locale, "pressHowIntro")}</Intro>
+            </>
+          ) : game === "circus_wheel" ? (
+            <>
+              <Intro>{t(locale, "wheelHowIntro")}</Intro>
             </>
           ) : (
             <>

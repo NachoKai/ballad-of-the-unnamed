@@ -51,6 +51,19 @@ const KEYS = [
   "npcRole_ally",
   "npcRole_acquaintance",
   "bondPeak",
+  "wheelHowTitle",
+  "wheelHowIntro",
+  "wheelSpin",
+  "wheelFreeSpin",
+  "wheelCashOut",
+  "wheelSpins",
+  "wheelNet",
+  "wheelYouWon",
+  "wheelNothing",
+  "wheelJackpot",
+  "wheelMysteryPrize",
+  "wheelMysteryInjury",
+  "wheelNoFunds",
 ] as const
 
 describe("interactive minigame i18n", () => {

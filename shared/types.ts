@@ -23,7 +23,12 @@ export type StatDeltas = Partial<Record<StatKey, number>>
 
 // ---- Interactive minigames (multi-move, server-authoritative) ----
 
-export type InteractiveGameKind = "tictactoe" | "rps" | "memotest" | "press_conference"
+export type InteractiveGameKind =
+  | "tictactoe"
+  | "rps"
+  | "memotest"
+  | "press_conference"
+  | "circus_wheel"
 
 // The five hand-signs of the goblin's game. Internal keys are language-neutral;
 // the client localizes them (e.g. rock → Piedra, paper → Pergamino, scissors →
@@ -53,6 +58,51 @@ export interface PressQuestion {
   id: string
   prompt: LocaleMap
   options: PressTagOption[]
+}
+
+// ---- Circus wheel of fortune (multi-spin, server-authoritative) ----
+
+// What a landing on a wheel segment pays out. `gold`/`jackpot` pay `amount`
+// gold, `freespin` banks another spin without cost, `item` grants a real shop
+// item into the character's inventory, `fame` grants `amount` fame on the spot,
+// `mystery` gambles: `chance` (default 0.5) pays `amount` gold as treasure,
+// otherwise it costs `healthCost` health as a rigged-box injury, and `nothing`
+// pays nothing.
+export type CircusSegmentKind =
+  | "gold"
+  | "jackpot"
+  | "nothing"
+  | "freespin"
+  | "item"
+  | "fame"
+  | "mystery"
+
+export interface CircusSegment {
+  id: string
+  icon: string
+  kind: CircusSegmentKind
+  // gold / jackpot / fame segments (and the mystery box's treasure side): the
+  // size of the prize.
+  amount?: number
+  // item segments: which shop item is granted on a landing.
+  itemId?: string
+  // mystery segments: health lost when the box is rigged (the trap side).
+  healthCost?: number
+  // mystery segments: probability the box holds treasure instead of a trap.
+  chance?: number
+  label: LocaleMap
+}
+
+// Which side of a rigged mystery box was revealed (treasure vs. trap).
+export type CircusMysterySide = "prize" | "injury"
+
+// Authored per event (top-level `wheel` field on the EventContent), like the
+// press conference's `questions`. Costs gold per spin; the wheel pays out from
+// its segments. Stored language-neutral in the pending state and localized at
+// serve time.
+export interface CircusWheelConfig {
+  cost: number
+  segments: CircusSegment[]
 }
 
 export type TicTacToeMark = "X" | "O"
@@ -95,6 +145,21 @@ export interface PendingMinigameState {
     questions: PressQuestion[]
     answers: number[]
     targets: (number | null)[]
+  }
+  // circus_wheel: the authored wheel, the segment index of every spin taken,
+  // banked free spins, and the running net gold (prizes − paid costs). The
+  // player walks away on demand; `over` marks the night finished. Mystery-box
+  // landings persist their revealed side keyed by spin index, so a reload
+  // re-serves the exact same result without re-rolling the run Rng.
+  wheel?: {
+    segments: CircusSegment[]
+    cost: number
+    spins: number[]
+    freeSpins: number
+    net: number
+    hitJackpot: boolean
+    over: boolean
+    mysteryResults?: Record<number, CircusMysterySide>
   }
 }
 
@@ -165,6 +230,32 @@ export type ServedInteractiveState =
       over: boolean
       result: "playing" | "player_win" | "partial" | "player_lose"
     }
+  | {
+      game: "circus_wheel"
+      // the wheel as authored, localized at serve time (labels rendered as-is).
+      segments: {
+        id: string
+        icon: string
+        kind: CircusSegmentKind
+        amount?: number
+        healthCost?: number
+        label: string
+      }[]
+      cost: number
+      // the character's live gold (updated by each spin server-side).
+      gold: number
+      spins: number // spins taken this night
+      freeSpins: number // banked free spins
+      net: number // net gold won (prizes − costs); negative means a loss
+      hitJackpot: boolean
+      // segment index of every landing, oldest first (recap strip).
+      log: number[]
+      // the most recent landing; `mystery` carries which side a mystery box
+      // revealed (undefined for every other segment kind).
+      lastSpin: { segment: number; mystery?: CircusMysterySide } | null
+      over: boolean
+      result: "playing" | "player_win" | "partial" | "player_lose"
+    }
 
 // A single move the client sends to /api/game/minigame-move.
 export type InteractiveMove =
@@ -172,6 +263,7 @@ export type InteractiveMove =
   | { kind: "rps"; choice: RpsChoice }
   | { kind: "memotest"; card: number }
   | { kind: "press_conference"; card: number }
+  | { kind: "circus_wheel"; action: "spin" | "leave" }
 
 export const PERSONALITY_TAGS = [
   "Humble",
@@ -432,6 +524,8 @@ export interface EventContent {
   cards?: MinigameCard[]
   // press_conference: the authored interview questions (3 x 4 tag-options).
   questions?: PressQuestion[]
+  // circus_wheel: the authored wheel (cost + segments) for the wheel game.
+  wheel?: CircusWheelConfig
   resolution?: MinigameResolution
   outcomes?: Record<OutcomeTier, MinigameOutcome>
   primaryStat?: StatKey

@@ -1,0 +1,192 @@
+[
+  {
+    "id": "circus_wheel_of_fortune",
+    "type": "minigame",
+    "subtype": "interactive",
+    "minAge": 10,
+    "maxAge": 99,
+    "weight": 2,
+    "primaryStat": "charisma",
+    "opponent": {
+      "en": "Madame Zephyr, the fortune-teller",
+      "es": "Madama Zefira, la adivina"
+    },
+    "narrative": {
+      "en": "A garish striped tent rises at the edge of the fairground. Inside, Madame Zephyr — rings on every finger, a smile of pure theater — taps a great painted wheel. 'Step up, fortune-friend. Sixty gold a spin. Gold, fame, prizes, free spins — or nothing at all. Even a mystery box, if you dare. The wheel decides, and the wheel never lies. Quit when you're ahead, and the night is yours.'",
+      "es": "Una carpa de rayas chillones se alza en el borde del campo ferial. Dentro, Madama Zefira — anillos en cada dedo, una sonrisa de puro teatro — toca una gran rueda pintada. 'Acercate, amiga de la fortuna. Sesenta de oro la tirada. Oro, fama, premios, tiradas gratis — o nada en absoluto. Hasta una caja misteriosa, si te animás. La rueda decide, y la rueda nunca miente. Retirate cuando vayas ganando, y la noche es tuya.'"
+    },
+    "wheel": {
+      "cost": 60,
+      "segments": [
+        {
+          "id": "empty",
+          "icon": "ban",
+          "kind": "nothing",
+          "label": {
+            "en": "Nothing",
+            "es": "Nada"
+          }
+        },
+        {
+          "id": "dust",
+          "icon": "cloud-fog",
+          "kind": "nothing",
+          "label": {
+            "en": "Dust",
+            "es": "Polvo"
+          }
+        },
+        {
+          "id": "cold_wind",
+          "icon": "wind",
+          "kind": "nothing",
+          "label": {
+            "en": "A cold wind",
+            "es": "Un viento frío"
+          }
+        },
+        {
+          "id": "coins_20",
+          "icon": "coins",
+          "kind": "gold",
+          "amount": 20,
+          "label": {
+            "en": "+20",
+            "es": "+20"
+          }
+        },
+        {
+          "id": "coins_60",
+          "icon": "coins",
+          "kind": "gold",
+          "amount": 60,
+          "label": {
+            "en": "+60",
+            "es": "+60"
+          }
+        },
+        {
+          "id": "coins_110",
+          "icon": "hand-coins",
+          "kind": "gold",
+          "amount": 110,
+          "label": {
+            "en": "+110",
+            "es": "+110"
+          }
+        },
+        {
+          "id": "fame",
+          "icon": "megaphone",
+          "kind": "fame",
+          "amount": 12,
+          "label": {
+            "en": "+12 Fame",
+            "es": "+12 Fama"
+          }
+        },
+        {
+          "id": "mystery_box",
+          "icon": "gem",
+          "kind": "mystery",
+          "amount": 140,
+          "healthCost": 12,
+          "chance": 0.5,
+          "label": {
+            "en": "Mystery box",
+            "es": "Caja misteriosa"
+          }
+        },
+        {
+          "id": "free_spin",
+          "icon": "rotate-3d",
+          "kind": "freespin",
+          "label": {
+            "en": "Free spin",
+            "es": "Tirada gratis"
+          }
+        },
+        {
+          "id": "lucky_charm",
+          "icon": "clover",
+          "kind": "item",
+          "itemId": "lucky_charm",
+          "label": {
+            "en": "Lucky Charm",
+            "es": "Amuleto de suerte"
+          }
+        },
+        {
+          "id": "crowd_boos",
+          "icon": "thumbs-down",
+          "kind": "nothing",
+          "label": {
+            "en": "The crowd boos",
+            "es": "La multitud abuchea"
+          }
+        },
+        {
+          "id": "dancer_boots",
+          "icon": "footprints",
+          "kind": "item",
+          "itemId": "enchanted_boots",
+          "label": {
+            "en": "Enchanted Boots",
+            "es": "Botas encantadas"
+          }
+        },
+        {
+          "id": "jackpot",
+          "icon": "star",
+          "kind": "jackpot",
+          "amount": 360,
+          "label": {
+            "en": "JACKPOT +360",
+            "es": "¡JACKPOT +360!"
+          }
+        }
+      ]
+    },
+    "resolution": {
+      "type": "interactive",
+      "game": "circus_wheel",
+      "baseWinChance": 0.5,
+      "statInfluence": {
+        "charisma": 0.004
+      },
+      "statThreshold": 20,
+      "rivalSkill": 0.5
+    },
+    "outcomes": {
+      "critical": {
+        "fameDelta": 6,
+        "countersDelta": {
+          "circus_jackpots": 1
+        },
+        "narrative": {
+          "en": "The wheel shudders to a stop on the jackpot, and Madame Zephyr gasps — genuinely, for once — before pressing a heavy purse into your hands. The crowd around the tent erupts. By morning, every campfire tells of the stranger who beat the wheel.",
+          "es": "La rueda se detiene temblando en el pozo mayor, y Madama Zefira jadea — de verdad, por una vez — antes de meterte una bolsa pesada en las manos. La multitud alrededor de la carpa estalla. Para la mañana, cada fogata cuenta la historia de la desconocida que venció a la rueda."
+        }
+      },
+      "success": {
+        "fameDelta": 2,
+        "narrative": {
+          "en": "You leave the tent with more gold than you brought. Madame Zephyr sees you off with a wink. 'The wheel favors the bold, fortune-friend — and it remembers the ones who quit while they're ahead.'",
+          "es": "Salís de la carpa con más oro del que trajiste. Madama Zefira te despide con un guiño. 'La rueda favorece a los audaces, amiga de la fortuna — y recuerda a quienes se retiran cuando van ganando.'"
+        }
+      },
+      "partial": {
+        "narrative": {
+          "en": "The wheel gave, and the wheel took back. You walk away with your purse much as it was — a night's entertainment for the price of a few bad landings. Madame Zephyr shrugs with practiced grace. 'The wheel giveth, friend, and the wheel taketh.'",
+          "es": "La rueda dio, y la rueda recogió. Te vas con la bolsa casi igual que llegó — una noche de entretenimiento al precio de algunos aterrizajes malos. Madama Zefira se encoge de hombros con gracia ensayada. 'La rueda da, amiga, y la rueda quita.'"
+        }
+      },
+      "fail": {
+        "narrative": {
+          "en": "The wheel was hungry tonight. Every spin fed it your gold until the painted spokes spun empty. Madame Zephyr pats your shoulder with theatrical sympathy. 'Come back when the fates smile, dear heart. The wheel is patient.'",
+          "es": "La rueda tuvo hambre esta noche. Cada tirada le alimentó tu oro hasta que los rayos pintados giraron vacíos. Madama Zefira te palmea el hombro con simpatía teatral. 'Volvé cuando los hados sonrían, corazón. La rueda es paciente.'"
+        }
+      }
+    }
+  }
+]
