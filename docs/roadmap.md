@@ -75,14 +75,20 @@ achievement (future content).
 
 ---
 
-### 3. More authored rest/recovery events 🟡
+### 3. More authored rest/recovery events ✅ shipped 2026-08-06
 
-> improvement-plan.md §1.4 (part). Recovery content remains thin — only the
+> improvement-plan.md §1.4 (part). Recovery content was thin — only the
 > forced-recovery path (`__forced_recovery__`, restores 40) and the `camp_cook`
 > shop item.
 
-- Author rest events using `staminaDelta` in `content/events/rest.json` (that
-  file exists with 8 events — expand with recovery-focused ones).
+- **Shipped 2026-08-06:** 8 new recovery-focused rest events authored in
+  `content/events/rest.json` (16 → 24): `rest_wayfarer_shelter`,
+  `rest_midwife_soak`, `rest_lighthouse_room`, `rest_cold_spring`,
+  `rest_windmill_loft`, `rest_orchard_nap`, `rest_ferryman_hut`,
+  `rest_tollhouse_room` — each with stamina-restoring choices via
+  `staminaDelta` (20–45) plus health/gold/reputation levers, and the familiar
+  stat-gated "push on" volatile option. Bilingual en/es, validated by
+  `pnpm i18n:check` + the server suite.
 
 ---
 

@@ -959,5 +959,555 @@
         }
       }
     ]
+  },
+  {
+    "id": "rest_wayfarer_shelter",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "location": "road",
+    "narrative": {
+      "en": "A stone wayfarers' shelter stands by {locationName}, its door open and its hearth banked. A {npcRole} nods from a bench: 'Coin not required. There's straw, there's fire, and the rain respects a roof. Rest your road-worn bones.'",
+      "es": "Un refugio de piedra para viajeros se alza junto a {locationName}, con la puerta abierta y el hogar preparado. Un {npcRole} asiente desde un banco: 'No se pide moneda. Hay paja, hay fuego, y la lluvia respeta un techo. Descansá tus huesos gastados por el camino.'"
+    },
+    "choices": [
+      {
+        "id": "bunk_straw",
+        "label": {
+          "en": "Claim a straw bunk and sleep hard",
+          "es": "Reclamar un jergón de paja y dormir a pierna suelta"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "staminaDelta": 35,
+        "statDeltas": {
+          "constitution": 1
+        },
+        "narrative": {
+          "en": "The straw rustles like a promise. You sleep the deep sleep of the simply tired, and the rain keeps its distance.",
+          "es": "La paja susurra como una promesa. Dormís el sueño profundo del simplemente cansado, y la lluvia se mantiene a distancia."
+        }
+      },
+      {
+        "id": "tend_hearth",
+        "label": {
+          "en": "Tend the hearth for the others",
+          "es": "Cuidar el hogar para los demás"
+        },
+        "tag": "Supportive",
+        "rarity": "uncommon",
+        "staminaDelta": 20,
+        "statDeltas": {
+          "charisma": 2
+        },
+        "narrative": {
+          "en": "You feed the fire and share the watch, trading road names with strangers. The night passes warm, and the shelter remembers you kindly.",
+          "es": "Alimentás el fuego y compartís la guardia, intercambiando nombres de camino con desconocidos. La noche pasa cálida, y el refugio te recuerda con cariño."
+        }
+      },
+      {
+        "id": "pay_corner",
+        "label": {
+          "en": "Pay for a quiet corner and a blanket",
+          "es": "Pagar por un rincón tranquilo y una manta"
+        },
+        "tag": "Professional",
+        "rarity": "rare",
+        "goldDelta": -15,
+        "staminaDelta": 45,
+        "healthDelta": 5,
+        "narrative": {
+          "en": "Coin buys you the corner behind the beam, a blanket with no holes, and peace. You wake clear-eyed and ready.",
+          "es": "La moneda te compra el rincón detrás de la viga, una manta sin agujeros y paz. Despertás con la mirada clara y listo."
+        }
+      },
+      {
+        "id": "press_on",
+        "label": {
+          "en": "Leave the warm roof and walk the night",
+          "es": "Dejar el techo cálido y caminar la noche"
+        },
+        "tag": "Confident",
+        "rarity": "volatile",
+        "requiresStat": {
+          "stat": "constitution",
+          "min": 12
+        },
+        "staminaDelta": -10,
+        "statDeltas": {
+          "dexterity": 2
+        },
+        "injuryRiskDelta": 0.05,
+        "narrative": {
+          "en": "You leave the fire for the starlit road, trading comfort for ground. The shelter's light fades behind you like a friendly ghost.",
+          "es": "Dejás el fuego por el camino estrellado, cambiando comodidad por terreno. La luz del refugio se apaga detrás tuyo como un fantasma amable."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rest_midwife_soak",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 4,
+    "location": "thornwood",
+    "narrative": {
+      "en": "A midwife's cottage in the heart of {locationName} smells of lavender and clean linen. She waves you to a stool by the stove: 'Your hands are shaking, traveler. Steep in my bath salts and let the day's miles drain out of you.'",
+      "es": "Una casa de partera en el corazón de {locationName} huele a lavanda y lino limpio. Te hace señas a un banquillo junto a la cocina: 'Te tiemblan las manos, viajero. Remojate en mis sales de baño y dejá que las millas del día se drenen de vos.'"
+    },
+    "choices": [
+      {
+        "id": "herbal_soak",
+        "label": {
+          "en": "Soak in the herbal bath",
+          "es": "Remojarte en el baño de hierbas"
+        },
+        "tag": "Humble",
+        "rarity": "uncommon",
+        "staminaDelta": 40,
+        "healthDelta": 5,
+        "statDeltas": {
+          "constitution": 1
+        },
+        "narrative": {
+          "en": "The salts sting, then soothe. You emerge smelling of lavender and feeling ten years younger, your knuckles unbent.",
+          "es": "Las sales pican, luego alivian. Salís oliendo a lavanda y sintiéndote diez años más joven, con los nudillos desentumecidos."
+        }
+      },
+      {
+        "id": "help_bundles",
+        "label": {
+          "en": "Help bundle the dried herbs",
+          "es": "Ayudar a atar las hierbas secas"
+        },
+        "tag": "Supportive",
+        "rarity": "common",
+        "staminaDelta": 20,
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "narrative": {
+          "en": "You learn which leaf calms and which root mends, hands busy while your mind rests. She sends you off with a sachet and a blessing.",
+          "es": "Aprendés qué hoja calma y qué raíz cura, con las manos ocupadas mientras la mente descansa. Te despide con un saquito y una bendición."
+        }
+      },
+      {
+        "id": "buy_draught",
+        "label": {
+          "en": "Buy a restorative draught",
+          "es": "Comprar una poción restauradora"
+        },
+        "tag": "Professional",
+        "rarity": "rare",
+        "goldDelta": -20,
+        "staminaDelta": 45,
+        "healthDelta": 6,
+        "narrative": {
+          "en": "The draught tastes of honey and stubbornness. An hour later your legs remember how to be legs.",
+          "es": "La poción sabe a miel y a terquedad. Una hora después tus piernas recuerdan cómo ser piernas."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rest_lighthouse_room",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "location": "greywater",
+    "narrative": {
+      "en": "The lighthouse keeper at {locationName} points a lantern toward a narrow room with a real bed. 'Storm's coming and you're soaked. The room's dry, the stew's hot, and the light keeps its own watch.'",
+      "es": "El farero de {locationName} apunta un farol hacia una habitación estrecha con una cama de verdad. 'Viene tormenta y estás empapado. La habitación está seca, el guiso está caliente, y la luz hace su propia guardia.'"
+    },
+    "choices": [
+      {
+        "id": "take_room",
+        "label": {
+          "en": "Take the room and the stew",
+          "es": "Tomar la habitación y el guiso"
+        },
+        "tag": "Professional",
+        "rarity": "uncommon",
+        "staminaDelta": 45,
+        "healthDelta": 5,
+        "statDeltas": {
+          "constitution": 1
+        },
+        "narrative": {
+          "en": "You sleep to the drum of rain on glass and wake to a grey, washed-clean world. The keeper nods: 'The sea gives days like this to those who rest.'",
+          "es": "Dormís al ritmo de la lluvia sobre el vidrio y despertás a un mundo gris y lavado. El farero asiente: 'El mar da días así a quienes descansan.'"
+        }
+      },
+      {
+        "id": "trim_lamp",
+        "label": {
+          "en": "Help trim the lamp and haul oil",
+          "es": "Ayudar a recortar la lámpara y acarrear aceite"
+        },
+        "tag": "Supportive",
+        "rarity": "common",
+        "staminaDelta": 25,
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "reputationDelta": 2,
+        "reputationFaction": "greywater",
+        "narrative": {
+          "en": "You climb the spiral stairs and learn the light's moods. The keeper speaks of you to the sailors: 'That one, the harbor remembers.'",
+          "es": "Subís las escaleras en espiral y aprendés los humores de la luz. El farero habla de vos a los marineros: 'A ese, el puerto lo recuerda.'"
+        }
+      },
+      {
+        "id": "walk_cliff",
+        "label": {
+          "en": "Walk the cliff path through the storm",
+          "es": "Caminar el sendero del acantilado en plena tormenta"
+        },
+        "tag": "Aggressive",
+        "rarity": "volatile",
+        "requiresStat": {
+          "stat": "constitution",
+          "min": 12
+        },
+        "staminaDelta": -12,
+        "statDeltas": {
+          "strength": 2
+        },
+        "injuryRiskDelta": 0.08,
+        "narrative": {
+          "en": "You trade a dry bed for the fury of the weather. Salt spray and wind scour you clean, and the storm feels like a challenge you won.",
+          "es": "Cambiás una cama seca por la furia del clima. La sal y el viento te raspan hasta limpiarte, y la tormenta se siente como un desafío que ganaste."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rest_cold_spring",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 4,
+    "location": "dungeon",
+    "narrative": {
+      "en": "Deep in the dark, a spring rises from the rock, so cold it smokes. The water is impossibly clear. The old tales say cold water wakes what tiredness puts to sleep.",
+      "es": "En la profundidad, un manantial brota de la roca, tan frío que humea. El agua es increíblemente clara. Las viejas historias dicen que el agua fría despierta lo que el cansancio adormece."
+    },
+    "choices": [
+      {
+        "id": "plunge_in",
+        "label": {
+          "en": "Plunge in and come out alive",
+          "es": "Zambullirte y salir vivo"
+        },
+        "tag": "Stoic",
+        "rarity": "uncommon",
+        "staminaDelta": 45,
+        "healthDelta": 5,
+        "statDeltas": {
+          "constitution": 1
+        },
+        "narrative": {
+          "en": "The cold steals your breath, then gives it back doubled. You climb out steaming, every nerve awake, the fatigue scrubbed away.",
+          "es": "El frío te roba el aliento, luego te lo devuelve doble. Salís humeando, con cada nervio despierto, la fatiga fregada."
+        }
+      },
+      {
+        "id": "fill_skins",
+        "label": {
+          "en": "Fill your waterskins with the pure water",
+          "es": "Llenar tus odres con el agua pura"
+        },
+        "tag": "Strategic",
+        "rarity": "common",
+        "staminaDelta": 15,
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "narrative": {
+          "en": "You bottle the cold itself. On the long road ahead, one sip will taste like this moment — rest carried with you.",
+          "es": "Embalsás el frío mismo. En el largo camino por delante, un sorbo sabrá a este momento — descanso llevado con vos."
+        }
+      },
+      {
+        "id": "drink_deeper",
+        "label": {
+          "en": "Take a sip and push deeper",
+          "es": "Tomar un sorbo y seguir más hondo"
+        },
+        "tag": "Confident",
+        "rarity": "volatile",
+        "requiresStat": {
+          "stat": "dexterity",
+          "min": 12
+        },
+        "staminaDelta": -8,
+        "statDeltas": {
+          "dexterity": 2
+        },
+        "injuryRiskDelta": 0.06,
+        "narrative": {
+          "en": "The cold sharpens your senses as you descend. The darkness ahead feels less like a wall and more like a door.",
+          "es": "El frío agudiza tus sentidos mientras bajás. La oscuridad por delante se siente menos como un muro y más como una puerta."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rest_windmill_loft",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 4,
+    "location": "road",
+    "narrative": {
+      "en": "The miller at {locationName} gestures at a ladder. 'The loft's warm as a loaf and the grain dust will settle your thoughts. Sleep there — the mill pays its debts in rest.'",
+      "es": "El molinero de {locationName} señala una escalera. 'El altillo está caliente como un pan y el polvo de grano te asentará los pensamientos. Dormí ahí — el molino paga sus deudas en descanso.'"
+    },
+    "choices": [
+      {
+        "id": "sleep_loft",
+        "label": {
+          "en": "Climb to the warm loft",
+          "es": "Subir al altillo caliente"
+        },
+        "tag": "Humble",
+        "rarity": "common",
+        "staminaDelta": 40,
+        "statDeltas": {
+          "constitution": 1
+        },
+        "narrative": {
+          "en": "You sleep to the soft turning of the sails and wake dusted in flour, warm and light. The miller waves you off with a loaf.",
+          "es": "Dormís con el suave girar de las aspas y despertás espolvoreado de harina, cálido y liviano. El molinero te despide con un pan."
+        }
+      },
+      {
+        "id": "grind_grain",
+        "label": {
+          "en": "Help grind the morning grain",
+          "es": "Ayudar a moler el grano de la mañana"
+        },
+        "tag": "Supportive",
+        "rarity": "uncommon",
+        "staminaDelta": 25,
+        "goldDelta": 10,
+        "statDeltas": {
+          "charisma": 1
+        },
+        "narrative": {
+          "en": "You push the great stone and the miller pushes the conversation. You leave with coin, a full belly, and a rhythm in your arms.",
+          "es": "Empujás la gran piedra y el molinero empuja la conversación. Partís con monedas, la panza llena y un ritmo en los brazos."
+        }
+      },
+      {
+        "id": "buy_provisions",
+        "label": {
+          "en": "Buy bread, cheese, and a quiet corner",
+          "es": "Comprar pan, queso y un rincón tranquilo"
+        },
+        "tag": "Professional",
+        "rarity": "rare",
+        "goldDelta": -10,
+        "staminaDelta": 35,
+        "healthDelta": 6,
+        "narrative": {
+          "en": "Warm bread, sharp cheese, and a bench out of the draft. You eat like a person and sleep like one.",
+          "es": "Pan tibio, queso fuerte y un banco fuera de la corriente. Comés como persona y dormís como persona."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rest_orchard_nap",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 4,
+    "location": "thornwood",
+    "narrative": {
+      "en": "The orchard at {locationName} is heavy with apples and humming with bees. A {npcRole} waves from the shade of an old tree: 'The grass is soft and the cider's cold. The Wardens say rest is half of any journey.'",
+      "es": "El huerto de {locationName} está cargado de manzanas y zumbando de abejas. Un {npcRole} saluda desde la sombra de un árbol viejo: 'El pasto es blando y la sidra está fría. Los Guardianes dicen que el descanso es la mitad de todo viaje.'"
+    },
+    "choices": [
+      {
+        "id": "nap_tree",
+        "label": {
+          "en": "Nap under the old tree",
+          "es": "Siestear bajo el árbol viejo"
+        },
+        "tag": "Humble",
+        "rarity": "uncommon",
+        "staminaDelta": 45,
+        "healthDelta": 3,
+        "statDeltas": {
+          "constitution": 1
+        },
+        "narrative": {
+          "en": "Apples fall around you like soft rain. You wake to the smell of cider and the feeling that the world has slowed down just for you.",
+          "es": "Las manzanas caen a tu alrededor como lluvia suave. Despertás con olor a sidra y la sensación de que el mundo se desaceleró solo para vos."
+        }
+      },
+      {
+        "id": "pick_apples",
+        "label": {
+          "en": "Help pick apples for a share",
+          "es": "Ayudar a recoger manzanas por una parte"
+        },
+        "tag": "Supportive",
+        "rarity": "common",
+        "staminaDelta": 25,
+        "goldDelta": 8,
+        "statDeltas": {
+          "charisma": 2
+        },
+        "narrative": {
+          "en": "Your hands learn the twist that frees an apple whole. The {npcRole} pays you in fruit and words of praise.",
+          "es": "Tus manos aprenden el giro que libera una manzana entera. El {npcRole} te paga en fruta y palabras de elogio."
+        }
+      },
+      {
+        "id": "gather_windfalls",
+        "label": {
+          "en": "Gather windfalls for the road ahead",
+          "es": "Juntar la fruta caída para el camino"
+        },
+        "tag": "Strategic",
+        "rarity": "rare",
+        "staminaDelta": 15,
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "narrative": {
+          "en": "You fill your pack with the bruised and beautiful, learning which apples keep and which must be eaten now. A quiet, useful wisdom.",
+          "es": "Llenás tu mochila con las magulladas y hermosas, aprendiendo qué manzanas duran y cuáles hay que comer ya. Una sabiduría callada y útil."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rest_ferryman_hut",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 4,
+    "location": "whispering_reed",
+    "narrative": {
+      "en": "The ferryman at {locationName} has pulled his boat up for the night. 'Crossing's at dawn,' he says, 'but the hut has a hearth and the hearth has a pot. Rest, and the river will wait like it always does.'",
+      "es": "El barquero de {locationName} ha varado su barca por la noche. 'El cruce es al amanecer', dice, 'pero la choza tiene hogar y el hogar tiene una olla. Descansá, y el río esperará como siempre espera.'"
+    },
+    "choices": [
+      {
+        "id": "hut_hearth",
+        "label": {
+          "en": "Sleep by the ferryman's hearth",
+          "es": "Dormir junto al hogar del barquero"
+        },
+        "tag": "Humble",
+        "rarity": "common",
+        "staminaDelta": 35,
+        "statDeltas": {
+          "constitution": 1
+        },
+        "narrative": {
+          "en": "The fire ticks like a clock, and the river hums its endless note. You wake to the smell of the ferryman's pot and the dawn on the water.",
+          "es": "El fuego hace tic-tac como un reloj, y el río zumba su nota eterna. Despertás con el olor de la olla del barquero y el amanecer sobre el agua."
+        }
+      },
+      {
+        "id": "help_rope",
+        "label": {
+          "en": "Help mend the rope and the oars",
+          "es": "Ayudar a remendar la cuerda y los remos"
+        },
+        "tag": "Supportive",
+        "rarity": "uncommon",
+        "staminaDelta": 25,
+        "statDeltas": {
+          "strength": 2
+        },
+        "reputationDelta": 2,
+        "reputationFaction": "whispering_reed",
+        "narrative": {
+          "en": "You splice rope under the ferryman's eye and hear the river's gossip. He waves you onto the boat free of charge: 'Friends of the rope cross free.'",
+          "es": "Empalmás cuerda bajo la mirada del barquero y escuchás los chismes del río. Te hace subir a la barca sin cobrar: 'Los amigos de la cuerda cruzan gratis.'"
+        }
+      },
+      {
+        "id": "pay_passage",
+        "label": {
+          "en": "Pay for passage and a hot meal",
+          "es": "Pagar por el cruce y una comida caliente"
+        },
+        "tag": "Professional",
+        "rarity": "rare",
+        "goldDelta": -12,
+        "staminaDelta": 45,
+        "healthDelta": 4,
+        "narrative": {
+          "en": "Coin buys you the dry corner and a bowl of the river's best. You cross at dawn, rested and fed, owing the river nothing.",
+          "es": "La moneda te compra el rincón seco y un plato de lo mejor del río. Cruzás al amanecer, descansado y alimentado, sin deberle nada al río."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rest_tollhouse_room",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 4,
+    "location": "road",
+    "narrative": {
+      "en": "The toll-taker at {locationName} slides a key across his desk. 'The room's plain but the bed is honest, and the road doesn't reach it. Sleep, and pay me in the morning with a story.'",
+      "es": "El cobrador de peaje de {locationName} desliza una llave sobre su escritorio. 'La habitación es sencilla pero la cama es honesta, y el camino no llega hasta ahí. Dormí, y pagame por la mañana con una historia.'"
+    },
+    "choices": [
+      {
+        "id": "take_key",
+        "label": {
+          "en": "Take the key and the plain room",
+          "es": "Tomar la llave y la habitación sencilla"
+        },
+        "tag": "Professional",
+        "rarity": "common",
+        "staminaDelta": 40,
+        "statDeltas": {
+          "constitution": 1
+        },
+        "narrative": {
+          "en": "The bed is honest indeed. You sleep without dreaming of the road for the first time in weeks and wake with a story worth the telling.",
+          "es": "La cama es honesta de verdad. Dormís sin soñar con el camino por primera vez en semanas y despertás con una historia que vale la pena contar."
+        }
+      },
+      {
+        "id": "share_story",
+        "label": {
+          "en": "Share your best road story over supper",
+          "es": "Compartir tu mejor historia de camino en la cena"
+        },
+        "tag": "Funny",
+        "rarity": "uncommon",
+        "staminaDelta": 30,
+        "fameDelta": 1,
+        "statDeltas": {
+          "charisma": 2
+        },
+        "narrative": {
+          "en": "You tell of the road, and the toll-taker tells of the river trade. By midnight you've swapped lies and laughs, and the room feels like a reward.",
+          "es": "Contás sobre el camino, y el cobrador cuenta sobre el comercio del río. A medianoche intercambiaron mentiras y risas, y la habitación se siente como un premio."
+        }
+      },
+      {
+        "id": "pay_coins",
+        "label": {
+          "en": "Pay coin and take the quiet room",
+          "es": "Pagar en monedas y tomar la habitación tranquila"
+        },
+        "tag": "Strategic",
+        "rarity": "rare",
+        "goldDelta": -15,
+        "staminaDelta": 45,
+        "healthDelta": 5,
+        "narrative": {
+          "en": "You pay in silver and take the room that faces away from the road. Coin buys silence, and silence buys a night's true rest.",
+          "es": "Pagás en plata y tomás la habitación que da al lado contrario del camino. La moneda compra silencio, y el silencio compra un verdadero descanso nocturno."
+        }
+      }
+    ]
   }
 ]

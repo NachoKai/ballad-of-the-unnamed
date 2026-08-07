@@ -134,7 +134,7 @@ Surface in HUD as a separate number from gold.
 
 **Spec ref**: §Character/stats (p35 — Stamina/Vigor)
 
-Status: turn cost + fatigue penalty (<20 stamina) ✅. **2026-07-30: forced recovery implemented — `deductStamina()` tracks `staminaZeroStreak`; after `GAME_CONFIG.forcedRecoveryTurns` (3) consecutive turns at 0 stamina, `buildServedEvent()` serves a synthetic `__forced_recovery__` rest event that restores `forcedRecoveryRestore` (40) stamina.** Recovery content remains thin (only the forced-rest path + camp cook item) — see open items below.
+Status: turn cost + fatigue penalty (<20 stamina) ✅. **2026-07-30: forced recovery implemented — `deductStamina()` tracks `staminaZeroStreak`; after `GAME_CONFIG.forcedRecoveryTurns` (3) consecutive turns at 0 stamina, `buildServedEvent()` serves a synthetic `__forced_recovery__` rest event that restores `forcedRecoveryRestore` (40) stamina. 2026-08-06: recovery content expanded — 8 new recovery-focused rest events authored in `content/events/rest.json` (16 → 24, `rest_wayfarer_shelter`, `rest_midwife_soak`, `rest_lighthouse_room`, `rest_cold_spring`, `rest_windmill_loft`, `rest_orchard_nap`, `rest_ferryman_hut`, `rest_tollhouse_room`) using `staminaDelta` (20–45), health/gold/reputation levers, and stat-gated "push on" volatile options.**
 
 `staminaDelta` exists on choices but nothing depletes/replenishes stamina systematically. Add:
 
@@ -405,11 +405,11 @@ Goal: Enough variety for 20+ runs before repetition sets in.
 
 **Spec ref**: — (volume targets)
 
-Status: current counts as of audit — Events **136**/60, Minigames **72**/25, Achievements **69**/50, Archetypes **54**/30+ (9 per class: 8 normal + 1 hidden master), World events **20**/20+, Clans 25 factions all region-tagged (18 authored clan events exercising join/leave/betray), NPC relationships system in place with 2 authored recurring NPCs (`ser_aldric`, `wanderer_of_the_homeland`). Target numbers in the table below are the Phase 5 goals. **2026-07-30: content expansion shipped — 17 new events (9 clan + 8 rest/recovery), 8 new minigames, 8 new achievement tiers. 2026-08-01 audit: added 10 world events, 5 region-variant events, 5 foreign/outsider events, 5 personality events, 3 destiny events. 2026-08-01 bugfix pass (B7-B12): +1 region event (`region_wastelands_cinder`), +11 achievements (`jetset_life` + 10 counter achievements). 2026-08-02: +3 minigames (Season-End Capstone debates/elections), +2 achievements. 2026-08-05: content expansion shipped — doubled all content volumes (events 68→136, minigames 36→72, slots 163→327, archetypes 30→60, shop 16→32) per `docs/superpowers/plans/2026-08-05-content-expansion.md`.**
+Status: current counts as of audit — Events **144**/60, Minigames **72**/25, Achievements **69**/50, Archetypes **54**/30+ (9 per class: 8 normal + 1 hidden master), World events **20**/20+, Clans 25 factions all region-tagged (18 authored clan events exercising join/leave/betray), NPC relationships system in place with 2 authored recurring NPCs (`ser_aldric`, `wanderer_of_the_homeland`). Target numbers in the table below are the Phase 5 goals. **2026-07-30: content expansion shipped — 17 new events (9 clan + 8 rest/recovery), 8 new minigames, 8 new achievement tiers. 2026-08-01 audit: added 10 world events, 5 region-variant events, 5 foreign/outsider events, 5 personality events, 3 destiny events. 2026-08-01 bugfix pass (B7-B12): +1 region event (`region_wastelands_cinder`), +11 achievements (`jetset_life` + 10 counter achievements). 2026-08-02: +3 minigames (Season-End Capstone debates/elections), +2 achievements. 2026-08-05: content expansion shipped — doubled all content volumes (events 68→136, minigames 36→72, slots 163→327, archetypes 30→60, shop 16→32) per `docs/superpowers/plans/2026-08-05-content-expansion.md`.**
 
 | Category                                        | Current       | Phase 5 Target                                  |
 | ----------------------------------------------- | ------------- | ----------------------------------------------- |
-| Events (tavern/road/dungeon/court + new themes) | 136           | 80+                                             |
+| Events (tavern/road/dungeon/court + new themes) | 144           | 80+                                             |
 | Minigames (duels + activities)                  | 72            | 25+                                             |
 | Achievements                                    | 69            | 60+                                             |
 | Slot pool entries                               | 327           | 300+                                            |
@@ -668,7 +668,7 @@ Remaining work by priority — see `docs/roadmap.md` for the consolidated open l
 
 0. ✅ **New-player Tutorial** — always-optional "How to play" modal (`TutorialModal.tsx` + `src/i18n/tutorial.ts`, 6 pages, en/es) — shipped 2026-08-06.
 1. 🟡 **1.2 (part)** — add `press_conference` minigame subtype (5 personality-tag events with `wantedTags`/`punishedTags` authored ✅)
-2. 🟡 **1.4 (part)** — more authored rest/recovery events using `staminaDelta` beyond the forced-recovery path
+2. ✅ **1.4 (part)** — more authored rest/recovery events using `staminaDelta` beyond the forced-recovery path (8 new events in `content/events/rest.json`, 2026-08-06)
 3. 🟡 **3.2** — separate `rivals` table + parallel rival RNG stream
 4. 🟡 **5.1** — content volume targets (events 136/80+, world 20/20+ ✅, NPC relationships 2/15+)
 5. 🟡 **5.4 (part)** — per-encounter completion tracking (overall % now implemented)
