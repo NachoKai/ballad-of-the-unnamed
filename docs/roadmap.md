@@ -92,16 +92,35 @@ achievement (future content).
 
 ---
 
-### 4. Separate `rivals` table + parallel RNG stream 🟡
+### 4. Separate `rivals` table + parallel RNG stream ✅ shipped 2026-08-06
 
 > improvement-plan.md §3.2 (part). Rival generation, HUD widget, end-game
-> comparison, and direct encounters are done. Remaining: the rival is stored
-> inline in the run JSONB (no `rivals` table), and it shares the run's single RNG
-> (no parallel stream).
+> comparison, and direct encounters were already done. This pass lands the last
+> two pieces: the rival now lives in a normalized `rivals` table, and it
+> advances on its own parallel RNG stream seeded from the same run seed — so
+> its stat bumps are independent-but-deterministic and never perturb the
+> player's event sequence.
 
-- Add a `rivals` table to `server/db/schema.sql`.
-- Advance the rival on a parallel RNG stream seeded from the same seed, so its
-  stat bumps / faction switches are independent-but-deterministic.
+- **Schema:** new `rivals` table in `server/db/schema.sql` (spec layout keyed by
+  `run_id → runs(id)`, plus `focus_id` and a nullable `character_id`), and a
+  `rival_rng_state` column on `runs` so the parallel stream resumes across
+  reloads. Existing installs pick both up via the idempotent migration block.
+- **Parallel stream:** `rivalRngFor(runSeed)` in `shared/rng.ts` derives a
+  second deterministic stream from the same seed (`hashSeed(seed + ":rival")`).
+  `generateRival` and `advanceRival` (via `generateSeasonSummary`/`buildServedEvent`)
+  draw from it, so the rival's existence and advancement never consume the
+  player's main stream — daily runs stay identical for everyone, and the rival
+  is a pure function of the seed.
+- **Persistence:** `saveRun` upserts the `rivals` row on every save
+  (`upsertRival` in `server/store/runStore.ts`); legacy runs default the stream
+  position from the seed on load.
+
+> Note: rival **faction switches** (the rival's `factionId` is currently set once
+> at creation and never changes) are still unimplemented — the parallel stream
+> is what would drive them, and this pass puts that stream in place.
+- **Tests:** `server/engine/engine.test.ts` — "archrival parallel RNG stream"
+  suite (stream determinism/independence, main-stream isolation, seed-identical
+  advancement through the season-summary path).
 
 ---
 

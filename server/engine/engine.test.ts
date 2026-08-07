@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest"
-import { Rng, hashSeed } from "../../shared/rng.js"
+import { Rng, hashSeed, rivalRngFor } from "../../shared/rng.js"
 import { computeScore, GAME_CONFIG, arcForAge, RIVAL_FOCUSES } from "../../shared/config.js"
 import {
   advanceRival,
@@ -2399,6 +2399,125 @@ describe("Rival", () => {
     advanceRival(c, new Rng(42))
     expect(c.rival!.powerLevel).toBeGreaterThanOrEqual(19)
     expect(c.rival!.lastAdvancedTurn).toBe(0)
+  })
+})
+
+// ---------------------------------------------------------------------------
+//  Archrival parallel RNG stream (roadmap item 4)
+// ---------------------------------------------------------------------------
+describe("archrival parallel RNG stream", () => {
+  it("rivalRngFor derives a deterministic stream from the run seed", () => {
+    const a = rivalRngFor("2026-08-06")
+    const b = rivalRngFor("2026-08-06")
+    // Same seed → identical stream.
+    expect(a.next()).toBe(b.next())
+    expect(a.getState()).toBe(b.getState())
+    // Different seed → different stream.
+    const c = rivalRngFor("2026-08-07")
+    expect(rivalRngFor("2026-08-06").next()).not.toBe(c.next())
+  })
+
+  it("the rival stream is independent of the player's main stream", () => {
+    const main = new Rng(hashSeed("2026-08-06"))
+    const rival = rivalRngFor("2026-08-06")
+    // Both are seeded from the same run seed but produce different sequences.
+    expect(rival.next()).not.toBe(main.next())
+  })
+
+  it("generateRival on the parallel stream leaves the main stream untouched", () => {
+    const main = new Rng(hashSeed("s1"))
+    const rivalRng = rivalRngFor("s1")
+    const before = main.getState()
+    const c = makeChar({ class: "warrior" })
+    const rival = generateRival(c, reg, rivalRng)
+    expect(rival).toBeTruthy()
+    // Generating the rival consumed only the parallel stream.
+    expect(main.getState()).toBe(before)
+    // The main stream still produces its own first draw unchanged.
+    const mainAfter = new Rng(hashSeed("s1"))
+    expect(main.next()).toBe(mainAfter.next())
+  })
+
+  it("advanceRival consumes only the stream it is handed", () => {
+    const main = new Rng(hashSeed("s2"))
+    const rivalRng = rivalRngFor("s2")
+    const before = main.getState()
+    const c = makeChar({
+      rival: {
+        name: "Roderick",
+        class: "wizard",
+        factionId: null,
+        focusId: "war",
+        powerLevel: 20,
+        age: 16,
+        location: "capital",
+        achievementsCount: 0,
+        score: 0,
+        lastAdvancedTurn: 0,
+      },
+    })
+    advanceRival(c, rivalRng)
+    expect(c.rival!.lastAdvancedTurn).toBe(0)
+    expect(main.getState()).toBe(before)
+  })
+
+  it("a rival advanced on the parallel stream is identical across identical seeds", () => {
+    const mk = () =>
+      makeChar({
+        rival: {
+          name: "Roderick",
+          class: "wizard",
+          factionId: null,
+          focusId: "war",
+          powerLevel: 20,
+          age: 16,
+          location: "capital",
+          achievementsCount: 0,
+          score: 0,
+          lastAdvancedTurn: 0,
+        },
+      })
+    const a = mk()
+    const b = mk()
+    advanceRival(a, rivalRngFor("daily-1"))
+    advanceRival(b, rivalRngFor("daily-1"))
+    expect(a.rival!.powerLevel).toBe(b.rival!.powerLevel)
+    expect(a.rival!.score).toBe(b.rival!.score)
+    expect(a.rival!.focusId).toBe(b.rival!.focusId)
+    expect(a.rival!.location).toBe(b.rival!.location)
+  })
+
+  it("a season-boundary serve advances the rival off the parallel stream", () => {
+    const mkRival = (over: Partial<CharacterState["rival"]> = {}) =>
+      makeChar({
+        turn: GAME_CONFIG.seasonLength,
+        rival: {
+          name: "Roderick",
+          class: "wizard",
+          factionId: null,
+          focusId: "war",
+          powerLevel: 20,
+          age: 16,
+          location: "capital",
+          achievementsCount: 0,
+          score: 0,
+          lastAdvancedTurn: 0,
+          ...over,
+        },
+      })
+    // Two identical runs on the same seed advance identically through
+    // buildServedEvent's season-summary path with the parallel stream.
+    const a = mkRival()
+    const b = mkRival()
+    const rngA = new Rng(hashSeed("season-1"))
+    const rngB = new Rng(hashSeed("season-1"))
+    buildServedEvent(a, reg, rngA, rivalRngFor("season-1"))
+    buildServedEvent(b, reg, rngB, rivalRngFor("season-1"))
+    expect(a.rival!.score).toBe(b.rival!.score)
+    expect(a.rival!.powerLevel).toBe(b.rival!.powerLevel)
+    expect(a.rival!.focusId).toBe(b.rival!.focusId)
+    // The main streams advanced identically too (world events etc. stayed on them).
+    expect(rngA.getState()).toBe(rngB.getState())
   })
 })
 

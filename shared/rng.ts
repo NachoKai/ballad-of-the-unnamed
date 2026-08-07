@@ -68,3 +68,12 @@ export function todayDailySeed(now = new Date()): string {
   // UTC midnight reseed: everyone on the same UTC date shares a seed.
   return now.toISOString().slice(0, 10)
 }
+
+// A parallel, independent-but-deterministic RNG stream for the archrival.
+// Derived from the SAME run seed as the player's main stream, so the rival's
+// whole career is a pure function of the seed (daily runs stay identical for
+// everyone) — but it is a distinct stream, so rival rolls never consume or
+// perturb the player's event sequence.
+export function rivalRngFor(runSeed: string): Rng {
+  return new Rng(hashSeed(runSeed + ":rival"))
+}

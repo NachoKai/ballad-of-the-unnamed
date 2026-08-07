@@ -1,6 +1,6 @@
 import { Router } from "express"
 import type { Request, Response } from "express"
-import { Rng, hashSeed, todayDailySeed } from "../../shared/rng.js"
+import { Rng, hashSeed, rivalRngFor, todayDailySeed } from "../../shared/rng.js"
 import { computeScore, GAME_CONFIG } from "../../shared/config.js"
 import { genderize } from "../../shared/genderize.js"
 import { loadContent } from "../content/registry.js"
@@ -166,6 +166,10 @@ gameRouter.post("/new", async (req: Request, res: Response) => {
 
     const seed = runType === "daily" ? todayDailySeed() : String(Date.now()) + Math.random()
     const rng = new Rng(hashSeed(seed))
+    // The archrival lives on its own parallel stream derived from the same
+    // seed, so generating/advancing it never consumes — or perturbs — the
+    // player's main stream (daily runs stay identical for everyone).
+    const rivalRng = rivalRngFor(seed)
 
     const character = createCharacter({
       id: crypto.randomUUID(),
@@ -178,21 +182,24 @@ gameRouter.post("/new", async (req: Request, res: Response) => {
       registry,
     })
 
-    character.rival = generateRival(character, registry, rng)
+    character.rival = generateRival(character, registry, rivalRng)
 
     const run = await createRun({
       runType,
       seed,
       rngState: rng.getState(),
+      rivalRngState: rivalRng.getState(),
       locale,
       character,
     })
 
     // Build the first offered event.
     const rng2 = new Rng(run.rngState)
-    const { event, served } = buildServedEvent(character, registry, rng2)
+    const rivalRng2 = new Rng(run.rivalRngState)
+    const { event, served } = buildServedEvent(character, registry, rng2, rivalRng2)
     run.pendingEvent = event
     run.rngState = rng2.getState()
+    run.rivalRngState = rivalRng2.getState()
     run.character = character
     await saveRun(run)
 
@@ -376,6 +383,7 @@ async function finishResolvedTurn(
   run: RunRecord,
   outcome: ResolveOutput,
   rng: Rng,
+  rivalRng: Rng,
 ): Promise<Record<string, unknown>> {
   const c = run.character
   const locale = run.locale
@@ -415,6 +423,7 @@ async function finishResolvedTurn(
     run.finished = true
     run.pendingEvent = null
     run.rngState = rng.getState()
+    run.rivalRngState = rivalRng.getState()
     await saveRun(run)
     await persistCharacterSnapshot(run)
     await insertLeaderboardEntry({
@@ -448,9 +457,10 @@ async function finishResolvedTurn(
     }
   }
 
-  const { event, served } = buildServedEvent(c, registry, rng)
+  const { event, served } = buildServedEvent(c, registry, rng, rivalRng)
   run.pendingEvent = event
   run.rngState = rng.getState()
+  run.rivalRngState = rivalRng.getState()
   await saveRun(run)
   return {
     character: c,
@@ -471,6 +481,7 @@ gameRouter.post("/choose", async (req: Request, res: Response) => {
 
     const event = run.pendingEvent
     const rng = new Rng(run.rngState)
+    const rivalRng = new Rng(run.rivalRngState)
     const isMinigame = event.type === "minigame" || Boolean(event.cards)
 
     // Interactive minigames are multi-move and resolve through /minigame-move,
@@ -482,7 +493,7 @@ gameRouter.post("/choose", async (req: Request, res: Response) => {
       ? resolveMinigame(run.character, event, String(req.body?.cardId ?? ""), registry, rng)
       : resolveChoice(run.character, event, String(req.body?.choiceId ?? ""), registry, rng)
 
-    return res.json(await finishResolvedTurn(run, outcome, rng))
+    return res.json(await finishResolvedTurn(run, outcome, rng, rivalRng))
   } catch (err) {
     const msg = (err as Error).message
     console.log("[v0] /choose error", msg)
@@ -520,6 +531,7 @@ gameRouter.post("/minigame-move", async (req: Request, res: Response) => {
     }
 
     const rng = new Rng(run.rngState)
+    const rivalRng = new Rng(run.rivalRngState)
     const primaryStat = c[ev.primaryStat ?? "intelligence"] as number
 
     const state = c.pendingMinigame
@@ -554,7 +566,7 @@ gameRouter.post("/minigame-move", async (req: Request, res: Response) => {
     c.pendingMinigame = null
     run.character = c
     const outcome = applyMinigameOutcome(c, ev, tier, registry, rng)
-    const payload = await finishResolvedTurn(run, outcome, rng)
+    const payload = await finishResolvedTurn(run, outcome, rng, rivalRng)
     return res.json({
       status: "finished",
       minigame: { game: state.game, view: finalView },

@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto"
 import { query, queryOne } from "../db/client.js"
-import { hashSeed } from "../../shared/rng.js"
+import { hashSeed, rivalRngFor } from "../../shared/rng.js"
 import type {
   CharacterState,
   EndingType,
@@ -16,6 +16,10 @@ export interface RunRecord {
   runType: RunType
   seed: string
   rngState: number
+  // The archrival's parallel RNG stream position (see rivalRngFor in
+  // shared/rng.ts) — the rival advances on its own stream so its rolls never
+  // consume the player's main stream. Persisted so reloads resume it.
+  rivalRngState: number
   locale: Locale
   character: CharacterState
   pendingEvent: EventContent | null
@@ -27,6 +31,7 @@ interface RunRow {
   run_type: RunType
   seed: string
   rng_state: string | number
+  rival_rng_state: string | number | null
   locale: Locale
   character: unknown
   pending_event: unknown
@@ -39,6 +44,10 @@ function rowToRecord(r: RunRow): RunRecord {
     runType: r.run_type,
     seed: r.seed,
     rngState: Number(r.rng_state),
+    // Legacy runs predate the parallel stream: default to the stream's initial
+    // state derived from the seed so future advances stay deterministic.
+    rivalRngState:
+      r.rival_rng_state == null ? rivalRngFor(r.seed).getState() : Number(r.rival_rng_state),
     locale: r.locale,
     character:
       typeof r.character === "string"
@@ -54,24 +63,37 @@ function rowToRecord(r: RunRow): RunRecord {
   }
 }
 
+// NOTE: the normalized `rivals` row is NOT written here — it is upserted by the
+// first saveRun() (every createRun call site immediately saves). Keeping the
+// write in one place avoids duplicating the rival→columns mapping.
 export async function createRun(input: {
   runType: RunType
   seed: string
   rngState: number
+  rivalRngState: number
   locale: Locale
   character: CharacterState
 }): Promise<RunRecord> {
   const id = randomUUID()
   await query(
-    `INSERT INTO runs (id, run_type, seed, rng_state, locale, character, pending_event, finished)
-     VALUES ($1, $2, $3, $4, $5, $6, NULL, false)`,
-    [id, input.runType, input.seed, input.rngState, input.locale, JSON.stringify(input.character)],
+    `INSERT INTO runs (id, run_type, seed, rng_state, rival_rng_state, locale, character, pending_event, finished)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, NULL, false)`,
+    [
+      id,
+      input.runType,
+      input.seed,
+      input.rngState,
+      input.rivalRngState,
+      input.locale,
+      JSON.stringify(input.character),
+    ],
   )
   return {
     id,
     runType: input.runType,
     seed: input.seed,
     rngState: input.rngState,
+    rivalRngState: input.rivalRngState,
     locale: input.locale,
     character: input.character,
     pendingEvent: null,
@@ -84,23 +106,63 @@ export async function getRun(id: string): Promise<RunRecord | null> {
   return rows[0] ? rowToRecord(rows[0]) : null
 }
 
+// Mirror the run's archrival into the normalized `rivals` table (upserted on
+// every save so the row is always current). No-op when the run has no rival.
+export async function upsertRival(run: RunRecord): Promise<void> {
+  const rv = run.character.rival
+  if (!rv) return
+  await query(
+    `INSERT INTO rivals
+      (run_id, character_id, name, class, faction_id, focus_id, power_level,
+       age, location, achievements_count, score, last_advanced_turn, updated_at)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12, now())
+     ON CONFLICT (run_id) DO UPDATE SET
+       character_id = EXCLUDED.character_id,
+       name = EXCLUDED.name, class = EXCLUDED.class,
+       faction_id = EXCLUDED.faction_id, focus_id = EXCLUDED.focus_id,
+       power_level = EXCLUDED.power_level, age = EXCLUDED.age,
+       location = EXCLUDED.location,
+       achievements_count = EXCLUDED.achievements_count,
+       score = EXCLUDED.score, last_advanced_turn = EXCLUDED.last_advanced_turn,
+       updated_at = now()`,
+    [
+      run.id,
+      run.character.id,
+      rv.name,
+      rv.class,
+      rv.factionId,
+      rv.focusId ?? null,
+      rv.powerLevel,
+      rv.age,
+      rv.location,
+      rv.achievementsCount,
+      rv.score,
+      rv.lastAdvancedTurn,
+    ],
+  )
+}
+
 export async function saveRun(run: RunRecord): Promise<void> {
   await query(
     `UPDATE runs
        SET rng_state = $2,
-           character = $3,
-           pending_event = $4,
-           finished = $5,
+           rival_rng_state = $3,
+           character = $4,
+           pending_event = $5,
+           finished = $6,
            updated_at = now()
      WHERE id = $1`,
     [
       run.id,
       run.rngState,
+      run.rivalRngState,
       JSON.stringify(run.character),
       run.pendingEvent ? JSON.stringify(run.pendingEvent) : null,
       run.finished,
     ],
   )
+  // Keep the normalized rivals row in sync on every save.
+  await upsertRival(run)
 }
 
 // Whether this player (by seed) already has a daily run today.

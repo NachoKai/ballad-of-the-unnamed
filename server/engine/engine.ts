@@ -410,11 +410,21 @@ export function generateSeasonSummary(
   c: CharacterState,
   registry: ContentRegistry,
   rng: Rng,
+  rivalRng?: Rng,
 ): EventContent {
-  // Clear expired hunted status and advance rival at season boundary.
+  // Clear expired hunted status and advance rival at season boundary. The
+  // rival advances on its own parallel stream (rivalRng, derived from the run
+  // seed — see rivalRngFor) so its stat rolls never consume the player's main
+  // stream. Callers without a parallel stream (tests, legacy paths) fall back
+  // to the main rng, preserving prior behavior.
+  //
+  // ⚠️ PRODUCTION INVARIANT: routes must ALWAYS pass the parallel rivalRng. If
+  // a caller ever omits it here, the rival advances off the main stream while
+  // the persisted rival_rng_state stays stale — on reload the restored stream
+  // replays earlier draws and the rival diverges from a same-seed fresh run.
   clearExpiredHunted(c)
   if (c.rival) {
-    advanceRival(c, rng)
+    advanceRival(c, rivalRng ?? rng)
   }
   return {
     id: "__season_summary__",
@@ -782,6 +792,7 @@ export function buildServedEvent(
   c: CharacterState,
   registry: ContentRegistry,
   rng: Rng,
+  rivalRng?: Rng,
 ): { event: EventContent; served: ServedEvent; finaleStage?: FinaleStage } {
   // Finale stage 2: outcome narrative with a single "continue" button.
   if (c.finaleStage2Choice) {
@@ -888,7 +899,7 @@ export function buildServedEvent(
   }
   // Season boundary: after every seasonLength turns, serve the season summary.
   if (c.turn > 0 && c.turn % GAME_CONFIG.seasonLength === 0) {
-    const ev = generateSeasonSummary(c, registry, rng)
+    const ev = generateSeasonSummary(c, registry, rng, rivalRng)
     const served = serveEvent(ev, c, c.locale, registry, rng, false)
     served.isSeasonSummary = true
     // A resolved capstone verdict swings this season's grade and is shown as a

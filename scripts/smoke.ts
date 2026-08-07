@@ -1,9 +1,10 @@
-import { Rng, hashSeed } from "../shared/rng.js"
+import { Rng, hashSeed, rivalRngFor } from "../shared/rng.js"
 import { loadContent } from "../server/content/registry.js"
 import {
   applyMinigameOutcome,
   buildServedEvent,
   createCharacter,
+  generateRival,
   resolveChoice,
   resolveMinigame,
 } from "../server/engine/engine.js"
@@ -92,6 +93,9 @@ function resolveServed(
 
 for (const classId of ["warrior", "wizard", "rogue", "ranger"]) {
   const rng = new Rng(hashSeed(`smoke-${classId}`))
+  // The archrival advances on its own parallel stream (same pattern as the
+  // routes) so the smoke sim exercises the production determinism path.
+  const rivalRng = rivalRngFor(`smoke-${classId}`)
   const c = createCharacter({
     id: "t",
     name: "Test",
@@ -99,9 +103,10 @@ for (const classId of ["warrior", "wizard", "rogue", "ranger"]) {
     locale: "en",
     registry: reg,
   })
+  c.rival = generateRival(c, reg, rivalRng)
   let turns = 0
   while (c.status === "alive" && turns < 300) {
-    const { event, served } = buildServedEvent(c, reg, rng)
+    const { event, served } = buildServedEvent(c, reg, rng, rivalRng)
     const out = resolveServed(c, event, served, rng)
     evaluateAchievements(c, reg, { endingType: out.endingType })
     turns++
@@ -120,6 +125,7 @@ for (const classId of ["warrior", "wizard", "rogue", "ranger"]) {
 // Determinism check: same seed must produce identical ending.
 function run(seed: string): string {
   const rng = new Rng(hashSeed(seed))
+  const rivalRng = rivalRngFor(seed)
   const c = createCharacter({
     id: "d",
     name: "D",
@@ -127,10 +133,11 @@ function run(seed: string): string {
     locale: "en",
     registry: reg,
   })
+  c.rival = generateRival(c, reg, rivalRng)
   let turns = 0
 
   while (c.status === "alive" && turns < 300) {
-    const { event, served } = buildServedEvent(c, reg, rng)
+    const { event, served } = buildServedEvent(c, reg, rng, rivalRng)
     const out = resolveServed(c, event, served, rng)
     turns++
     if (out.ended) return `${out.endingType}:${c.age}:${c.gold}:${turns}`

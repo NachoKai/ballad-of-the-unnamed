@@ -8,16 +8,21 @@
 -- tables below remain for the fuller build-out (clans, inventory, turn_log).
 
 CREATE TABLE IF NOT EXISTS runs (
-  id            TEXT PRIMARY KEY,
-  run_type      TEXT NOT NULL DEFAULT 'standard',   -- standard | daily
-  seed          TEXT NOT NULL,
-  rng_state     BIGINT NOT NULL,
-  locale        TEXT NOT NULL DEFAULT 'en',
-  character     JSONB NOT NULL,
-  pending_event JSONB,
-  finished      BOOLEAN NOT NULL DEFAULT false,
-  created_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
-  updated_at    TIMESTAMPTZ NOT NULL DEFAULT now()
+  id              TEXT PRIMARY KEY,
+  run_type        TEXT NOT NULL DEFAULT 'standard',   -- standard | daily
+  seed            TEXT NOT NULL,
+  rng_state       BIGINT NOT NULL,
+  -- The archrival advances on its own parallel RNG stream (see rivalRngFor in
+  -- shared/rng.ts), seeded from the same run seed so daily runs stay
+  -- reproducible. State persisted here so the stream resumes across reloads
+  -- without ever consuming the player's main stream.
+  rival_rng_state BIGINT NOT NULL DEFAULT 0,
+  locale          TEXT NOT NULL DEFAULT 'en',
+  character       JSONB NOT NULL,
+  pending_event   JSONB,
+  finished        BOOLEAN NOT NULL DEFAULT false,
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at      TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 CREATE INDEX IF NOT EXISTS idx_runs_daily ON runs (run_type, seed);
 
@@ -44,6 +49,27 @@ CREATE TABLE IF NOT EXISTS leaderboard (
 );
 CREATE INDEX IF NOT EXISTS idx_lb_score ON leaderboard (score DESC);
 CREATE INDEX IF NOT EXISTS idx_lb_runtype ON leaderboard (run_type, seed, score DESC);
+
+-- The archrival, normalized (spec: Archrival system §3.2). The engine keeps
+-- the rival inline on the run's character JSONB for fast deterministic
+-- resolution; this row is upserted on every saveRun so the rival also lives as
+-- a queryable record (per-run 1:1, keyed on the run id — the run row always
+-- exists during play, unlike `characters`, which is only written at run end).
+CREATE TABLE IF NOT EXISTS rivals (
+  run_id              TEXT PRIMARY KEY REFERENCES runs(id) ON DELETE CASCADE,
+  character_id        TEXT,                -- nullable, joins characters(id) after run end
+  name                TEXT NOT NULL,       -- generated from the name pool, not translated
+  class               TEXT NOT NULL,
+  faction_id          TEXT,                -- the faction the rival currently belongs to
+  focus_id            TEXT,                -- seasonal focus (RIVAL_FOCUSES in shared/config.ts)
+  power_level         INTEGER NOT NULL DEFAULT 0,
+  age                 INTEGER NOT NULL,
+  location            TEXT,                -- flavor text for the comparison widget
+  achievements_count  INTEGER NOT NULL DEFAULT 0,
+  score               INTEGER NOT NULL DEFAULT 0,  -- head-to-head comparison metric
+  last_advanced_turn  INTEGER NOT NULL DEFAULT 0,
+  updated_at          TIMESTAMPTZ NOT NULL DEFAULT now()
+);
 
 -- NORMALIZED TABLES (reserved for the fuller build-out) ---------------------
 
@@ -125,6 +151,7 @@ CREATE TABLE IF NOT EXISTS turn_log (
 );
 
 -- Migrations for columns added after initial table creation --------------------
+ALTER TABLE runs ADD COLUMN IF NOT EXISTS rival_rng_state BIGINT NOT NULL DEFAULT 0;
 ALTER TABLE leaderboard ADD COLUMN IF NOT EXISTS legacy_score INTEGER NOT NULL DEFAULT 0;
 ALTER TABLE leaderboard ADD COLUMN IF NOT EXISTS epithet TEXT;
 ALTER TABLE leaderboard ADD COLUMN IF NOT EXISTS leaderboard_tier TEXT NOT NULL DEFAULT 'standard';

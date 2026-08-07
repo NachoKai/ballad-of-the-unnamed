@@ -268,7 +268,7 @@ Goal: The world feels alive. The player has rivals, friends, and a wider world t
 
 **Spec ref**: §Archrival (p562-589), El Ídolo ref: §4 (full detail)
 
-Status: rival generation (`generateRival`), parallel advancement (`advanceRival` at the season boundary), HUD widget (`served.rivalUpdate` + `{rivalName}` slot substitution), end-game comparison (`generateRivalComparison` in the epilogue), and direct encounters (the `dungeon_rival_encounter` event tagged `involvesRival`) ✅. `{rivalName}` slot rendering fixed 2026-07-30. ⬜ Not done: separate `rivals` table (rival is stored inline in the run JSONB — `server/db/schema.sql` has no `rivals` table) and a fully parallel RNG stream (rival shares the run's single deterministic RNG).
+Status: rival generation (`generateRival`), parallel advancement (`advanceRival` at the season boundary), HUD widget (`served.rivalUpdate` + `{rivalName}` slot substitution), end-game comparison (`generateRivalComparison` in the epilogue), and direct encounters (the `dungeon_rival_encounter` event tagged `involvesRival`) ✅. `{rivalName}` slot rendering fixed 2026-07-30. **2026-08-06: separate `rivals` table + parallel RNG stream shipped.** The rival still lives inline on the run's character JSONB for fast deterministic resolution (the engine + client read `c.rival` in ~10 places), but it is now mirrored into a normalized `rivals` table (spec layout keyed by `run_id`, upserted on every `saveRun`) AND advances on its own parallel stream — `rivalRngFor(runSeed)` in `shared/rng.ts` derives `hashSeed(seed + ":rival")`, so rival rolls never consume the player's main stream (independent but deterministic; daily runs stay identical). The stream position persists in `runs.rival_rng_state`; legacy runs default it from the seed. Tests: `engine.test.ts` "archrival parallel RNG stream" suite.
 
 **Implementation**:
 
@@ -669,7 +669,7 @@ Remaining work by priority — see `docs/roadmap.md` for the consolidated open l
 0. ✅ **New-player Tutorial** — always-optional "How to play" modal (`TutorialModal.tsx` + `src/i18n/tutorial.ts`, 6 pages, en/es) — shipped 2026-08-06.
 1. 🟡 **1.2 (part)** — add `press_conference` minigame subtype (5 personality-tag events with `wantedTags`/`punishedTags` authored ✅)
 2. ✅ **1.4 (part)** — more authored rest/recovery events using `staminaDelta` beyond the forced-recovery path (8 new events in `content/events/rest.json`, 2026-08-06)
-3. 🟡 **3.2** — separate `rivals` table + parallel rival RNG stream
+3. ✅ **3.2** — separate `rivals` table + parallel rival RNG stream (shipped 2026-08-06)
 4. 🟡 **5.1** — content volume targets (events 136/80+, world 20/20+ ✅, NPC relationships 2/15+)
 5. 🟡 **5.4 (part)** — per-encounter completion tracking (overall % now implemented)
 6. ⬜ **6.1** — analytics (optional)
