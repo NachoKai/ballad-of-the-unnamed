@@ -1254,6 +1254,40 @@
         "en": "Amass 50 liability in a single life.",
         "es": "Acumula 50 de expediente en una sola vida."
       }
+    },
+    {
+      "id": "bonded_for_life",
+      "icon": "heart-handshake",
+      "rarity": "rare",
+      "condition": {
+        "type": "relationship_affinity_gte",
+        "value": 80
+      },
+      "name": {
+        "en": "Bonded for Life",
+        "es": "Unidos de por Vida"
+      },
+      "description": {
+        "en": "Reach 80 affinity with any companion.",
+        "es": "Alcanza 80 de afinidad con cualquier compañero."
+      }
+    },
+    {
+      "id": "burned_that_bridge",
+      "icon": "flame",
+      "rarity": "rare",
+      "condition": {
+        "type": "relationship_affinity_lte",
+        "value": -80
+      },
+      "name": {
+        "en": "Burned That Bridge",
+        "es": "Quemó ese Puente"
+      },
+      "description": {
+        "en": "Sink to -80 affinity with any acquaintance.",
+        "es": "Cae a -80 de afinidad con cualquier conocido."
+      }
     }
   ]
 }

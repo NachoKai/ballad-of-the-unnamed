@@ -118,20 +118,43 @@ achievement (future content).
 > Note: rival **faction switches** (the rival's `factionId` is currently set once
 > at creation and never changes) are still unimplemented — the parallel stream
 > is what would drive them, and this pass puts that stream in place.
+
 - **Tests:** `server/engine/engine.test.ts` — "archrival parallel RNG stream"
   suite (stream determinism/independence, main-stream isolation, seed-identical
   advancement through the season-summary path).
 
 ---
 
-### 5. Content volume: NPC relationships (2 → 15+) 🟡
+### 5. Content volume: NPC relationships (2 → 15+) ✅ shipped 2026-08-07
 
 > improvement-plan.md §5.1. Events (136), minigames (72), archetypes (54 = 6×9),
-> world events, and clans all exceed targets. **NPCs are the laggard: only 2
-> recurring NPCs** (`ser_aldric`, `wanderer_of_the_homeland`).
+> world events, and clans all exceed targets. **NPCs were the laggard: only 2
+> recurring NPCs** (`ser_aldric`, `wanderer_of_the_homeland`) — now 15.
 
-- Author more `introducesRelationshipId` NPCs → 15+ recurring NPCs.
-- Wire `requiresRelationshipId` gates + `affinityDelta` choices.
+Shipped pieces:
+
+- **Content:** `content/events/relationships.json` — 13 new recurring NPCs (2 → 15
+  total): Sister Mira (healer), Lyra (bard), Fenwick (alchemist mentor), Captain
+  Bram (guard mentor), Merra (innkeeper), Jorin (smith apprentice), Tess (orphan
+  child), Elara (duelist love interest), Grimble (merchant), Velda (seer mentor),
+  Thane Wulfric (nemesis), Lucian (court spy), Kade (warden). Each NPC ships a
+  one-shot **intro event** (a `introducesRelationshipId` choice + `affinityDelta`
+  opening) and a repeatable **follow-up event** gated by `requiresRelationshipId`
+  whose choices carry `affinityDelta` on both sides — befriend up to Devoted or
+  betray down to Nemesis, exactly the §3.1 loop the content was missing.
+- **Achievements:** `bonded_for_life` (peak affinity ≥ 80) +
+  `burned_that_bridge` (affinity ≤ -80) — the spec's "Bonded for Life" /
+  "Burned That Bridge" pair, now actually reachable (nemesis intros open on the
+  negative side so a feud is a real path, not just friend-betrayal).
+- **Tests:** content-audit suite in `server/engine/engine.test.ts` (≥15 NPCs;
+  every NPC has an intro + a gated follow-up; no orphan `requiresRelationshipId`
+  gates; every follow-up can actually move affinity; the two achievements exist).
+
+| File | Change |
+| ----------------------------------- | ---------------------------------------------------------------------- || `content/events/relationships.json` | **New** — 28 events: 13 intros + 15 gated follow-ups (13 new NPCs + follow-ups for the 2 legacy NPCs, en+es) |
+| `content/achievements.json` | +2 relationship achievements (`bonded_for_life`, `burned_that_bridge`) |
+| `server/engine/engine.test.ts` | +content-audit suite for the NPC roster |
+| `docs/improvement-plan.md` | §5.1 status line + table row updated (2 → 15) |
 
 ---
 

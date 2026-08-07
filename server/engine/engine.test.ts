@@ -2250,6 +2250,157 @@ describe("Relationships", () => {
 })
 
 // ---------------------------------------------------------------------------
+// Recurring NPC relationships (content volume audit)
+// ---------------------------------------------------------------------------
+describe("recurring NPC relationships (content audit)", () => {
+  // Every npc id that content can introduce via introducesRelationshipId.
+  const introducedNpcs = new Set<string>()
+  const introducedBy: Record<string, string[]> = {}
+  for (const ev of reg.events) {
+    for (const ch of ev.choices ?? []) {
+      if (ch.introducesRelationshipId) {
+        introducedNpcs.add(ch.introducesRelationshipId)
+        ;(introducedBy[ch.introducesRelationshipId] ??= []).push(ev.id)
+      }
+    }
+  }
+
+  // Every npc id that gates a follow-up event via requiresRelationshipId.
+  const gatedFollowUps = new Map<string, EventContent[]>()
+  for (const ev of reg.events) {
+    if (ev.requiresRelationshipId) {
+      const list = gatedFollowUps.get(ev.requiresRelationshipId) ?? []
+      list.push(ev)
+      gatedFollowUps.set(ev.requiresRelationshipId, list)
+    }
+  }
+
+  it("ships 15+ recurring NPCs", () => {
+    expect(
+      introducedNpcs.size,
+      `expected >= 15 introduced npc ids, got ${introducedNpcs.size}`,
+    ).toBeGreaterThanOrEqual(15)
+    expect(introducedNpcs).toContain("ser_aldric")
+    expect(introducedNpcs).toContain("wanderer_of_the_homeland")
+  })
+
+  it("every introduced NPC has at least one requiresRelationshipId follow-up", () => {
+    for (const npcId of introducedNpcs) {
+      const followUps = gatedFollowUps.get(npcId) ?? []
+      expect(followUps.length, `${npcId} has no follow-up event gated on it`).toBeGreaterThan(0)
+    }
+  })
+
+  it("no follow-up gate references an NPC content never introduces", () => {
+    for (const npcId of gatedFollowUps.keys()) {
+      expect(introducedNpcs.has(npcId), `${npcId} gates events but is never introduced`).toBe(true)
+    }
+  })
+
+  it("every introduction choice carries a role and a bilingual name", () => {
+    for (const ev of reg.events) {
+      for (const ch of ev.choices ?? []) {
+        if (!ch.introducesRelationshipId) continue
+        expect(
+          ch.introducesNpcRole,
+          `${ev.id} choice ${ch.id} missing introducesNpcRole`,
+        ).toBeTruthy()
+        expect(
+          ch.introducesNpcName?.en && ch.introducesNpcName.es,
+          `${ev.id} choice ${ch.id} missing bilingual introducesNpcName`,
+        ).toBeTruthy()
+      }
+    }
+  })
+
+  it("every follow-up event offers an affinityDelta choice (the bond loop is playable)", () => {
+    for (const [npcId, followUps] of gatedFollowUps) {
+      const hasAffinityChoice = followUps.some((ev) =>
+        (ev.choices ?? []).some((ch) => ch.affinityDelta !== undefined),
+      )
+      expect(
+        hasAffinityChoice,
+        `${npcId} follow-ups never move affinity — Bonded for Life / Burned That Bridge are unreachable via ${npcId}`,
+      ).toBe(true)
+    }
+  })
+
+  it("no affinityDelta is silently dropped on ungated events", () => {
+    // The engine only applies affinityDelta when the event is gated on an NPC
+    // (requiresRelationshipId) or the choice introduces one — a delta on a plain
+    // choice of an ungated event would be dead data that never moves the bond.
+    for (const ev of reg.events) {
+      for (const ch of ev.choices ?? []) {
+        if (ch.affinityDelta !== undefined && !ev.requiresRelationshipId) {
+          expect(
+            ch.introducesRelationshipId,
+            `${ev.id} choice ${ch.id} has affinityDelta but neither introduces the NPC nor sits on a gated event`,
+          ).toBeTruthy()
+        }
+      }
+    }
+  })
+
+  it("introductions can open on the negative side so a feud is a real path", () => {
+    // A nemesis-flavored NPC should be meetable on bad terms (negative intro
+    // affinity) so the -80 achievement is reachable without betraying a friend.
+    const nemesisIntros = [...introducedNpcs].filter((npcId) =>
+      (introducedBy[npcId] ?? []).some((evId) => {
+        const ev = reg.eventsById.get(evId)
+        return (ev?.choices ?? []).some(
+          (ch) => ch.introducesRelationshipId === npcId && (ch.affinityDelta ?? 0) < 0,
+        )
+      }),
+    )
+    expect(nemesisIntros.length).toBeGreaterThanOrEqual(2)
+  })
+
+  it("the relationship achievements exist with the correct conditions", () => {
+    const achIds = reg.achievements.map((a) => a.id)
+    expect(achIds).toContain("bonded_for_life")
+    expect(achIds).toContain("burned_that_bridge")
+    const bonded = reg.achievements.find((a) => a.id === "bonded_for_life")
+    const burned = reg.achievements.find((a) => a.id === "burned_that_bridge")
+    expect(bonded?.condition).toEqual({ type: "relationship_affinity_gte", value: 80 })
+    expect(burned?.condition).toEqual({ type: "relationship_affinity_lte", value: -80 })
+  })
+
+  it("the authored affinity budget can actually reach both achievement thresholds", () => {
+    // Fastest path per NPC: the best intro delta + two repeats of the best
+    // follow-up choice. At least one NPC must be able to cross +80 and at
+    // least one to sink below -80 within a handful of encounters.
+    const bestPath = (npcId: string, dir: 1 | -1) => {
+      let intro = 0
+      let followup = 0
+      for (const ev of reg.events) {
+        for (const ch of ev.choices ?? []) {
+          if (ch.introducesRelationshipId === npcId) {
+            intro =
+              dir === 1
+                ? Math.max(intro, ch.affinityDelta ?? 0)
+                : Math.min(intro, ch.affinityDelta ?? 0)
+          } else if (ev.requiresRelationshipId === npcId) {
+            followup =
+              dir === 1
+                ? Math.max(followup, ch.affinityDelta ?? 0)
+                : Math.min(followup, ch.affinityDelta ?? 0)
+          }
+        }
+      }
+      return intro + 2 * followup
+    }
+    expect(
+      [...introducedNpcs].some((id) => bestPath(id, 1) >= 80),
+      "no NPC can reach +80 affinity within a few meetings (bonded_for_life unreachable)",
+    ).toBe(true)
+    expect(
+      [...introducedNpcs].some((id) => bestPath(id, -1) <= -80),
+      "no NPC can reach -80 affinity within a few meetings (burned_that_bridge unreachable)",
+    ).toBe(true)
+  })
+})
+
+// ---------------------------------------------------------------------------
 //  Flags
 // ---------------------------------------------------------------------------
 // Flags

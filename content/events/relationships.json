@@ -1,0 +1,1558 @@
+[
+  {
+    "id": "rel_mira_intro",
+    "minAge": 16,
+    "maxAge": 70,
+    "weight": 8,
+    "excludeIfCompletedIds": ["rel_mira_intro"],
+    "narrative": {
+      "en": "At {locationName}, a village is laid low by fever. A healer in a grey cloak works the rows of cots with a bowl of bitter tea and two good hands. She looks up, exhausted, and sees you at the tent flap. 'You look like someone who can carry a bucket and not flinch. Can you?'",
+      "es": "En {locationName}, una aldea está postrada por la fiebre. Una curandera de capa gris trabaja entre las filas de catres con un cuenco de té amargo y dos buenas manos. Levanta la vista, agotada, y te ve en la entrada de la tienda. 'Parecés alguien que puede cargar un balde y no inmutarse. ¿Podés?'"
+    },
+    "choices": [
+      {
+        "id": "help",
+        "label": { "en": "Roll up your sleeves and help", "es": "Arremangarte y ayudar" },
+        "tag": "Humble",
+        "rarity": "uncommon",
+        "statDeltas": { "charisma": 2 },
+        "healthDelta": 5,
+        "countersDelta": { "lives_saved": 1 },
+        "introducesRelationshipId": "sister_mira",
+        "introducesNpcRole": "friend",
+        "introducesNpcName": { "en": "Sister Mira", "es": "la hermana Mira" },
+        "affinityDelta": 25,
+        "narrative": {
+          "en": "You stay until the fever breaks. By the end she knows your name and trusts your hands.",
+          "es": "Te quedás hasta que cede la fiebre. Al final, ella conoce tu nombre y confía en tus manos."
+        }
+      },
+      {
+        "id": "pay",
+        "label": { "en": "Leave coin and walk on", "es": "Dejar monedas y seguir camino" },
+        "tag": "Professional",
+        "rarity": "common",
+        "goldDelta": -40,
+        "reputationDelta": 2,
+        "reputationFaction": "greywater",
+        "narrative": {
+          "en": "You leave a pouch of coin on the table and walk on. She remembers the stranger who gave, not the one who stayed.",
+          "es": "Dejás una bolsa de monedas sobre la mesa y seguís camino. Recuerda a quien dio, no a quien se quedó."
+        }
+      },
+      {
+        "id": "leave",
+        "label": { "en": "Not your fight — keep moving", "es": "No es tu pelea — seguir" },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": { "intelligence": 1 },
+        "narrative": {
+          "en": "Some fights aren't yours. The fever is the village's own. You walk on and try not to think about the cots.",
+          "es": "Algunas luchas no son tuyas. La fiebre es de la aldea. Seguís caminando y tratás de no pensar en los catres."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rel_mira_aid",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "requiresRelationshipId": "sister_mira",
+    "narrative": {
+      "en": "Sister Mira finds you on the road with two horses and a map. 'A warden post upstream is burning with fever. They sent for me. I can't do it alone — and I know someone who carries a bucket and doesn't flinch.'",
+      "es": "La hermana Mira te encuentra en el camino con dos caballos y un mapa. 'Un puesto de guardias río arriba arde de fiebre. Me llamaron. No puedo hacerlo sola — y conozco a alguien que carga un balde y no se inmuta.'"
+    },
+    "choices": [
+      {
+        "id": "go",
+        "label": {
+          "en": "Ride with her into the sick ward",
+          "es": "Cabalgar con ella a la enfermería"
+        },
+        "tag": "Supportive",
+        "rarity": "rare",
+        "statDeltas": { "charisma": 3 },
+        "healthDelta": -5,
+        "staminaDelta": -15,
+        "countersDelta": { "lives_saved": 1 },
+        "affinityDelta": 20,
+        "narrative": {
+          "en": "You ride with her into the sick ward and come out the other side. Whatever passes between two people who save lives together is not small.",
+          "es": "Cabalgás con ella hacia la enfermería y salís del otro lado. Lo que pasa entre dos personas que salvan vidas juntas no es poca cosa."
+        }
+      },
+      {
+        "id": "send_gold",
+        "label": { "en": "Fund the ride instead", "es": "Financiar el viaje en su lugar" },
+        "tag": "Professional",
+        "rarity": "uncommon",
+        "goldDelta": -80,
+        "affinityDelta": 5,
+        "narrative": {
+          "en": "You can't go, but you fund the ride. She nods — grateful, if a little disappointed.",
+          "es": "No podés ir, pero financiás el viaje. Ella asiente — agradecida, aunque un poco decepcionada."
+        }
+      },
+      {
+        "id": "decline",
+        "label": { "en": "Decline — the road calls", "es": "Declinar — el camino te llama" },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": { "intelligence": 1 },
+        "affinityDelta": -15,
+        "narrative": {
+          "en": "'Then I'll find another pair of hands.' Her voice is flat. You watch her ride away and wonder if that friendship was ever real.",
+          "es": "'Entonces buscaré otro par de manos.' Su voz es plana. La ves alejarse cabalgando y te preguntás si esa amistad fue alguna vez real."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rel_lyra_intro",
+    "minAge": 16,
+    "maxAge": 70,
+    "weight": 8,
+    "excludeIfCompletedIds": ["rel_lyra_intro"],
+    "narrative": {
+      "en": "At the tavern in {locationName}, a bard with a silver circlet finishes her song and the room falls silent. Then she turns to you. 'I heard a rumor about you before I heard your name. That's rare. Sit — I want the version with the details wrong on purpose.'",
+      "es": "En la taberna de {locationName}, una barda con un círculo de plata termina su canción y la sala queda en silencio. Luego se vuelve hacia vos. 'Oí un rumor sobre vos antes que tu nombre. Eso es raro. Sentate — quiero la versión con los detalles mal a propósito.'"
+    },
+    "choices": [
+      {
+        "id": "tell_story",
+        "label": {
+          "en": "Trade her a story for a song",
+          "es": "Cambiarle una historia por una canción"
+        },
+        "tag": "Funny",
+        "rarity": "rare",
+        "statDeltas": { "charisma": 3 },
+        "fameDelta": 4,
+        "introducesRelationshipId": "bard_lyra",
+        "introducesNpcRole": "friend",
+        "introducesNpcName": { "en": "Lyra", "es": "Lyra" },
+        "affinityDelta": 25,
+        "narrative": {
+          "en": "You trade her a story for a song, and by morning you're a verse in her repertoire. Lyra never forgets a good source.",
+          "es": "Le cambiás una historia por una canción, y para la mañana sos un verso de su repertorio. Lyra nunca olvida una buena fuente."
+        }
+      },
+      {
+        "id": "modest",
+        "label": {
+          "en": "Wave it off — no story worth singing",
+          "es": "Restarle importancia — no hay historia"
+        },
+        "tag": "Humble",
+        "rarity": "common",
+        "statDeltas": { "charisma": 1 },
+        "narrative": {
+          "en": "'There's no story worth singing.' She raises an eyebrow. 'Modesty is the best disguise, but I'll find the truth anyway.'",
+          "es": "'No hay historia que valga una canción.' Alza una ceja. 'La modestia es el mejor disfraz, pero igual voy a encontrar la verdad.'"
+        }
+      },
+      {
+        "id": "buy_song",
+        "label": {
+          "en": "Pay her to sing your deeds tonight",
+          "es": "Pagarle para que cante tus hazañas"
+        },
+        "tag": "Cocky",
+        "rarity": "uncommon",
+        "goldDelta": -30,
+        "fameDelta": 2,
+        "statDeltas": { "charisma": 1 },
+        "narrative": {
+          "en": "You pay her to sing your deeds tonight. She does — with such embellishment that half the room believes you've slain three dragons.",
+          "es": "Le pagás para que cante tus hazañas esta noche. Lo hace — con tal adorno que media sala cree que mataste tres dragones."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rel_lyra_song",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "requiresRelationshipId": "bard_lyra",
+    "narrative": {
+      "en": "Lyra catches your arm at the market crossroads. 'The song about you is finished — but it has teeth. The court will love it or hang it. Tell me the version to sing, and I'll sing it true.'",
+      "es": "Lyra te toma del brazo en el cruce del mercado. 'La canción sobre vos está lista — pero tiene dientes. A la corte le encantará o la colgarán. Decime qué versión cantar, y la cantaré fiel.'"
+    },
+    "choices": [
+      {
+        "id": "true_story",
+        "label": {
+          "en": "Tell her the truth, warts and all",
+          "es": "Contarle la verdad, con todo y defectos"
+        },
+        "tag": "Confident",
+        "rarity": "rare",
+        "statDeltas": { "charisma": 2 },
+        "fameDelta": 6,
+        "affinityDelta": 20,
+        "narrative": {
+          "en": "You tell her the truth, warts and all. The song is better for it — and Lyra respects a person who can be sung about honestly.",
+          "es": "Le contás la verdad, con todo y defectos. La canción gana con eso — y Lyra respeta a quien se deja cantar con honestidad."
+        }
+      },
+      {
+        "id": "polished",
+        "label": { "en": "Hand her the polished version", "es": "Pasarle la versión pulida" },
+        "tag": "Strategic",
+        "rarity": "uncommon",
+        "fameDelta": 3,
+        "affinityDelta": 5,
+        "narrative": {
+          "en": "You hand her the polished version. The song is a hit; the truth waits for another verse.",
+          "es": "Le pasás la versión pulida. La canción es un éxito; la verdad espera otro verso."
+        }
+      },
+      {
+        "id": "silence_her",
+        "label": {
+          "en": "Pay her to bury the song entirely",
+          "es": "Pagarle para enterrar la canción"
+        },
+        "tag": "Aggressive",
+        "rarity": "volatile",
+        "goldDelta": -100,
+        "fameDelta": -5,
+        "tradeoffDeltas": { "charisma": -2 },
+        "liabilityDelta": 8,
+        "affinityDelta": -40,
+        "narrative": {
+          "en": "You pay her to bury the song entirely. She pockets the coin and smiles, but her eyes go cold. Some songs die; the singers don't forget.",
+          "es": "Le pagás para enterrar la canción por completo. Guarda la moneda y sonríe, pero sus ojos se vuelven fríos. Algunas canciones mueren; las cantoras no olvidan."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rel_fenwick_intro",
+    "minAge": 16,
+    "maxAge": 70,
+    "weight": 8,
+    "excludeIfCompletedIds": ["rel_fenwick_intro"],
+    "narrative": {
+      "en": "A ramshackle cart has shed a wheel at {locationName}, and its owner — a small old man with singed eyebrows — is cursing a cloud of purple smoke. He squints at you. 'You look like someone who can hold a flask steady. Hold this, and I'll teach you what the smoke means.'",
+      "es": "Una carreta destartalada ha perdido una rueda en {locationName}, y su dueño — un viejecito de cejas quemadas — maldice una nube de humo violeta. Te entrecierra los ojos. 'Parecés alguien que puede sostener un frasco firme. Sostené esto, y te enseño lo que significa el humo.'"
+    },
+    "choices": [
+      {
+        "id": "assist",
+        "label": { "en": "Hold the flask and learn", "es": "Sostener el frasco y aprender" },
+        "tag": "Strategic",
+        "rarity": "uncommon",
+        "statDeltas": { "intelligence": 2 },
+        "introducesRelationshipId": "alchemist_fenwick",
+        "introducesNpcRole": "mentor",
+        "introducesNpcName": { "en": "Fenwick", "es": "Fenwick" },
+        "affinityDelta": 25,
+        "narrative": {
+          "en": "You hold the flask, ask the right questions, and by sunset you know more about alchemy than most apothecaries. Fenwick adopts you as a student on the spot.",
+          "es": "Sostenés el frasco, hacés las preguntas correctas y al atardecer sabés más de alquimia que la mayoría de los boticarios. Fenwick te adopta como alumno en el acto."
+        }
+      },
+      {
+        "id": "buy_potion",
+        "label": { "en": "Buy a draught instead", "es": "Comprar una pócima en su lugar" },
+        "tag": "Professional",
+        "rarity": "common",
+        "goldDelta": -50,
+        "healthDelta": 10,
+        "narrative": {
+          "en": "You buy a draught instead of an apprenticeship. The potion works; the lesson doesn't come with it.",
+          "es": "Comprás una pócima en lugar de un aprendizaje. La poción funciona; la lección no viene incluida."
+        }
+      },
+      {
+        "id": "decline",
+        "label": { "en": "Keep walking", "es": "Seguir de largo" },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": { "intelligence": 1 },
+        "narrative": {
+          "en": "'Your loss, then. Smoke doesn't wait for the curious.'",
+          "es": "'Perdés, entonces. El humo no espera a los curiosos.'"
+        }
+      }
+    ]
+  },
+  {
+    "id": "rel_fenwick_ingredient",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "requiresRelationshipId": "alchemist_fenwick",
+    "narrative": {
+      "en": "Fenwick intercepts you at the herbalist's stall, holding a list. 'I need {creatureName} blood for a brew that could turn a war. The swamps are crawling with the beasts, and my knees are older than my recipes. Come with me — or hold the list and watch someone else take the credit.'",
+      "es": "Fenwick te intercepta en el puesto de la herborista con una lista en la mano. 'Necesito sangre de {creatureName} para una brebaje que podría cambiar una guerra. Los pantanos están llenos de esas bestias, y mis rodillas son más viejas que mis recetas. Venite conmigo — o sostené la lista y mirá cómo otro se lleva el crédito.'"
+    },
+    "choices": [
+      {
+        "id": "hunt",
+        "label": { "en": "Brave the swamp with him", "es": "Enfrentar el pantano con él" },
+        "tag": "Aggressive",
+        "rarity": "rare",
+        "statDeltas": { "constitution": 2, "dexterity": 1 },
+        "healthDelta": -8,
+        "injuryRiskDelta": 0.1,
+        "countersDelta": { "alchemy_won": 1 },
+        "affinityDelta": 20,
+        "narrative": {
+          "en": "You return with the vial full and a new scar. Fenwick's brew bubbles to life, and his respect for you is now measurable in ounces.",
+          "es": "Volvés con el frasco lleno y una cicatriz nueva. La brebaje de Fenwick burbujea a la vida, y su respeto por vos ahora se mide en onzas."
+        }
+      },
+      {
+        "id": "fetch_cheap",
+        "label": {
+          "en": "Buy a substitute from a shadier dealer",
+          "es": "Comprar un sustituto a un vendedor turbio"
+        },
+        "tag": "Professional",
+        "rarity": "uncommon",
+        "goldDelta": -60,
+        "affinityDelta": 5,
+        "narrative": {
+          "en": "You buy a substitute ingredient from a shadier dealer. The brew works — mostly. Fenwick thanks you, though he mutters about shortcuts.",
+          "es": "Comprás un ingrediente sustituto a un vendedor turbio. La brebaje funciona — más o menos. Fenwick te agradece, aunque murmura sobre atajos."
+        }
+      },
+      {
+        "id": "refuse",
+        "label": {
+          "en": "Refuse — you have your own hunt",
+          "es": "Negarte — tenés tu propia cacería"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": { "intelligence": 1 },
+        "affinityDelta": -15,
+        "narrative": {
+          "en": "'Then I'll go alone and die with my recipes.' He's joking. Mostly.",
+          "es": "'Entonces iré solo y moriré con mis recetas.' Está bromeando. Más o menos."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rel_bram_intro",
+    "minAge": 16,
+    "maxAge": 70,
+    "weight": 8,
+    "excludeIfCompletedIds": ["rel_bram_intro"],
+    "narrative": {
+      "en": "At a harbor tavern in {locationName}, a one-eyed man with a soldier's bearing watches you drink. Finally he walks over. 'I've trained fifty blades and buried forty of them. The ones who listen live longer. Sit, and I'll tell you which ones listened.'",
+      "es": "En una taberna del puerto de {locationName}, un hombre tuerto con porte de soldado te observa beber. Finalmente se acerca. 'Entrené cincuenta espadas y enterré cuarenta. Los que escuchan viven más. Sentate, y te cuento cuáles escucharon.'"
+    },
+    "choices": [
+      {
+        "id": "accept",
+        "label": { "en": "Sit and learn", "es": "Sentarte y aprender" },
+        "tag": "Humble",
+        "rarity": "uncommon",
+        "statDeltas": { "constitution": 1, "strength": 1 },
+        "introducesRelationshipId": "captain_bram",
+        "introducesNpcRole": "mentor",
+        "introducesNpcName": { "en": "Captain Bram", "es": "el capitán Bram" },
+        "affinityDelta": 25,
+        "narrative": {
+          "en": "You sit, and he talks until the candles drown. You leave a better blade than you arrived — and a named friend.",
+          "es": "Te sentás, y habla hasta que las velas se ahogan. Salís mejor espada de la que llegaste — y con un amigo con nombre."
+        }
+      },
+      {
+        "id": "buy_drink",
+        "label": {
+          "en": "Buy him a drink, trade war stories",
+          "es": "Invitarle una bebida y contar historias"
+        },
+        "tag": "Funny",
+        "rarity": "common",
+        "goldDelta": -20,
+        "statDeltas": { "charisma": 1 },
+        "narrative": {
+          "en": "You buy him a drink and trade war stories until dawn. He leaves chuckling — a good night, but not a lesson.",
+          "es": "Le comprás una bebida e intercambiás historias de guerra hasta el alba. Se va riendo entre dientes — buena noche, pero no una lección."
+        }
+      },
+      {
+        "id": "decline",
+        "label": { "en": "Decline politely", "es": "Declinar con cortesía" },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": { "intelligence": 1 },
+        "narrative": {
+          "en": "'Suit yourself. The sea will teach you what I would have.'",
+          "es": "'Como quieras. El mar te enseñará lo que yo te habría enseñado.'"
+        }
+      }
+    ]
+  },
+  {
+    "id": "rel_bram_favor",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "requiresRelationshipId": "captain_bram",
+    "narrative": {
+      "en": "Captain Bram's old crew has been seized at the docks — debts, the captain says, or politics, which are the same thing. He shows you the arrest order. 'I trained those boys. I can't walk the dock anymore without a limp, but you can. Help me spring them, and the debt is mine to you.'",
+      "es": "La vieja tripulación del capitán Bram ha sido detenida en los muelles — deudas, dice el capitán, o política, que es lo mismo. Te muestra la orden de arresto. 'Yo entrené a esos muchachos. Ya no puedo caminar por el muelle sin cojear, pero vos sí. Ayudame a sacarlos, y la deuda es mía contigo.'"
+    },
+    "choices": [
+      {
+        "id": "help_breakout",
+        "label": { "en": "Spring them from the cells", "es": "Sacarlos de las celdas" },
+        "tag": "Aggressive",
+        "rarity": "rare",
+        "statDeltas": { "dexterity": 2, "strength": 1 },
+        "injuryRiskDelta": 0.15,
+        "liabilityDelta": 6,
+        "affinityDelta": 25,
+        "narrative": {
+          "en": "The jailbreak goes off clean — one bruised guard and a lot of grateful sailors. Bram claps your shoulder so hard it stings. 'You're the best of them, and I trained them all.'",
+          "es": "La fuga sale limpia — un guardia golpeado y un montón de marineros agradecidos. Bram te palmea el hombro tan fuerte que duele. 'Sos el mejor de todos, y yo los entrené a todos.'"
+        }
+      },
+      {
+        "id": "pay_fines",
+        "label": { "en": "Pay the debts instead", "es": "Pagar las deudas en su lugar" },
+        "tag": "Professional",
+        "rarity": "uncommon",
+        "goldDelta": -120,
+        "affinityDelta": 10,
+        "narrative": {
+          "en": "You pay the debts instead. Bram is torn between pride and relief — but he doesn't forget the gold.",
+          "es": "Pagás las deudas en su lugar. Bram está dividido entre el orgullo y el alivio — pero no olvida el oro."
+        }
+      },
+      {
+        "id": "walk_away",
+        "label": { "en": "Walk away from the dock", "es": "Alejarte del muelle" },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": { "intelligence": 1 },
+        "affinityDelta": -20,
+        "narrative": {
+          "en": "You tell him you can't. He nods slowly, and something closes behind his one good eye. 'The sea teaches everyone eventually.'",
+          "es": "Le decís que no podés. Asiente despacio, y algo se cierra detrás de su único ojo bueno. 'El mar enseña a todos, tarde o temprano.'"
+        }
+      }
+    ]
+  },
+  {
+    "id": "rel_merra_intro",
+    "minAge": 16,
+    "maxAge": 70,
+    "weight": 8,
+    "excludeIfCompletedIds": ["rel_merra_intro"],
+    "narrative": {
+      "en": "The inn at {locationName} is full to the rafters when its keeper — a broad woman with flour up to her elbows — plants a tankard in front of you. 'One room left, and it's the one with the draft. But I've got a stew that'll make you forget the draft, and I could use a strong pair of hands in the kitchen.'",
+      "es": "La posada de {locationName} está llena hasta las vigas cuando su dueña — una mujer ancha con harina hasta los codos — planta una jarra frente a vos. 'Queda una habitación, y es la que tiene corriente. Pero tengo un guiso que te hará olvidar la corriente, y me vendrían bien unas manos fuertes en la cocina.'"
+    },
+    "choices": [
+      {
+        "id": "help_kitchen",
+        "label": { "en": "Work the kitchen for a night", "es": "Trabajar la cocina una noche" },
+        "tag": "Supportive",
+        "rarity": "uncommon",
+        "statDeltas": { "constitution": 2 },
+        "staminaDelta": 15,
+        "introducesRelationshipId": "innkeeper_merra",
+        "introducesNpcRole": "friend",
+        "introducesNpcName": { "en": "Merra", "es": "Merra" },
+        "affinityDelta": 25,
+        "narrative": {
+          "en": "You chop, stir, and carry until closing. Merra feeds you twice and refuses your coin. 'A worker eats free in my house,' she says. You've made an ally.",
+          "es": "Picás, revolvés y llevás platos hasta el cierre. Merra te da de comer dos veces y rechaza tu moneda. 'Quien trabaja come gratis en mi casa', dice. Ganaste una aliada."
+        }
+      },
+      {
+        "id": "pay_room",
+        "label": { "en": "Pay for the room and sleep", "es": "Pagar la habitación y dormir" },
+        "tag": "Professional",
+        "rarity": "common",
+        "goldDelta": -40,
+        "staminaDelta": 20,
+        "narrative": {
+          "en": "You pay for the drafty room and sleep like a stone anyway.",
+          "es": "Pagás la habitación con corriente y dormís como una piedra de todos modos."
+        }
+      },
+      {
+        "id": "leave",
+        "label": { "en": "Move on", "es": "Seguir de largo" },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": { "intelligence": 1 },
+        "narrative": {
+          "en": "'Suit yourself — the stew won't miss you.' It probably would have.",
+          "es": "'Como quieras — el guiso no te va a extrañar.' Probablemente lo habría hecho."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rel_merra_threat",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "requiresRelationshipId": "innkeeper_merra",
+    "narrative": {
+      "en": "You arrive at Merra's inn to find the tables overturned and her facing down three hired thugs with a cleaver. 'They want the deed to my land — the new lord's men,' she says without taking her eyes off them. 'You can walk away. I'll understand. But I'd rather not face them alone.'",
+      "es": "Llegás a la posada de Merra y encontrás las mesas volcadas y a ella enfrentando a tres matones a sueldo con una cuchilla. 'Quieren la escritura de mi tierra — los hombres del nuevo señor', dice sin apartar los ojos de ellos. 'Podés irte. Lo entenderé. Pero preferiría no enfrentarlos sola.'"
+    },
+    "choices": [
+      {
+        "id": "stand_with_her",
+        "label": {
+          "en": "Stand with her, cleaver and all",
+          "es": "Quedarte con ella, cuchilla incluida"
+        },
+        "tag": "Aggressive",
+        "rarity": "rare",
+        "statDeltas": { "strength": 2, "constitution": 1 },
+        "healthDelta": -6,
+        "injuryRiskDelta": 0.12,
+        "reputationDelta": 3,
+        "reputationFaction": "greywater",
+        "countersDelta": { "street_fights_won": 1 },
+        "affinityDelta": 30,
+        "narrative": {
+          "en": "Three thugs, one cleaver, and you. They leave through the window. Merra pours two drinks and raises hers. 'To the only stranger who ever stayed.'",
+          "es": "Tres matones, una cuchilla y vos. Se van por la ventana. Merra sirve dos bebidas y alza la suya. 'Por la única persona que se quedó.'"
+        }
+      },
+      {
+        "id": "pay_them",
+        "label": { "en": "Buy them off", "es": "Comprar su silencio" },
+        "tag": "Professional",
+        "rarity": "uncommon",
+        "goldDelta": -150,
+        "affinityDelta": 5,
+        "narrative": {
+          "en": "Gold changes hands and the thugs leave grumbling. Merra's pride is wounded, but her land is safe — and her thanks are real.",
+          "es": "El oro cambia de manos y los matones se van refunfuñando. El orgullo de Merra queda herido, pero su tierra está a salvo — y su agradecimiento es real."
+        }
+      },
+      {
+        "id": "leave",
+        "label": { "en": "Walk out the door", "es": "Salir por la puerta" },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": { "intelligence": 1 },
+        "affinityDelta": -35,
+        "narrative": {
+          "en": "You walk out. Behind you, the cleaver hits the table with a sound you'll hear in your sleep for years.",
+          "es": "Salís. Detrás de vos, la cuchilla golpea la mesa con un sonido que vas a oír en tus sueños durante años."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rel_jorin_intro",
+    "minAge": 16,
+    "maxAge": 70,
+    "weight": 8,
+    "excludeIfCompletedIds": ["rel_jorin_intro"],
+    "narrative": {
+      "en": "A young smith's apprentice sits in the rain outside the forge at {locationName}, hammering a bent horseshoe into shape with more heart than skill. He looks up. 'Master says I've got good hands and bad teachers. You look like you know one end of a blade from the other. Could you show me the difference?'",
+      "es": "Un joven aprendiz de herrero está sentado bajo la lluvia fuera de la fragua de {locationName}, martillando una herradura doblada con más corazón que oficio. Levanta la vista. 'El herrero mayor dice que tengo buenas manos y malos maestros. Parecés alguien que sabe distinguir un filo de otro. ¿Podrías mostrarme la diferencia?'"
+    },
+    "choices": [
+      {
+        "id": "teach",
+        "label": { "en": "Teach him what you know", "es": "Enseñarle lo que sabés" },
+        "tag": "Supportive",
+        "rarity": "rare",
+        "statDeltas": { "charisma": 2, "intelligence": 1 },
+        "countersDelta": { "smithing_won": 1 },
+        "introducesRelationshipId": "apprentice_jorin",
+        "introducesNpcRole": "apprentice",
+        "introducesNpcName": { "en": "Jorin", "es": "Jorin" },
+        "affinityDelta": 30,
+        "narrative": {
+          "en": "You show him the grip, the weight, the patience. A season later, his first blade doesn't wobble — and he names it after you, badly.",
+          "es": "Le mostrás el agarre, el peso, la paciencia. Una temporada después, su primera hoja no titubea — y la bautiza con tu nombre, mal pronunciado."
+        }
+      },
+      {
+        "id": "give_gold",
+        "label": {
+          "en": "Leave coin for a proper teacher",
+          "es": "Dejarle monedas para un buen herrero"
+        },
+        "tag": "Professional",
+        "rarity": "common",
+        "goldDelta": -40,
+        "narrative": {
+          "en": "You leave him coin for a proper teacher. He takes it, grateful, though what he wanted was a mentor, not a purse.",
+          "es": "Le dejás monedas para un maestro de verdad. Las acepta, agradecido, aunque lo que quería era un mentor, no una bolsa."
+        }
+      },
+      {
+        "id": "pass",
+        "label": { "en": "Pass him by", "es": "Pasar de largo" },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": { "intelligence": 1 },
+        "narrative": {
+          "en": "You have your own road. He nods and goes back to hammering in the rain.",
+          "es": "Tenés tu propio camino. Él asiente y vuelve a martillar bajo la lluvia."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rel_jorin_hammer",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "requiresRelationshipId": "apprentice_jorin",
+    "narrative": {
+      "en": "Jorin finds you with a wrapped bundle under his arm and a hopeful look. 'I made you something. It's not a master's work — but it's the best thing I've ever made, and I made it because of what you taught me.'",
+      "es": "Jorin te encuentra con un bulto envuelto bajo el brazo y una mirada esperanzada. 'Te hice algo. No es obra de un artesano consumado — pero es lo mejor que hice en mi vida, y lo hice por lo que me enseñaste.'"
+    },
+    "choices": [
+      {
+        "id": "accept_gift",
+        "label": { "en": "Accept the blade with honor", "es": "Aceptar la hoja con honor" },
+        "tag": "Supportive",
+        "rarity": "uncommon",
+        "statDeltas": { "charisma": 2 },
+        "countersDelta": { "smithing_won": 1 },
+        "affinityDelta": 20,
+        "narrative": {
+          "en": "The blade is rough but true, and you wear it where people can see it. Jorin walks taller for a month.",
+          "es": "La hoja es tosca pero firme, y la llevás donde la gente pueda verla. Jorin camina con la cabeza en alto durante un mes."
+        }
+      },
+      {
+        "id": "critique",
+        "label": {
+          "en": "Test the edge and teach the fix",
+          "es": "Probar el filo y enseñarle el arreglo"
+        },
+        "tag": "Professional",
+        "rarity": "rare",
+        "statDeltas": { "intelligence": 2 },
+        "affinityDelta": 5,
+        "narrative": {
+          "en": "You test the edge and tell him exactly what's wrong with it — then show him how to fix it. He leaves determined, not deflated.",
+          "es": "Probás el filo y le decís exactamente qué tiene de malo — luego le mostrás cómo arreglarlo. Se va decidido, no desinflado."
+        }
+      },
+      {
+        "id": "dismiss",
+        "label": { "en": "Set it aside without a word", "es": "Dejarla de lado sin decir palabra" },
+        "tag": "Cocky",
+        "rarity": "common",
+        "affinityDelta": -30,
+        "narrative": {
+          "en": "You take the blade, glance at it, and set it aside. He says nothing, but the light in his face goes out.",
+          "es": "Tomás la hoja, la mirás de reojo y la dejás a un lado. Él no dice nada, pero la luz de su cara se apaga."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rel_tess_intro",
+    "minAge": 16,
+    "maxAge": 70,
+    "weight": 8,
+    "excludeIfCompletedIds": ["rel_tess_intro"],
+    "narrative": {
+      "en": "A child with too-old eyes is picking pockets at the market in {locationName} — badly. She's caught, and the merchant's hand is raised. She doesn't flinch. 'Go on, then,' she says. 'I've been hit by better.'",
+      "es": "Una niña con ojos demasiado viejos está robando carteras en el mercado de {locationName} — mal. La atrapan, y la mano del mercader se alza. Ella no se inmuta. 'Dale, entonces', dice. 'Me han pegado mejores.'"
+    },
+    "choices": [
+      {
+        "id": "intervene",
+        "label": { "en": "Pay for what she took", "es": "Pagar por lo que tomó" },
+        "tag": "Supportive",
+        "rarity": "rare",
+        "statDeltas": { "charisma": 3 },
+        "goldDelta": -30,
+        "countersDelta": { "lives_saved": 1 },
+        "introducesRelationshipId": "orphan_tess",
+        "introducesNpcRole": "child",
+        "introducesNpcName": { "en": "Tess", "es": "Tess" },
+        "affinityDelta": 30,
+        "narrative": {
+          "en": "You pay for what she took, and the merchant backs down. She eyes you like you're a trap — then, slowly, takes your hand. 'Nobody ever paid for me before.'",
+          "es": "Pagás por lo que tomó, y el mercader se echa atrás. Ella te mira como si fueras una trampa — y luego, despacio, toma tu mano. 'Nadie había pagado por mí antes.'"
+        }
+      },
+      {
+        "id": "pay_merchant",
+        "label": {
+          "en": "Pay the merchant, leave the child",
+          "es": "Pagar al mercader, dejar a la niña"
+        },
+        "tag": "Professional",
+        "rarity": "common",
+        "goldDelta": -30,
+        "narrative": {
+          "en": "You pay the merchant but leave the child to her fate. The lesson she learns isn't yours to give.",
+          "es": "Pagás al mercader pero dejás a la niña a su suerte. La lección que aprende no es tuya para dar."
+        }
+      },
+      {
+        "id": "walk",
+        "label": { "en": "Walk on", "es": "Seguir de largo" },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": { "intelligence": 1 },
+        "narrative": {
+          "en": "Not your fight. You tell yourself that twice before you believe it.",
+          "es": "No es tu pelea. Te lo decís dos veces antes de creértelo."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rel_tess_path",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "requiresRelationshipId": "orphan_tess",
+    "narrative": {
+      "en": "Tess catches up to you on the road, breathless, with a stolen sword almost as tall as she is. 'I watched you. I want to be like you. Teach me, or tell me to go — but don't pretend you didn't see me.'",
+      "es": "Tess te alcanza en el camino, sin aliento, con una espada robada casi tan alta como ella. 'Te observé. Quiero ser como vos. Enseñame, o decime que me vaya — pero no finjas que no me viste.'"
+    },
+    "choices": [
+      {
+        "id": "take_her",
+        "label": { "en": "Take her under your wing", "es": "Ponerla bajo tu ala" },
+        "tag": "Humble",
+        "rarity": "rare",
+        "statDeltas": { "charisma": 2 },
+        "staminaDelta": -15,
+        "affinityDelta": 25,
+        "narrative": {
+          "en": "You teach her what you know, and she learns twice as fast as you did. The road gets louder, and better.",
+          "es": "Le enseñás lo que sabés, y ella aprende el doble de rápido que vos. El camino se vuelve más ruidoso, y mejor."
+        }
+      },
+      {
+        "id": "find_her_place",
+        "label": {
+          "en": "Find her a place at the temple school",
+          "es": "Conseguirle un lugar en la escuela del templo"
+        },
+        "tag": "Professional",
+        "rarity": "uncommon",
+        "goldDelta": -60,
+        "affinityDelta": 10,
+        "narrative": {
+          "en": "You find her a place at a temple school where she'll be fed and taught. She goes without complaint — but looks back once.",
+          "es": "Le conseguís un lugar en una escuela del templo donde la alimentarán y educarán. Se va sin quejarse — pero mira atrás una vez."
+        }
+      },
+      {
+        "id": "send_away",
+        "label": { "en": "Send her away", "es": "Despedirla" },
+        "tag": "Stoic",
+        "rarity": "common",
+        "affinityDelta": -35,
+        "narrative": {
+          "en": "You tell her no. She nods like she expected it and walks away with the too-big sword. Something in you hardens, and you let it.",
+          "es": "Le decís que no. Asiente como si lo esperara y se va con la espada demasiado grande. Algo en vos se endurece, y lo dejás."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rel_elara_intro",
+    "minAge": 16,
+    "maxAge": 70,
+    "weight": 8,
+    "excludeIfCompletedIds": ["rel_elara_intro"],
+    "narrative": {
+      "en": "A duelist with a scarred hand and a banner-painted shield is holding the practice ring at {locationName} against all comers. She beckons you in. 'I've heard your name twice today. Once was a boast, once was a warning. I want to know which one's true.'",
+      "es": "Una duelista de mano cicatrizada y escudo pintado con un estandarte está defendiendo el círculo de práctica de {locationName} contra todos. Te hace señas para que entres. 'Oí tu nombre dos veces hoy. Una fue un alarde, otra fue una advertencia. Quiero saber cuál es cierta.'"
+    },
+    "choices": [
+      {
+        "id": "spar",
+        "label": { "en": "Step into the ring", "es": "Entrar al círculo" },
+        "tag": "Confident",
+        "rarity": "rare",
+        "statDeltas": { "dexterity": 2, "strength": 1 },
+        "healthDelta": -5,
+        "injuryRiskDelta": 0.08,
+        "countersDelta": { "duels_won": 1 },
+        "introducesRelationshipId": "swordmaiden_elara",
+        "introducesNpcRole": "love_interest",
+        "introducesNpcName": { "en": "Elara", "es": "Elara" },
+        "affinityDelta": 25,
+        "narrative": {
+          "en": "The bout goes long and honest. When it's over, she laughs and offers her hand. 'The warning, then. Good — warnings are more interesting.'",
+          "es": "El combate es largo y honesto. Cuando termina, ella ríe y te ofrece la mano. 'La advertencia, entonces. Bien — las advertencias son más interesantes.'"
+        }
+      },
+      {
+        "id": "decline",
+        "label": { "en": "Decline with a compliment", "es": "Declinar con un elogio" },
+        "tag": "Humble",
+        "rarity": "common",
+        "statDeltas": { "charisma": 1 },
+        "narrative": {
+          "en": "'Smart,' she says, sheathing her blade. 'A fighter who knows when not to fight is worth watching.'",
+          "es": "'Qué inteligente', dice, envainando su hoja. 'Alguien que sabe cuándo no pelear vale la pena mirar.'"
+        }
+      },
+      {
+        "id": "taunt",
+        "label": { "en": "Talk yourself up from the ropes", "es": "Alardearte desde las cuerdas" },
+        "tag": "Cocky",
+        "rarity": "volatile",
+        "statDeltas": { "charisma": 2 },
+        "fameDelta": 3,
+        "tradeoffDeltas": { "constitution": -2 },
+        "narrative": {
+          "en": "You talk the talk from the ropes and the crowd loves it. She files your name under 'worth beating later.'",
+          "es": "Hablás con arrogancia desde las cuerdas y la multitud lo adora. Ella archiva tu nombre bajo 'merece una paliza después'."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rel_elara_duet",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "requiresRelationshipId": "swordmaiden_elara",
+    "narrative": {
+      "en": "Elara finds you at dusk, armor off, a bottle in each hand. 'There's a tournament next season. They say you fight better when you have something to fight for. I was thinking we could practice that.'",
+      "es": "Elara te encuentra al anochecer, sin armadura, una botella en cada mano. 'Hay un torneo la próxima temporada. Dicen que peleás mejor cuando tenés algo por lo que pelear. Pensaba que podríamos practicar eso.'"
+    },
+    "choices": [
+      {
+        "id": "accept",
+        "label": {
+          "en": "Stay and practice until the moon is high",
+          "es": "Quedarte a practicar hasta la luna alta"
+        },
+        "tag": "Confident",
+        "rarity": "rare",
+        "statDeltas": { "charisma": 2, "dexterity": 1 },
+        "affinityDelta": 30,
+        "narrative": {
+          "en": "You practice until the moon is high, and something between you sharpens like a blade. The tournament can wait; this doesn't.",
+          "es": "Practicás hasta que la luna está alta, y algo entre ustedes se afila como una hoja. El torneo puede esperar; esto no."
+        }
+      },
+      {
+        "id": "postpone",
+        "label": { "en": "The road comes first", "es": "El camino va primero" },
+        "tag": "Professional",
+        "rarity": "uncommon",
+        "statDeltas": { "charisma": 1 },
+        "affinityDelta": 5,
+        "narrative": {
+          "en": "You tell her the road comes first. She nods, unsmiling, and hands you one of the bottles anyway.",
+          "es": "Le decís que el camino va primero. Ella asiente, sin sonreír, y de todos modos te pasa una de las botellas."
+        }
+      },
+      {
+        "id": "break_it",
+        "label": {
+          "en": "Tell her plainly there's nothing between you",
+          "es": "Decirle sin vueltas que no hay nada"
+        },
+        "tag": "Stoic",
+        "rarity": "volatile",
+        "statDeltas": { "intelligence": 2 },
+        "tradeoffDeltas": { "charisma": -3 },
+        "affinityDelta": -40,
+        "narrative": {
+          "en": "You tell her plainly there's nothing between you. The dusk goes cold. 'Then fight alone,' she says, and walks away.",
+          "es": "Le decís sin vueltas que no hay nada entre ustedes. El anochecer se vuelve frío. 'Entonces peleá sin mí', dice, y se va."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rel_grimble_intro",
+    "minAge": 16,
+    "maxAge": 70,
+    "weight": 8,
+    "excludeIfCompletedIds": ["rel_grimble_intro"],
+    "narrative": {
+      "en": "A merchant with a haunted look and a mule-train of empty crates approaches you at {locationName}. 'They took everything — the toll, the cargo, the good years. I've nothing left but a name that used to mean something. You look like the kind of luck I could borrow.'",
+      "es": "Un mercader de mirada atormentada y una recua de cajas vacías se acerca a vos en {locationName}. 'Se llevaron todo — el peaje, la carga, los buenos años. No me queda nada salvo un nombre que solía significar algo. Parecés el tipo de suerte que podría pedir prestada.'"
+    },
+    "choices": [
+      {
+        "id": "back_him",
+        "label": { "en": "Stake his next caravan", "es": "Financiar su próxima caravana" },
+        "tag": "Strategic",
+        "rarity": "rare",
+        "statDeltas": { "intelligence": 2 },
+        "goldDelta": -80,
+        "introducesRelationshipId": "merchant_grimble",
+        "introducesNpcRole": "friend",
+        "introducesNpcName": { "en": "Grimble", "es": "Grimble" },
+        "affinityDelta": 25,
+        "narrative": {
+          "en": "You stake his next caravan. It comes back twice as full, and Grimble pays you back with interest and a loyalty that money can't buy.",
+          "es": "Financiás su próxima caravana. Vuelve el doble de cargada, y Grimble te devuelve el dinero con intereses y una lealtad que el dinero no puede comprar."
+        }
+      },
+      {
+        "id": "loan_small",
+        "label": { "en": "Lend a smaller sum", "es": "Prestarle una suma menor" },
+        "tag": "Professional",
+        "rarity": "uncommon",
+        "goldDelta": -40,
+        "narrative": {
+          "en": "You lend a smaller sum — enough to get him moving, not enough to sink you if it fails. He takes it gratefully.",
+          "es": "Le prestás una suma menor — suficiente para ponerlo en marcha, no tanto como para hundirte si fracasa. Lo acepta agradecido."
+        }
+      },
+      {
+        "id": "refuse",
+        "label": { "en": "Refuse and walk on", "es": "Negarte y seguir" },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": { "intelligence": 1 },
+        "narrative": {
+          "en": "He nods, unsurprised, and leads his empty mules into the dusk.",
+          "es": "Asiente, sin sorpresa, y lleva sus mulas vacías hacia el anochecer."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rel_grimble_deal",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "requiresRelationshipId": "merchant_grimble",
+    "narrative": {
+      "en": "Grimble pulls you into a back room, grinning and sweating in equal measure. 'I've found a cargo that triples its value if it never passes the customs gate. One more partner and it's done. I thought of you first — the coin is real, but so is the risk.'",
+      "es": "Grimble te mete en un cuarto trasero, sonriendo y sudando por partes iguales. 'Encontré una carga que triplica su valor si nunca pasa la aduana. Un socio más y está hecho. Pensé en vos primero — la moneda es real, pero el riesgo también.'"
+    },
+    "choices": [
+      {
+        "id": "invest",
+        "label": { "en": "Split the profit and keep quiet", "es": "Repartir la ganancia y callar" },
+        "tag": "Cocky",
+        "rarity": "rare",
+        "goldDelta": 250,
+        "liabilityDelta": 12,
+        "affinityDelta": 20,
+        "narrative": {
+          "en": "You split the profit and keep your mouth shut. Grimble's grin is now permanently welded on. What the customs gate doesn't know won't hurt you — much.",
+          "es": "Repartís la ganancia y mantenés la boca cerrada. La sonrisa de Grimble ahora está soldada de forma permanente. Lo que la aduana no sabe no te hará daño — mucho."
+        }
+      },
+      {
+        "id": "talk_him_out",
+        "label": { "en": "Talk him into going legit", "es": "Convencerlo de ir por lo legal" },
+        "tag": "Supportive",
+        "rarity": "uncommon",
+        "statDeltas": { "charisma": 2 },
+        "affinityDelta": 15,
+        "narrative": {
+          "en": "You talk him into going legit — slower money, clean books. He grumbles, but a year later he thanks you from behind a proper counter.",
+          "es": "Lo convencés de ir por lo legal — dinero más lento, libros limpios. Refunfuña, pero un año después te agradece desde detrás de un mostrador de verdad."
+        }
+      },
+      {
+        "id": "walk",
+        "label": { "en": "Count yourself out", "es": "Descontarte del trato" },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": { "intelligence": 1 },
+        "affinityDelta": -20,
+        "narrative": {
+          "en": "You tell him to count you out. He shrugs and finds someone hungrier.",
+          "es": "Le decís que no cuente con vos. Se encoge de hombros y encuentra a alguien más hambriento."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rel_velda_intro",
+    "minAge": 16,
+    "maxAge": 70,
+    "weight": 8,
+    "excludeIfCompletedIds": ["rel_velda_intro"],
+    "narrative": {
+      "en": "An old woman in a tent of blue cloth at the {locationName} market waves you over. 'I've read palms for kings and thieves, and both lie the same way. Yours doesn't. Come — I'll tell you one true thing, free, because you need it.'",
+      "es": "Una anciana en una carpa de tela azul en el mercado de {locationName} te hace señas. 'Leí las palmas de reyes y ladrones, y ambos mienten igual. La tuya no. Vení — te diré una cosa verdadera, gratis, porque la necesitás.'"
+    },
+    "choices": [
+      {
+        "id": "listen",
+        "label": {
+          "en": "Sit and hear the one true thing",
+          "es": "Sentarte y oír la cosa verdadera"
+        },
+        "tag": "Humble",
+        "rarity": "uncommon",
+        "statDeltas": { "intelligence": 2 },
+        "staminaDelta": 10,
+        "introducesRelationshipId": "seer_velda",
+        "introducesNpcRole": "mentor",
+        "introducesNpcName": { "en": "Velda", "es": "Velda" },
+        "affinityDelta": 25,
+        "narrative": {
+          "en": "Her one true thing opens a door in your head that had been stuck shut. You leave the tent lighter, and she waves you off like family.",
+          "es": "Su única cosa verdadera abre una puerta en tu cabeza que estaba atascada. Salís de la carpa como si te hubieran quitado un peso de encima, y ella te despide como a un familiar."
+        }
+      },
+      {
+        "id": "pay_gold",
+        "label": { "en": "Pay for the full reading", "es": "Pagar por la lectura completa" },
+        "tag": "Professional",
+        "rarity": "common",
+        "goldDelta": -40,
+        "statDeltas": { "intelligence": 1 },
+        "narrative": {
+          "en": "You pay for the full reading. It's mostly flattery, but the last line sticks with you for years.",
+          "es": "Pagás por la lectura completa. Es mayormente halago, pero la última línea se te queda pegada durante años."
+        }
+      },
+      {
+        "id": "scoff",
+        "label": {
+          "en": "Laugh at the tent and keep walking",
+          "es": "Reírte de la carpa y seguir"
+        },
+        "tag": "Cocky",
+        "rarity": "common",
+        "statDeltas": { "charisma": 1 },
+        "narrative": {
+          "en": "You laugh at the tent and keep walking. She calls after you: 'The skeptic's fate is to be surprised.'",
+          "es": "Te reís de la carpa y seguís caminando. Te grita detrás: 'El destino del escéptico es llevarse sorpresas.'"
+        }
+      }
+    ]
+  },
+  {
+    "id": "rel_velda_omen",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "requiresRelationshipId": "seer_velda",
+    "narrative": {
+      "en": "Velda finds you at a crossroads, breathless, which is alarming because you've never seen her move faster than a shuffle. 'I saw your thread in the loom last night. It's knotted — someone is cutting threads to shorten your road. Be careful who you trust, and take this.' She presses a knotted charm into your hand.",
+      "es": "Velda te encuentra en un cruce, sin aliento, lo cual es alarmante porque nunca la viste moverse más rápido que un arrastre. 'Vi tu hilo en el telar anoche. Está anudado — alguien está cortando hilos para acortar tu camino. Cuidado con quién confiás, y tomá esto.' Te aprieta un amuleto anudado en la mano."
+    },
+    "choices": [
+      {
+        "id": "accept_charm",
+        "label": {
+          "en": "Wear the charm and mind your back",
+          "es": "Llevar el amuleto y cuidar tus espaldas"
+        },
+        "tag": "Humble",
+        "rarity": "rare",
+        "statDeltas": { "charisma": 2 },
+        "healthDelta": 5,
+        "affinityDelta": 25,
+        "narrative": {
+          "en": "You wear the charm and mind your back. A season later, an ambush fails that should have succeeded — and you send Velda a gift of honey.",
+          "es": "Llevás el amuleto y cuidás tus espaldas. Una temporada después, una emboscada fracasa cuando debía triunfar — y le enviás a Velda un regalo de miel."
+        }
+      },
+      {
+        "id": "ask_more",
+        "label": { "en": "Press her for names", "es": "Exigirle nombres" },
+        "tag": "Strategic",
+        "rarity": "uncommon",
+        "statDeltas": { "intelligence": 2 },
+        "affinityDelta": 10,
+        "narrative": {
+          "en": "You press her for names. She tells you the direction of the knife, not the hand — 'knowing too much bends the thread,' she says.",
+          "es": "Le exigís nombres. Te dice la dirección del cuchillo, no la mano — 'saber demasiado dobla el hilo', dice."
+        }
+      },
+      {
+        "id": "dismiss",
+        "label": {
+          "en": "Thank her and set the charm aside",
+          "es": "Agradecerle y dejar el amuleto de lado"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "affinityDelta": -15,
+        "narrative": {
+          "en": "You thank her and set the charm aside. Threads and omens are for people with time to be afraid. You don't have that luxury.",
+          "es": "Le agradecés y dejás el amuleto de lado. Los hilos y los presagios son para gente con tiempo de tener miedo. Vos no tenés ese lujo."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rel_aldric_last_lesson",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "requiresRelationshipId": "ser_aldric",
+    "narrative": {
+      "en": "Ser Aldric's voice reaches you before he does — 'I've been looking for you for three days.' He looks smaller than you remember, and older, but his eyes are the same. 'There's a debt I've carried since before you were born — a name, a bridge, and a score I swore to settle while I could still lift a sword. I don't want to die owing it. Ride with me?'",
+      "es": "La voz de Ser Aldric te alcanza antes que él: 'Te he estado buscando durante tres días.' Se lo ve más pequeño que en tu recuerdo, y más viejo, pero sus ojos son los mismos. 'Hay una deuda que cargo desde antes de que nacieras — un nombre, un puente y una cuenta que juré saldar mientras pudiera levantar una espada. No quiero morir debiéndola. ¿Cabalgás conmigo?'"
+    },
+    "choices": [
+      {
+        "id": "ride",
+        "label": {
+          "en": "Ride with him to the old bridge",
+          "es": "Cabalgás con él hasta el puente viejo"
+        },
+        "tag": "Humble",
+        "rarity": "rare",
+        "statDeltas": { "constitution": 2, "strength": 1 },
+        "healthDelta": -6,
+        "injuryRiskDelta": 0.12,
+        "countersDelta": { "battles_won": 1 },
+        "affinityDelta": 25,
+        "narrative": {
+          "en": "The old bridge has one good story left in it. Aldric settles his debt with you at his back, and later, over a fire, he gives you the last lesson he kept for someone worth teaching.",
+          "es": "El puente viejo todavía guarda una buena historia. Aldric salda su deuda con vos a su espalda, y más tarde, junto al fuego, te da la última lección que guardaba para alguien que valiera la pena."
+        }
+      },
+      {
+        "id": "fund",
+        "label": { "en": "Fund the road instead", "es": "Financiar el camino en su lugar" },
+        "tag": "Professional",
+        "rarity": "uncommon",
+        "goldDelta": -80,
+        "affinityDelta": 10,
+        "narrative": {
+          "en": "You can't ride, but you fund the road. He takes the coin gravely — 'A soldier's pension,' he calls it, and it buys him the dignity of finishing his own story.",
+          "es": "No podés cabalgar, pero financiás el camino. Toma la moneda con solemnidad — 'Una pensión de soldado', la llama, y le compra la dignidad de terminar su propia historia."
+        }
+      },
+      {
+        "id": "refuse",
+        "label": {
+          "en": "Refuse — your own road calls",
+          "es": "Negarte — tu propio camino te llama"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": { "intelligence": 1 },
+        "affinityDelta": -20,
+        "narrative": {
+          "en": "'Then it'll wait a little longer,' he says, but the light in his eyes dims. Some debts can't wait forever.",
+          "es": "'Entonces esperará un poco más', dice, pero la luz de sus ojos se apaga. Algunas deudas no pueden esperar para siempre."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rel_wanderer_home",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "requiresRelationshipId": "wanderer_of_the_homeland",
+    "narrative": {
+      "en": "The Old Campaigner finds you by the docks, leaning on a staff he didn't have last time. 'I've booked passage home — the first ship in twenty years that feels like it's pointing the right way. I wanted to tell you myself. And to ask: will you write to me when you finally come home? Or have you already forgotten the old songs?'",
+      "es": "El Viejo Campañero te encuentra en los muelles, apoyado en un bastón que no tenía la última vez. 'Reservé pasaje a casa — el primer barco en veinte años que siente que apunta hacia el lado correcto. Quería decírtelo yo mismo. Y preguntarte: ¿me vas a escribir cuando por fin vuelvas a casa? ¿O ya olvidaste las viejas canciones?'"
+    },
+    "choices": [
+      {
+        "id": "promise",
+        "label": {
+          "en": "Promise him a letter — and mean it",
+          "es": "Prometerle una carta — y decirlo en serio"
+        },
+        "tag": "Supportive",
+        "rarity": "rare",
+        "statDeltas": { "charisma": 2 },
+        "affinityDelta": 25,
+        "narrative": {
+          "en": "You promise him a letter, and mean it. The old man's eyes go bright — the way home is sweeter when someone remembers you're going.",
+          "es": "Le prometés una carta, y lo decís en serio. Los ojos del viejo se iluminan — el camino a casa es más dulce cuando alguien recuerda que vas."
+        }
+      },
+      {
+        "id": "see_him_off",
+        "label": {
+          "en": "See him off with provisions and coin",
+          "es": "Despedirlo con provisiones y monedas"
+        },
+        "tag": "Professional",
+        "rarity": "uncommon",
+        "goldDelta": -50,
+        "staminaDelta": 15,
+        "affinityDelta": 15,
+        "narrative": {
+          "en": "You don't sail, but you see him off with provisions and a pouch of coin. He protests, then accepts, then hugs you like family.",
+          "es": "No navegás, pero lo despedís con provisiones y una bolsa de monedas. Protesta, luego acepta, luego te abraza como si fueras familia."
+        }
+      },
+      {
+        "id": "forget",
+        "label": { "en": "Wish him well and walk away", "es": "Desearle buen viaje y alejarte" },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": { "intelligence": 1 },
+        "affinityDelta": -30,
+        "narrative": {
+          "en": "You wish him well and walk away. He watches you go, and the old songs grow quieter.",
+          "es": "Le deseás buen viaje y te alejás. Él te mira partir, y las viejas canciones se vuelven más silenciosas."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rel_wulfric_intro",
+    "minAge": 16,
+    "maxAge": 70,
+    "weight": 8,
+    "excludeIfCompletedIds": ["rel_wulfric_intro"],
+    "narrative": {
+      "en": "A scarred warrior in a wolf-pelt cloak blocks your path at {locationName}, arms crossed. 'They sing songs about you now. I've killed three men they sang songs about. That makes us neighbors — and I don't like neighbors.'",
+      "es": "Un guerrero cicatrizado con capa de piel de lobo te bloquea el paso en {locationName}, con los brazos cruzados. 'Ahora cantan canciones sobre vos. Yo maté a tres hombres sobre los que cantaban canciones. Eso nos hace vecinos — y a mí no me gustan los vecinos.'"
+    },
+    "choices": [
+      {
+        "id": "stand_firm",
+        "label": {
+          "en": "Hold his gaze without a word",
+          "es": "Sostener su mirada sin decir palabra"
+        },
+        "tag": "Confident",
+        "rarity": "uncommon",
+        "statDeltas": { "charisma": 2 },
+        "introducesRelationshipId": "thane_wulfric",
+        "introducesNpcRole": "nemesis",
+        "introducesNpcName": { "en": "Thane Wulfric", "es": "Thane Wulfric" },
+        "affinityDelta": -20,
+        "narrative": {
+          "en": "You hold his gaze without a word. He grins like a knife. 'Good. A coward would have bored me. Now I'll know exactly where to find you.'",
+          "es": "Sostenés su mirada sin decir palabra. Sonríe como un cuchillo. 'Bien. Un cobarde me habría aburrido. Ahora sabré exactamente dónde encontrarte.'"
+        }
+      },
+      {
+        "id": "offer_drink",
+        "label": { "en": "Buy him a drink instead", "es": "Invitarle una bebida en su lugar" },
+        "tag": "Funny",
+        "rarity": "uncommon",
+        "goldDelta": -20,
+        "statDeltas": { "charisma": 2 },
+        "introducesRelationshipId": "thane_wulfric",
+        "introducesNpcRole": "nemesis",
+        "introducesNpcName": { "en": "Thane Wulfric", "es": "Thane Wulfric" },
+        "affinityDelta": 5,
+        "narrative": {
+          "en": "You buy him a drink instead of a fight. He eyes the ale, then you, then drinks. 'Cheap peace. I'll remember it — or not.'",
+          "es": "Le comprás una bebida en lugar de una pelea. Mira la cerveza, luego a vos, luego bebe. 'Paz barata. La recordaré — o no.'"
+        }
+      },
+      {
+        "id": "snub",
+        "label": { "en": "Walk past without stopping", "es": "Pasar de largo sin detenerte" },
+        "tag": "Aggressive",
+        "rarity": "common",
+        "statDeltas": { "strength": 1 },
+        "narrative": {
+          "en": "You walk past him without stopping. The silence behind you is louder than any threat he could have made.",
+          "es": "Pasás de largo sin detenerte. El silencio detrás de vos es más fuerte que cualquier amenaza que podría haber hecho."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rel_wulfric_rematch",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "requiresRelationshipId": "thane_wulfric",
+    "narrative": {
+      "en": "Wulfric finds you again, this time with a dented shield and a fresh wound that says someone else got there first. 'I've been thinking about our neighbors business. Settle it now — the road, the honor, and whatever's in that purse of yours.'",
+      "es": "Wulfric te encuentra de nuevo, esta vez con un escudo abollado y una herida fresca que dice que alguien llegó antes. 'He estado pensando en nuestro asunto de vecinos. Resolvámoslo ahora — el camino, el honor y lo que haya en esa bolsa tuya.'"
+    },
+    "choices": [
+      {
+        "id": "duel",
+        "label": { "en": "Settle it with steel", "es": "Resolverlo con acero" },
+        "tag": "Aggressive",
+        "rarity": "rare",
+        "statDeltas": { "strength": 2, "dexterity": 1 },
+        "healthDelta": -8,
+        "injuryRiskDelta": 0.15,
+        "goldDelta": 100,
+        "countersDelta": { "duels_won": 1, "battles_won": 1 },
+        "affinityDelta": -25,
+        "narrative": {
+          "en": "The fight is short, ugly, and yours. He spits blood, grins, and nods. 'Next time, I'll be ready.' There will be a next time.",
+          "es": "La pelea es corta, fea y tuya. Escupe sangre, sonríe y asiente. 'La próxima, estaré listo.' Habrá una próxima."
+        }
+      },
+      {
+        "id": "parley",
+        "label": {
+          "en": "Settle it with words and coin",
+          "es": "Resolverlo con palabras y monedas"
+        },
+        "tag": "Strategic",
+        "rarity": "uncommon",
+        "statDeltas": { "charisma": 2 },
+        "goldDelta": -50,
+        "affinityDelta": 20,
+        "narrative": {
+          "en": "You settle it with words and coin instead of steel. He takes the gold, calls it a tribute, and for now — only for now — the road is clear.",
+          "es": "Lo resolvés con palabras y monedas en lugar de acero. Toma el oro, lo llama tributo y, por ahora — solo por ahora — el camino está despejado."
+        }
+      },
+      {
+        "id": "ambush_him",
+        "label": { "en": "Don't fight fair", "es": "No pelear limpio" },
+        "tag": "Cocky",
+        "rarity": "volatile",
+        "statDeltas": { "dexterity": 3 },
+        "tradeoffDeltas": { "charisma": -2 },
+        "liabilityDelta": 15,
+        "countersDelta": { "battles_won": 1 },
+        "affinityDelta": -40,
+        "narrative": {
+          "en": "You don't fight fair. He never will again either. The feud deepens into something personal, and his friends start watching for you.",
+          "es": "No peleás limpio. Él tampoco lo hará nunca más. La enemistad se vuelve algo personal, y sus amigos empiezan a buscarte."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rel_lucian_intro",
+    "minAge": 16,
+    "maxAge": 70,
+    "weight": 8,
+    "excludeIfCompletedIds": ["rel_lucian_intro"],
+    "narrative": {
+      "en": "A clerk with ink-stained fingers and a smile that doesn't reach his eyes intercepts you in the antechamber at {locationName}. 'I keep the court's records. I know who owes whom, who fears whom, and who will betray whom by spring. You've been mentioned. That can be good or bad — I haven't decided yet.'",
+      "es": "Un escriba con dedos manchados de tinta y una sonrisa que no llega a sus ojos te intercepta en la antesala de {locationName}. 'Yo llevo los registros de la corte. Sé quién le debe a quién, quién teme a quién y quién traicionará a quién para la primavera. Usted ha sido mencionado. Eso puede ser bueno o malo — todavía no lo decidí.'"
+    },
+    "choices": [
+      {
+        "id": "play_along",
+        "label": { "en": "Feed him a small truth", "es": "Darle una pequeña verdad" },
+        "tag": "Strategic",
+        "rarity": "uncommon",
+        "statDeltas": { "intelligence": 2 },
+        "introducesRelationshipId": "court_spy_lucian",
+        "introducesNpcRole": "nemesis",
+        "introducesNpcName": { "en": "Lucian", "es": "Lucian" },
+        "affinityDelta": -10,
+        "narrative": {
+          "en": "You feed him a small truth to see what he does with it. He files it with a nod, and you realize you're now a line in his ledger.",
+          "es": "Le das una pequeña verdad para ver qué hace con ella. La archiva con un asentimiento, y te das cuenta de que ahora sos una línea en su libro mayor."
+        }
+      },
+      {
+        "id": "bribe",
+        "label": { "en": "Buy his goodwill", "es": "Comprar su buena voluntad" },
+        "tag": "Professional",
+        "rarity": "common",
+        "goldDelta": -80,
+        "introducesRelationshipId": "court_spy_lucian",
+        "introducesNpcRole": "nemesis",
+        "introducesNpcName": { "en": "Lucian", "es": "Lucian" },
+        "affinityDelta": 10,
+        "narrative": {
+          "en": "You buy his goodwill — for now. Lucian takes the coin with that same smile. Goodwill is just a better rate.",
+          "es": "Comprás su buena voluntad — por ahora. Lucian toma la moneda con esa misma sonrisa. La buena voluntad es solo una mejor tarifa."
+        }
+      },
+      {
+        "id": "warn_him",
+        "label": {
+          "en": "Warn him to keep your name out of it",
+          "es": "Advertirle que te deje fuera"
+        },
+        "tag": "Aggressive",
+        "rarity": "common",
+        "statDeltas": { "charisma": 1 },
+        "introducesRelationshipId": "court_spy_lucian",
+        "introducesNpcRole": "nemesis",
+        "introducesNpcName": { "en": "Lucian", "es": "Lucian" },
+        "affinityDelta": -30,
+        "narrative": {
+          "en": "You tell him plainly that if your name appears in the wrong record, you'll find him. He laughs softly. 'Threats are the most interesting records of all.'",
+          "es": "Le decís sin vueltas que si tu nombre aparece en el registro equivocado, lo vas a encontrar. Se ríe en voz baja. 'Las amenazas son los registros más interesantes de todos.'"
+        }
+      }
+    ]
+  },
+  {
+    "id": "rel_lucian_blackmail",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "requiresRelationshipId": "court_spy_lucian",
+    "narrative": {
+      "en": "Lucian finds you alone with a single sheet of parchment in hand. 'There's a rumor about you — about a choice you made that the court would judge harshly. I can make this page disappear, or I can make it the first page of your story. It depends entirely on how useful you'd like to be.'",
+      "es": "Lucian te encuentra a solas con una sola hoja de pergamino en la mano. 'Hay un rumor sobre vos — sobre una decisión que tomaste y que la corte juzgaría con dureza. Puedo hacer que esta página desaparezca, o que sea la primera página de tu historia. Depende por completo de cuán útil quieras ser.'"
+    },
+    "choices": [
+      {
+        "id": "pay",
+        "label": { "en": "Pay him to bury the page", "es": "Pagarle para que entierre la página" },
+        "tag": "Professional",
+        "rarity": "uncommon",
+        "goldDelta": -120,
+        "liabilityDelta": -8,
+        "affinityDelta": 10,
+        "narrative": {
+          "en": "You pay him to bury it. The page disappears, but so does a piece of your freedom — he'll be back.",
+          "es": "Le pagás para que lo entierre. La página desaparece, pero también una parte de tu libertad — volverá."
+        }
+      },
+      {
+        "id": "call_his_bluff",
+        "label": { "en": "Call his bluff and dare him", "es": "Verle el farol y desafiarlo" },
+        "tag": "Confident",
+        "rarity": "rare",
+        "statDeltas": { "charisma": 3 },
+        "fameDelta": 4,
+        "affinityDelta": -25,
+        "narrative": {
+          "en": "You call his bluff and dare him to publish. He doesn't — the story was half true and fully unprovable, and he respects the nerve.",
+          "es": "Le ves el farol y lo desafiás a publicarlo. No lo hace — la historia era medio cierta y del todo indemostrable, y respeta el coraje."
+        }
+      },
+      {
+        "id": "give_him_someone",
+        "label": { "en": "Hand him a bigger fish", "es": "Entregarle un pez más grande" },
+        "tag": "Aggressive",
+        "rarity": "volatile",
+        "statDeltas": { "intelligence": 2 },
+        "tradeoffDeltas": { "charisma": -3 },
+        "liabilityDelta": 15,
+        "affinityDelta": -35,
+        "narrative": {
+          "en": "You hand him a bigger fish — a real secret about someone else. He's delighted. You've made a deal with the record-keeper, and the records always win.",
+          "es": "Le entregás un pez más grande — un secreto real sobre otro. Está encantado. Hiciste un trato con el archivero, y los archivos siempre ganan."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rel_kade_intro",
+    "minAge": 16,
+    "maxAge": 70,
+    "weight": 8,
+    "excludeIfCompletedIds": ["rel_kade_intro"],
+    "narrative": {
+      "en": "In the depths below {locationName}, a barred cell holds a man in a warden's uniform who looks more prisoner than jailer. 'They locked me in my own dungeon — my deputies sold the keys to the highest bidder. Cut me out, and I'll owe you a key that opens anything in this city.'",
+      "es": "En las profundidades bajo {locationName}, una celda con barrotes encierra a un hombre con uniforme de guardián que parece más prisionero que carcelero. 'Me encerraron en mi propia mazmorra — mis ayudantes vendieron las llaves al mejor postor. Sacame, y te deberé una llave que abre cualquier cosa en esta ciudad.'"
+    },
+    "choices": [
+      {
+        "id": "free_him",
+        "label": { "en": "Spring him from his own cell", "es": "Sacarlo de su propia celda" },
+        "tag": "Supportive",
+        "rarity": "rare",
+        "statDeltas": { "charisma": 2 },
+        "reputationDelta": 3,
+        "reputationFaction": "ironhold",
+        "countersDelta": { "lives_saved": 1 },
+        "introducesRelationshipId": "warden_kade",
+        "introducesNpcRole": "friend",
+        "introducesNpcName": { "en": "Kade", "es": "Kade" },
+        "affinityDelta": 30,
+        "narrative": {
+          "en": "You spring him clean. Kade keeps his word — and his word is heavy. A key that opens anything is a friend you keep close.",
+          "es": "Lo liberás sin problemas. Kade cumple su palabra — y su palabra pesa. Una llave que abre cualquier cosa es un amigo que conviene tener cerca."
+        }
+      },
+      {
+        "id": "report_him",
+        "label": {
+          "en": "Turn him over to the city guard",
+          "es": "Entregarlo a la guardia de la ciudad"
+        },
+        "tag": "Professional",
+        "rarity": "common",
+        "goldDelta": 60,
+        "reputationDelta": 2,
+        "reputationFaction": "ironhold",
+        "introducesRelationshipId": "warden_kade",
+        "introducesNpcRole": "friend",
+        "introducesNpcName": { "en": "Kade", "es": "Kade" },
+        "affinityDelta": -25,
+        "narrative": {
+          "en": "You hand him over to the city guard instead. His look, as they drag him past, promises a cold ledger entry.",
+          "es": "Lo entregás a la guardia de la ciudad en su lugar. Su mirada, mientras lo arrastran, promete una entrada fría en el libro mayor."
+        }
+      },
+      {
+        "id": "leave",
+        "label": {
+          "en": "Pass the cell without stopping",
+          "es": "Pasar de largo frente a la celda"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": { "intelligence": 1 },
+        "narrative": {
+          "en": "You pass the cell without stopping. Some keys are better left unturned.",
+          "es": "Pasás de largo frente a la celda sin detenerte. Algunas llaves es mejor no girarlas."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rel_kade_return",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "requiresRelationshipId": "warden_kade",
+    "narrative": {
+      "en": "Kade finds you at a tavern table, sliding a single dark key across the wood. 'My deputies were found — the old way. The key is yours: one lock, any lock, once. Use it well, and don't tell me what it opens.'",
+      "es": "Kade te encuentra en una mesa de taberna, deslizando una única llave oscura sobre la madera. 'A mis ayudantes los encontraron — a la vieja usanza. La llave es tuya: una cerradura, cualquiera, una vez. Usala bien, y no me digas qué abre.'"
+    },
+    "choices": [
+      {
+        "id": "accept",
+        "label": { "en": "Take the key and ask nothing", "es": "Tomar la llave y no preguntar" },
+        "tag": "Strategic",
+        "rarity": "uncommon",
+        "statDeltas": { "intelligence": 2 },
+        "affinityDelta": 25,
+        "narrative": {
+          "en": "You take the key and don't ask what it took to make it. Some debts are best kept in the dark, between friends.",
+          "es": "Tomás la llave y no preguntás qué costó conseguirla. Algunas deudas es mejor mantenerlas en la oscuridad, entre amigos."
+        }
+      },
+      {
+        "id": "refuse",
+        "label": {
+          "en": "Push it back — keep your word, not your locks",
+          "es": "Devolvérsela — su palabra, no sus cerraduras"
+        },
+        "tag": "Humble",
+        "rarity": "uncommon",
+        "statDeltas": { "charisma": 2 },
+        "affinityDelta": 10,
+        "narrative": {
+          "en": "You push it back. 'Keep your key. I freed you for your word, not your locks.' He laughs, genuinely, for the first time.",
+          "es": "Se la devolvés. 'Quedate con tu llave. Te liberé por tu palabra, no por tus cerraduras.' Se ríe, de verdad, por primera vez."
+        }
+      },
+      {
+        "id": "sell_it",
+        "label": { "en": "Sell it to the highest bidder", "es": "Venderla al mejor postor" },
+        "tag": "Cocky",
+        "rarity": "volatile",
+        "goldDelta": 200,
+        "tradeoffDeltas": { "charisma": -2 },
+        "liabilityDelta": 10,
+        "affinityDelta": -30,
+        "narrative": {
+          "en": "You sell the key to the highest bidder — and Kade finds out. His eyes go flat. 'The old way has new customers,' he says, and walks out.",
+          "es": "Vendés la llave al mejor postor — y Kade se entera. Sus ojos se vuelven planos. 'La vieja usanza tiene clientes nuevos', dice, y sale."
+        }
+      }
+    ]
+  }
+]

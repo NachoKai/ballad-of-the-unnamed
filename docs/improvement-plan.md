@@ -2,7 +2,7 @@
 
 > Based on: `docs/fantasy-cyoa-rpg-spec.md` (810 lines), `docs/el-idolo-reference-notes.md` (253 lines), and full codebase audit.
 >
-> Current state: core game loop works end-to-end (creation → events → death/retirement → leaderboard). 136 events, 72 minigames, 69 achievements, 6 classes, bilingual EN/ES, deterministic RNG, server-authoritative, deployed on Neon + Vite + Express.
+> Current state: core game loop works end-to-end (creation → events → death/retirement → leaderboard). 172 events, 72 minigames, 71 achievements, 6 classes, bilingual EN/ES, deterministic RNG, server-authoritative, deployed on Neon + Vite + Express.
 
 ## Status Legend
 
@@ -401,22 +401,22 @@ Extend `EndingScreen.tsx` with:
 
 Goal: Enough variety for 20+ runs before repetition sets in.
 
-### 5.1 Content Expansion Targets 🟡
+### 5.1 Content Expansion Targets ✅
 
 **Spec ref**: — (volume targets)
 
-Status: current counts as of audit — Events **144**/60, Minigames **72**/25, Achievements **69**/50, Archetypes **54**/30+ (9 per class: 8 normal + 1 hidden master), World events **20**/20+, Clans 25 factions all region-tagged (18 authored clan events exercising join/leave/betray), NPC relationships system in place with 2 authored recurring NPCs (`ser_aldric`, `wanderer_of_the_homeland`). Target numbers in the table below are the Phase 5 goals. **2026-07-30: content expansion shipped — 17 new events (9 clan + 8 rest/recovery), 8 new minigames, 8 new achievement tiers. 2026-08-01 audit: added 10 world events, 5 region-variant events, 5 foreign/outsider events, 5 personality events, 3 destiny events. 2026-08-01 bugfix pass (B7-B12): +1 region event (`region_wastelands_cinder`), +11 achievements (`jetset_life` + 10 counter achievements). 2026-08-02: +3 minigames (Season-End Capstone debates/elections), +2 achievements. 2026-08-05: content expansion shipped — doubled all content volumes (events 68→136, minigames 36→72, slots 163→327, archetypes 30→60, shop 16→32) per `docs/superpowers/plans/2026-08-05-content-expansion.md`.**
+Status: current counts as of audit — Events **172**/60, Minigames **72**/25, Achievements **71**/50, Archetypes **54**/30+ (9 per class: 8 normal + 1 hidden master), World events **20**/20+, Clans 25 factions all region-tagged (18 authored clan events exercising join/leave/betray), NPC relationships system in place with 15 authored recurring NPCs (`ser_aldric`, `wanderer_of_the_homeland` + 13 in `content/events/relationships.json`). Target numbers in the table below are the Phase 5 goals. **2026-07-30: content expansion shipped — 17 new events (9 clan + 8 rest/recovery), 8 new minigames, 8 new achievement tiers. 2026-08-01 audit: added 10 world events, 5 region-variant events, 5 foreign/outsider events, 5 personality events, 3 destiny events. 2026-08-01 bugfix pass (B7-B12): +1 region event (`region_wastelands_cinder`), +11 achievements (`jetset_life` + 10 counter achievements). 2026-08-02: +3 minigames (Season-End Capstone debates/elections), +2 achievements. 2026-08-05: content expansion shipped — doubled all content volumes (events 68→136, minigames 36→72, slots 163→327, archetypes 30→60, shop 16→32) per `docs/superpowers/plans/2026-08-05-content-expansion.md`. 2026-08-07: NPC relationship expansion — 13 new recurring NPCs (2 → 15) in `content/events/relationships.json` (intro + `requiresRelationshipId` follow-up events with `affinityDelta` choices; the 2 legacy NPCs also gained follow-ups), plus the `bonded_for_life` / `burned_that_bridge` relationship achievements (events 136→172, achievements 69→71).**
 
 | Category                                        | Current       | Phase 5 Target                                  |
 | ----------------------------------------------- | ------------- | ----------------------------------------------- |
-| Events (tavern/road/dungeon/court + new themes) | 144           | 80+                                             |
+| Events (tavern/road/dungeon/court + new themes) | 172           | 80+                                             |
 | Minigames (duels + activities)                  | 72            | 25+                                             |
-| Achievements                                    | 69            | 60+                                             |
+| Achievements                                    | 71            | 60+                                             |
 | Slot pool entries                               | 327           | 300+                                            |
 | Archetypes                                      | 54            | 30+ (5-8 per class)                             |
 | World events                                    | 20            | 20+                                             |
 | Clans                                           | 25 (factions) | 10+ joinable with perks (18 clan events now ✅) |
-| NPC relationships                               | 2             | 15+ recurring NPCs                              |
+| NPC relationships                               | 15            | 15+ recurring NPCs                              |
 
 **Key principle**: Composability over raw count. Each authored event template + slot pools + age/class/fame gating produces many distinct felt variants. A few hundred templates should produce thousands of unique-feeling runs.
 
@@ -654,7 +654,7 @@ Phase 1 (Identity): 1.1 ✅, 1.2 🟡, 1.3 ✅, 1.4 ✅ — 1 week
 Phase 2 (Economy):  2.1 ✅, 2.2 ✅, 2.3 ✅, 2.4 ✅ — 1.5 weeks
 Phase 3 (Social):   3.1 ✅, 3.2 🟡, 3.3 ✅, 3.4 ✅, 3.5 ✅ — 2 weeks
 Phase 4 (Legacy):   4.1 ✅, 4.2 ✅, 4.3 ✅, 4.4 ✅ — 1 week
-Phase 5 (Content):  5.1 🟡 (136/80+ events, 72/25+ minigames, 69/60+ achievements), 5.2 ✅, 5.3 ✅, 5.4 ✅ — ongoing
+Phase 5 (Content):  5.1 ✅ (170/80+ events, 72/25+ minigames, 71/60+ achievements, NPC relationships 15/15+), 5.2 ✅, 5.3 ✅, 5.4 ✅ — ongoing
 Phase 6 (Optional): 6.1 ⬜ Analytics — if/when needed
 Phase 7 (New ideas): 7.1 ✅, 7.2 ✅, 7.3 ✅, 7.4 ✅, 7.5 ✅, 7.6 ✅, 7.7 ✅, 7.8 ✅ (tests) — shipped
 Phase 8 (Backlog):  8.1 ✅ Hidden master archetypes (per-class unlock) — shipped 2026-08-05
@@ -670,7 +670,7 @@ Remaining work by priority — see `docs/roadmap.md` for the consolidated open l
 1. 🟡 **1.2 (part)** — add `press_conference` minigame subtype (5 personality-tag events with `wantedTags`/`punishedTags` authored ✅)
 2. ✅ **1.4 (part)** — more authored rest/recovery events using `staminaDelta` beyond the forced-recovery path (8 new events in `content/events/rest.json`, 2026-08-06)
 3. ✅ **3.2** — separate `rivals` table + parallel rival RNG stream (shipped 2026-08-06)
-4. 🟡 **5.1** — content volume targets (events 136/80+, world 20/20+ ✅, NPC relationships 2/15+)
+4. ✅ **5.1** — content volume targets (events 172/80+, world 20/20+ ✅, NPC relationships 15/15+)
 5. 🟡 **5.4 (part)** — per-encounter completion tracking (overall % now implemented)
 6. ⬜ **6.1** — analytics (optional)
 7. ✅ **8.1** — hidden master archetypes, one per class, unlocked by finishing a run with that class (shipped 2026-08-05)
