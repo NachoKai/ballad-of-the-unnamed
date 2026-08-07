@@ -6,13 +6,18 @@ import type {
   CharacterState,
   EndingType,
   Locale,
+  RelationshipEntry,
   RichEpilogueData,
 } from "@shared/types"
+import { affinityTierId } from "@shared/config"
+import { interpolate } from "@shared/i18n"
 import { gt, t } from "../i18n/strings"
+import { bondTone, showsBondPeak, type BondTone } from "../lib/bonds"
 import { AchIcon } from "./AchIcon"
 import { FactionFlag } from "./FactionFlag"
 import { BtnPrimary, BtnGhost } from "./ui/Button"
 import { SpecularBorder } from "./ui/SpecularBorder"
+import { TONES } from "./ui/Tag"
 import { TextBalance, TextPretty } from "./ui/Text"
 import { rise } from "./ui/Animation"
 
@@ -162,6 +167,45 @@ function LostEncountersBlock({ locale, count }: { locale: Locale; count: number 
   )
 }
 
+// The bonds forged over a life: every met NPC with their role, final affinity
+// tier, and last affinity. Same tier/role labels and tone logic as the HUD
+// strip, so a devoted ally reads sage and a sworn enemy reads blood.
+function BondsBlock({
+  locale,
+  relationships,
+}: {
+  locale: Locale
+  relationships: RelationshipEntry[]
+}) {
+  if (relationships.length === 0) return null
+  return (
+    <Section>
+      <SectionTitle>{t(locale, "relationships")}</SectionTitle>
+      <BondsGrid>
+        {[...relationships]
+          .sort((a, b) => b.affinity - a.affinity)
+          .map((rel) => {
+            const tone = bondTone(rel.affinity)
+            return (
+              <BondBadge key={rel.npcId} $tone={tone}>
+                <BondName>{rel.npcName ?? rel.npcId}</BondName>
+                <BondRole>{t(locale, `npcRole_${rel.npcRole ?? "acquaintance"}`)}</BondRole>
+                <BondTier>{t(locale, `affinity_tier_${affinityTierId(rel.affinity)}`)}</BondTier>
+                <BondValue $tone={tone}>
+                  {rel.affinity > 0 ? "+" : ""}
+                  {rel.affinity}
+                </BondValue>
+                {showsBondPeak(rel) && (
+                  <BondPeak>{interpolate(t(locale, "bondPeak"), { n: rel.peakAffinity })}</BondPeak>
+                )}
+              </BondBadge>
+            )
+          })}
+      </BondsGrid>
+    </Section>
+  )
+}
+
 export function EndingScreen({
   locale,
   character,
@@ -244,6 +288,8 @@ export function EndingScreen({
             <LostEncountersBlock locale={locale} count={richEpilogueData.lostEncounters} />
           </>
         )}
+
+        <BondsBlock locale={locale} relationships={character.relationships ?? []} />
 
         {achievements.length > 0 && (
           <EndingAchievements>
@@ -559,6 +605,59 @@ const LostEncountersCard = styled.div`
   background: rgba(200, 90, 90, 0.06);
   color: ${({ theme }) => theme.colors.bloodBright};
   font-size: 15px;
+`
+
+const BondsGrid = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+`
+
+const BondBadge = styled.div<{ $tone: BondTone }>`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 14px;
+  min-width: 108px;
+  border: 1px solid ${({ $tone }) => TONES[$tone].border};
+  border-radius: ${({ theme }) => theme.radii.sm};
+  background: ${({ $tone }) => TONES[$tone].fill};
+`
+
+const BondName = styled.span`
+  font-size: 14px;
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.parchment};
+  text-align: center;
+`
+
+const BondRole = styled.span`
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.colors.muted};
+`
+
+const BondTier = styled.span`
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.colors.gold};
+`
+
+const BondValue = styled.span<{ $tone: BondTone }>`
+  font-size: 19px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: ${({ $tone }) => TONES[$tone].text};
+`
+
+const BondPeak = styled.span`
+  font-size: 12px;
+  font-style: italic;
+  color: ${({ theme }) => theme.colors.muted2};
+  text-align: center;
 `
 
 const EndingAchievements = styled.div`

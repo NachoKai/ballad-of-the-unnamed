@@ -34,6 +34,23 @@ const KEYS = [
   "minigameResultWin",
   "minigameResultLose",
   "minigameResultDraw",
+  "affinity_tier_nemesis",
+  "affinity_tier_rival",
+  "affinity_tier_wary",
+  "affinity_tier_stranger",
+  "affinity_tier_acquaintance",
+  "affinity_tier_friend",
+  "affinity_tier_devoted",
+  "tooltip_relationships",
+  "npcRole_mentor",
+  "npcRole_friend",
+  "npcRole_love_interest",
+  "npcRole_nemesis",
+  "npcRole_child",
+  "npcRole_apprentice",
+  "npcRole_ally",
+  "npcRole_acquaintance",
+  "bondPeak",
 ] as const
 
 describe("interactive minigame i18n", () => {

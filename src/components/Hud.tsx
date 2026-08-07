@@ -14,12 +14,13 @@ import type { Arc, CharacterState, Locale } from "@shared/types"
 import { STAT_KEYS } from "@shared/types"
 import { keyframes, styled } from "styled-components"
 import { genderize } from "@shared/genderize"
-import { GAME_CONFIG, REPUTATION_TIERS, reputationTierId } from "@shared/config"
+import { affinityTierId, GAME_CONFIG, REPUTATION_TIERS, reputationTierId } from "@shared/config"
 import { gt as translateFor, t as translate } from "../i18n/strings"
 import { STAT_ABBR } from "../constants"
 import { personalitySummary } from "../lib/personality"
 import { careerTitle } from "../lib/careerTitle"
 import { FactionFlag } from "./FactionFlag"
+import { bondTone } from "../lib/bonds"
 import { Panel } from "./ui/Panel"
 import { Tag } from "./ui/Tag"
 import { Tooltip } from "./ui/Tooltip"
@@ -56,6 +57,7 @@ export function Hud({ character: c, locale, onShopOpen, canBuy }: Props) {
     c.momentum === "rising" ? TrendingUp : c.momentum === "falling" ? TrendingDown : Activity
   const currentArcIndex = PATH_ARCS.indexOf(c.currentArc)
   const inventoryCount = c.inventory?.reduce((s, i) => s + i.qty, 0) ?? 0
+  const bonds = c.relationships ?? []
   const playerScore = (c.counters["battles_won"] ?? 0) + (c.counters["quests_completed"] ?? 0)
 
   const primaryRep =
@@ -223,6 +225,32 @@ export function Hud({ character: c, locale, onShopOpen, canBuy }: Props) {
           </>
         )}
       </DetailsSection>
+
+      {bonds.length > 0 && (
+        <BondsWrap>
+          <BondsBar>
+            <Tooltip content={t("tooltip_relationships")} side="bottom" align="start">
+              <BondsHead>
+                {t("relationships")}
+                <BondsCount>{bonds.length}</BondsCount>
+              </BondsHead>
+            </Tooltip>
+            <BondsList>
+              {[...bonds]
+                .sort((a, b) => b.affinity - a.affinity)
+                .map((rel) => (
+                  <Tag key={rel.npcId} $tone={bondTone(rel.affinity)}>
+                    <b>{rel.npcName ?? rel.npcId}</b>
+                    <span>
+                      {t(`npcRole_${rel.npcRole ?? "acquaintance"}`)} ·{" "}
+                      {t(`affinity_tier_${affinityTierId(rel.affinity)}`)} [{rel.affinity}]
+                    </span>
+                  </Tag>
+                ))}
+            </BondsList>
+          </BondsBar>
+        </BondsWrap>
+      )}
 
       <PathTip content={t("tooltip_path")} side="bottom" fill>
         <PathRow>
@@ -599,6 +627,51 @@ const StatusRow = styled.div`
   gap: 10px;
   padding: 16px 18px 18px;
   border-top: 1px solid ${({ theme }) => theme.colors.line};
+`
+
+const BondsWrap = styled.div`
+  padding: 4px 18px 12px;
+`
+
+const BondsBar = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 12px;
+  background: ${({ theme }) => theme.colors.ink3};
+  border: 1px solid ${({ theme }) => theme.colors.line};
+  border-radius: ${({ theme }) => theme.radii.sm};
+`
+
+const BondsHead = styled.span`
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.colors.gold};
+`
+
+const BondsCount = styled.span`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: ${({ theme }) => theme.colors.ink};
+  color: ${({ theme }) => theme.colors.goldBright};
+  font-size: 11px;
+  font-weight: 700;
+`
+
+const BondsList = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
 `
 
 const PathTip = styled(Tooltip)`

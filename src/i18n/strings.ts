@@ -172,6 +172,9 @@ const en: StringMap = {
   relationship: "Bond",
   relationships: "Relationships",
   affinity: "Affinity",
+  // Ending-screen bond badge: shown when a relationship fell from a positive
+  // peak (peakAffinity is always >= 0). {n} is interpolated with the peak.
+  bondPeak: "was +{n} at their best",
 
   factionHistory: "Faction History",
   rivalComparison: "Rival Comparison",
@@ -278,6 +281,29 @@ const en: StringMap = {
   reputation_tier_legend: "Legend",
   reputation_tier_myth: "Myth",
 
+  // NPC relationship affinity tiers (-100..100). The labels describe the
+  // bond itself, not the player or the NPC, so they stay gender-neutral in
+  // Spanish and are rendered with plain t() — never gt().
+  affinity_tier_nemesis: "Nemesis",
+  affinity_tier_rival: "Rival",
+  affinity_tier_wary: "Wary",
+  affinity_tier_stranger: "Stranger",
+  affinity_tier_acquaintance: "Acquaintance",
+  affinity_tier_friend: "Friend",
+  affinity_tier_devoted: "Devoted",
+
+  // NPC relationship roles — what the NPC is to the player. The labels
+  // describe the NPC, whose gender is never tracked, so Spanish stays
+  // gender-neutral and they render with plain t() — never gt().
+  npcRole_mentor: "Mentor",
+  npcRole_friend: "Friend",
+  npcRole_love_interest: "Love interest",
+  npcRole_nemesis: "Nemesis",
+  npcRole_child: "Ward",
+  npcRole_apprentice: "Apprentice",
+  npcRole_ally: "Ally",
+  npcRole_acquaintance: "Acquaintance",
+
   personality_tag_Confident: "Confident",
   personality_tag_Supportive: "Supportive",
   personality_tag_Stoic: "Stoic",
@@ -323,6 +349,8 @@ const en: StringMap = {
   tooltip_faction: "The faction you serve — their halls back you, and their quarrels become yours.",
   tooltip_location: "Where you stand. Abroad, you are a stranger in a foreign region.",
   tooltip_rival_focus: "What your rival is chasing this run. Outpace them on this front for glory.",
+  tooltip_relationships:
+    "The bonds you've forged — who remembers your name, and how they regard you.",
   tooltip_abandon: "Abandon this life and begin anew. This run's progress is lost forever.",
   tooltip_stat_strength: "Strength — feats of might and battle.",
   tooltip_stat_dexterity: "Dexterity — speed, precision, and cunning hands.",
@@ -581,6 +609,9 @@ const es: StringMap = {
   relationship: "Vínculo",
   relationships: "Relaciones",
   affinity: "Afiliación",
+  // Marcador del pico de afinidad en la pantalla final: se muestra cuando el
+  // vínculo cayó desde un pico positivo (peakAffinity siempre es >= 0).
+  bondPeak: "llegó a +{n}",
 
   factionHistory: "Historial de Facción",
   rivalComparison: "Comparación con Rival",
@@ -687,6 +718,29 @@ const es: StringMap = {
   reputation_tier_legend: "Leyenda",
   reputation_tier_myth: "Mito",
 
+  // Vínculos de afinidad con NPC (-100..100). Las etiquetas describen el
+  // vínculo mismo, no al jugador ni al NPC, así que son neutras en español y
+  // se renderizan con t() — nunca con gt().
+  affinity_tier_nemesis: "Enemistad",
+  affinity_tier_rival: "Rivalidad",
+  affinity_tier_wary: "Recelo",
+  affinity_tier_stranger: "Rostro nuevo",
+  affinity_tier_acquaintance: "Cercanía",
+  affinity_tier_friend: "Amistad",
+  affinity_tier_devoted: "Devoción",
+
+  // Roles de vínculo con NPC — qué es el NPC para el jugador. Las etiquetas
+  // describen al NPC, cuyo género nunca se registra, así que el español
+  // permanece neutro y se renderizan con t() — nunca con gt().
+  npcRole_mentor: "Guía",
+  npcRole_friend: "Amistad",
+  npcRole_love_interest: "Amor",
+  npcRole_nemesis: "Enemistad",
+  npcRole_child: "Menor a tu cargo",
+  npcRole_apprentice: "Aprendiz",
+  npcRole_ally: "Camarada",
+  npcRole_acquaintance: "Contacto",
+
   personality_tag_Confident: "Seguro",
   personality_tag_Supportive: "Solidario",
   personality_tag_Stoic: "Estoico",
@@ -738,6 +792,7 @@ const es: StringMap = {
     "Dónde te encuentras. En el exterior, eres un extraño en una región extranjera.",
   tooltip_rival_focus:
     "Lo que tu rival persigue en esta vida. Supéralo en este frente para lograr gloria.",
+  tooltip_relationships: "Los vínculos que forjaste — quién recuerda tu nombre y cómo te ve.",
   tooltip_abandon:
     "Abandonar esta vida y empezar de nuevo. El progreso de esta partida se pierde para siempre.",
   tooltip_stat_strength: "Fuerza: proezas de poderío y combate.",

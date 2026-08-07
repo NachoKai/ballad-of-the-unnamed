@@ -8,7 +8,9 @@ interface TagProps {
   $fill?: boolean
 }
 
-const TONES: Record<TagTone, { border: string; fill: string; text: string }> = {
+// Exported so sibling screens (e.g. the ending screen's bond badges) can reuse
+// the exact same tone palette instead of re-deriving the rgba values.
+export const TONES: Record<TagTone, { border: string; fill: string; text: string }> = {
   gold: {
     border: "rgba(201, 164, 76, 0.55)",
     fill: "rgba(201, 164, 76, 0.12)",
