@@ -483,7 +483,6 @@ export default function App() {
             locale={locale}
             onStart={startRun}
             onStartWithArchetype={startRunWithArchetype}
-            onTutorial={() => setTutorialOpen(true)}
           />
         )}
 

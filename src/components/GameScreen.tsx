@@ -354,6 +354,18 @@ export function GameScreen({
                   <b>+{event.stipendEarned}</b>
                 </SeasonStat>
               )}
+              {event.seasonFameGain != null && event.seasonFameGain > 0 && (
+                <SeasonStat>
+                  <span>{t(locale, "seasonFameGain")}</span>
+                  <b>+{event.seasonFameGain}</b>
+                </SeasonStat>
+              )}
+              {event.seasonReputationGain != null && event.seasonReputationGain > 0 && (
+                <SeasonStat>
+                  <span>{t(locale, "seasonReputationGain")}</span>
+                  <b>+{event.seasonReputationGain}</b>
+                </SeasonStat>
+              )}
             </SeasonStatRow>
           </>
         )}

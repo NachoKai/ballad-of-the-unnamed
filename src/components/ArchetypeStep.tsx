@@ -118,7 +118,7 @@ const Card = styled.button<{ $master?: boolean }>`
   );
   border: 1px solid ${({ $master, theme }) => ($master ? theme.colors.gold : theme.colors.line)};
   border-radius: ${({ theme }) => theme.radii.lg};
-  padding: 24px 18px 18px;
+  padding: ${({ $master }) => ($master ? "36px" : "24px")} 18px 18px;
   transition:
     border-color 0.15s,
     transform 0.15s,

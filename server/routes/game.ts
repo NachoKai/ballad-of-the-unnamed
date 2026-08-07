@@ -11,6 +11,7 @@ import {
   generateRival,
   resolveChoice,
   resolveMinigame,
+  seasonStipendFor,
   type ResolveOutput,
 } from "../engine/engine.js"
 import {
@@ -31,6 +32,7 @@ import {
   localize,
   peakReputation,
   seasonHeadline,
+  seasonRenownGains,
 } from "../engine/helpers.js"
 import {
   createRun,
@@ -245,6 +247,18 @@ gameRouter.get("/state", async (req: Request, res: Response) => {
       served.seasonGrade = grade
       served.seasonHeadline = seasonHeadline(grade, locale)
       if (capstone) served.capstoneResult = capstone
+
+      // Re-serve the renown dividend so a reload shows the same amounts that
+      // resolveSeasonSummary will apply when the player continues.
+      const renown = seasonRenownGains(c, capstone?.gradeDelta ?? 0)
+      served.seasonFameGain = renown.fame
+      if (renown.reputation > 0) served.seasonReputationGain = renown.reputation
+
+      // The stipend row used to silently disappear on reload — restore it so
+      // the resumed summary matches the live-served one.
+      if (c.currentClanId) {
+        served.stipendEarned = seasonStipendFor(c, c.currentClanId, registry)
+      }
 
       if (run.character.rival) {
         served.rivalUpdate = buildRivalUpdate(run.character, registry, locale)
@@ -509,14 +523,15 @@ gameRouter.post("/minigame-move", async (req: Request, res: Response) => {
     const primaryStat = c[ev.primaryStat ?? "intelligence"] as number
 
     const state = c.pendingMinigame
-    const before = interactiveView(state)
+    const locale = c.locale
+    const before = interactiveView(state, locale)
     // Reject moves after the match is already over: applyInteractiveMove has no
     // guard against post-over moves (rps keeps counting wins, ttt throws on a
     // full board), so the current view's over flag is the authoritative gate.
     if (before.over) {
       return res.status(400).json({ error: "match_already_finished" })
     }
-    const { over } = applyInteractiveMove(state, move, primaryStat, rng, ev.resolution)
+    const { over } = applyInteractiveMove(state, move, primaryStat, rng, ev.resolution, c)
 
     if (!over) {
       run.rngState = rng.getState()
@@ -525,7 +540,7 @@ gameRouter.post("/minigame-move", async (req: Request, res: Response) => {
         status: "playing",
         minigame: {
           game: state.game,
-          view: interactiveView(state),
+          view: interactiveView(state, locale),
         },
         feedback: null,
       })
@@ -535,7 +550,7 @@ gameRouter.post("/minigame-move", async (req: Request, res: Response) => {
     // rides along so the client can render the completed board under the
     // result banner (the last move's state is never sent as a "playing" frame).
     const tier = interactiveTier(state)
-    const finalView = interactiveView(state)
+    const finalView = interactiveView(state, locale)
     c.pendingMinigame = null
     run.character = c
     const outcome = applyMinigameOutcome(c, ev, tier, registry, rng)
@@ -551,6 +566,7 @@ gameRouter.post("/minigame-move", async (req: Request, res: Response) => {
     if (
       msg.startsWith("invalid tictactoe cell") ||
       msg.startsWith("invalid memotest card") ||
+      msg.startsWith("invalid press option") ||
       msg.startsWith("invalid move for")
     ) {
       return res.status(400).json({ error: "invalid_move" })

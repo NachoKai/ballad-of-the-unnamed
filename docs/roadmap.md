@@ -47,19 +47,31 @@ cold. A short, skip-able tutorial shown before the first run.
 
 ---
 
-### 2. `press_conference` minigame subtype 🟡
+### 2. `press_conference` minigame subtype ✅ shipped 2026-08-06
 
 > improvement-plan.md §1.2 (part). The 5 personality-tag events using
-> `wantedTags`/`punishedTags` are authored; the engine synergy
-> (`computeTagSynergy`) is done. The press-conference minigame itself is not.
+> `wantedTags`/`punishedTags` were already authored; the engine synergy
+> (`computeTagSynergy`) was done. The press-conference minigame itself is now
+> shipped: an interactive `game: "press_conference"` (3 questions × 4
+> personality-tag answers) with a hidden "what they wanted" target drawn per
+> question from the run Rng, weighted by `computeTagSynergy` plus a
+> fame/charisma tilt (the El Ídolo "tu liderazgo y tu fama pesan" model).
 
-A minigame where 3 questions each have 4 tag-options, and the "correct" read is
-partly stat-gated (Charisma + Fame influence what the NPC wants to hear).
+Shipped pieces:
 
-- Add `press_conference` to `MinigameSubtype`.
-- Extend resolution in `resolveMinigame()`.
-- Authored content: reuse the `wantedTags`/`punishedTags` mechanism.
-- All draws through the per-run seeded `Rng`.
+- **Engine:** `server/engine/minigames/pressConference.ts` (`createPressState`,
+  `pressOver`, `pressResult`, `answerPressTarget`, `pressTargetWeight`) wired
+  into the four interactive switch points in `minigames/index.ts`; all draws
+  through the per-run seeded `Rng` (determinism tests included).
+- **Content:** `content/minigames/press_conference.json` — one authored event
+  (`press_gauntlet_01`, primary stat charisma), bilingual prompts/outcomes.
+- **Registry:** startup validation enforces `questions` (≥1, 4 options each,
+  every option tagged, bilingual prompts).
+- **Client:** `PressConferenceGame.tsx` question pager + ✓/✗ reveal, wired into
+  `MinigameFrame.tsx` and `HowToModal`.
+
+Rides the existing per-run interactive cap + cooldown; no `Sin Filtro`
+achievement (future content).
 
 ---
 

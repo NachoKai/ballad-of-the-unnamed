@@ -61,6 +61,19 @@ export const GAME_CONFIG = {
   // World events: how many to roll per season.
   worldEventsPerSeason: 2,
 
+  // Renown economy knobs.
+  // Positive faction-reputation gains are scaled up by this factor (negative
+  // deltas are untouched) so "Renombre" climbs faster — rebalanced from the
+  // original +1..+4 pacing.
+  reputationGainMultiplier: 1.5,
+  // "The bards sing": each season boundary grants renown scaled by the season
+  // grade — fame always, and standing with the current faction if you belong
+  // to one. Applied in resolveSeasonSummary, shown on the summary. Fame stays
+  // at 1/grade so the fame achievement ladder (25/50/75/100/150) stays
+  // meaningful across a ~10-season run instead of filling up automatically.
+  seasonFamePerGrade: 1,
+  seasonReputationPerGrade: 1,
+
   // Exhaustion: after N consecutive turns at 0 stamina, a recovery event is forced.
   forcedRecoveryTurns: 3,
   // Stamina restored by a forced recovery turn.

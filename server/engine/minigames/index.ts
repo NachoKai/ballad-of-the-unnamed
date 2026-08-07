@@ -31,6 +31,7 @@ import {
   MEMOTEST_SIZE,
   rivalMemotestTurn,
 } from "./memotest.js"
+import { answerPressTarget, createPressState, pressOver, pressResult } from "./pressConference.js"
 
 // Higher player primary stat ⇒ lower rival skill ⇒ easier opponent. Clamped so
 // the game stays a real contest for every character.
@@ -52,6 +53,7 @@ export function createInteractiveState(ev: EventContent): PendingMinigameState {
   const game = ev.resolution?.game ?? "tictactoe"
   if (game === "tictactoe") return createTicTacToeState(ev.id)
   if (game === "memotest") return createMemotestState(ev.id)
+  if (game === "press_conference") return createPressState(ev.id, ev.questions ?? [])
   return createRpsState(ev.id, ev.resolution?.bestOf ?? 3)
 }
 
@@ -61,7 +63,10 @@ function ticTacToeResult(board: TicTacToeCell[]): "playing" | "player_win" | "ri
   return isBoardFull(board) ? "draw" : "playing"
 }
 
-export function interactiveView(state: PendingMinigameState): ServedInteractiveState {
+export function interactiveView(
+  state: PendingMinigameState,
+  locale: "en" | "es" = "en",
+): ServedInteractiveState {
   if (state.game === "tictactoe") {
     const board = state.board ?? Array(9).fill(null)
     return {
@@ -110,6 +115,32 @@ export function interactiveView(state: PendingMinigameState): ServedInteractiveS
       result: memotestResult(state),
     }
   }
+  if (state.game === "press_conference") {
+    // Defensive default (mirrors the ?? fallbacks of the other branches) so a
+    // weirdly persisted state can't crash the serve path.
+    const p = state.press ?? { questions: [], answers: [], targets: [] }
+    return {
+      game: "press_conference",
+      index: p.answers.length,
+      // prose prompts are authored bilingual and localized here; option
+      // labels render client-side via personality_tag_<tag>.
+      questions: p.questions.map((q) => ({
+        prompt: q.prompt[locale],
+        options: q.options.map((op) => ({ id: op.id, icon: op.icon, tag: op.tag })),
+      })),
+      answers: p.answers,
+      // correctness per answered question (null until answered). The targets
+      // of answered questions ride along as `wanted` so the reveal can show
+      // what the interviewer "wanted" for each miss; unanswered targets stay
+      // null, so no future target is ever leaked.
+      revealed: p.targets.map((t, i) =>
+        t != null && i < p.answers.length ? p.answers[i] === t : null,
+      ),
+      wanted: p.targets,
+      over: pressOver(state),
+      result: pressResult(state),
+    }
+  }
   const over = rpsMatchOver(state)
   const result = over
     ? (state.playerWins ?? 0) > (state.rivalWins ?? 0)
@@ -148,6 +179,7 @@ export function applyInteractiveMove(
   primaryStat: number,
   rng: Rng,
   resolution?: MinigameResolution,
+  c?: CharacterState,
 ): { over: boolean; roundResult?: RpsRoundResult } {
   const res: { over: boolean; roundResult?: RpsRoundResult } = { over: false }
   // The event's authored rivalSkill + statInfluence tune the opponent; callers
@@ -214,6 +246,17 @@ export function applyInteractiveMove(
     return res
   }
 
+  if (state.game === "press_conference") {
+    if (move.kind !== "press_conference") throw new Error("invalid move for press_conference")
+    if (!c) throw new Error("press_conference needs the character")
+    // Charisma is the press conference's primary stat; it tilts the hidden
+    // "what they wanted" target alongside the character's tag history.
+    const charismaInfluence = resolution?.statInfluence?.charisma ?? 0
+    answerPressTarget(state, move.card, c, rng, charismaInfluence)
+    res.over = pressOver(state)
+    return res
+  }
+
   if (move.kind !== "rps") throw new Error("invalid move for rps")
   const rivalChoice = rivalRpsMove(state, rivalSkillFor(primaryStat, rivalRes), rng)
   const roundResult = judgeRound(move.choice, rivalChoice)
@@ -242,6 +285,21 @@ export function interactiveTier(state: PendingMinigameState): OutcomeTier {
     if (pp === rp) return "partial"
     return "fail"
   }
+  if (state.game === "press_conference") {
+    const r = pressResult(state)
+    if (r === "player_win") return "critical"
+    if (r === "player_lose") return "fail"
+    // 2/3 correct is a real sign of read (success); 1/3 is a mixed room.
+    const p = state.press
+    let correct = 0
+    if (p) {
+      for (let i = 0; i < p.answers.length; i++) {
+        const t = p.targets[i]
+        if (t != null && p.answers[i] === t) correct++
+      }
+    }
+    return correct >= 2 ? "success" : "partial"
+  }
   const pw = state.playerWins ?? 0
   const rw = state.rivalWins ?? 0
   if (pw === 2 && rw === 0) return "critical"
@@ -255,12 +313,12 @@ export function interactiveTier(state: PendingMinigameState): OutcomeTier {
 export function prepareInteractiveServe(
   ev: EventContent,
   c: CharacterState,
-  _locale: "en" | "es",
+  locale: "en" | "es",
 ): ServedInteractiveState {
   if (!c.pendingMinigame || c.pendingMinigame.eventId !== ev.id) {
     c.pendingMinigame = createInteractiveState(ev)
   }
-  return interactiveView(c.pendingMinigame)
+  return interactiveView(c.pendingMinigame, locale)
 }
 
 export function interactiveOpponentName(

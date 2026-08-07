@@ -129,13 +129,13 @@
         }
       },
       "fail": {
-        "reputationDelta": -3,
-        "fameDelta": -2,
+        "reputationDelta": -2,
+        "fameDelta": -1,
         "verdict": {
-          "en": "BAD −4",
-          "es": "MALA −4"
+          "en": "BAD −2",
+          "es": "MALA −2"
         },
-        "gradeDelta": -4,
+        "gradeDelta": -2,
         "narrative": {
           "en": "Your words tangle. {rivalName} seizes the opening and drives it home, and the court's laughter follows you out the door. The season ends on a sour note that everyone will quote.",
           "es": "Tus palabras se enredan. {rivalName} aprovecha el hueco y lo remata, y la risa de la corte te sigue hasta la puerta. La temporada termina con una nota amarga que todos citarán."
@@ -259,13 +259,13 @@
         }
       },
       "fail": {
-        "reputationDelta": -3,
-        "fameDelta": -2,
+        "reputationDelta": -2,
+        "fameDelta": -1,
         "verdict": {
-          "en": "BAD −4",
-          "es": "MALA −4"
+          "en": "BAD −2",
+          "es": "MALA −2"
         },
-        "gradeDelta": -4,
+        "gradeDelta": -2,
         "narrative": {
           "en": "The stance you chose is exposed as bought, and both halls turn on you at once. The court's laughter follows you out, and {rivalName} tells the story all winter — with embellishments.",
           "es": "La postura que elegiste queda expuesta como comprada, y ambos salones se vuelven contra vos a la vez. La risa de la corte te sigue hasta afuera, y {rivalName} cuenta la historia todo el invierno — con adornos."

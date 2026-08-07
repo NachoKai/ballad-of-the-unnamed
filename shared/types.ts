@@ -23,7 +23,7 @@ export type StatDeltas = Partial<Record<StatKey, number>>
 
 // ---- Interactive minigames (multi-move, server-authoritative) ----
 
-export type InteractiveGameKind = "tictactoe" | "rps" | "memotest"
+export type InteractiveGameKind = "tictactoe" | "rps" | "memotest" | "press_conference"
 
 // The five hand-signs of the goblin's game. Internal keys are language-neutral;
 // the client localizes them (e.g. rock → Piedra, paper → Pergamino, scissors →
@@ -36,6 +36,24 @@ export type RpsRoundResult = "win" | "loss" | "tie"
 // maps them to themed labels + icons (e.g. "dragon_egg" → Dragon's Egg).
 export type MemotestFace =
   "dragon_egg" | "sword" | "crown" | "potion" | "phoenix" | "shield" | "scroll" | "gem"
+
+// A single answer choice for a press-conference question. Reuses the same
+// wantedTags / punishedTags semantics as ChoiceContent so the character's
+// accumulated personality history can be consulted when drawing the hidden
+// "what they wanted" target.
+export interface PressTagOption {
+  id: string
+  icon: string
+  tag: PersonalityTag
+  wantedTags?: Partial<Record<PersonalityTag, number>>
+  punishedTags?: Partial<Record<PersonalityTag, number>>
+}
+
+export interface PressQuestion {
+  id: string
+  prompt: LocaleMap
+  options: PressTagOption[]
+}
 
 export type TicTacToeMark = "X" | "O"
 export type TicTacToeCell = TicTacToeMark | null
@@ -70,6 +88,14 @@ export interface PendingMinigameState {
   // the last resolved player pair (misses let the rival take a turn).
   lastPlayerTurn?: { cards: number[]; matched: boolean } | null
   lastRivalTurn?: { cards: number[]; matched: boolean } | null
+  // press_conference: the authored questions, the player's chosen option
+  // index per question (parallel to `questions`), and each question's hidden
+  // "what they wanted" target index (null until that question is answered).
+  press?: {
+    questions: PressQuestion[]
+    answers: number[]
+    targets: (number | null)[]
+  }
 }
 
 // Client-facing serialized view of a game in progress.
@@ -122,12 +148,30 @@ export type ServedInteractiveState =
       over: boolean
       result: "playing" | "player_win" | "rival_win" | "draw"
     }
+  | {
+      game: "press_conference"
+      index: number // which question is being answered (0-based)
+      // localized prompts + option tags (prose localized at serve time; the
+      // client renders option labels via the familiar personality_tag_<tag> path)
+      questions: {
+        prompt: string
+        options: { id: string; icon?: string; tag: PersonalityTag }[]
+      }[]
+      answers: number[] // player's chosen option index per question
+      revealed: (boolean | null)[] // correctness per answered question
+      // each question's hidden "what they wanted" option index — null until
+      // that question is answered, so the reveal can show it per miss.
+      wanted: (number | null)[]
+      over: boolean
+      result: "playing" | "player_win" | "partial" | "player_lose"
+    }
 
 // A single move the client sends to /api/game/minigame-move.
 export type InteractiveMove =
   | { kind: "tictactoe"; cell: number }
   | { kind: "rps"; choice: RpsChoice }
   | { kind: "memotest"; card: number }
+  | { kind: "press_conference"; card: number }
 
 export const PERSONALITY_TAGS = [
   "Humble",
@@ -386,6 +430,8 @@ export interface EventContent {
   // Regular events use choices; minigames use cards + resolution + outcomes.
   choices?: ChoiceContent[]
   cards?: MinigameCard[]
+  // press_conference: the authored interview questions (3 x 4 tag-options).
+  questions?: PressQuestion[]
   resolution?: MinigameResolution
   outcomes?: Record<OutcomeTier, MinigameOutcome>
   primaryStat?: StatKey
@@ -615,6 +661,10 @@ export interface ServedEvent {
   capstoneResult?: CapstoneResult
   // Gold paid to the character this season by their faction (season summary).
   stipendEarned?: number
+  // "The bards sing" renown dividend earned at the season boundary, scaled by
+  // the season grade — fame always, plus standing with the current faction.
+  seasonFameGain?: number
+  seasonReputationGain?: number
   flagLabel?: string
   // Interactive minigame: a multi-move game frame instead of a card grid.
   // When present, `choices` is empty and the client renders a game component.

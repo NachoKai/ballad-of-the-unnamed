@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest"
 import type {
+  InteractiveGameKind,
   InteractiveMove,
   PendingMinigameState,
+  PressQuestion,
   ServedInteractiveState,
 } from "../../../shared/types.js"
 
@@ -87,5 +89,44 @@ describe("interactive minigame types", () => {
       result: "playing",
     }
     expect(view.over).toBe(false)
+  })
+})
+
+describe("press_conference types", () => {
+  it("exposes the press_conference interactive kind", () => {
+    const kind: InteractiveGameKind = "press_conference"
+    expect(kind).toBe("press_conference")
+  })
+
+  it("the press_conference move discriminant is structurally valid", () => {
+    const m: InteractiveMove = { kind: "press_conference", card: 2 }
+    // Narrowing the union must succeed.
+    if (m.kind === "press_conference") expect(m.card).toBe(2)
+    else expect.fail("should narrow")
+  })
+
+  it("served view carries a press_conference branch", () => {
+    const view: ServedInteractiveState = {
+      game: "press_conference",
+      index: 0,
+      questions: [],
+      answers: [],
+      revealed: [],
+      wanted: [null, null, null],
+      over: false,
+      result: "playing",
+    }
+    expect(view.game).toBe("press_conference")
+    if (view.game === "press_conference") expect(view.result).toBe("playing")
+  })
+
+  it("PressQuestion carries a bilingual prompt and options", () => {
+    const q: PressQuestion = {
+      id: "q1",
+      prompt: { en: "Who are you?", es: "¿Quién sos?" },
+      options: [{ id: "a", icon: "gem", tag: "Confident", wantedTags: { Confident: 1 } }],
+    }
+    expect(q.options.length).toBeGreaterThan(0)
+    expect(q.options[0].tag).toBe("Confident")
   })
 })

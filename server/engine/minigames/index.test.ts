@@ -7,7 +7,12 @@ import {
   interactiveView,
   rivalSkillFor,
 } from "./index.js"
-import type { EventContent, InteractiveMove } from "../../../shared/types.js"
+import type {
+  CharacterState,
+  EventContent,
+  InteractiveMove,
+  PressQuestion,
+} from "../../../shared/types.js"
 
 function eventWith(game: "tictactoe" | "rps" | "memotest"): EventContent {
   return {
@@ -262,5 +267,158 @@ describe("interactive orchestrator", () => {
     const b = play(7)
     expect(a.state).toEqual(b.state)
     expect(a.over).toBe(b.over)
+  })
+})
+
+// The minimal character surface the press branch reads (personality history,
+// fame, charisma) plus enough for primaryStat lookups.
+function pressCharacter(): CharacterState {
+  return {
+    personality: { Confident: 2, Humble: 1 },
+    charisma: 50,
+    fame: 40,
+    intelligence: 20,
+  } as unknown as CharacterState
+}
+
+function pressQuestionsFixture(): PressQuestion[] {
+  const options = (prefix: string) =>
+    (["Confident", "Cocky", "Humble", "Supportive"] as const).map((tag, i) => ({
+      id: `${prefix}_${i}`,
+      icon: "gem",
+      tag,
+      wantedTags: { [tag]: 1 },
+    }))
+  return [0, 1, 2].map((n) => ({
+    id: `q${n}`,
+    prompt: { en: `Question ${n}`, es: `Pregunta ${n}` },
+    options: options(`q${n}`),
+  }))
+}
+
+function pressEvent(): EventContent {
+  return {
+    id: "ev_press_conference",
+    type: "minigame",
+    minAge: 0,
+    maxAge: 99,
+    weight: 1,
+    primaryStat: "charisma",
+    narrative: { en: "go", es: "ve" },
+    resolution: {
+      type: "interactive",
+      game: "press_conference",
+      baseWinChance: 0.5,
+      statInfluence: { charisma: 0.012 },
+    },
+    questions: pressQuestionsFixture(),
+    outcomes: {
+      critical: { narrative: { en: "c", es: "c" } },
+      success: { narrative: { en: "s", es: "s" } },
+      partial: { narrative: { en: "p", es: "p" } },
+      fail: { narrative: { en: "f", es: "f" } },
+    },
+  }
+}
+
+describe("press_conference orchestrator", () => {
+  it("creates an rng-free initial state with the authored questions", () => {
+    const state = createInteractiveState(pressEvent())
+    expect(state.game).toBe("press_conference")
+    expect(state.press!.questions).toHaveLength(3)
+    expect(state.press!.answers).toEqual([])
+    expect(state.press!.targets).toEqual([null, null, null])
+  })
+
+  it("serves a localized press view while playing", () => {
+    const state = createInteractiveState(pressEvent())
+    const view = interactiveView(state, "es")
+    if (view.game !== "press_conference") throw new Error("expected press view")
+    expect(view.index).toBe(0)
+    expect(view.questions[0].prompt).toBe("Pregunta 0")
+    expect(view.questions[0].options).toHaveLength(4)
+    expect(view.questions[0].options[0].tag).toBe("Confident")
+    expect(view.over).toBe(false)
+    expect(view.result).toBe("playing")
+  })
+
+  it("resolves a press_conference event end to end and maps to a tier", () => {
+    const ev = pressEvent()
+    const c = pressCharacter()
+    const state = createInteractiveState(ev)
+    const rng = new Rng(7)
+    let over = false
+    let guard = 0
+    while (!over && guard++ < 10) {
+      over = applyInteractiveMove(
+        state,
+        { kind: "press_conference", card: 0 },
+        50,
+        rng,
+        ev.resolution,
+        c,
+      ).over
+    }
+    expect(over).toBe(true)
+    expect(state.press!.answers).toHaveLength(3)
+    const tier = interactiveTier(state)
+    expect(["critical", "success", "partial", "fail"]).toContain(tier)
+  })
+
+  it("maps press reads to the graduated tier ladder", () => {
+    const base = () => createInteractiveState(pressEvent())
+    // 3/3 → critical, 2/3 → success, 1/3 → partial, 0/3 → fail.
+    const sweep = base()
+    sweep.press!.answers = [0, 1, 2]
+    sweep.press!.targets = [0, 1, 2]
+    expect(interactiveTier(sweep)).toBe("critical")
+    const strong = base()
+    strong.press!.answers = [0, 1, 2]
+    strong.press!.targets = [0, 1, 3]
+    expect(interactiveTier(strong)).toBe("success")
+    const mixed = base()
+    mixed.press!.answers = [0, 1, 2]
+    mixed.press!.targets = [0, 3, 3]
+    expect(interactiveTier(mixed)).toBe("partial")
+    const lost = base()
+    lost.press!.answers = [0, 1, 2]
+    lost.press!.targets = [3, 3, 3]
+    expect(interactiveTier(lost)).toBe("fail")
+  })
+
+  it("is deterministic for the same seed and answers", () => {
+    function play(seed: number) {
+      const ev = pressEvent()
+      const c = pressCharacter()
+      const state = createInteractiveState(ev)
+      const rng = new Rng(seed)
+      for (let q = 0; q < 3; q++) {
+        applyInteractiveMove(
+          state,
+          { kind: "press_conference", card: q % 4 },
+          50,
+          rng,
+          ev.resolution,
+          c,
+        )
+      }
+      return state
+    }
+    expect(play(21)).toEqual(play(21))
+  })
+
+  it("rejects a non-press move for a press game", () => {
+    const ev = pressEvent()
+    const state = createInteractiveState(ev)
+    expect(() =>
+      applyInteractiveMove(
+        state,
+        { kind: "rps", choice: "rock" },
+        50,
+        new Rng(1),
+        ev.resolution,
+        pressCharacter(),
+      ),
+    ).toThrow("invalid move for press_conference")
   })
 })

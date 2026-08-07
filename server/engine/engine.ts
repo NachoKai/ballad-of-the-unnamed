@@ -52,6 +52,7 @@ import {
   regionOf,
   roleSignalFor,
   seasonHeadline,
+  seasonRenownGains,
   serveEvent,
   setFlag,
   updateMarketValue,
@@ -898,6 +899,13 @@ export function buildServedEvent(
     served.seasonHeadline = seasonHeadline(grade, c.locale)
     if (capstone) served.capstoneResult = capstone
 
+    // The renown dividend ("the bards sing"): fame + faction standing earned
+    // this season, scaled by the grade. Shown here; resolveSeasonSummary
+    // applies the same deterministic amounts when the player continues.
+    const renown = seasonRenownGains(c, capstone?.gradeDelta ?? 0)
+    served.seasonFameGain = renown.fame
+    if (renown.reputation > 0) served.seasonReputationGain = renown.reputation
+
     // Roll world events and embed in season summary.
     served.worldEvents = rollWorldEvents(c, registry, rng)
 
@@ -1046,6 +1054,16 @@ export function buildServedEvent(
 export function resolveSeasonSummary(c: CharacterState, registry: ContentRegistry): void {
   c.seasonCount += 1
   c.turn += 1
+  // The bards sing: renown earned this season (fame + standing with the current
+  // faction), scaled by the season grade — deterministic and matching the
+  // amounts served on the summary block. Read before the capstone is cleared.
+  const renown = seasonRenownGains(c, c.pendingCapstoneResult?.gradeDelta ?? 0)
+  c.fame += renown.fame
+  if (renown.reputation > 0 && c.currentClanId) {
+    // Unscaled: the dividend is already at its final value, matching the
+    // amount shown on the season summary (adjustReputation would re-scale it).
+    adjustReputation(c, c.currentClanId, renown.reputation, false)
+  }
   // The capstone verdict was consumed by this season's summary.
   c.pendingCapstoneResult = null
   //  liability: the underworld's memory fades slowly, a season at a time.
@@ -1067,7 +1085,9 @@ export function resolveSeasonSummary(c: CharacterState, registry: ContentRegistr
 // Applying deltas
 // ---------------------------------------------------------------------------
 
-function computeTagSynergy(
+// Re-exported for the press_conference minigame module, which weighs each
+// answer option's hidden target by the character's accumulated tag history.
+export function computeTagSynergy(
   c: CharacterState,
   choice: { wantedTags?: Record<string, number>; punishedTags?: Record<string, number> },
 ): number {

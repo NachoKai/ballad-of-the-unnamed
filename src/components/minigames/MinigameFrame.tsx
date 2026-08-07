@@ -9,6 +9,7 @@ import { rise } from "../ui/Animation"
 import { TicTacToeGame } from "./TicTacToeGame"
 import { RpsGame } from "./RpsGame"
 import { MemotestGame, type MemotestPeek } from "./MemotestGame"
+import { PressConferenceGame } from "./PressConferenceGame"
 import { HowToModal } from "./HowToModal"
 
 interface Props {
@@ -74,6 +75,22 @@ export function MinigameFrame({ locale, event, onMove, onFinished, finishedResul
   // Match over: result banner + localized outcome narrative + Continue.
   if (finishedResult) {
     const finalView = finishedResult.minigame?.view ?? view
+    // Press conferences don't map to a win/draw/lose banner — their result is
+    // a graduated read (flawless / mixed / misread) shown by the game itself.
+    if (finalView.game === "press_conference") {
+      return (
+        <Frame>
+          <PressConferenceGame
+            locale={locale}
+            view={finalView}
+            busy
+            onAnswer={() => {}}
+            onContinue={onFinished}
+          />
+          {finishedResult.narrative && <Narrative>{finishedResult.narrative}</Narrative>}
+        </Frame>
+      )
+    }
     const won = finalView.result === "player_win"
     const draw = finalView.result === "draw"
     const tone = won ? "win" : draw ? "draw" : "lose"
@@ -143,6 +160,13 @@ export function MinigameFrame({ locale, event, onMove, onFinished, finishedResul
           onCard={(card) => handle({ kind: "memotest", card })}
           feedback={feedback}
           peek={peek}
+        />
+      ) : view.game === "press_conference" ? (
+        <PressConferenceGame
+          locale={locale}
+          view={view}
+          busy={busy}
+          onAnswer={(i) => handle({ kind: "press_conference", card: i })}
         />
       ) : (
         <RpsGame
@@ -258,7 +282,7 @@ const ResultSub = styled.div`
 `
 
 const Narrative = styled.div`
-  max-width: 520px;
+  max-width: 720px;
   text-align: center;
   font-size: 17px;
   line-height: 1.6;

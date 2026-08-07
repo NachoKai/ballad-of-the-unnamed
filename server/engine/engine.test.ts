@@ -37,6 +37,7 @@ import {
   isEligible,
   joinClan,
   roleSignalFor,
+  scaledReputationDelta,
   serveEvent,
   updateMomentum,
 } from "./helpers.js"
@@ -1623,6 +1624,124 @@ describe("season summary", () => {
 })
 
 // ---------------------------------------------------------------------------
+// Renown rebalance: reputation scaling + the per-season "bards sing" dividend
+// ---------------------------------------------------------------------------
+describe("renown economy", () => {
+  it("resolveSeasonSummary grants fame scaled by the season grade", () => {
+    const c = makeChar({ turn: 5, seasonCount: 0, powerLevel: 50, fame: 0 })
+    resolveSeasonSummary(c, reg)
+    // grade = round(50/10) = 5 → fame += 5 * seasonFamePerGrade
+    expect(c.fame).toBe(5 * GAME_CONFIG.seasonFamePerGrade)
+  })
+
+  it("resolveSeasonSummary grants standing with the current faction", () => {
+    const c = makeChar({ turn: 5, seasonCount: 0, powerLevel: 50, currentClanId: "ironhold" })
+    resolveSeasonSummary(c, reg)
+    // starts at 10 (makeChar default) → +5 * seasonReputationPerGrade
+    expect(c.reputations.find((r) => r.faction === "ironhold")?.value).toBe(
+      10 + 5 * GAME_CONFIG.seasonReputationPerGrade,
+    )
+  })
+
+  it("resolveSeasonSummary grants no faction standing without a clan", () => {
+    const c = makeChar({ turn: 5, seasonCount: 0, powerLevel: 50 })
+    const before = c.reputations[0].value
+    resolveSeasonSummary(c, reg)
+    expect(c.reputations[0].value).toBe(before)
+  })
+
+  it("a bad capstone verdict shrinks the renown dividend", () => {
+    const c = makeChar({
+      turn: 5,
+      seasonCount: 0,
+      powerLevel: 50,
+      fame: 0,
+      pendingCapstoneResult: {
+        kind: "election",
+        tier: "fail",
+        verdict: "BAD −2",
+        gradeDelta: -2,
+      },
+    })
+    resolveSeasonSummary(c, reg)
+    // grade = 5 − 2 = 3 → fame += 3 * seasonFamePerGrade
+    expect(c.fame).toBe(3 * GAME_CONFIG.seasonFamePerGrade)
+  })
+
+  it("buildServedEvent serves the renown dividend on the season summary", () => {
+    const clanless = makeChar({ turn: GAME_CONFIG.seasonLength, powerLevel: 50 })
+    const clanlessServed = buildServedEvent(clanless, reg, new Rng(42)).served
+    expect(clanlessServed.seasonFameGain).toBe(5 * GAME_CONFIG.seasonFamePerGrade)
+    expect(clanlessServed.seasonReputationGain).toBeUndefined()
+
+    const clanned = makeChar({
+      turn: GAME_CONFIG.seasonLength,
+      powerLevel: 50,
+      currentClanId: "ironhold",
+    })
+    const clannedServed = buildServedEvent(clanned, reg, new Rng(42)).served
+    expect(clannedServed.seasonFameGain).toBe(5 * GAME_CONFIG.seasonFamePerGrade)
+    expect(clannedServed.seasonReputationGain).toBe(5 * GAME_CONFIG.seasonReputationPerGrade)
+  })
+
+  it("the served renown dividend matches exactly what resolveSeasonSummary applies", () => {
+    const c = makeChar({
+      turn: GAME_CONFIG.seasonLength,
+      powerLevel: 50,
+      currentClanId: "ironhold",
+    })
+    const served = buildServedEvent(c, reg, new Rng(42)).served
+    const repBefore = c.reputations.find((r) => r.faction === "ironhold")!.value
+    resolveSeasonSummary(c, reg)
+    const repAfter = c.reputations.find((r) => r.faction === "ironhold")!.value
+    expect(repAfter - repBefore).toBe(served.seasonReputationGain)
+    expect(c.fame).toBe(served.seasonFameGain!)
+  })
+
+  it("capstone fail verdicts are softened to −2", () => {
+    const election = reg.minigames.find((m) => m.id === "election_of_the_year")
+    expect(election?.outcomes?.fail.gradeDelta).toBe(-2)
+    expect(election?.outcomes?.fail.verdict?.es).toBe("MALA −2")
+    expect(election?.outcomes?.fail.reputationDelta).toBe(-2)
+    expect(election?.outcomes?.fail.fameDelta).toBe(-1)
+    const debate = reg.minigames.find((m) => m.id === "debate_rival_claim")
+    expect(debate?.outcomes?.fail.gradeDelta).toBe(-2)
+    expect(debate?.outcomes?.fail.verdict?.en).toBe("BAD −2")
+  })
+
+  it("positive reputation gains are scaled up and shown before applying", () => {
+    const ev: EventContent = {
+      id: "rep_scale",
+      minAge: 0,
+      maxAge: 99,
+      weight: 1,
+      narrative: { en: "", es: "" },
+      choices: [
+        {
+          id: "aid",
+          rarity: "common",
+          label: { en: "", es: "" },
+          narrative: { en: "", es: "" },
+          reputationDelta: 3,
+          reputationFaction: "ironhold",
+        },
+      ],
+    }
+    const c = makeChar()
+    const served = serveEvent(ev, c, "en", reg, new Rng(1), false)
+    // 3 × 1.5 = 4.5 → rounds to 5, exactly what adjustReputation applies.
+    expect(served.choices[0].reputationDelta).toBe(5)
+    resolveChoice(c, ev, "aid", reg, new Rng(1))
+    expect(c.reputations.find((r) => r.faction === "ironhold")?.value).toBe(15)
+  })
+
+  it("negative reputation deltas are not scaled", () => {
+    expect(scaledReputationDelta(-3)).toBe(-3)
+    expect(scaledReputationDelta(-4)).toBe(-4)
+  })
+})
+
+// ---------------------------------------------------------------------------
 // Season-end capstone (debates / elections)
 // ---------------------------------------------------------------------------
 describe("season-end capstone", () => {
@@ -1664,7 +1783,8 @@ describe("season-end capstone", () => {
     resolveMinigame(c, election!, trapCard!.id, reg, new Rng(5))
     expect(c.pendingCapstoneResult).toBeDefined()
     expect(c.pendingCapstoneResult!.kind).toBe("election")
-    expect(c.pendingCapstoneResult!.gradeDelta).toBe(-4)
+    // Softened from the original −4 so a bad verdict doesn't crush the season.
+    expect(c.pendingCapstoneResult!.gradeDelta).toBe(-2)
   })
 
   it("season summary carries the capstone result and its grade swing", () => {

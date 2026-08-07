@@ -100,13 +100,13 @@
         }
       },
       "fail": {
-        "reputationDelta": -3,
-        "fameDelta": -2,
+        "reputationDelta": -2,
+        "fameDelta": -1,
         "verdict": {
-          "en": "BAD −4",
-          "es": "MALA −4"
+          "en": "BAD −2",
+          "es": "MALA −2"
         },
-        "gradeDelta": -4,
+        "gradeDelta": -2,
         "narrative": {
           "en": "The hidden strings snap in public. Your candidate is laughed out of the assembly and your judgment is questioned in every corner. The season closes on a scandal with your name attached.",
           "es": "Los hilos ocultos se rompen en público. Se ríen de tu candidata en la asamblea y cuestionan tu juicio en cada rincón. La temporada cierra con un escándalo y tu nombre pegado a él."
@@ -217,14 +217,14 @@
         }
       },
       "fail": {
-        "reputationDelta": -3,
-        "fameDelta": -2,
+        "reputationDelta": -2,
+        "fameDelta": -1,
         "goldDelta": -50,
         "verdict": {
-          "en": "BAD −4",
-          "es": "MALA −4"
+          "en": "BAD −2",
+          "es": "MALA −2"
         },
-        "gradeDelta": -4,
+        "gradeDelta": -2,
         "narrative": {
           "en": "The promised chest went to a shadow, and the treasury's loss lands at your feet. The council's accounts inspector gives you a look that will outlast the season.",
           "es": "La caja prometida fue a parar a una sombra, y la pérdida del tesoro cae a tus pies. La inspectora de cuentas del consejo te dedica una mirada que durará más que la temporada."
@@ -336,14 +336,14 @@
       },
       "fail": {
         "goldDelta": -80,
-        "fameDelta": -2,
-        "reputationDelta": -3,
+        "fameDelta": -1,
+        "reputationDelta": -2,
         "liabilityDelta": 1,
         "verdict": {
-          "en": "BAD −4",
-          "es": "MALA −4"
+          "en": "BAD −2",
+          "es": "MALA −2"
         },
-        "gradeDelta": -4,
+        "gradeDelta": -2,
         "narrative": {
           "en": "The hidden book surfaces at the vote, and the guild turns on the name you vouched for — and on you. Auditors shadow your accounts all winter, and the cartel's debt is now, quietly, yours.",
           "es": "El libro oculto sale a la luz en la votación, y el gremio se vuelve contra el nombre que avalaste — y contra vos. Los auditores siguen tus cuentas todo el invierno, y la deuda del cártel ahora es, en silencio, tuya."
@@ -453,13 +453,13 @@
         }
       },
       "fail": {
-        "fameDelta": -2,
-        "reputationDelta": -4,
+        "fameDelta": -1,
+        "reputationDelta": -2,
         "verdict": {
-          "en": "BAD −4",
-          "es": "MALA −4"
+          "en": "BAD −2",
+          "es": "MALA −2"
         },
-        "gradeDelta": -4,
+        "gradeDelta": -2,
         "narrative": {
           "en": "The darker vow comes to light during the first sermon, and the temple denounces the Voice — and the hand that raised her. The faithful cross themselves when you pass.",
           "es": "El voto oscuro sale a la luz durante el primer sermón, y el templo denuncia a la Voz — y a la mano que la elevó. Los fieles se persignan al verte pasar."
@@ -568,14 +568,14 @@
         }
       },
       "fail": {
-        "fameDelta": -2,
-        "reputationDelta": -3,
+        "fameDelta": -1,
+        "reputationDelta": -2,
         "liabilityDelta": 2,
         "verdict": {
-          "en": "BAD −4",
-          "es": "MALA −4"
+          "en": "BAD −2",
+          "es": "MALA −2"
         },
-        "gradeDelta": -4,
+        "gradeDelta": -2,
         "narrative": {
           "en": "The bought debt surfaces in open court, and the bench is disgraced — with your endorsement found in the margins. The city's clerks start a file on you that never quite closes.",
           "es": "La deuda comprada sale a la luz en plena sala, y el estrado queda deshonrado — con tu aval encontrado en los márgenes. Los escribanos de la ciudad abren un expediente sobre vos que nunca termina de cerrarse."
@@ -686,13 +686,13 @@
         }
       },
       "fail": {
-        "fameDelta": -3,
-        "reputationDelta": -3,
+        "fameDelta": -1,
+        "reputationDelta": -2,
         "verdict": {
-          "en": "BAD −4",
-          "es": "MALA −4"
+          "en": "BAD −2",
+          "es": "MALA −2"
         },
-        "gradeDelta": -4,
+        "gradeDelta": -2,
         "narrative": {
           "en": "The forged claim is denounced at the naming ceremony, and the house's fury finds its way to your name. Doors that once opened to you now close with a sound like a latch being drawn.",
           "es": "El reclamo forjado es denunciado en la ceremonia de nombramiento, y la furia de la casa encuentra el camino hacia tu nombre. Las puertas que antes se te abrían ahora se cierran con un sonido como de cerrojo corrido."
@@ -801,13 +801,13 @@
         }
       },
       "fail": {
-        "reputationDelta": -3,
-        "fameDelta": -2,
+        "reputationDelta": -2,
+        "fameDelta": -1,
         "verdict": {
-          "en": "BAD −4",
-          "es": "MALA −4"
+          "en": "BAD −2",
+          "es": "MALA −2"
         },
-        "gradeDelta": -4,
+        "gradeDelta": -2,
         "narrative": {
           "en": "The false flag you backed is denounced at the quayside, and the fleets turn on your ruling. The harbor master files a complaint against you that will follow the fishing season to its bitter end.",
           "es": "La bandera falsa que respaldaste es denunciada en el muelle, y las flotas se vuelven contra tu fallo. El capitán del puerto presenta una queja contra vos que seguirá a la temporada de pesca hasta su amargo final."
@@ -920,14 +920,14 @@
       },
       "fail": {
         "goldDelta": -80,
-        "fameDelta": -2,
-        "reputationDelta": -3,
+        "fameDelta": -1,
+        "reputationDelta": -2,
         "liabilityDelta": 2,
         "verdict": {
-          "en": "BAD −4",
-          "es": "MALA −4"
+          "en": "BAD −2",
+          "es": "MALA −2"
         },
-        "gradeDelta": -4,
+        "gradeDelta": -2,
         "narrative": {
           "en": "The double-bought plan surfaces at the signing, and the assembly's fury lands on your name. The customs house opens a ledger on you, and every merchant on the road learns to ask what your endorsement costs.",
           "es": "El plan comprado dos veces sale a la luz en la firma, y la furia de la asamblea cae sobre tu nombre. La aduana abre un libro de cuentas sobre vos, y cada mercader del camino aprende a preguntar cuánto cuesta tu aval."
@@ -1036,14 +1036,14 @@
         }
       },
       "fail": {
-        "reputationDelta": -4,
-        "fameDelta": -2,
+        "reputationDelta": -2,
+        "fameDelta": -1,
         "liabilityDelta": 1,
         "verdict": {
-          "en": "BAD −4",
-          "es": "MALA −4"
+          "en": "BAD −2",
+          "es": "MALA −2"
         },
-        "gradeDelta": -4,
+        "gradeDelta": -2,
         "narrative": {
           "en": "The warlord's debt comes due in the middle of the season, and the pension fund empties twice. The veterans march on the council house — and your name is painted on the banner they carry.",
           "es": "La deuda del señor de la guerra vence a mitad de temporada, y el fondo de pensiones se vacía dos veces. Los veteranos marchan sobre la casa del consejo — y tu nombre está pintado en el estandarte que llevan."
@@ -1156,13 +1156,13 @@
       },
       "fail": {
         "goldDelta": -80,
-        "fameDelta": -2,
-        "reputationDelta": -3,
+        "fameDelta": -1,
+        "reputationDelta": -2,
         "verdict": {
-          "en": "BAD −4",
-          "es": "MALA −4"
+          "en": "BAD −2",
+          "es": "MALA −2"
         },
-        "gradeDelta": -4,
+        "gradeDelta": -2,
         "narrative": {
           "en": "The forged coins surface when the first tolls come due, and the bridge charter is voided in disgrace — with your endorsement stamped on the voided page. The mint's auditors follow your name all winter.",
           "es": "Las monedas falsas salen a la luz cuando vence el primer peaje, y la carta del puente se anula en desgracia — con tu aval estampado en la página anulada. Los auditores de la ceca siguen tu nombre todo el invierno."
@@ -1276,13 +1276,13 @@
       },
       "fail": {
         "goldDelta": -60,
-        "fameDelta": -2,
-        "reputationDelta": -3,
+        "fameDelta": -1,
+        "reputationDelta": -2,
         "verdict": {
-          "en": "BAD −4",
-          "es": "MALA −4"
+          "en": "BAD −2",
+          "es": "MALA −2"
         },
-        "gradeDelta": -4,
+        "gradeDelta": -2,
         "narrative": {
           "en": "The ghost deed is denounced at the harvest feast, and the fields stand half-sown all season. Every empty row is blamed on your judgment, and the hungry winter will remember your name.",
           "es": "La escritura fantasma es denunciada en la fiesta de la cosecha, y los campos quedan a medio sembrar toda la temporada. Cada surco vacío se le achaca a tu criterio, y el invierno hambriento recordará tu nombre."
@@ -1391,13 +1391,13 @@
         }
       },
       "fail": {
-        "fameDelta": -2,
-        "reputationDelta": -4,
+        "fameDelta": -1,
+        "reputationDelta": -2,
         "verdict": {
-          "en": "BAD −4",
-          "es": "MALA −4"
+          "en": "BAD −2",
+          "es": "MALA −2"
         },
-        "gradeDelta": -4,
+        "gradeDelta": -2,
         "narrative": {
           "en": "The forbidden hymn is sung at the high feast, and the temple denounces the voice — and the hand that raised it. The choir falls silent every time you pass, and the canon is scrubbed of your name.",
           "es": "El himno prohibido se canta en la gran fiesta, y el templo denuncia a la voz — y a la mano que la elevó. El coro enmudece cada vez que pasás, y el canon se limpia de tu nombre."

@@ -1,0 +1,97 @@
+[
+  {
+    "id": "press_gauntlet_01",
+    "type": "minigame",
+    "subtype": "press_conference",
+    "minAge": 18,
+    "maxAge": 99,
+    "weight": 14,
+    "primaryStat": "charisma",
+    "opponent": {
+      "en": "Court Scribe Veran",
+      "es": "Escriba de la Corte Veran"
+    },
+    "narrative": {
+      "en": "Reporters crowd the dais. A single interviewer rises, pen poised. \"Three questions, hero. Let us see the real you.\"",
+      "es": "Periodistas llenan la tribuna. Un solo entrevistador se alza, pluma en alto. \"Tres preguntas, héroe. Dejá que veamos al verdadero vos.\""
+    },
+    "resolution": {
+      "type": "interactive",
+      "game": "press_conference",
+      "baseWinChance": 0.5,
+      "statInfluence": { "charisma": 0.012 }
+    },
+    "questions": [
+      {
+        "id": "q1",
+        "prompt": {
+          "en": "The stories call you a rising star. What do you tell a realm that expects a hero?",
+          "es": "Los relatos te llaman estrella en ascenso. ¿Qué le decís a un reino que espera un héroe?"
+        },
+        "options": [
+          { "id": "q1_a", "icon": "gem", "tag": "Confident", "wantedTags": { "Confident": 1 } },
+          { "id": "q1_b", "icon": "flame", "tag": "Cocky", "wantedTags": { "Cocky": 1 } },
+          { "id": "q1_c", "icon": "scroll", "tag": "Humble", "wantedTags": { "Humble": 1 } },
+          { "id": "q1_d", "icon": "heart", "tag": "Supportive", "wantedTags": { "Supportive": 1 } }
+        ]
+      },
+      {
+        "id": "q2",
+        "prompt": {
+          "en": "There are rumors you took a shortcut to the top. Your answer?",
+          "es": "Corren rumores de que tomaste un atajo hacia la cima. ¿Tu respuesta?"
+        },
+        "options": [
+          { "id": "q2_a", "icon": "gem", "tag": "Confident", "wantedTags": { "Confident": 1 } },
+          { "id": "q2_b", "icon": "flame", "tag": "Cocky", "wantedTags": { "Cocky": 1 } },
+          { "id": "q2_c", "icon": "scroll", "tag": "Humble", "wantedTags": { "Humble": 1 } },
+          { "id": "q2_d", "icon": "heart", "tag": "Supportive", "wantedTags": { "Supportive": 1 } }
+        ]
+      },
+      {
+        "id": "q3",
+        "prompt": {
+          "en": "If you could speak to the young soul you once were, what would you promise them?",
+          "es": "Si pudieras hablarle a la joven alma que fuiste, ¿qué le prometerías?"
+        },
+        "options": [
+          { "id": "q3_a", "icon": "gem", "tag": "Confident", "wantedTags": { "Confident": 1 } },
+          { "id": "q3_b", "icon": "flame", "tag": "Cocky", "wantedTags": { "Cocky": 1 } },
+          { "id": "q3_c", "icon": "scroll", "tag": "Humble", "wantedTags": { "Humble": 1 } },
+          { "id": "q3_d", "icon": "heart", "tag": "Supportive", "wantedTags": { "Supportive": 1 } }
+        ]
+      }
+    ],
+    "outcomes": {
+      "critical": {
+        "fameDelta": 6,
+        "reputationDelta": 3,
+        "narrative": {
+          "en": "Everything you said landed. The room is yours — a legend in the making.",
+          "es": "Todo lo que dijiste impactó. La sala es tuya — una leyenda naciendo."
+        }
+      },
+      "success": {
+        "fameDelta": 2,
+        "narrative": {
+          "en": "Mostly honest, mostly liked. A balanced press room.",
+          "es": "Mayormente honesto, mayormente querido. Una sala equilibrada."
+        }
+      },
+      "partial": {
+        "narrative": {
+          "en": "A mixed reception. The sharper questions caught you off guard.",
+          "es": "Recepción mixta. Las preguntas más filas te tomaron desprevenido."
+        }
+      },
+      "fail": {
+        "fameDelta": -2,
+        "reputationDelta": -2,
+        "narrative": {
+          "en": "It went badly. They print what they wanted to print.",
+          "es": "Salió mal. Imprimen lo que querían imprimir."
+        }
+      }
+    }
+  }
+]

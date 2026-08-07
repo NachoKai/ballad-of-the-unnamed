@@ -156,10 +156,27 @@ export function loadContent(): ContentRegistry {
         assert(
           mg.resolution.game === "tictactoe" ||
             mg.resolution.game === "rps" ||
-            mg.resolution.game === "memotest",
+            mg.resolution.game === "memotest" ||
+            mg.resolution.game === "press_conference",
           `minigame ${mg.id} invalid interactive game`,
         )
         assert(mg.primaryStat, `minigame ${mg.id} interactive needs primaryStat`)
+        if (mg.resolution.game === "press_conference") {
+          assert(
+            Array.isArray(mg.questions) && mg.questions.length > 0,
+            `minigame ${mg.id} press_conference needs questions`,
+          )
+          for (const q of mg.questions) {
+            validateLocaleMap(q.prompt, `minigame ${mg.id} question ${q.id || ""} prompt`)
+            assert(
+              q.options && q.options.length === 4,
+              `minigame ${mg.id} question ${q.id} needs 4 options`,
+            )
+            for (const op of q.options) {
+              assert(op.tag, `minigame ${mg.id} question ${q.id} option ${op.id} needs tag`)
+            }
+          }
+        }
       }
       for (const card of mg.cards ?? []) {
         validateLocaleMap(card.label, `minigame ${mg.id} card ${card.id} label`)

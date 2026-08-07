@@ -74,8 +74,10 @@ function resolveServed(
           ? { kind: "tictactoe", cell: (state.board ?? []).findIndex((x) => x === null) }
           : state.game === "memotest"
             ? { kind: "memotest", card: memotestSmokeCard(state) }
-            : { kind: "rps", choice: "rock" }
-      over = applyInteractiveMove(state, move, primaryStat, rng).over
+            : state.game === "press_conference"
+              ? { kind: "press_conference", card: 0 }
+              : { kind: "rps", choice: "rock" }
+      over = applyInteractiveMove(state, move, primaryStat, rng, event.resolution, c).over
     }
     c.pendingMinigame = null
     return applyMinigameOutcome(c, event, interactiveTier(state), reg, rng)

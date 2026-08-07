@@ -19,7 +19,13 @@ const RPS_RULES: { key: string; icon: string }[] = [
 
 export function HowToModal({ locale, game, onClose }: Props) {
   const isRps = game === "rps"
-  const titleKey = isRps ? "rpsHowTitle" : game === "memotest" ? "memHowTitle" : "tttHowTitle"
+  const titleKey = isRps
+    ? "rpsHowTitle"
+    : game === "memotest"
+      ? "memHowTitle"
+      : game === "press_conference"
+        ? "pressHowTitle"
+        : "tttHowTitle"
   return (
     <Overlay onClick={onClose}>
       <Modal onClick={(e) => e.stopPropagation()}>
@@ -46,6 +52,10 @@ export function HowToModal({ locale, game, onClose }: Props) {
             <>
               <Intro>{t(locale, "memHowIntro")}</Intro>
               <TttBody>{t(locale, "memHowBody")}</TttBody>
+            </>
+          ) : game === "press_conference" ? (
+            <>
+              <Intro>{t(locale, "pressHowIntro")}</Intro>
             </>
           ) : (
             <>

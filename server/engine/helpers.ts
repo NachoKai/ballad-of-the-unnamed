@@ -92,13 +92,30 @@ export function peakReputation(c: CharacterState): number {
   return Math.max(...c.reputations.map((r) => r.peakValue))
 }
 
-export function adjustReputation(c: CharacterState, faction: string, delta: number): void {
+// Positive reputation gains are scaled up by the config knob (negative deltas
+// pass through untouched) so faction standing climbs faster — the "renombre too
+// slow" balance knob. Used both when applying (adjustReputation) and when
+// serving the pre-pick display (serveEvent), so the card always shows exactly
+// what will be applied.
+export function scaledReputationDelta(delta: number): number {
+  return delta > 0 ? Math.round(delta * GAME_CONFIG.reputationGainMultiplier) : delta
+}
+
+export function adjustReputation(
+  c: CharacterState,
+  faction: string,
+  delta: number,
+  scale = true,
+): void {
   let rep = c.reputations.find((r) => r.faction === faction)
   if (!rep) {
     rep = { faction, value: 0, peakValue: 0 }
     c.reputations.push(rep)
   }
-  rep.value = Math.max(0, Math.min(100, rep.value + delta))
+  // `scale: false` is for rewards that are already computed at their final
+  // value (the season dividend), so the applied number matches the served one.
+  const scaled = scale ? scaledReputationDelta(delta) : delta
+  rep.value = Math.max(0, Math.min(100, rep.value + scaled))
   rep.peakValue = Math.max(rep.peakValue, rep.value)
 }
 
@@ -406,7 +423,10 @@ export function serveEvent(
       statDeltas: ch.statDeltas,
       tradeoffDeltas: ch.tradeoffDeltas,
       fameDelta: ch.fameDelta,
-      reputationDelta: ch.reputationDelta,
+      // Display the scaled gain so the pre-pick card matches what actually
+      // applies (adjustReputation applies the same scaled value).
+      reputationDelta:
+        ch.reputationDelta != null ? scaledReputationDelta(ch.reputationDelta) : undefined,
       goldDelta: ch.goldDelta,
       factionId: ch.factionId ?? ch.joinClanId ?? ch.reputationFaction,
       stipend: ch.stipend,
@@ -587,4 +607,21 @@ export function seasonHeadline(grade: number, locale: Locale): string {
       : locale === "en"
         ? "A Season of Hardship"
         : "Una Temporada de Dificultades"
+}
+
+// "The bards sing": renown earned at the season boundary, scaled by the season
+// grade. Fame always accrues; standing with the current faction accrues only
+// while the character belongs to one (a solo wanderer has no faction to thank).
+// Computed deterministically from the character + capstone verdict, and shared
+// by the serve path, the /state resume path, and resolveSeasonSummary so the
+// displayed amounts always match what gets applied.
+export function seasonRenownGains(
+  c: CharacterState,
+  capstoneDelta = 0,
+): { fame: number; reputation: number } {
+  const grade = computeSeasonGrade(c, capstoneDelta)
+  return {
+    fame: grade * GAME_CONFIG.seasonFamePerGrade,
+    reputation: c.currentClanId ? grade * GAME_CONFIG.seasonReputationPerGrade : 0,
+  }
 }
