@@ -198,6 +198,19 @@ export interface CreatureContent {
   fleeDifficulty: number // 0..1; higher = harder to flee
 }
 
+// Active "menace" state wired from a rolled world event to the combat pool:
+// while alive, matching creatures are emboldened (their encounters weigh more)
+// until enough of them are slain or the menace expires. Stored in
+// c.flags[combatMenaceFlag] as a language-neutral JSON blob.
+export interface CombatMenaceState {
+  eventId: string
+  creatureIds: string[]
+  weightMultiplier: number
+  killTarget: number
+  kills: number
+  untilSeason: number
+}
+
 // A status on one side of the fight. Language-neutral id; client localizes.
 // turns: rounds remaining (0 = permanent until cleared).
 export type CombatStatusId =
@@ -291,6 +304,13 @@ export interface ServedCombatState {
   creatureMoveNames: Record<string, string>
   over: boolean
   result: "won" | "lost" | "fled" | null
+  // Active world-event menace targeting this fight (localized headline + kill
+  // progress), so the client can show why the encounter feels emboldened.
+  menace?: {
+    headline: string
+    kills: number
+    killTarget: number
+  }
 }
 
 // One action the client submits to /api/game/combat-move.
@@ -738,6 +758,16 @@ export interface EventContent {
   // combat encounter: creature pool (ids into content/combat/creatures.json).
   // Served as a combat frame instead of a card grid (like interactive minigames).
   combat?: { creatures: string[] }
+  // World event → combat linkage: while this menace is active (rolled on a
+  // season summary), matching creatures are emboldened — their encounters get
+  // weight × weightMultiplier — until `killTarget` of them are slain or
+  // `durationSeasons` seasons pass.
+  combatMenace?: {
+    creatureIds: string[]
+    weightMultiplier: number
+    durationSeasons: number
+    killTarget: number
+  }
   resolution?: MinigameResolution
   outcomes?: Record<OutcomeTier, MinigameOutcome>
   primaryStat?: StatKey

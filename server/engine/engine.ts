@@ -54,6 +54,7 @@ import {
   seasonHeadline,
   seasonRenownGains,
   serveEvent,
+  setCombatMenace,
   setFlag,
   updateMarketValue,
   updateMomentum,
@@ -219,6 +220,10 @@ export function rollWorldEvents(
   for (let i = 0; i < count; i++) {
     const ev = rng.pick(worldPool)
     if (!ev) continue
+    // A menace world event ("wolves terrorize the east road") arms the combat
+    // linkage: matching creatures become emboldened until enough are slain.
+    // Only sets when no menace is already active.
+    if (ev.combatMenace) setCombatMenace(c, ev)
     const headline = ev.worldEventHeadline
       ? fillSlots(localize(ev.worldEventHeadline, c.locale), c.locale, registry, rng, c)
       : "The World Turns"

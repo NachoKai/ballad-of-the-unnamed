@@ -374,6 +374,20 @@ export function loadContent(): ContentRegistry {
   }
   const creaturesById = new Map(creatures.map((cr) => [cr.id, cr]))
 
+  // World-event combat menaces must target real creatures with sane knobs.
+  // (Validated after the roster loads — events load earlier in this file.)
+  for (const ev of events) {
+    const menace = ev.combatMenace
+    if (!menace) continue
+    assert(menace.creatureIds.length > 0, `event ${ev.id} combatMenace needs creatureIds`)
+    for (const cid of menace.creatureIds) {
+      assert(creaturesById.has(cid), `event ${ev.id} combatMenace unknown creature ${cid}`)
+    }
+    assert(menace.weightMultiplier > 1, `event ${ev.id} combatMenace weightMultiplier must be > 1`)
+    assert(menace.durationSeasons >= 1, `event ${ev.id} combatMenace needs durationSeasons >= 1`)
+    assert(menace.killTarget >= 1, `event ${ev.id} combatMenace needs killTarget >= 1`)
+  }
+
   // Load combat encounters — separate bank, never part of the event rotation.
   const combats: EventContent[] = []
   for (const file of readdirSync(join(CONTENT_ROOT, "combat"))) {

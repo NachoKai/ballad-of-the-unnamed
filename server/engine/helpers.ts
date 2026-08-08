@@ -1,5 +1,6 @@
 import type {
   CharacterState,
+  CombatMenaceState,
   EventContent,
   Locale,
   LocaleMap,
@@ -183,6 +184,62 @@ export function setFlag(c: CharacterState, key: string, value: unknown): void {
   c.flags[key] = value
 }
 
+// ---- Combat menace (world event → creature-pool weight linkage) ------------
+
+// The character flag that holds the active menace (a CombatMenaceState blob).
+export const COMBAT_MENACE_FLAG = "combat_menace"
+
+// The active menace, or null when none is set or it has expired. Note this
+// getter has a side effect: an expired menace is deleted from c.flags (lazy
+// cleanup) so stale blobs don't linger — safe anywhere the character is later
+// persisted, but callers should not rely on the flag surviving a read.
+export function activeMenace(c: CharacterState): CombatMenaceState | null {
+  const m = c.flags[COMBAT_MENACE_FLAG] as CombatMenaceState | undefined
+  if (!m) return null
+  if (c.seasonCount > m.untilSeason) {
+    delete c.flags[COMBAT_MENACE_FLAG]
+    return null
+  }
+  return m
+}
+
+// Arm a menace from a rolled world event. Only sets when no menace is active
+// (a second menace event doesn't overwrite progress on the first).
+export function setCombatMenace(c: CharacterState, ev: EventContent): void {
+  const menace = ev.combatMenace
+  if (!menace || activeMenace(c)) return
+  c.flags[COMBAT_MENACE_FLAG] = {
+    eventId: ev.id,
+    creatureIds: menace.creatureIds,
+    weightMultiplier: menace.weightMultiplier,
+    killTarget: menace.killTarget,
+    kills: 0,
+    untilSeason: c.seasonCount + menace.durationSeasons,
+  }
+}
+
+// A won fight against a menaced creature counts toward resolving it. Returns
+// true when the kill target is met and the menace lifts.
+export function registerMenaceKill(c: CharacterState, creatureId: string): boolean {
+  const m = activeMenace(c)
+  if (!m || !m.creatureIds.includes(creatureId)) return false
+  m.kills += 1
+  if (m.kills >= m.killTarget) {
+    delete c.flags[COMBAT_MENACE_FLAG]
+    return true
+  }
+  return false
+}
+
+// Weight multiplier a combat encounter gets while an active menace targets one
+// of its creatures (1 = no boost).
+export function menaceWeightMultiplier(ev: EventContent, c: CharacterState): number {
+  const m = activeMenace(c)
+  if (!m || ev.type !== "combat" || !ev.combat) return 1
+  const targets = ev.combat.creatures.some((id) => m.creatureIds.includes(id))
+  return targets ? m.weightMultiplier : 1
+}
+
 export function applyClanBetrayal(c: CharacterState, newClanId: string, turn: number): void {
   const oldClanId = c.currentClanId
   if (!oldClanId) return
@@ -352,10 +409,12 @@ export function hasPlayableChoice(ev: EventContent, c: CharacterState): boolean 
 }
 
 // Momentum nudges the effective weight so runs feel like they have streaks.
+// An active combat menace also boosts matching combat encounters.
 export function effectiveWeight(ev: EventContent, c: CharacterState): number {
   let w = ev.weight
   if (c.momentum === "rising" && ev.location === "court") w *= 1.3
   if (c.momentum === "falling" && ev.location === "dungeon") w *= 1.3
+  w *= menaceWeightMultiplier(ev, c)
   return w
 }
 

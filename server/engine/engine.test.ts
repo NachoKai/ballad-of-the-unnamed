@@ -27,20 +27,25 @@ import { endCombat, prepareCombatServe, resolveCombatRound } from "./combat/inde
 import { MEMOTEST_CARD_COUNT } from "./minigames/memotest.js"
 import { loadContent } from "../content/registry.js"
 import {
+  activeMenace,
   adjustAffinity,
   applyClanBetrayal,
   buildRivalUpdate,
   clearExpiredHunted,
   computePowerLevel,
+  effectiveWeight,
   ensureRelationship,
   fillSlots,
   hasPlayableChoice,
   isBenched,
   isEligible,
   joinClan,
+  menaceWeightMultiplier,
+  registerMenaceKill,
   roleSignalFor,
   scaledReputationDelta,
   serveEvent,
+  setCombatMenace,
   updateMomentum,
 } from "./helpers.js"
 import type {
@@ -2959,6 +2964,91 @@ describe("World events", () => {
     expect(events.length).toBeGreaterThan(0)
     expect(events[0].headline).toBeTruthy()
     expect(events[0].narrative).toBeTruthy()
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Combat menace (world event → creature-pool weight linkage)
+// ---------------------------------------------------------------------------
+describe("combat menace", () => {
+  const wolfMenace = reg.events.find((e) => e.id === "world_wolf_menace")!
+  const wolfTerritory = reg.combats.find((e) => e.id === "wolf_territory")!
+  const golemAwakening = reg.combats.find((e) => e.id === "golem_awakening")!
+  const ogreRaids = reg.combats.find((e) => e.id === "ogre_raids")!
+
+  it("rollWorldEvents arms the menace flag from a menace world event", () => {
+    const c = makeChar({ age: 20, currentArc: arcForAge(20) })
+    // Force the wolf menace onto the character directly (the roll is seeded,
+    // so asserting a specific pick would be brittle — setCombatMenace is the
+    // unit under test; rollWorldEvents calls it when a menace event is rolled).
+    setCombatMenace(c, wolfMenace)
+    const m = activeMenace(c)
+    expect(m).not.toBeNull()
+    expect(m!.creatureIds).toContain("dire_wolf")
+    expect(m!.killTarget).toBe(4)
+    expect(m!.kills).toBe(0)
+    expect(m!.untilSeason).toBe(c.seasonCount + 3)
+  })
+
+  it("rollWorldEvents actually arms a menace when a menace event is drawn", () => {
+    // Seed brute-force: find a seed whose world roll draws the wolf menace.
+    let armed = false
+    for (let seed = 0; seed < 400; seed++) {
+      const cc = makeChar({ age: 20, currentArc: arcForAge(20), seasonCount: 1 })
+      rollWorldEvents(cc, reg, new Rng(seed))
+      if (activeMenace(cc)) {
+        armed = true
+        break
+      }
+    }
+    expect(armed).toBe(true)
+  })
+
+  it("an armed menace boosts matching combat encounters in effectiveWeight", () => {
+    const c = makeChar({ age: 20, currentArc: arcForAge(20) })
+    setCombatMenace(c, wolfMenace)
+    const boosted = effectiveWeight(wolfTerritory, c)
+    const plain = effectiveWeight(ogreRaids, c)
+    expect(boosted).toBe(wolfTerritory.weight * 2.5)
+    expect(plain).toBe(ogreRaids.weight) // no dire_wolf/werewolf in ogre_raids
+  })
+
+  it("menaceWeightMultiplier returns 1 for non-matching encounters", () => {
+    const c = makeChar()
+    setCombatMenace(c, wolfMenace)
+    expect(menaceWeightMultiplier(golemAwakening, c)).toBe(1)
+    expect(menaceWeightMultiplier(wolfTerritory, c)).toBe(2.5)
+  })
+
+  it("registerMenaceKill counts kills and resolves at the target", () => {
+    const c = makeChar()
+    setCombatMenace(c, wolfMenace)
+    expect(registerMenaceKill(c, "dire_wolf")).toBe(false)
+    expect(registerMenaceKill(c, "rat_swarm")).toBe(false) // not menaced
+    expect(activeMenace(c)!.kills).toBe(1)
+    for (let i = 0; i < 3; i++) registerMenaceKill(c, "werewolf")
+    // 4 total kills (1 dire_wolf + 3 werewolf) — menace resolved.
+    expect(activeMenace(c)).toBeNull()
+    expect(registerMenaceKill(c, "dire_wolf")).toBe(false)
+  })
+
+  it("a menace expires after its duration seasons", () => {
+    const c = makeChar({ seasonCount: 1 })
+    setCombatMenace(c, wolfMenace)
+    expect(activeMenace(c)).not.toBeNull()
+    c.seasonCount = 5 // armed at season 1, untilSeason 4
+    expect(activeMenace(c)).toBeNull()
+  })
+
+  it("a menace stays active through its final season and clears the stale flag", () => {
+    const c = makeChar({ seasonCount: 1 })
+    setCombatMenace(c, wolfMenace)
+    c.seasonCount = 4 // untilSeason = 1 + 3 = 4 → still active at the boundary
+    expect(activeMenace(c)).not.toBeNull()
+    c.seasonCount = 5
+    expect(activeMenace(c)).toBeNull()
+    // The expired blob is lazily deleted, not left dangling.
+    expect(c.flags["combat_menace"]).toBeUndefined()
   })
 })
 

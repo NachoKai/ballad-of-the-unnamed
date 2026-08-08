@@ -9,6 +9,7 @@ import type {
 import { arcForAge, GAME_CONFIG } from "../../../shared/config.js"
 import { Rng } from "../../../shared/rng.js"
 import { loadContent } from "../../content/registry.js"
+import { activeMenace, setCombatMenace } from "../helpers.js"
 import {
   applyStatusesTick,
   combatView,
@@ -743,6 +744,68 @@ describe("endCombat rewards and outcomes", () => {
     state2.result = "won"
     endCombat(c2, ev, state2, reg, new Rng(1))
     expect(c2.counters["boss_kills"] ?? 0).toBe(1)
+  })
+
+  it("kingdom_hero/legend expansion creatures award elite and boss counters", () => {
+    // Phase 2 roster: every new high-tier creature is registered and bumps the
+    // right rarity counter on a forced kill.
+    for (const [id, counter] of [
+      ["manticore", "elite_kills"],
+      ["griffon", "elite_kills"],
+      ["storm_titan", "elite_kills"],
+      ["sphinx", "elite_kills"],
+      ["hydra", "boss_kills"],
+      ["sea_serpent", "boss_kills"],
+      ["demon_lord", "boss_kills"],
+    ] as [string, string][]) {
+      expect(reg.creaturesById.has(id)).toBe(true)
+      const c = makeChar({ class: "warrior", age: 16, currentArc: arcForAge(16) })
+      const state = startCombatState(roadAmbush, c, reg, new Rng(1))
+      state.creature = reg.creaturesById.get(id)!
+      state.creatureHealth = 0
+      state.over = true
+      state.result = "won"
+      endCombat(c, roadAmbush, state, reg, new Rng(1))
+      expect(c.counters[counter] ?? 0, `${id} should bump ${counter}`).toBe(1)
+      expect(c.counters["monsters_killed"] ?? 0).toBe(1)
+    }
+  })
+
+  it("winning against a menaced creature counts toward resolving the menace", () => {
+    const wolfMenace = reg.events.find((e) => e.id === "world_wolf_menace")!
+    expect(wolfMenace.combatMenace).toBeDefined()
+    const c = makeChar({ class: "warrior", age: 20, currentArc: arcForAge(20) })
+    setCombatMenace(c, wolfMenace)
+    const state = startCombatState(roadAmbush, c, reg, new Rng(1))
+    state.creature = reg.creaturesById.get("dire_wolf")!
+    state.creatureHealth = 0
+    state.over = true
+    state.result = "won"
+    endCombat(c, roadAmbush, state, reg, new Rng(1))
+    // One dire_wolf of the 4-kill target — menace still active.
+    expect(activeMenace(c)).not.toBeNull()
+    expect(activeMenace(c)!.kills).toBe(1)
+    expect(c.counters["menaces_resolved"] ?? 0).toBe(0)
+  })
+
+  it("enough menaced kills resolves the menace and narrates it", () => {
+    const wolfMenace = reg.events.find((e) => e.id === "world_wolf_menace")!
+    const c = makeChar({ class: "warrior", age: 20, currentArc: arcForAge(20) })
+    setCombatMenace(c, wolfMenace)
+    // 4 kills against menaced creatures (dire_wolf + 3 werewolf); the 4th
+    // reaches the kill target and resolves the menace.
+    let lastOut: ReturnType<typeof endCombat>
+    for (const id of ["dire_wolf", "werewolf", "werewolf", "werewolf"]) {
+      const state = startCombatState(roadAmbush, c, reg, new Rng(1))
+      state.creature = reg.creaturesById.get(id)!
+      state.creatureHealth = 0
+      state.over = true
+      state.result = "won"
+      lastOut = endCombat(c, roadAmbush, state, reg, new Rng(1))
+    }
+    expect(lastOut!.narrative).toMatch(/menace is over/i)
+    expect(activeMenace(c)).toBeNull()
+    expect(c.counters["menaces_resolved"] ?? 0).toBe(1)
   })
 
   it("item drops grant inventory when the roll lands", () => {

@@ -132,5 +132,102 @@
       "es": "La torre se alza desde un campo muerto, blanca como un hueso contra el gris. En su cima, un trono de cornamentas sostiene a un rey que ha sobrevivido a su reino — y a todos los que cantaron sus canciones. Levanta un dedo, y las puertas se cierran detrás de ti."
     },
     "combat": { "creatures": ["lich_king"] }
+  },
+  {
+    "id": "manticore_nest",
+    "type": "combat",
+    "minAge": 40,
+    "maxAge": 79,
+    "weight": 2,
+    "location": "foreign",
+    "narrative": {
+      "en": "The crags stink of old blood and crushed bone. A nest of woven spines crowns the highest ledge, and something with a lion's body and a scorpion's tail watches you pick your way up. It has been a long time since anything dared this climb.",
+      "es": "Los riscos apestan a sangre vieja y huesos molidos. Un nido de espinas trenzadas corona el peñasco más alto, y algo con cuerpo de león y cola de escorpión observa cómo te abres paso. Hace mucho que nada se atreve a esta subida."
+    },
+    "combat": { "creatures": ["manticore", "griffon"] }
+  },
+  {
+    "id": "griffon_eyrie",
+    "type": "combat",
+    "minAge": 40,
+    "maxAge": 79,
+    "weight": 1,
+    "location": "road",
+    "excludeIfCompletedIds": ["griffon_eyrie"],
+    "narrative": {
+      "en": "A winged shadow sweeps low over the pass, and the horses panic before you can calm them. A griffon lands on the crag ahead, wings mantling, its cry a clarion that says the heights are not yours to take.",
+      "es": "Una sombra alada barre el paso a baja altura, y los caballos entran en pánico antes de que puedas calmarlos. Un grifo se posa en el peñasco, alas desplegadas, su grito un clarín que anuncia que las alturas no son tuyas."
+    },
+    "combat": { "creatures": ["griffon"] }
+  },
+  {
+    "id": "hydra_bog",
+    "type": "combat",
+    "minAge": 40,
+    "maxAge": 79,
+    "weight": 1,
+    "location": "dungeon",
+    "excludeIfCompletedIds": ["hydra_bog"],
+    "narrative": {
+      "en": "The marsh waters ripple in circles that have no center. Seven heads rise from the murk in slow succession, seven pairs of eyes fixing on you with the patience of something that has killed every hunter who ever came this way.",
+      "es": "Las aguas del pantano ondulan en círculos sin centro. Siete cabezas emergen de la turbiedad en lenta sucesión, siete pares de ojos clavándose en ti con la paciencia de algo que ha matado a todo cazador que vino por aquí."
+    },
+    "combat": { "creatures": ["hydra"] }
+  },
+  {
+    "id": "sphinx_riddle",
+    "type": "combat",
+    "minAge": 60,
+    "maxAge": 99,
+    "weight": 1,
+    "location": "foreign",
+    "excludeIfCompletedIds": ["sphinx_riddle"],
+    "narrative": {
+      "en": "The temple door has no handle — only a beast of sun-bleached stone crouched before it, wings folded, eyes half-lidded. 'Answer, wanderer, or be answered,' it says. The sand begins to stir at its feet.",
+      "es": "La puerta del templo no tiene picaporte — solo una bestia de piedra blanqueada por el sol agazapada ante ella, alas plegadas, ojos entrecerrados. 'Responde, caminante, o serás respondido', dice. La arena comienza a agitarse a sus pies."
+    },
+    "combat": { "creatures": ["sphinx"] }
+  },
+  {
+    "id": "storm_titan_wake",
+    "type": "combat",
+    "minAge": 40,
+    "maxAge": 79,
+    "weight": 1,
+    "location": "court",
+    "excludeIfCompletedIds": ["storm_titan_wake"],
+    "narrative": {
+      "en": "The great bell of the hall tolls without a hand — then the roof groans and tears. A colossus of bronze and cloud steps through, every stride shaking dust from the rafters. Some treaties were never meant to be signed.",
+      "es": "La gran campana de la sala tañe sin mano alguna — entonces el techo gime y se rasga. Un coloso de bronce y nube entra a zancadas, cada paso sacudiendo el polvo de las vigas. Algunos tratados jamás debieron firmarse."
+    },
+    "combat": { "creatures": ["storm_titan"] }
+  },
+  {
+    "id": "sea_serpent_waters",
+    "type": "combat",
+    "minAge": 60,
+    "maxAge": 99,
+    "weight": 1,
+    "location": "foreign",
+    "excludeIfCompletedIds": ["sea_serpent_waters"],
+    "narrative": {
+      "en": "The sea goes suddenly flat, the gulls gone silent. A spine the length of a ship's keel breaks the surface, then another, then a head like a drowned storm rises to look at you. The water remembers every song about it.",
+      "es": "El mar se aplana de pronto, las gaviotas callan. Una espina del largo de la quilla de un barco rompe la superficie, luego otra, luego una cabeza como una tormenta ahogada se alza para mirarte. El agua recuerda cada canción sobre ella."
+    },
+    "combat": { "creatures": ["sea_serpent"] }
+  },
+  {
+    "id": "demon_gate",
+    "type": "combat",
+    "minAge": 60,
+    "maxAge": 99,
+    "weight": 1,
+    "location": "dungeon",
+    "excludeIfCompletedIds": ["demon_gate"],
+    "narrative": {
+      "en": "The ritual chamber is scorched black, and in its center a gate of fused bone and brass stands ajar. Heat pours out, wrong heat, and a voice older than the kingdom says: 'You may enter, or you may run. Choose quickly — the door does not stay open.'",
+      "es": "La cámara ritual está chamuscada de negro, y en su centro un portal de hueso fundido y bronce está entreabierto. Un calor sale de él, un calor equivocado, y una voz más vieja que el reino dice: 'Puedes entrar, o puedes huir. Elige rápido — la puerta no queda abierta.'"
+    },
+    "combat": { "creatures": ["demon_lord"] }
   }
 ]

@@ -201,6 +201,21 @@ export function CombatGame({ locale, event, onMove, onFinished, finishedResult }
         {t(locale, "combatRound")} <b>{view.round}</b>
       </RoundHeader>
 
+      {view.menace && (
+        <MenaceBanner>
+          <Skull size={15} strokeWidth={2} aria-hidden="true" />
+          <MenaceText>
+            <b>{view.menace.headline}</b>
+            <span>
+              {interpolate(t(locale, "combatMenaceProgress"), {
+                kills: view.menace.kills,
+                target: view.menace.killTarget,
+              })}
+            </span>
+          </MenaceText>
+        </MenaceBanner>
+      )}
+
       <CombatantsGrid>
         {/* Creature panel */}
         <CombatantCard $side="creature">
@@ -431,6 +446,38 @@ const RoundHeader = styled.div`
     color: ${({ theme }) => theme.colors.goldBright};
     font-size: 16px;
     font-variant-numeric: tabular-nums;
+  }
+`
+
+const MenaceBanner = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 18px;
+  border: 1px solid rgba(200, 90, 90, 0.45);
+  border-left: 3px solid ${({ theme }) => theme.colors.bloodBright};
+  border-radius: ${({ theme }) => theme.radii.sm};
+  background: linear-gradient(90deg, rgba(200, 90, 90, 0.12), rgba(200, 90, 90, 0.03));
+  color: ${({ theme }) => theme.colors.bloodBright};
+`
+
+const MenaceText = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 13px;
+
+  b {
+    font-family: ${({ theme }) => theme.fonts.display};
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: ${({ theme }) => theme.colors.parchment};
+  }
+
+  span {
+    font-style: italic;
+    color: ${({ theme }) => theme.colors.muted};
   }
 `
 

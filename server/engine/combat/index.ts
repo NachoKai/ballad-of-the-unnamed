@@ -25,10 +25,12 @@ import { GAME_CONFIG } from "../../../shared/config.js"
 // inside function bodies (ESM live bindings resolve at call time).
 import { ageUp, bumpCounter, defaultFaction, heroicOrPeaceful, rollDeath } from "../engine.js"
 import {
+  activeMenace,
   adjustReputation,
   clearExpiredHunted,
   deductStamina,
   recomputeDerived,
+  registerMenaceKill,
   updateMarketValue,
   updateMomentum,
 } from "../helpers.js"
@@ -430,6 +432,23 @@ export function combatView(
   for (const mv of state.creature.moves) {
     moveNames[mv.id] = loc(mv.name ?? { en: mv.id, es: mv.id }, locale)
   }
+  // Surface the active menace when it targets this fight's creature, so the
+  // client can show why the encounter feels emboldened (and the kill progress).
+  const menace = activeMenace(c)
+  const menaceInfo =
+    menace && menace.creatureIds.includes(state.creature.id)
+      ? {
+          headline: loc(
+            registry.events.find((e) => e.id === menace.eventId)?.worldEventHeadline ?? {
+              en: "A menace stirs",
+              es: "Una amenaza se agita",
+            },
+            locale,
+          ),
+          kills: menace.kills,
+          killTarget: menace.killTarget,
+        }
+      : undefined
   return {
     creature: {
       id: state.creature.id,
@@ -469,6 +488,7 @@ export function combatView(
     creatureMoveNames: moveNames,
     over: state.over,
     result: state.result,
+    menace: menaceInfo,
   }
 }
 
@@ -543,6 +563,15 @@ export function endCombat(
         : `El ${loc(creature.name, c.locale)} cae. Te quedas con el botín: ${gold} de oro${
             fame > 0 ? `, ${fame} de fama` : ""
           }.`
+    // A kill toward the active combat menace (world-event linkage) — resolves
+    // the menace when the kill target is met (flag cleared by the helper).
+    if (registerMenaceKill(c, creature.id)) {
+      bumpCounter(c, "menaces_resolved")
+      narrative =
+        c.locale === "en"
+          ? `${narrative} The menace is over — the roads are quiet again.`
+          : `${narrative} La amenaza terminó — los caminos vuelven a estar en calma.`
+    }
   } else if (state.result === "fled") {
     bumpCounter(c, "flees_count")
     narrative =

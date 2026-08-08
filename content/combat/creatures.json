@@ -626,5 +626,375 @@
       ]
     },
     "fleeDifficulty": 0.7
+  },
+  {
+    "id": "manticore",
+    "name": { "en": "Manticore", "es": "Manticora" },
+    "icon": "target",
+    "rarity": "elite",
+    "arcs": ["kingdom_hero", "legend"],
+    "canKillPlayer": true,
+    "health": 95,
+    "attack": 13,
+    "defense": 5,
+    "magicResistance": 4,
+    "moves": [
+      {
+        "id": "tail_sting",
+        "name": { "en": "Tail Sting", "es": "Aguijón de Cola" },
+        "weight": 65,
+        "effect": "damage",
+        "damageMultiplier": 1.0
+      },
+      {
+        "id": "dive",
+        "name": { "en": "Dive", "es": "Picada" },
+        "weight": 20,
+        "effect": "damage",
+        "damageMultiplier": 1.25,
+        "minHealthFraction": 0.5
+      },
+      {
+        "id": "screech",
+        "name": { "en": "Screech", "es": "Chillido" },
+        "weight": 10,
+        "effect": "debuff_player_attack",
+        "debuffAmount": 4
+      },
+      {
+        "id": "retreat",
+        "name": { "en": "Flee", "es": "Huida" },
+        "weight": 5,
+        "effect": "flee_if_low_hp",
+        "maxHealthFraction": 0.15
+      }
+    ],
+    "loot": {
+      "goldMin": 55,
+      "goldMax": 95,
+      "fameMin": 5,
+      "fameMax": 8,
+      "items": [{ "itemId": "elixir_of_vigor", "chance": 0.3 }]
+    },
+    "fleeDifficulty": 0.45
+  },
+  {
+    "id": "griffon",
+    "name": { "en": "Griffon", "es": "Grifo" },
+    "icon": "star",
+    "rarity": "elite",
+    "arcs": ["kingdom_hero", "legend"],
+    "canKillPlayer": true,
+    "health": 88,
+    "attack": 12,
+    "defense": 5,
+    "magicResistance": 5,
+    "moves": [
+      {
+        "id": "talons",
+        "name": { "en": "Talons", "es": "Garras" },
+        "weight": 65,
+        "effect": "damage",
+        "damageMultiplier": 1.0
+      },
+      {
+        "id": "dive",
+        "name": { "en": "Dive", "es": "Picada" },
+        "weight": 20,
+        "effect": "damage",
+        "damageMultiplier": 1.2,
+        "minHealthFraction": 0.5
+      },
+      {
+        "id": "feather_storm",
+        "name": { "en": "Feather Storm", "es": "Tormenta de Plumas" },
+        "weight": 10,
+        "effect": "debuff_player_attack",
+        "debuffAmount": 3
+      },
+      {
+        "id": "retreat",
+        "name": { "en": "Flee", "es": "Huida" },
+        "weight": 5,
+        "effect": "flee_if_low_hp",
+        "maxHealthFraction": 0.15
+      }
+    ],
+    "loot": {
+      "goldMin": 50,
+      "goldMax": 90,
+      "fameMin": 5,
+      "fameMax": 8,
+      "items": [{ "itemId": "trophy_wing", "chance": 0.25 }]
+    },
+    "fleeDifficulty": 0.4
+  },
+  {
+    "id": "hydra",
+    "name": { "en": "Hydra", "es": "Hidra" },
+    "icon": "layers",
+    "rarity": "boss",
+    "arcs": ["kingdom_hero", "legend"],
+    "canKillPlayer": true,
+    "health": 150,
+    "attack": 15,
+    "defense": 6,
+    "magicResistance": 8,
+    "moves": [
+      {
+        "id": "fang",
+        "name": { "en": "Fang", "es": "Colmillo" },
+        "weight": 65,
+        "effect": "damage",
+        "damageMultiplier": 1.0
+      },
+      {
+        "id": "acid_spit",
+        "name": { "en": "Acid Spit", "es": "Escupitajo Ácido" },
+        "weight": 20,
+        "effect": "damage",
+        "damageMultiplier": 1.3,
+        "minHealthFraction": 0.5
+      },
+      {
+        "id": "regrow_heads",
+        "name": { "en": "Regrow Heads", "es": "Recrecer Cabezas" },
+        "weight": 10,
+        "effect": "heal",
+        "healAmount": 20,
+        "maxHealthFraction": 0.5
+      },
+      {
+        "id": "enrage",
+        "name": { "en": "Enrage", "es": "Enfurecerse" },
+        "weight": 5,
+        "effect": "self_buff_attack",
+        "maxHealthFraction": 0.5
+      }
+    ],
+    "loot": {
+      "goldMin": 130,
+      "goldMax": 200,
+      "fameMin": 12,
+      "fameMax": 18,
+      "items": [
+        { "itemId": "elixir_of_vigor", "chance": 0.4 },
+        { "itemId": "battle_surgeon", "chance": 0.3 }
+      ]
+    },
+    "fleeDifficulty": 0.6
+  },
+  {
+    "id": "sphinx",
+    "name": { "en": "Sphinx", "es": "Esfinge" },
+    "icon": "brain",
+    "rarity": "elite",
+    "arcs": ["legend", "old_hero"],
+    "canKillPlayer": true,
+    "health": 105,
+    "attack": 13,
+    "defense": 4,
+    "magicResistance": 10,
+    "moves": [
+      {
+        "id": "claw",
+        "name": { "en": "Claw", "es": "Garra" },
+        "weight": 65,
+        "effect": "damage",
+        "damageMultiplier": 1.0
+      },
+      {
+        "id": "riddle_curse",
+        "name": { "en": "Riddle Curse", "es": "Maldición del Enigma" },
+        "weight": 20,
+        "effect": "debuff_player_attack",
+        "debuffAmount": 5
+      },
+      {
+        "id": "sandstorm",
+        "name": { "en": "Sandstorm", "es": "Tormenta de Arena" },
+        "weight": 10,
+        "effect": "damage",
+        "damageMultiplier": 1.2,
+        "minHealthFraction": 0.5
+      },
+      {
+        "id": "vanish",
+        "name": { "en": "Vanish", "es": "Desvanecerse" },
+        "weight": 5,
+        "effect": "flee_if_low_hp",
+        "maxHealthFraction": 0.15
+      }
+    ],
+    "loot": {
+      "goldMin": 65,
+      "goldMax": 105,
+      "fameMin": 7,
+      "fameMax": 10,
+      "items": [{ "itemId": "royal_tutor", "chance": 0.3 }]
+    },
+    "fleeDifficulty": 0.5
+  },
+  {
+    "id": "storm_titan",
+    "name": { "en": "Storm Titan", "es": "Titán de la Tormenta" },
+    "icon": "zap",
+    "rarity": "elite",
+    "arcs": ["kingdom_hero", "legend"],
+    "canKillPlayer": true,
+    "health": 130,
+    "attack": 14,
+    "defense": 6,
+    "magicResistance": 5,
+    "moves": [
+      {
+        "id": "thunder_slam",
+        "name": { "en": "Thunder Slam", "es": "Golpe de Trueno" },
+        "weight": 65,
+        "effect": "damage",
+        "damageMultiplier": 1.1
+      },
+      {
+        "id": "lightning_call",
+        "name": { "en": "Lightning Call", "es": "Llamada del Rayo" },
+        "weight": 20,
+        "effect": "damage",
+        "damageMultiplier": 1.3,
+        "minHealthFraction": 0.5
+      },
+      {
+        "id": "warcry",
+        "name": { "en": "Warcry", "es": "Grito de Guerra" },
+        "weight": 10,
+        "effect": "self_buff_attack",
+        "maxHealthFraction": 0.5
+      },
+      {
+        "id": "storm_heal",
+        "name": { "en": "Storm Mend", "es": "Curación de Tormenta" },
+        "weight": 5,
+        "effect": "heal",
+        "healAmount": 18,
+        "maxHealthFraction": 0.4
+      }
+    ],
+    "loot": {
+      "goldMin": 90,
+      "goldMax": 140,
+      "fameMin": 10,
+      "fameMax": 14,
+      "items": [{ "itemId": "battle_healer", "chance": 0.3 }]
+    },
+    "fleeDifficulty": 0.5
+  },
+  {
+    "id": "sea_serpent",
+    "name": { "en": "Sea Serpent", "es": "Serpiente Marina" },
+    "icon": "fish",
+    "rarity": "boss",
+    "arcs": ["legend", "old_hero"],
+    "canKillPlayer": true,
+    "health": 190,
+    "attack": 17,
+    "defense": 7,
+    "magicResistance": 9,
+    "moves": [
+      {
+        "id": "crushing_coils",
+        "name": { "en": "Crushing Coils", "es": "Anillos Aplastantes" },
+        "weight": 65,
+        "effect": "damage",
+        "damageMultiplier": 1.1
+      },
+      {
+        "id": "tidal_breath",
+        "name": { "en": "Tidal Breath", "es": "Aliento de Marea" },
+        "weight": 20,
+        "effect": "damage",
+        "damageMultiplier": 1.3,
+        "minHealthFraction": 0.5
+      },
+      {
+        "id": "drag_below",
+        "name": { "en": "Drag Below", "es": "Arrastrar al Fondo" },
+        "weight": 10,
+        "effect": "debuff_player_attack",
+        "debuffAmount": 5
+      },
+      {
+        "id": "thick_scales",
+        "name": { "en": "Thick Scales", "es": "Escamas Gruesas" },
+        "weight": 5,
+        "effect": "heal",
+        "healAmount": 24,
+        "maxHealthFraction": 0.4
+      }
+    ],
+    "loot": {
+      "goldMin": 190,
+      "goldMax": 280,
+      "fameMin": 18,
+      "fameMax": 26,
+      "items": [
+        { "itemId": "elixir_of_vigor", "chance": 0.4 },
+        { "itemId": "lucky_charm", "chance": 0.3 }
+      ]
+    },
+    "fleeDifficulty": 0.65
+  },
+  {
+    "id": "demon_lord",
+    "name": { "en": "Demon Lord", "es": "Señor Demonio" },
+    "icon": "wand",
+    "rarity": "boss",
+    "arcs": ["legend", "old_hero"],
+    "canKillPlayer": true,
+    "health": 185,
+    "attack": 16,
+    "defense": 6,
+    "magicResistance": 12,
+    "moves": [
+      {
+        "id": "hellfire",
+        "name": { "en": "Hellfire", "es": "Fuego Infernal" },
+        "weight": 65,
+        "effect": "damage",
+        "damageMultiplier": 1.1
+      },
+      {
+        "id": "soul_drain",
+        "name": { "en": "Soul Drain", "es": "Drenar Alma" },
+        "weight": 20,
+        "effect": "damage",
+        "damageMultiplier": 1.3,
+        "minHealthFraction": 0.5
+      },
+      {
+        "id": "dread_aura",
+        "name": { "en": "Dread Aura", "es": "Aura de Pavor" },
+        "weight": 10,
+        "effect": "debuff_player_attack",
+        "debuffAmount": 6
+      },
+      {
+        "id": "demonic_renewal",
+        "name": { "en": "Demonic Renewal", "es": "Renovación Demoníaca" },
+        "weight": 5,
+        "effect": "heal",
+        "healAmount": 26,
+        "maxHealthFraction": 0.4
+      }
+    ],
+    "loot": {
+      "goldMin": 200,
+      "goldMax": 320,
+      "fameMin": 20,
+      "fameMax": 30,
+      "items": [
+        { "itemId": "battle_surgeon", "chance": 0.4 },
+        { "itemId": "scout_dossier", "chance": 0.4 }
+      ]
+    },
+    "fleeDifficulty": 0.7
   }
 ]

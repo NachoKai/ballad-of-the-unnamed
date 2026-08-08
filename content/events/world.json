@@ -578,5 +578,110 @@
         }
       }
     ]
+  },
+  {
+    "id": "world_wolf_menace",
+    "type": "world",
+    "minAge": 18,
+    "maxAge": 59,
+    "weight": 2,
+    "narrative": {
+      "en": "Wolves are hunting the east road again — a great grey pack with a taste for lone travelers. Villages arm their watch, and the caravans take the long way around. Someone with a blade could make a name ending this.",
+      "es": "Los lobos vuelven a cazar en el camino del este — una gran jauría gris con gusto por los viajeros solitarios. Las aldeas arman sus vigilias y las caravanas dan el rodeo. Alguien con espada podría hacerse un nombre terminando con esto."
+    },
+    "worldEventHeadline": {
+      "en": "Wolves Terrorize the East Road",
+      "es": "Los Lobos Aterrorizan el Camino del Este"
+    },
+    "combatMenace": {
+      "creatureIds": ["dire_wolf", "werewolf"],
+      "weightMultiplier": 2.5,
+      "durationSeasons": 3,
+      "killTarget": 4
+    },
+    "choices": [
+      {
+        "id": "acknowledge",
+        "rarity": "common",
+        "label": {
+          "en": "The world moves on",
+          "es": "El mundo sigue"
+        },
+        "narrative": {
+          "en": "The road stays dangerous until someone proves otherwise.",
+          "es": "El camino seguirá siendo peligroso hasta que alguien demuestre lo contrario."
+        }
+      }
+    ]
+  },
+  {
+    "id": "world_ogre_menace",
+    "type": "world",
+    "minAge": 26,
+    "maxAge": 79,
+    "weight": 2,
+    "narrative": {
+      "en": "An ogre warband has been burning farmsteads toward the {slot:worldLocation} pass. Militia drafts are posted in every village square. The bounty on a chief's head would buy a small holding.",
+      "es": "Una banda de ogros ha estado quemando granjas rumbo al paso de {slot:worldLocation}. Las levas de milicia se publican en cada plaza de aldea. La recompensa por la cabeza de un cacique alcanzaría para una pequeña propiedad."
+    },
+    "worldEventHeadline": {
+      "en": "Ogre Warband Marches on {slot:worldLocation}",
+      "es": "Una Banda de Ogros Avanza sobre {slot:worldLocation}"
+    },
+    "combatMenace": {
+      "creatureIds": ["ogre_chief", "stone_golem"],
+      "weightMultiplier": 2.5,
+      "durationSeasons": 3,
+      "killTarget": 3
+    },
+    "choices": [
+      {
+        "id": "acknowledge",
+        "rarity": "common",
+        "label": {
+          "en": "The world moves on",
+          "es": "El mundo sigue"
+        },
+        "narrative": {
+          "en": "The war drums keep time without you.",
+          "es": "Los tambores de guerra siguen el compás sin ti."
+        }
+      }
+    ]
+  },
+  {
+    "id": "world_dragon_menace",
+    "type": "world",
+    "minAge": 40,
+    "maxAge": 99,
+    "weight": 1,
+    "narrative": {
+      "en": "A dragon has taken the high valley, and its shadow is the new weather. Shepherds count their flocks from the far ridge. Kings offer titles to whoever can thin the bloodline — or settle the beast's appetite.",
+      "es": "Un dragón se ha adueñado del valle alto, y su sombra es el nuevo clima. Los pastores cuentan sus rebaños desde la cresta lejana. Los reyes ofrecen títulos a quien pueda diezmar el linaje — o calmar el apetito de la bestia."
+    },
+    "worldEventHeadline": {
+      "en": "Dragon Claims the High Valley",
+      "es": "Un Dragón Reclama el Valle Alto"
+    },
+    "combatMenace": {
+      "creatureIds": ["young_dragon", "elder_dragon"],
+      "weightMultiplier": 3,
+      "durationSeasons": 2,
+      "killTarget": 1
+    },
+    "choices": [
+      {
+        "id": "acknowledge",
+        "rarity": "common",
+        "label": {
+          "en": "The world moves on",
+          "es": "El mundo sigue"
+        },
+        "narrative": {
+          "en": "Every throne waits to see who will carry the first scar.",
+          "es": "Cada trono espera a ver quién llevará la primera cicatriz."
+        }
+      }
+    ]
   }
 ]

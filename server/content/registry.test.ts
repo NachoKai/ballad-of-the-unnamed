@@ -52,6 +52,21 @@ describe("combat content", () => {
     }
   })
 
+  it("every world-event combat menace targets real creatures with sane knobs", () => {
+    const menaceEvents = reg.events.filter((e) => e.combatMenace)
+    expect(menaceEvents.length).toBeGreaterThan(0)
+    for (const ev of menaceEvents) {
+      expect(ev.type).toBe("world")
+      expect(ev.combatMenace!.creatureIds.length).toBeGreaterThan(0)
+      for (const cid of ev.combatMenace!.creatureIds) {
+        expect(reg.creaturesById.has(cid), `${ev.id} menace unknown ${cid}`).toBe(true)
+      }
+      expect(ev.combatMenace!.weightMultiplier).toBeGreaterThan(1)
+      expect(ev.combatMenace!.durationSeasons).toBeGreaterThanOrEqual(1)
+      expect(ev.combatMenace!.killTarget).toBeGreaterThanOrEqual(1)
+    }
+  })
+
   it("every encounter keeps an arc-viable creature across its whole age range", () => {
     // Guard against the empty-pool crash: an encounter is eligible at an age
     // where its entire creature pool is arc-filtered out.
