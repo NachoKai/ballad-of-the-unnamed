@@ -374,6 +374,11 @@ const en: StringMap = {
   liability: "Liability",
   tooltip_liability:
     "What the realm knows of your darker deeds. A high liability opens grim paths — and closes clean ones.",
+  details: "Details",
+  tooltip_details: "Your full chronicle — renown, rival, and the road ahead.",
+  personality: "Personality",
+  stats: "Status",
+  attributes: "Attributes",
 
   // Interactive minigames (tic-tac-toe / five-sign hand game).
   minigameChooseMove: "Make your move",
@@ -562,7 +567,7 @@ const es: StringMap = {
   class_ranger: "Montaraz",
   class_cleric: "Clérigo",
   class_bard: "Bardo",
-  shop: "Tienda",
+  shop: "TIENDA",
   shop_retinue: "Séquito",
   shop_consumable: "Consumibles",
   shop_luxury: "Lujo",
@@ -807,7 +812,8 @@ const es: StringMap = {
     "Dónde te encuentras. En el exterior, eres un extraño en una región extranjera.",
   tooltip_rival_focus:
     "Lo que tu rival persigue en esta vida. Supéralo en este frente para lograr gloria.",
-  tooltip_rival_faction: "Qué estandarte ondea tu rival. Las alianzas cambian — incluso para ellos.",
+  tooltip_rival_faction:
+    "Qué estandarte ondea tu rival. Las alianzas cambian — incluso para ellos.",
   tooltip_relationships: "Los vínculos que forjaste — quién recuerda tu nombre y cómo te ve.",
   tooltip_abandon:
     "Abandonar esta vida y empezar de nuevo. El progreso de esta partida se pierde para siempre.",
@@ -834,6 +840,11 @@ const es: StringMap = {
   liability: "Expediente",
   tooltip_liability:
     "Lo que el reino sabe de tus actos más oscuros. Un expediente alto abre caminos sombríos — y cierra los limpios.",
+  details: "Detalles",
+  tooltip_details: "Tu crónica completa — renombre, rival y el camino por delante.",
+  personality: "Personalidad",
+  stats: "Estado",
+  attributes: "Atributos",
 
   // Interactive minigames (tic-tac-toe / five-sign hand game).
   minigameChooseMove: "Hacé tu jugada",

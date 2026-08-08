@@ -25,6 +25,7 @@ import { LeaderboardScreen } from "./components/LeaderboardScreen"
 import { CollectionScreen } from "./components/CollectionScreen"
 import { TutorialModal } from "./components/TutorialModal"
 import { ShopModal } from "./components/ShopModal"
+import { DetailsModal } from "./components/DetailsModal"
 import { Toasts, useAchievementToasts } from "./components/Toasts"
 import { LinkBtn } from "./components/ui/Button"
 import { ShinyText } from "./components/ui/ShinyText"
@@ -55,6 +56,7 @@ export default function App() {
   const [turnNarrative, setTurnNarrative] = useState<string | null>(null)
   const [ending, setEnding] = useState<EndingData | null>(null)
   const [shopOpen, setShopOpen] = useState(false)
+  const [detailsOpen, setDetailsOpen] = useState(false)
   const [canBuy, setCanBuy] = useState(false)
   // Auto-show the tutorial on first visit only (no saved flag). Afterwards the
   // modal is still reopenable any time via "How to play".
@@ -501,6 +503,7 @@ export default function App() {
             minigameFinishedResult={pendingMinigameResult}
             onAbandon={abandonRun}
             onShopOpen={() => setShopOpen(true)}
+            onDetailsOpen={() => setDetailsOpen(true)}
             canBuy={canBuy}
           />
         )}
@@ -518,6 +521,14 @@ export default function App() {
               )
               if (res.newAchievements?.length) pushToasts(res.newAchievements)
             }}
+          />
+        )}
+
+        {screen === "game" && detailsOpen && character && (
+          <DetailsModal
+            locale={locale}
+            character={character}
+            onClose={() => setDetailsOpen(false)}
           />
         )}
 

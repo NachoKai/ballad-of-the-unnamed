@@ -87,7 +87,7 @@ const Overlay = styled.div`
 
 const Modal = styled.div`
   width: 100%;
-  max-width: 560px;
+  max-width: 720px;
   max-height: 82vh;
   overflow-y: auto;
   background: ${({ theme }) => theme.colors.ink2};
@@ -97,6 +97,10 @@ const Modal = styled.div`
 `
 
 const Header = styled.div`
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: ${({ theme }) => theme.colors.ink2};
   display: flex;
   align-items: center;
   gap: 12px;
@@ -153,7 +157,7 @@ const PageText = styled(TextPretty)`
   color: ${({ theme }) => theme.colors.parchmentDim};
   font-size: 17px;
   line-height: 1.55;
-  max-width: 46ch;
+  max-width: 62ch;
 `
 
 const Footer = styled.div`

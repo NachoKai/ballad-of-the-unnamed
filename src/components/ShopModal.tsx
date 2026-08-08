@@ -126,8 +126,8 @@ const Overlay = styled.div`
 
 const Modal = styled.div`
   width: 100%;
-  max-width: 640px;
-  max-height: 80vh;
+  max-width: 920px;
+  max-height: 92vh;
   overflow-y: auto;
   background: ${({ theme }) => theme.colors.ink2};
   border: 1px solid ${({ theme }) => theme.colors.line};
@@ -136,6 +136,10 @@ const Modal = styled.div`
 `
 
 const Header = styled.div`
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: ${({ theme }) => theme.colors.ink2};
   display: flex;
   align-items: center;
   gap: 16px;

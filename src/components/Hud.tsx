@@ -1,26 +1,23 @@
 import {
   Activity,
-  Crosshair,
+  Award,
+  Dumbbell,
   Globe,
   Home,
+  ScrollText,
   Skull,
   Store,
-  Swords,
-  TrendingDown,
-  TrendingUp,
   TriangleAlert,
 } from "lucide-react"
-import type { Arc, CharacterState, Locale } from "@shared/types"
+import type { CharacterState, Locale } from "@shared/types"
 import { STAT_KEYS } from "@shared/types"
 import { keyframes, styled } from "styled-components"
 import { genderize } from "@shared/genderize"
-import { affinityTierId, GAME_CONFIG, REPUTATION_TIERS, reputationTierId } from "@shared/config"
+import { GAME_CONFIG, REPUTATION_TIERS, reputationTierId } from "@shared/config"
 import { gt as translateFor, t as translate } from "../i18n/strings"
 import { STAT_ABBR } from "../constants"
-import { personalitySummary } from "../lib/personality"
-import { careerTitle } from "../lib/careerTitle"
+import type { Theme } from "../theme"
 import { FactionFlag } from "./FactionFlag"
-import { bondTone } from "../lib/bonds"
 import { Panel } from "./ui/Panel"
 import { Tag } from "./ui/Tag"
 import { Tooltip } from "./ui/Tooltip"
@@ -30,11 +27,8 @@ interface Props {
   locale: Locale
   onShopOpen?: () => void
   canBuy?: boolean
+  onDetailsOpen?: () => void
 }
-
-// The chapters of a life of renown, in order. "child" is skipped — it is the
-// prologue, not a rung on the road to power.
-const PATH_ARCS: Arc[] = ["adventurer", "mercenary", "kingdom_hero", "legend", "old_hero"]
 
 // Reputation is clamped 0..100 server-side; the bar fills across the whole
 // scale so the tier tick marks stay at their true positions.
@@ -42,30 +36,19 @@ function repFillPct(value: number): number {
   return Math.max(0, Math.min(100, value))
 }
 
-export function Hud({ character: c, locale, onShopOpen, canBuy }: Props) {
+export function Hud({ character: c, locale, onShopOpen, canBuy, onDetailsOpen }: Props) {
   const t = (k: string) => translate(locale, k)
   const className = t(`class_${c.class}`)
-  const momentumKey =
-    c.momentum === "rising"
-      ? "momentumRising"
-      : c.momentum === "falling"
-        ? "momentumFalling"
-        : "momentumNormal"
-  const arcKey = `arc_${c.currentArc}`
-  const career = careerTitle(locale, c.gender, c.currentArc, c.powerLevel)
-  const MomentumIcon =
-    c.momentum === "rising" ? TrendingUp : c.momentum === "falling" ? TrendingDown : Activity
-  const currentArcIndex = PATH_ARCS.indexOf(c.currentArc)
   const inventoryCount = c.inventory?.reduce((s, i) => s + i.qty, 0) ?? 0
-  const bonds = c.relationships ?? []
-  const playerScore = (c.counters["battles_won"] ?? 0) + (c.counters["quests_completed"] ?? 0)
 
   const primaryRep =
     c.reputations.length > 0
       ? c.reputations.reduce((a, b) => (a.peakValue >= b.peakValue ? a : b))
       : null
 
-  const topTags = personalitySummary(c.personality)
+  const liability = c.liability ?? 0
+  const notorious = liability >= GAME_CONFIG.liabilityNotoriousThreshold
+  const liabilityTint = liability > 0 ? (notorious ? "blood" : "stain") : undefined
 
   return (
     <HudWrap>
@@ -106,21 +89,6 @@ export function Hud({ character: c, locale, onShopOpen, canBuy }: Props) {
               </Tag>
             </Tooltip>
           )}
-          {topTags.length > 0 && (
-            <Tooltip content={t("tooltip_personality")}>
-              <Tag $tone="sage">
-                {topTags
-                  .map((tag) => translateFor(locale, c.gender, `personality_tag_${tag}`))
-                  .join(" · ")}
-              </Tag>
-            </Tooltip>
-          )}
-          <Tooltip content={t("tooltip_arc")}>
-            <Tag $tone="gold">{t(arcKey)}</Tag>
-          </Tooltip>
-          <Tooltip content={t("tooltip_careerTitle")}>
-            <Tag $tone="gold">{career}</Tag>
-          </Tooltip>
           {c.huntedBy && (
             <Tooltip content={t("tooltip_hunted")}>
               <Tag $tone="blood">
@@ -128,12 +96,15 @@ export function Hud({ character: c, locale, onShopOpen, canBuy }: Props) {
               </Tag>
             </Tooltip>
           )}
-          <Tooltip content={t("tooltip_momentum")} align="end">
-            <Tag $tone={c.momentum === "falling" ? "blood" : "sage"}>
-              <MomentumIcon size={12} aria-hidden="true" /> {t(momentumKey)}
-            </Tag>
-          </Tooltip>
         </TagList>
+        {onDetailsOpen && (
+          <Tooltip content={t("tooltip_details")} align="end">
+            <DetailsBtn type="button" onClick={onDetailsOpen}>
+              <ScrollText size={14} aria-hidden="true" />
+              {t("details")}
+            </DetailsBtn>
+          </Tooltip>
+        )}
         {onShopOpen && (
           <ShopTip content={t("tooltip_shop")} align="end">
             <ShopBtn type="button" onClick={onShopOpen}>
@@ -146,7 +117,16 @@ export function Hud({ character: c, locale, onShopOpen, canBuy }: Props) {
         )}
       </TagRow>
 
+      <SectionLabel>
+        <Activity size={12} aria-hidden="true" /> {t("stats")}
+      </SectionLabel>
       <PrimaryGrid>
+        <PrimaryTip content={t("tooltip_age")}>
+          <PrimaryCard $tint="bronze">
+            <CardLabel $tint="bronze">{t("age")}</CardLabel>
+            <CardValue $tint="bronze">{c.age}</CardValue>
+          </PrimaryCard>
+        </PrimaryTip>
         <PrimaryTip content={t("tooltip_health")}>
           <PrimaryCard $tint="sage" $low={c.health < 30}>
             <CardLabel>{t("health")}</CardLabel>
@@ -165,119 +145,54 @@ export function Hud({ character: c, locale, onShopOpen, canBuy }: Props) {
             <CardValue $tint="gold">{c.gold}</CardValue>
           </PrimaryCard>
         </PrimaryTip>
+        <PrimaryTip content={t("tooltip_fame")}>
+          <PrimaryCard $tint="silver">
+            <CardLabel $tint="silver">{t("fame")}</CardLabel>
+            <CardValue $tint="silver">{c.fame}</CardValue>
+          </PrimaryCard>
+        </PrimaryTip>
+        <PrimaryTip content={t("tooltip_power")}>
+          <PrimaryCard $tint="blood">
+            <CardLabel $tint="blood">{t("power")}</CardLabel>
+            <CardValue $tint="blood">{c.powerLevel}</CardValue>
+          </PrimaryCard>
+        </PrimaryTip>
+        <PrimaryTip content={t("tooltip_liability")}>
+          <PrimaryCard $tint={liabilityTint}>
+            <CardLabel $tint={liabilityTint}>
+              {notorious && <Skull size={12} aria-hidden="true" />}
+              {t("liability")}
+            </CardLabel>
+            <CardValue $tint={liabilityTint}>{liability}</CardValue>
+          </PrimaryCard>
+        </PrimaryTip>
+        <PrimaryTip content={t("tooltip_mv")}>
+          <PrimaryCard $tint="gold">
+            <CardLabel $tint="gold">MV</CardLabel>
+            <CardValue $tint="gold">{c.marketValue}</CardValue>
+          </PrimaryCard>
+        </PrimaryTip>
+      </PrimaryGrid>
+
+      <SectionLabel>
+        <Dumbbell size={12} aria-hidden="true" /> {t("attributes")}
+      </SectionLabel>
+      <AttrRow>
         {STAT_KEYS.map((k) => (
           <PrimaryTip key={k} content={t(`tooltip_stat_${k}`)}>
-            <PrimaryCard>
-              <CardLabel>{t(STAT_ABBR[k])}</CardLabel>
-              <CardValue>{c[k]}</CardValue>
+            <PrimaryCard $tint={STAT_TINT[k]}>
+              <CardLabel $tint={STAT_TINT[k]}>{t(STAT_ABBR[k])}</CardLabel>
+              <CardValue $tint={STAT_TINT[k]}>{c[k]}</CardValue>
             </PrimaryCard>
           </PrimaryTip>
         ))}
-      </PrimaryGrid>
+      </AttrRow>
 
-      <DetailsSection>
-        <Tooltip content={t("tooltip_age")}>
-          <Meter>
-            {t("age")} <b>{c.age}</b>
-          </Meter>
-        </Tooltip>
-        <Tooltip content={t("tooltip_fame")}>
-          <Meter>
-            {t("fame")} <b>{c.fame}</b>
-          </Meter>
-        </Tooltip>
-        <Tooltip content={t("tooltip_power")}>
-          <Meter>
-            {t("power")} <b>{c.powerLevel}</b>
-          </Meter>
-        </Tooltip>
-        <Tooltip content={t("tooltip_liability")}>
-          <LiabilityMeter
-            $high={(c.liability ?? 0) >= GAME_CONFIG.liabilityNotoriousThreshold}
-            $stained={(c.liability ?? 0) > 0}
-          >
-            {(c.liability ?? 0) >= GAME_CONFIG.liabilityNotoriousThreshold && (
-              <Skull size={12} aria-hidden="true" />
-            )}
-            {t("liability")} <b>{c.liability ?? 0}</b>
-          </LiabilityMeter>
-        </Tooltip>
-        <Tooltip content={t("tooltip_mv")}>
-          <Meter>
-            MV <b>{c.marketValue}</b>
-          </Meter>
-        </Tooltip>
-        {c.rival && (
-          <>
-            <Tooltip content={t("tooltip_rival")}>
-              <Tag $tone="blood">
-                <Swords size={12} /> {c.rival.name} {t("vs")} <b>{playerScore}</b>—
-                <b>{c.rival.score}</b>
-              </Tag>
-            </Tooltip>
-            {c.rival.factionId && (
-              <Tooltip content={t("tooltip_rival_faction")} side="bottom">
-                <FactionChip>
-                  <FactionFlag factionId={c.rival.factionId} size={12} />
-                  {t(`faction_${c.rival.factionId}`)}
-                </FactionChip>
-              </Tooltip>
-            )}
-            {c.rival.focusId && (
-              <Tooltip content={t("tooltip_rival_focus")} side="bottom">
-                <FocusChip>
-                  <Crosshair size={12} aria-hidden="true" /> {t(`rivalFocus_${c.rival.focusId}`)}
-                </FocusChip>
-              </Tooltip>
-            )}
-          </>
-        )}
-      </DetailsSection>
-
-      {bonds.length > 0 && (
-        <BondsWrap>
-          <BondsBar>
-            <Tooltip content={t("tooltip_relationships")} side="bottom" align="start">
-              <BondsHead>
-                {t("relationships")}
-                <BondsCount>{bonds.length}</BondsCount>
-              </BondsHead>
-            </Tooltip>
-            <BondsList>
-              {[...bonds]
-                .sort((a, b) => b.affinity - a.affinity)
-                .map((rel) => (
-                  <Tag key={rel.npcId} $tone={bondTone(rel.affinity)}>
-                    <b>{rel.npcName ?? rel.npcId}</b>
-                    <span>
-                      {t(`npcRole_${rel.npcRole ?? "acquaintance"}`)} ·{" "}
-                      {t(`affinity_tier_${affinityTierId(rel.affinity)}`)} [{rel.affinity}]
-                    </span>
-                  </Tag>
-                ))}
-            </BondsList>
-          </BondsBar>
-        </BondsWrap>
+      {primaryRep && (
+        <SectionLabel>
+          <Award size={12} aria-hidden="true" /> {t("reputation")}
+        </SectionLabel>
       )}
-
-      <PathTip content={t("tooltip_path")} side="bottom" fill>
-        <PathRow>
-          <PathLabel>{t("pathLabel")}</PathLabel>
-          <PathSteps>
-            {PATH_ARCS.map((arc, i) => {
-              const state =
-                i < currentArcIndex ? "reached" : i === currentArcIndex ? "current" : "future"
-              return (
-                <PathStepGroup key={arc}>
-                  {i > 0 && <PathArrow aria-hidden="true">→</PathArrow>}
-                  <PathStep $state={state}>{t(`arc_${arc}`)}</PathStep>
-                </PathStepGroup>
-              )
-            })}
-          </PathSteps>
-        </PathRow>
-      </PathTip>
-
       <StatusRow>
         {primaryRep && (
           <RepTip content={t("tooltip_reputation")}>
@@ -319,8 +234,6 @@ const TagRow = styled.div`
   align-items: flex-start;
   gap: 12px;
   padding: 10px 18px 14px;
-  border-top: 1px solid ${({ theme }) => theme.colors.line};
-  border-bottom: 1px solid ${({ theme }) => theme.colors.line};
 `
 
 const TagList = styled.div`
@@ -381,19 +294,85 @@ const NameSep = styled.span`
   color: ${({ theme }) => theme.colors.gold};
 `
 
+const SectionLabel = styled.h3`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 18px 18px 0;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.colors.gold};
+
+  svg {
+    flex-shrink: 0;
+    opacity: 0.85;
+  }
+
+  &::after {
+    content: "";
+    height: 1px;
+    flex: 1;
+    background: linear-gradient(90deg, ${({ theme }) => theme.colors.line2}, transparent);
+  }
+`
+
 const PrimaryGrid = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  padding: 20px 18px 14px;
+  padding: 20px 18px 18px;
 `
+
+const AttrRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 14px 18px 18px;
+`
+
+type TileTint = "gold" | "sage" | "blood" | "stain" | "bronze" | "silver" | "blue" | "purple"
+
+// Per-attribute accent: the classic RPG color-coding for the five core stats.
+const STAT_TINT: Record<string, TileTint> = {
+  strength: "blood",
+  dexterity: "gold",
+  constitution: "sage",
+  intelligence: "blue",
+  charisma: "purple",
+}
+
+// Single source of truth for the card accent colors, keyed by tint.
+function tileColor(tint: TileTint | undefined, theme: Theme, fallback: string): string {
+  switch (tint) {
+    case "gold":
+      return theme.colors.goldBright
+    case "sage":
+      return theme.colors.sage
+    case "blood":
+      return theme.colors.bloodBright
+    case "stain":
+      return theme.colors.rarity.volatile
+    case "bronze":
+      return theme.colors.rank3
+    case "silver":
+      return theme.colors.rank2
+    case "blue":
+      return theme.colors.rarity.rare
+    case "purple":
+      return theme.colors.rarity.epic
+    default:
+      return fallback
+  }
+}
 
 const PrimaryTip = styled(Tooltip)`
   flex: 1 1 0;
   min-width: 104px;
 `
 
-const PrimaryCard = styled.span<{ $tint?: "gold" | "sage"; $low?: boolean }>`
+const PrimaryCard = styled.span<{ $tint?: TileTint; $low?: boolean }>`
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -405,93 +384,32 @@ const PrimaryCard = styled.span<{ $tint?: "gold" | "sage"; $low?: boolean }>`
   border: 1px solid ${({ theme }) => theme.colors.line};
   border-top: 2px solid
     ${({ $tint, $low, theme }) =>
-      $low
-        ? theme.colors.bloodBright
-        : $tint === "gold"
-          ? theme.colors.goldBright
-          : $tint === "sage"
-            ? theme.colors.sage
-            : theme.colors.line2};
+      $low ? theme.colors.bloodBright : tileColor($tint, theme, theme.colors.line2)};
   border-radius: ${({ theme }) => theme.radii.sm};
 `
 
-const CardLabel = styled.span`
+const CardLabel = styled.span<{ $tint?: TileTint }>`
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   font-size: 11px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: ${({ theme }) => theme.colors.muted};
+  color: ${({ $tint, theme }) => tileColor($tint, theme, theme.colors.muted)};
+
+  svg {
+    flex-shrink: 0;
+  }
 `
 
-const CardValue = styled.span<{ $tint?: "gold"; $low?: boolean }>`
+const CardValue = styled.span<{ $tint?: TileTint; $low?: boolean }>`
   font-family: ${({ theme }) => theme.fonts.display};
   font-size: 24px;
   line-height: 1;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
   color: ${({ $tint, $low, theme }) =>
-    $low
-      ? theme.colors.bloodBright
-      : $tint === "gold"
-        ? theme.colors.goldBright
-        : theme.colors.parchment};
-`
-
-const DetailsSection = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px 12px;
-  padding: 14px 18px;
-`
-
-const Meter = styled.span<{ $low?: boolean }>`
-  display: inline-flex;
-  align-items: baseline;
-  gap: 5px;
-  padding: 4px 11px;
-  background: ${({ theme }) => theme.colors.ink3};
-  border: 1px solid ${({ $low, theme }) => ($low ? theme.colors.bloodBright : theme.colors.line)};
-  border-radius: 999px;
-  font-size: 13px;
-  letter-spacing: 0.03em;
-  white-space: nowrap;
-  color: ${({ $low, theme }) => ($low ? theme.colors.bloodBright : theme.colors.muted)};
-  text-transform: uppercase;
-
-  b {
-    font-size: 15px;
-    font-variant-numeric: tabular-nums;
-    color: ${({ $low, theme }) => ($low ? theme.colors.bloodBright : theme.colors.parchment)};
-    text-transform: none;
-  }
-`
-
-const LiabilityMeter = styled.span<{ $high?: boolean; $stained?: boolean }>`
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 4px 11px;
-  background: ${({ $high, theme }) => ($high ? "rgba(191, 30, 30, 0.14)" : theme.colors.ink3)};
-  border: 1px solid ${({ $high, theme }) => ($high ? theme.colors.bloodBright : theme.colors.line)};
-  border-radius: 999px;
-  font-size: 13px;
-  letter-spacing: 0.03em;
-  white-space: nowrap;
-  text-transform: uppercase;
-  color: ${({ $high, $stained, theme }) =>
-    $high ? theme.colors.bloodBright : $stained ? "#c9803c" : theme.colors.muted};
-  box-shadow: ${({ $high }) => ($high ? `0 0 12px rgba(191, 30, 30, 0.25)` : "none")};
-
-  b {
-    font-size: 15px;
-    font-variant-numeric: tabular-nums;
-    color: ${({ $high, theme }) => ($high ? theme.colors.bloodBright : theme.colors.parchment)};
-    text-transform: none;
-  }
-
-  svg {
-    flex-shrink: 0;
-  }
+    $low ? theme.colors.bloodBright : tileColor($tint, theme, theme.colors.parchment)};
 `
 
 const ShopBtn = styled.button`
@@ -559,18 +477,33 @@ const InvBadge = styled.span`
   font-weight: 700;
 `
 
-const FocusChip = styled(Tag)`
-  margin-left: auto;
-`
-
-const FactionChip = styled(Tag)`
+const DetailsBtn = styled.button`
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  background: ${({ theme }) => theme.colors.ink3};
+  border: 1px solid ${({ theme }) => theme.colors.line2};
+  border-radius: 999px;
+  padding: 5px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: ${({ theme }) => theme.colors.parchmentDim};
+  cursor: pointer;
+  transition: all 0.15s;
+
+  &:hover {
+    border-color: ${({ theme }) => theme.colors.gold};
+    color: ${({ theme }) => theme.colors.goldBright};
+    box-shadow: 0 0 10px rgba(201, 164, 76, 0.2);
+  }
 `
 
 const RepTip = styled(Tooltip)`
-  flex: 0 0 100%;
+  flex: 1 1 auto;
+  min-width: 260px;
 `
 
 const RepBar = styled.div`
@@ -640,116 +573,4 @@ const StatusRow = styled.div`
   align-items: center;
   gap: 10px;
   padding: 16px 18px 18px;
-  border-top: 1px solid ${({ theme }) => theme.colors.line};
-`
-
-const BondsWrap = styled.div`
-  padding: 4px 18px 12px;
-`
-
-const BondsBar = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  width: 100%;
-  padding: 8px 12px;
-  background: ${({ theme }) => theme.colors.ink3};
-  border: 1px solid ${({ theme }) => theme.colors.line};
-  border-radius: ${({ theme }) => theme.radii.sm};
-`
-
-const BondsHead = styled.span`
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 11px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: ${({ theme }) => theme.colors.gold};
-`
-
-const BondsCount = styled.span`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 18px;
-  height: 18px;
-  padding: 0 5px;
-  border-radius: 999px;
-  background: ${({ theme }) => theme.colors.ink};
-  color: ${({ theme }) => theme.colors.goldBright};
-  font-size: 11px;
-  font-weight: 700;
-`
-
-const BondsList = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-`
-
-const PathTip = styled(Tooltip)`
-  display: block;
-  padding: 12px 18px 8px;
-`
-
-const PathRow = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 14px;
-  background: ${({ theme }) => theme.colors.ink3};
-  border: 1px solid ${({ theme }) => theme.colors.line};
-  border-radius: ${({ theme }) => theme.radii.sm};
-`
-
-const PathLabel = styled.span`
-  flex-shrink: 0;
-  font-size: 11px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: ${({ theme }) => theme.colors.gold};
-`
-
-const PathSteps = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
-  min-width: 0;
-`
-
-const PathStepGroup = styled.span`
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-`
-
-const PathArrow = styled.span`
-  color: ${({ theme }) => theme.colors.muted2};
-  font-size: 13px;
-`
-
-const PathStep = styled.span<{ $state: "reached" | "current" | "future" }>`
-  padding: 2px 8px;
-  border: 1px solid
-    ${({ $state, theme }) =>
-      $state === "current"
-        ? theme.colors.goldBright
-        : $state === "reached"
-          ? theme.colors.line2
-          : theme.colors.line};
-  border-radius: 999px;
-  font-size: 12px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  color: ${({ $state, theme }) =>
-    $state === "current"
-      ? theme.colors.goldBright
-      : $state === "reached"
-        ? theme.colors.parchmentDim
-        : theme.colors.muted2};
-  background: ${({ $state }) =>
-    $state === "current" ? "rgba(201, 164, 76, 0.12)" : "transparent"};
 `

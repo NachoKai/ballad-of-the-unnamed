@@ -40,6 +40,7 @@ interface Props {
   minigameFinishedResult: MinigameMoveResponse | null
   onAbandon: () => void
   onShopOpen?: () => void
+  onDetailsOpen?: () => void
   canBuy?: boolean
 }
 
@@ -54,6 +55,7 @@ export function GameScreen({
   minigameFinishedResult,
   onAbandon,
   onShopOpen,
+  onDetailsOpen,
   canBuy,
 }: Props) {
   const [busy, setBusy] = useState(false)
@@ -199,7 +201,13 @@ export function GameScreen({
 
   return (
     <GameLayout>
-      <Hud locale={locale} character={character} onShopOpen={onShopOpen} canBuy={canBuy} />
+      <Hud
+        locale={locale}
+        character={character}
+        onShopOpen={onShopOpen}
+        onDetailsOpen={onDetailsOpen}
+        canBuy={canBuy}
+      />
 
       <Scene aria-live="polite">
         <SceneTime>

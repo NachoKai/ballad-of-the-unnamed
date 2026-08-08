@@ -86,7 +86,7 @@ achievement (future content).
   `rest_midwife_soak`, `rest_lighthouse_room`, `rest_cold_spring`,
   `rest_windmill_loft`, `rest_orchard_nap`, `rest_ferryman_hut`,
   `rest_tollhouse_room` — each with stamina-restoring choices via
-  `staminaDelta` (20–45) plus health/gold/reputation levers, and the familiar
+  `staminaDelta` (20-45) plus health/gold/reputation levers, and the familiar
   stat-gated "push on" volatile option. Bilingual en/es, validated by
   `pnpm i18n:check` + the server suite.
 
