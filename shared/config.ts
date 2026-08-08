@@ -218,6 +218,16 @@ export const RIVAL_NAMES: string[] = [
   "Rowan",
 ]
 
+// Whole-arc tournament names, keyed by the name key used for the intro/fixture
+// generation. Shared between engine.ts (serving the arc) and epilogue.ts
+// (naming a won tournament in the "Your Story" scrollback).
+export const TOURNAMENT_NAMES: Record<string, { en: string; es: string }> = {
+  grand_melee: { en: "the Grand Melee", es: "la Gran Justa" },
+  high_duel: { en: "the High Duel", es: "el Duelo Mayor" },
+  tournament_of_arms: { en: "the Tournament of Arms", es: "el Torneo de Armas" },
+  champions_games: { en: "the Champions' Games", es: "los Juegos de los Campeones" },
+}
+
 // Clan specialties for offer generation.
 export const CLAN_SPECIALTIES: { id: string; label: { en: string; es: string } }[] = [
   { id: "gold", label: { en: "Wealth & Trade", es: "Riqueza y Comercio" } },

@@ -20,7 +20,12 @@ import {
   tournamentFixtureEvent,
   tournamentIntroEvent,
 } from "./engine.js"
-import { generateDistinctions, generateEpilogue, generateEpithet } from "./epilogue.js"
+import {
+  generateDistinctions,
+  generateEpilogue,
+  generateEpithet,
+  renderStoryLog,
+} from "./epilogue.js"
 import { evaluateAchievements } from "./achievements.js"
 import { applyInteractiveMove, createInteractiveState, interactiveTier } from "./minigames/index.js"
 import { endCombat, prepareCombatServe, resolveCombatRound } from "./combat/index.js"
@@ -1527,6 +1532,333 @@ describe("market value", () => {
     }
     resolveChoice(c, event, "ok", reg, new Rng(1))
     expect(c.marketValue).toBeGreaterThan(0)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Per-encounter seen tracking (Trophy Hall collection)
+// ---------------------------------------------------------------------------
+describe("per-encounter seen tracking", () => {
+  it("createCharacter starts with an empty seen list", () => {
+    const c = createCharacter({
+      id: "seen0",
+      name: "X",
+      classId: "warrior",
+      locale: "en",
+      registry: reg,
+    })
+    expect(c.seenEventIds).toEqual([])
+  })
+
+  it("buildServedEvent records the served authored encounter id", () => {
+    const c = makeChar()
+    const rng = new Rng(1234)
+    // The first beat can be synthetic (e.g. a clan offer) — skip ahead until
+    // an authored encounter is served, then assert it was recorded.
+    let servedId = ""
+    for (let i = 0; i < 10; i++) {
+      const { event } = buildServedEvent(c, reg, rng)
+      if (!event.id.startsWith("__")) {
+        servedId = event.id
+        break
+      }
+    }
+    expect(servedId).not.toBe("")
+    expect(c.seenEventIds).toContain(servedId)
+  })
+
+  it("synthetic beats are never recorded", () => {
+    const c = makeChar({ turn: GAME_CONFIG.seasonLength })
+    const { event } = buildServedEvent(c, reg, new Rng(42))
+    expect(event.id).toBe("__season_summary__")
+    expect(c.seenEventIds ?? []).toHaveLength(0)
+  })
+
+  it("records every authored encounter played across a season, deduped and in order", () => {
+    const c = makeChar()
+    const rng = new Rng(hashSeed("seen-tracking"))
+    const eventsOffered: string[] = []
+    for (let i = 0; i < GAME_CONFIG.seasonLength + 1; i++) {
+      const { event } = buildServedEvent(c, reg, rng)
+      if (!event.id.startsWith("__")) eventsOffered.push(event.id)
+      if (playTurn(c, rng)) break
+    }
+    expect(eventsOffered.length).toBeGreaterThan(0)
+    // Every authored encounter the player was offered ended up recorded — the
+    // recorded list may be strictly longer because playTurn serves (and thus
+    // records) additional beats between the offers observed here.
+    const deduped = [...new Set(eventsOffered)]
+    for (const id of deduped) {
+      expect(c.seenEventIds).toContain(id)
+    }
+    // No synthetic beat ever leaked into the list.
+    for (const id of c.seenEventIds ?? []) {
+      expect(id.startsWith("__")).toBe(false)
+    }
+    // Serve order preserved: the offered events appear in seenEventIds in the
+    // same relative order (interleaved serves can sit between them, so this is
+    // a subsequence check, not an equality check).
+    let matched = 0
+    for (const id of c.seenEventIds ?? []) {
+      if (id === deduped[matched]) matched++
+    }
+    expect(matched).toBe(deduped.length)
+  })
+
+  it("seen tracking is deterministic per seed and never perturbs the main stream", () => {
+    const play = (seed: string) => {
+      const c = createCharacter({
+        id: "x",
+        name: "X",
+        classId: "warrior",
+        origin: "humble",
+        locale: "en",
+        registry: reg,
+      })
+      const rng = new Rng(hashSeed(seed))
+      c.rival = generateRival(c, reg, rng)
+      for (let i = 0; i < GAME_CONFIG.seasonLength + 1; i++) {
+        if (playTurn(c, rng)) break
+      }
+      return { seen: (c.seenEventIds ?? []).slice(), turn: c.turn, gold: c.gold }
+    }
+    const a = play("seen-determinism")
+    const b = play("seen-determinism")
+    expect(a.seen).toEqual(b.seen)
+    expect(a.turn).toBe(b.turn)
+    expect(a.gold).toBe(b.gold)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Turn log / "Your Story" recap (turn_log table + ending screen)
+// ---------------------------------------------------------------------------
+describe("turn log (Your Story recap)", () => {
+  it("resolveChoice records the resolved turn in the story log", () => {
+    const c = makeChar()
+    const event: EventContent = {
+      id: "log_test",
+      minAge: 0,
+      maxAge: 99,
+      weight: 1,
+      narrative: { en: "", es: "" },
+      choices: [
+        {
+          id: "pick",
+          rarity: "common",
+          tag: "Humble",
+          label: { en: "", es: "" },
+          narrative: { en: "", es: "" },
+        },
+      ],
+    }
+    resolveChoice(c, event, "pick", reg, new Rng(1))
+    expect(c.turnLog).toHaveLength(1)
+    expect(c.turnLog![0]).toMatchObject({
+      turn: 1,
+      eventId: "log_test",
+      choiceId: "pick",
+      tag: "Humble",
+    })
+  })
+
+  it("synthetic beats are never recorded", () => {
+    const c = makeChar()
+    const ev = retirementOfferEvent()
+    resolveChoice(c, ev, "retire", reg, new Rng(1))
+    expect(c.status).toBe("retired")
+    expect(c.turnLog ?? []).toHaveLength(0)
+  })
+
+  it("applyMinigameOutcome records the outcome tier as the choice key", () => {
+    const c = createCharacter({
+      id: "story-mg",
+      name: "Tier",
+      classId: "warrior",
+      origin: "humble",
+      locale: "en",
+      registry: reg,
+    })
+    const event: EventContent = {
+      id: "story_minigame",
+      type: "minigame",
+      minAge: 0,
+      maxAge: 99,
+      weight: 1,
+      narrative: { en: "n", es: "n" },
+      outcomes: {
+        critical: { narrative: { en: "crit", es: "crit" } },
+        success: { narrative: { en: "ok", es: "ok" } },
+        partial: { narrative: { en: "p", es: "p" } },
+        fail: { narrative: { en: "f", es: "f" } },
+      },
+    }
+    applyMinigameOutcome(c, event, "critical", reg, new Rng(1))
+    expect(c.turnLog).toHaveLength(1)
+    expect(c.turnLog![0]).toMatchObject({ eventId: "story_minigame", choiceId: "tier:critical" })
+  })
+
+  it("combat turns record the result key", () => {
+    const ev = reg.combats[0]
+    if (!ev) throw new Error("no combat fixture")
+    const c = makeChar({ class: "warrior" })
+    const rng = new Rng(7)
+    prepareCombatServe(ev, c, "en", reg, rng)
+    const state = c.pendingCombat!
+    const kit = reg.classKits[c.class]
+    let guard = 0
+    while (!state.over && guard < 40) {
+      resolveCombatRound(state, c, kit, { kind: "attack" }, rng)
+      guard++
+    }
+    endCombat(c, ev, state, reg, rng)
+    const last = c.turnLog?.[c.turnLog.length - 1]
+    expect(last?.eventId).toBe(ev.id)
+    expect(last?.choiceId).toMatch(/^result:/)
+  })
+
+  it("renderStoryLog renders localized story lines from the ids", () => {
+    const c = makeChar({
+      turn: 3,
+      turnLog: [
+        { turn: 1, eventId: "tavern_stranger", choiceId: "humble", tag: "Humble" },
+        { turn: 2, eventId: "duel_final_blow", choiceId: "tier:success" },
+      ],
+    })
+    const en = renderStoryLog(c, reg, "en")
+    expect(en).toHaveLength(2)
+    expect(en[0].headline).toBeTruthy()
+    expect(en[0].detail).toBeTruthy()
+    expect(en[0].tag).toBe("Humble")
+    expect(en[1].detail).toBeTruthy()
+    expect(en[0].season).toBe(1)
+    const es = renderStoryLog(c, reg, "es")
+    expect(es).toHaveLength(2)
+    expect(es[0].headline).toBeTruthy()
+    expect(es[1].detail).toBeTruthy()
+  })
+
+  it("story log is deterministic per seed", () => {
+    const play = (seed: string) => {
+      const c = createCharacter({
+        id: "x",
+        name: "X",
+        classId: "warrior",
+        origin: "humble",
+        locale: "en",
+        registry: reg,
+      })
+      const rng = new Rng(hashSeed(seed))
+      c.rival = generateRival(c, reg, rng)
+      for (let i = 0; i < GAME_CONFIG.seasonLength + 1; i++) {
+        if (playTurn(c, rng)) break
+      }
+      return (c.turnLog ?? []).map((e) => `${e.turn}:${e.eventId}:${e.choiceId}`)
+    }
+    expect(play("story-determinism")).toEqual(play("story-determinism"))
+  })
+
+  it("same-seed runs render byte-identical story text (no per-run id in the seed)", () => {
+    const play = (seed: string, id: string) => {
+      const c = createCharacter({
+        id,
+        name: "X",
+        classId: "warrior",
+        origin: "humble",
+        locale: "en",
+        registry: reg,
+      })
+      const rng = new Rng(hashSeed(seed))
+      c.rival = generateRival(c, reg, rng)
+      for (let i = 0; i < GAME_CONFIG.seasonLength + 1; i++) {
+        if (playTurn(c, rng)) break
+      }
+      return renderStoryLog(c, reg, "en").map(
+        (s) => `${s.turn}:${s.season}:${s.headline}|${s.detail}|${s.tag ?? ""}`,
+      )
+    }
+    const a = play("story-render-determinism", "run-a")
+    const b = play("story-render-determinism", "run-b")
+    expect(a.length).toBeGreaterThan(0)
+    expect(a).toEqual(b)
+  })
+
+  it("joinClan records a clan life beat with the faction id", () => {
+    const c = makeChar()
+    joinClan(c, "golden_lotus", 3, 400)
+    expect(c.turnLog).toHaveLength(1)
+    expect(c.turnLog![0]).toMatchObject({
+      turn: 0,
+      eventId: "__clan_join__",
+      choiceId: "golden_lotus",
+      kind: "clan",
+    })
+  })
+
+  it("a won tournament records a tournament life beat (runner-up does not)", () => {
+    // Last fixture, already at 1 win: forcing a success tier wins the arc.
+    const c = makeChar({
+      turn: 12,
+      pendingTournament: { mode: "luck", fixturesLeft: 1, won: 1, nameKey: "grand_melee" },
+    })
+    const fixture = tournamentFixtureEvent(c)
+    applyMinigameOutcome(c, fixture, "success", reg, new Rng(1))
+    expect(c.pendingTournamentResult).toMatchObject({ won: true, nameKey: "grand_melee" })
+    const win = c.turnLog?.[c.turnLog.length - 1]
+    expect(win).toMatchObject({
+      eventId: "__tournament_win__",
+      choiceId: "grand_melee",
+      kind: "tournament",
+    })
+
+    // Runner-up: 1 win out of 3 fixtures → no tournament beat.
+    const c2 = makeChar({
+      turn: 12,
+      pendingTournament: { mode: "luck", fixturesLeft: 1, won: 0, nameKey: "high_duel" },
+    })
+    const fixture2 = tournamentFixtureEvent(c2)
+    applyMinigameOutcome(c2, fixture2, "success", reg, new Rng(1))
+    expect(c2.pendingTournamentResult).toMatchObject({ won: false, nameKey: "high_duel" })
+    const last = c2.turnLog?.[c2.turnLog.length - 1]
+    expect(last?.eventId).not.toBe("__tournament_win__")
+  })
+
+  it("renderStoryLog renders the special life beats with localized headlines", () => {
+    const c = makeChar({
+      turn: 9,
+      turnLog: [
+        { turn: 1, eventId: "tavern_stranger", choiceId: "humble", kind: "event" },
+        { turn: 3, eventId: "__shop__", choiceId: "camp_cook", kind: "shop" },
+        { turn: 5, eventId: "__clan_join__", choiceId: "golden_lotus", kind: "clan" },
+        { turn: 7, eventId: "__tournament_win__", choiceId: "grand_melee", kind: "tournament" },
+      ],
+    })
+    const en = renderStoryLog(c, reg, "en")
+    expect(en).toHaveLength(4)
+    expect(en[1]).toMatchObject({ headline: "Camp Cook", kind: "shop" })
+    expect(en[1].detail).toBe("Purchased from the market")
+    expect(en[2]).toMatchObject({ headline: "Golden Lotus", kind: "clan" })
+    expect(en[3]).toMatchObject({ headline: "the Grand Melee", kind: "tournament" })
+    expect(en[0].kind).toBe("event")
+
+    const es = renderStoryLog(c, reg, "es")
+    expect(es[1].headline).toBe("Cocinero de campaña")
+    expect(es[1].detail).toBe("Comprado en el mercado")
+    expect(es[3].headline).toBe("la Gran Justa")
+  })
+
+  it("special beats with unknown content ids degrade to the raw id, never crash", () => {
+    const c = makeChar({
+      turn: 2,
+      turnLog: [
+        { turn: 1, eventId: "__shop__", choiceId: "nonexistent_item", kind: "shop" },
+        { turn: 2, eventId: "__clan_join__", choiceId: "vanished_faction", kind: "clan" },
+      ],
+    })
+    const en = renderStoryLog(c, reg, "en")
+    expect(en[0].headline).toBe("nonexistent_item")
+    expect(en[1].headline).toBe("vanished_faction")
+    expect(en[1].detail).toBe("Swore allegiance")
   })
 })
 

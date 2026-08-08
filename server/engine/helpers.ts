@@ -4,12 +4,14 @@ import type {
   EventContent,
   Locale,
   LocaleMap,
+  PersonalityTag,
   Rarity,
   RelationshipEntry,
   RoleSignal,
   ServedChoice,
   ServedEvent,
   StatKey,
+  TurnLogKind,
 } from "../../shared/types.js"
 import { STAT_KEYS } from "../../shared/types.js"
 import type { Rng } from "../../shared/rng.js"
@@ -54,6 +56,27 @@ export function fillSlots(
 
 export function localize(map: LocaleMap, locale: Locale): string {
   return map[locale] ?? map.en
+}
+
+// Record one resolved beat of the run's story. Language-neutral (ids only,
+// never baked prose) so the ending screen can re-render the "Your Story"
+// scrollback in either locale, and the `turn_log` table can be mirrored at run
+// end. `choiceId` is the chosen choice's id for regular events, a
+// `tier:<tier>` / `result:<result>` key for minigames and combat encounters,
+// or the item/faction/tournament id for the special kinds. Synthetic `__*`
+// beats are skipped (they are scaffolding, not story) unless a non-event
+// `kind` is passed explicitly — special life beats deliberately use a
+// synthetic marker as their eventId (e.g. shop purchases).
+export function logTurn(
+  c: CharacterState,
+  eventId: string,
+  choiceId: string,
+  tag?: PersonalityTag,
+  kind: TurnLogKind = "event",
+): void {
+  if (!eventId || (eventId.startsWith("__") && kind === "event")) return
+  const log = c.turnLog ?? (c.turnLog = [])
+  log.push({ turn: c.turn, eventId, choiceId, tag, kind })
 }
 
 // Power level is a single scalar used for scoring and matchmaking-style gates.
@@ -282,6 +305,9 @@ export function joinClan(
 ): void {
   c.currentClanId = clanId
   c.gold += signingGold
+  // The run's story: joining a clan is a life beat worth remembering. Logged
+  // with the faction id as the "choice" so the ending screen can name it.
+  logTurn(c, "__clan_join__", clanId, undefined, "clan")
   c.clanMemberships.push({
     clanId,
     rank: "recruit",

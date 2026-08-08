@@ -9,6 +9,9 @@ export interface ToastItem {
   icon: string
   title: string
   desc: string
+  // "gold" is the default celebratory card; "error" renders with the blood-
+  // red border/icon treatment for failures.
+  tone?: "gold" | "error"
 }
 
 export function useAchievementToasts(locale: Locale, t: (k: string) => string) {
@@ -27,7 +30,7 @@ export function useAchievementToasts(locale: Locale, t: (k: string) => string) {
 
   // Custom (non-achievement) toasts — e.g. "New archetype unlocked!" on the
   // ending screen. Same card, no "Achievement unlocked" prefix.
-  function pushCustom(items: { icon: string; title: string; desc: string }[]) {
+  function pushCustom(items: { icon: string; title: string; desc: string; tone?: ToastItem["tone"] }[]) {
     if (items.length === 0) return
     const withIds = items.map((item) => ({
       ...item,
@@ -36,11 +39,16 @@ export function useAchievementToasts(locale: Locale, t: (k: string) => string) {
     setToasts((prev) => [...prev, ...withIds])
   }
 
+  // Error toasts — failures surfaced to the player with a distinct treatment.
+  function pushError(items: { title: string; desc: string }[]) {
+    pushCustom(items.map((item) => ({ ...item, icon: "siren", tone: "error" as const })))
+  }
+
   function remove(id: string) {
     setToasts((prev) => prev.filter((x) => x.id !== id))
   }
 
-  return { toasts, push, pushCustom, remove }
+  return { toasts, push, pushCustom, pushError, remove }
 }
 
 export function Toasts({
@@ -61,17 +69,17 @@ export function Toasts({
 
 function ToastCard({ item, onExpire }: { item: ToastItem; onExpire: (id: string) => void }) {
   useEffect(() => {
-    const timer = setTimeout(() => onExpire(item.id), 5000)
+    const timer = setTimeout(() => onExpire(item.id), item.tone === "error" ? 9000 : 5000)
     return () => clearTimeout(timer)
-  }, [item.id, onExpire])
+  }, [item.id, item.tone, onExpire])
 
   return (
-    <Toast role="status" onClick={() => onExpire(item.id)}>
-      <ToastIcon>
+    <Toast role="status" $tone={item.tone ?? "gold"} onClick={() => onExpire(item.id)}>
+      <ToastIcon $tone={item.tone ?? "gold"}>
         <AchIcon name={item.icon} size={26} />
       </ToastIcon>
       <div>
-        <ToastTitle>{item.title}</ToastTitle>
+        <ToastTitle $tone={item.tone ?? "gold"}>{item.title}</ToastTitle>
         <ToastDesc>{item.desc}</ToastDesc>
       </div>
     </Toast>
@@ -92,7 +100,7 @@ const toastIn = keyframes`
   from { opacity: 0; transform: translateX(30px); }
 `
 
-const Toast = styled.div`
+const Toast = styled.div<{ $tone: NonNullable<ToastItem["tone"]> }>`
   display: flex;
   align-items: center;
   gap: 16px;
@@ -104,22 +112,23 @@ const Toast = styled.div`
     ${({ theme }) => theme.colors.panel2},
     ${({ theme }) => theme.colors.ink2}
   );
-  border: 1px solid ${({ theme }) => theme.colors.gold};
+  border: 1px solid
+    ${({ $tone, theme }) => ($tone === "error" ? theme.colors.bloodBright : theme.colors.gold)};
   border-radius: ${({ theme }) => theme.radii.sm};
   box-shadow: ${({ theme }) => theme.shadow};
   animation: ${toastIn} 0.35s ease both;
   cursor: pointer;
 `
 
-const ToastIcon = styled.span`
+const ToastIcon = styled.span<{ $tone: NonNullable<ToastItem["tone"]> }>`
   font-size: 27px;
-  color: ${({ theme }) => theme.colors.goldBright};
+  color: ${({ $tone, theme }) => ($tone === "error" ? theme.colors.bloodBright : theme.colors.goldBright)};
 `
 
-const ToastTitle = styled.div`
+const ToastTitle = styled.div<{ $tone: NonNullable<ToastItem["tone"]> }>`
   font-family: ${({ theme }) => theme.fonts.display};
   font-size: 16px;
-  color: ${({ theme }) => theme.colors.goldBright};
+  color: ${({ $tone, theme }) => ($tone === "error" ? theme.colors.bloodBright : theme.colors.goldBright)};
 `
 
 const ToastDesc = styled.div`

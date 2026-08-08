@@ -133,6 +133,71 @@ export interface BuyResponse {
   newAchievements: AchievementContent[]
 }
 
+// A structured API failure thrown by jfetch for any non-2xx response. `code`
+// is the machine error code from the server (e.g. "invalid_choice"), `status`
+// the HTTP status, `errorId` the server-side correlation id the player can
+// quote when reporting a bug, and `detail` the raw server message (dev only).
+export class ApiError extends Error {
+  readonly status: number
+  readonly code: string
+  readonly errorId: string | null
+  readonly detail: string | null
+
+  constructor(input: {
+    status: number
+    code: string
+    errorId?: string | null
+    detail?: string | null
+  }) {
+    // Fall back to the code so `err.message` stays useful for callers that
+    // only read `.message` (the pre-ApiError behavior).
+    super(input.detail || input.code)
+    this.name = "ApiError"
+    this.status = input.status
+    this.code = input.code
+    this.errorId = input.errorId ?? null
+    this.detail = input.detail ?? null
+  }
+}
+
+// One encounter in the Trophy Hall per-encounter breakdown: its id, a
+// localized display label (derived server-side from the narrative), an
+// optional group tag (the event's authored location, a faction/place id), and
+// whether any finished run has faced it.
+export interface EncounterView {
+  id: string
+  label: string
+  group: string
+  seen: boolean
+}
+
+export interface CollectionResponse {
+  uniqueFactions: string[]
+  uniqueEndings: string[]
+  uniqueClasses: string[]
+  uniqueAchievements: string[]
+  // Every authored encounter id seen across all finished runs.
+  seenEventIds: string[]
+  totalRuns: number
+  encounters: {
+    events: EncounterView[]
+    minigames: EncounterView[]
+    combats: EncounterView[]
+  }
+  encounterProgress: {
+    events: { collected: number; total: number }
+    minigames: { collected: number; total: number }
+    combats: { collected: number; total: number }
+  }
+  completion: {
+    endings: { collected: number; total: number }
+    factions: { collected: number; total: number }
+    classes: { collected: number; total: number }
+    achievements: { collected: number; total: number }
+    overall: { collected: number; total: number; pct: number }
+  }
+}
+
 export interface LeaderboardEntryView {
   rank: number
   id: string
@@ -158,8 +223,16 @@ async function jfetch<T>(url: string, opts: RequestInit = {}): Promise<T> {
     ...opts,
   })
   if (!res.ok) {
-    const body = await res.json().catch(() => ({}))
-    throw new Error(body.error || `HTTP ${res.status}`)
+    const body = (await res.json().catch(() => ({}))) as Record<string, unknown>
+    throw new ApiError({
+      status: res.status,
+      // The X-Request-Id header is echoed by the server's request logger, so
+      // a player-reported id matches the terminal log even when the body
+      // didn't carry one.
+      code: typeof body.error === "string" ? body.error : `http_${res.status}`,
+      errorId: (typeof body.errorId === "string" && body.errorId) || res.headers.get("x-request-id"),
+      detail: typeof body.detail === "string" ? body.detail : null,
+    })
   }
   return res.json() as Promise<T>
 }
@@ -254,19 +327,6 @@ export const api = {
       `/api/meta/player-runs?name=${encodeURIComponent(name)}`,
     ),
 
-  collection: () =>
-    jfetch<{
-      uniqueFactions: string[]
-      uniqueEndings: string[]
-      uniqueClasses: string[]
-      uniqueAchievements: string[]
-      totalRuns: number
-      completion: {
-        endings: { collected: number; total: number }
-        factions: { collected: number; total: number }
-        classes: { collected: number; total: number }
-        achievements: { collected: number; total: number }
-        overall: { collected: number; total: number; pct: number }
-      }
-    }>("/api/meta/collection"),
+  collection: (locale: Locale) =>
+    jfetch<CollectionResponse>(`/api/meta/collection?locale=${locale}`),
 }

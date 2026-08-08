@@ -275,6 +275,23 @@ describe("POST /buy · achievementTrigger wiring", () => {
     const res = body as { error: string }
     expect(res.error).toBe("not_enough_gold")
   })
+
+  it("records the purchase as a shop life beat in the story log", async () => {
+    const c = makeLegendRun()
+    const { body } = await postBuy(c, "camp_cook")
+    const res = body as { character: CharacterState }
+    const last = res.character.turnLog?.[res.character.turnLog.length - 1]
+    expect(last).toMatchObject({
+      eventId: "__shop__",
+      choiceId: "camp_cook",
+      kind: "shop",
+    })
+    // A failed purchase must not log anything.
+    const poor = makeLegendRun()
+    poor.gold = 0
+    await postBuy(poor, "floating_realm")
+    expect(poor.turnLog ?? []).toHaveLength(0)
+  })
 })
 
 describe("POST /choose · interactive minigame guard", () => {
@@ -869,5 +886,77 @@ describe("POST /combat-move · combat encounters", () => {
     const { statusCode, body } = await postChoose(c, roadAmbush, "anything")
     expect(statusCode).toBe(400)
     expect((body as { error: string }).error).toBe("combat_event")
+  })
+})
+
+// Drive POST /new (the store is mocked above, so a rejection simulates a
+// backend failure — e.g. the DB being down or a schema drift).
+async function postNew() {
+  let statusCode = 200
+  let resolveJson!: (v: { statusCode: number; body: unknown }) => void
+  const res = {
+    status(code: number) {
+      statusCode = code
+      return this
+    },
+    json(body: unknown) {
+      resolveJson({ statusCode, body })
+      return this
+    },
+  } as unknown as Response
+
+  const jsonPromise = new Promise<{ statusCode: number; body: unknown }>((r) => {
+    resolveJson = r
+  })
+  const req = {
+    method: "POST",
+    url: "/new",
+    body: { name: "Test", classId: "warrior", locale: "en", runType: "standard" },
+    query: {},
+  } as unknown as Request
+  gameRouter(req, res, () => {})
+  return jsonPromise
+}
+
+describe("POST /new · error handling contract", () => {
+  it("a store failure returns a structured server_error with a correlatable errorId", async () => {
+    store.createRun.mockRejectedValueOnce(new Error("the archive is on fire"))
+    const { statusCode, body } = await postNew()
+    expect(statusCode).toBe(500)
+    const res = body as { error: string; errorId?: string; detail?: string }
+    expect(res.error).toBe("server_error")
+    expect(typeof res.errorId).toBe("string")
+    expect(res.errorId!.length).toBeGreaterThan(0)
+    // Dev/test builds carry the raw message so the terminal + the response
+    // agree; production suppresses it (see server/errors.ts).
+    expect(res.detail).toBe("the archive is on fire")
+  })
+
+  it("a missing run on /buy still returns the stable not_found code", async () => {
+    store.getRun.mockResolvedValueOnce(null)
+    let statusCode = 200
+    let resolveJson!: (v: { statusCode: number; body: unknown }) => void
+    const res = {
+      status(code: number) {
+        statusCode = code
+        return this
+      },
+      json(body: unknown) {
+        resolveJson({ statusCode, body })
+        return this
+      },
+    } as unknown as Response
+    const jsonPromise = new Promise<{ statusCode: number; body: unknown }>((r) => {
+      resolveJson = r
+    })
+    const req = {
+      method: "POST",
+      url: "/buy",
+      body: { runId: "ghost", itemId: "camp_cook" },
+      query: {},
+    } as unknown as Request
+    gameRouter(req, res, () => {})
+    const { body } = await jsonPromise
+    expect((body as { error: string }).error).toBe("not_found")
   })
 })

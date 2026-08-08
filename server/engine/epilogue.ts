@@ -4,14 +4,18 @@ import type {
   CharacterState,
   EndingType,
   EpithetData,
+  EventContent,
   FactionHistoryEntry,
   DistinctionEntry,
   Locale,
+  OutcomeTier,
   RichEpilogueData,
   RivalComparison,
+  StoryEntryView,
 } from "../../shared/types.js"
-import { localize, peakReputation } from "./helpers.js"
-import { GAME_CONFIG, reputationTierId } from "../../shared/config.js"
+import { fillSlots, localize, peakReputation } from "./helpers.js"
+import { GAME_CONFIG, reputationTierId, TOURNAMENT_NAMES } from "../../shared/config.js"
+import { hashSeed, Rng } from "../../shared/rng.js"
 
 // class-partitioned legend identities. The position/class defines what kind
 // of idol you end up being; pools are keyed by behavior archetype and are
@@ -225,6 +229,152 @@ export function generateRivalComparison(c: CharacterState): RivalComparison | nu
   }
 }
 
+// ---- "Your Story" scrollback ----------------------------------------------
+
+// The combat-result phrase used as a story line's detail (bilingual, inline —
+// the same pattern as engine.ts's TOURNAMENT_NAMES).
+const STORY_COMBAT_RESULT: Record<string, { en: string; es: string }> = {
+  won: { en: "Victory", es: "Victoria" },
+  lost: { en: "Defeat", es: "Derrota" },
+  fled: { en: "You fled", es: "Huiste" },
+}
+
+// Phrases for the special life beats (shop / clan / tournament). These are
+// deliberate, short labels — the headline names the subject, the detail names
+// the act.
+const STORY_SPECIAL_DETAIL: Record<string, { en: string; es: string }> = {
+  shop: { en: "Purchased from the market", es: "Comprado en el mercado" },
+  clan: { en: "Swore allegiance", es: "Juró lealtad" },
+  tournament: { en: "Champion of the tournament", es: "Campeón del torneo" },
+}
+
+function truncateStory(text: string, max: number): string {
+  if (text.length <= max) return text
+  const head = text.slice(0, max)
+  const punct = Math.max(head.lastIndexOf("."), head.lastIndexOf("!"), head.lastIndexOf("?"))
+  return punct > 12 ? `${head.slice(0, punct + 1)}…` : `${head.trim()}…`
+}
+
+function storyHeadline(
+  ev: EventContent,
+  c: CharacterState,
+  registry: ContentRegistry,
+  locale: Locale,
+  rng: Rng,
+): string {
+  if (ev.flagLabel) {
+    return fillSlots(localize(ev.flagLabel, locale), locale, registry, rng, c)
+  }
+  const raw = fillSlots(localize(ev.narrative, locale), locale, registry, rng, c)
+    .replace(/\s+/g, " ")
+    .trim()
+  return truncateStory(raw, 64)
+}
+
+function storyDetail(
+  ev: EventContent,
+  choiceId: string,
+  c: CharacterState,
+  registry: ContentRegistry,
+  locale: Locale,
+  rng: Rng,
+): string {
+  // Minigame turns log the outcome tier as the "choice" (tier:<tier>).
+  if (choiceId.startsWith("tier:")) {
+    const tier = choiceId.slice(5) as OutcomeTier
+    const narrative = ev.outcomes?.[tier]?.narrative
+    if (narrative) {
+      return truncateStory(
+        fillSlots(localize(narrative, locale), locale, registry, rng, c)
+          .replace(/\s+/g, " ")
+          .trim(),
+        96,
+      )
+    }
+    return tier
+  }
+  // Combat turns log the outcome as the "choice" (result:<result>).
+  if (choiceId.startsWith("result:")) {
+    const key = choiceId.slice(7)
+    return STORY_COMBAT_RESULT[key]?.[locale] ?? STORY_COMBAT_RESULT.won[locale]
+  }
+  // Regular events: the chosen option's label.
+  const choice = (ev.choices ?? []).find((ch) => ch.id === choiceId)
+  if (choice) {
+    return truncateStory(
+      fillSlots(localize(choice.label, locale), locale, registry, rng, c)
+        .replace(/\s+/g, " ")
+        .trim(),
+      96,
+    )
+  }
+  return ""
+}
+
+// Render the run's story from the language-neutral turnLog ids, at end time, so
+// either locale can be produced. Slot names are re-filled with a stable
+// per-entry seed (event + turn). Same-seed daily runs serve identical events at
+// identical turns, so this keeps the "Your Story" scrollback byte-identical
+// across same-seed runs — the same determinism the live-served text already has.
+// A special beat's headline, resolved from its stored content id.
+function specialHeadline(
+  entry: { eventId: string; choiceId: string },
+  registry: ContentRegistry,
+  locale: Locale,
+): string {
+  if (entry.eventId === "__shop__") {
+    const item = registry.shop.find((i) => i.id === entry.choiceId)
+    return item ? localize(item.name, locale) : entry.choiceId
+  }
+  if (entry.eventId === "__clan_join__") {
+    const faction = registry.factionsById.get(entry.choiceId)
+    return faction ? localize(faction.name, locale) : entry.choiceId
+  }
+  if (entry.eventId === "__tournament_win__") {
+    return TOURNAMENT_NAMES[entry.choiceId]?.[locale] ?? TOURNAMENT_NAMES[entry.choiceId]?.en ?? entry.choiceId
+  }
+  return entry.choiceId
+}
+
+export function renderStoryLog(
+  c: CharacterState,
+  registry: ContentRegistry,
+  locale: Locale,
+): StoryEntryView[] {
+  const byId = new Map<string, EventContent>()
+  for (const ev of [...registry.events, ...registry.minigames, ...registry.combats]) {
+    if (!byId.has(ev.id)) byId.set(ev.id, ev)
+  }
+  const story: StoryEntryView[] = []
+  for (const entry of c.turnLog ?? []) {
+    // Special life beats (shop / clan / tournament) resolve from their stored
+    // content id, not from the event catalog.
+    if (entry.kind && entry.kind !== "event") {
+      const kindDetail = STORY_SPECIAL_DETAIL[entry.kind]
+      story.push({
+        turn: entry.turn,
+        season: Math.floor(entry.turn / GAME_CONFIG.seasonLength) + 1,
+        headline: specialHeadline(entry, registry, locale),
+        detail: kindDetail?.[locale] ?? "",
+        kind: entry.kind,
+      })
+      continue
+    }
+    const ev = byId.get(entry.eventId)
+    if (!ev) continue
+    const rng = new Rng(hashSeed(`${entry.eventId}:${entry.turn}`))
+    story.push({
+      turn: entry.turn,
+      season: Math.floor(entry.turn / GAME_CONFIG.seasonLength) + 1,
+      headline: storyHeadline(ev, c, registry, locale, rng),
+      detail: storyDetail(ev, entry.choiceId, c, registry, locale, rng),
+      tag: entry.tag,
+      kind: entry.kind ?? "event",
+    })
+  }
+  return story
+}
+
 export function generateRichEpilogueData(
   c: CharacterState,
   endingType: EndingType,
@@ -255,6 +405,7 @@ export function generateRichEpilogueData(
       )
     }),
     score,
+    story: renderStoryLog(c, registry, locale),
   }
 }
 

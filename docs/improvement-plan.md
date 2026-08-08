@@ -375,6 +375,10 @@ Store as `leaderboard_entries.epithet` (already in schema).
 
 **Spec ref**: El Ídolo ref: §14 (full anatomy)
 
+**2026-08-08: "Your Story" scrollback shipped** — the dead `turn_log` table is now wired end-to-end: `logTurn` (helpers.ts) records every resolved authored turn as language-neutral ids on `CharacterState.turnLog` (`resolveChoice` → choice id, `applyMinigameOutcome` → `tier:<tier>`, `endCombat` → `result:<result>`; synthetic `__*` beats skipped), `persistCharacterSnapshot` mirrors the log into `turn_log` rows at run end (delete-then-insert, idempotent), and `renderStoryLog` (epilogue.ts) re-renders the ids in either locale as `richEpilogueData.story` (stable per-entry slot fills). `EndingScreen` renders the timeline — turn badges, detail line (chosen option / outcome prose / combat result), personality-tag chips, season dividers.
+
+**2026-08-08 follow-up: life beats beyond encounters** — the scrollback also records shop purchases (`/buy` → `__shop__` + item id, kind `shop`), clan joins (`joinClan` → `__clan_join__` + faction id, kind `clan`), and won tournaments (`applyMinigameOutcome` → `__tournament_win__` + name key, kind `tournament`; runner-ups not logged). `renderStoryLog` resolves each from its content id; the beat kind rides `turn_log.vars` JSONB; the UI renders a gold kind chip (Shop/Clan/Tournament) in place of the personality tag.
+
 Extend `EndingScreen.tsx` with:
 
 - **Auto-generated epithet** + card/sticker frame tier based on peak reputation
@@ -451,7 +455,7 @@ Each tier is its own unlockable, keeping the achievement dopamine loop alive lon
 
 **El Ídolo ref**: §15 (Vitrina de copas — 54 collectible trophies across runs)
 
-Status: Trophy Hall screen (`CollectionScreen.tsx`) + `GET /api/meta/collection` ✅. **2026-07-30: completion percentage added — the endpoint now also returns `uniqueClasses`, `uniqueAchievements`, and a `completion` block (`endings`/`factions`/`classes`/`achievements` + overall `collected/total/pct`) computed against the content catalog; `CollectionScreen` renders a progress-bar block plus Classes and Achievements tag sections.**
+Status: Trophy Hall screen (`CollectionScreen.tsx`) + `GET /api/meta/collection` ✅. **2026-07-30: completion percentage added — the endpoint now also returns `uniqueClasses`, `uniqueAchievements`, and a `completion` block (`endings`/`factions`/`classes`/`achievements` + overall `collected/total/pct`) computed against the content catalog; `CollectionScreen` renders a progress-bar block plus Classes and Achievements tag sections. 2026-08-08: per-encounter completion breakdown shipped — `buildServedEvent` records every served authored encounter into `CharacterState.seenEventIds` (synthetic `__*` beats excluded; `runs.seen_event_ids` was already in the schema but never written — `saveRun` + `persistCharacterSnapshot` now keep it in sync), and `/api/meta/collection?locale=` returns `encounters` (events/minigames/combats with localized narrative-derived labels + `group` location tag + `seen`) and `encounterProgress` (collected/total per bank, world events excluded as ambient). `CollectionScreen` renders the Encounters section with per-bank progress bars and "Still to discover" chip lists (show-all toggle).**
 
 A "Trophy Hall" screen accessible from the main menu:
 
@@ -671,9 +675,11 @@ Remaining work by priority — see `docs/roadmap.md` for the consolidated open l
 2. ✅ **1.4 (part)** — more authored rest/recovery events using `staminaDelta` beyond the forced-recovery path (8 new events in `content/events/rest.json`, 2026-08-06)
 3. ✅ **3.2** — separate `rivals` table + parallel rival RNG stream (2026-08-06) + rival faction switches (2026-08-07)
 4. ✅ **5.1** — content volume targets (events 172/80+, world 20/20+ ✅, NPC relationships 15/15+)
-5. 🟡 **5.4 (part)** — per-encounter completion tracking (overall % now implemented)
-6. ⬜ **6.1** — analytics (optional)
-7. ✅ **8.1** — hidden master archetypes, one per class, unlocked by finishing a run with that class (shipped 2026-08-05)
+5. ✅ **5.4** — per-encounter completion tracking (overall % + per-encounter breakdown, shipped 2026-08-08)
+6. ✅ **4.3 (part)** — turn_log "Your Story" recap: language-neutral per-turn ids recorded on the run (`logTurn`), mirrored to the `turn_log` table at run end, rendered as an ending-screen timeline (shipped 2026-08-08)
+7. ⬜ **6.1** — analytics (optional)
+8. ✅ **8.1** — hidden master archetypes, one per class, unlocked by finishing a run with that class (shipped 2026-08-05)
+9. ✅ **Ops** — structured logging + error visibility: every request logs a single line with a `reqId` correlation key (echoed as `X-Request-Id` + the JSON `errorId`), failures log a full stack block, 4xx/5xx summaries drop to debug (no double-printing), and domain audit lines cover the market (`shop.purchase`, `shop.list` at debug) and the leaderboard (`leaderboard.fetch`, `leaderboard.insert` with tier). `server/logger.ts` renders JSON lines in production and readable key=value in dev (`LOG_FORMAT`, `LOG_LEVEL` overrides); `server/errors.ts` routes every async rejection through the error middleware (shipped 2026-08-08)
 
 > Phase 7 is fully shipped as of 2026-08-02: 7.1 homeland/outsider ✅, 7.2 origin + bench ✅, 7.3 region-gated variants ✅, 7.4 tournaments ✅, 7.5 prestige-gated honors ✅, 7.6 negotiation dial ✅, 7.7 class-partitioned epithets ✅, 7.8 determinism tests ✅.
 

@@ -25,6 +25,13 @@ const en: StringMap = {
   play: "Play",
   leaderboard: "Hall of Legends",
   loading: "Consulting the fates...",
+  // Error surfacing: the toast title, the try-again hint, the correlation id
+  // (rendered as a mystical "omen" the player can quote when reporting), and
+  // the in-game transient-failure narrative.
+  errorTitle: "The fates have stumbled",
+  errorTryAgain: "Steady yourself and try again.",
+  errorOmen: "Omen: {id}",
+  fatesHesitate: "The fates hesitate... try again.",
   openMenu: "Open menu",
   closeMenu: "Close menu",
   age: "Age",
@@ -184,6 +191,14 @@ const en: StringMap = {
   lostEncounters: "Finales Perdidas",
   lostEncounterSingle: "lost decisive encounter",
   lostEncounterPlural: "lost decisive encounters",
+  // Ending screen "Your Story" scrollback.
+  yourStory: "Your Story",
+  storyTurn: "Turn {n}",
+  storySeason: "Season {n}",
+  // Special life-beat chips (shop / clan / tournament entries in the scrollback).
+  storyKind_shop: "Shop",
+  storyKind_clan: "Clan",
+  storyKind_tournament: "Tournament",
   peakMarketValue: "Peak Value",
   legacyScore: "Legacy",
   epithet: "Epithet",
@@ -326,6 +341,15 @@ const en: StringMap = {
   achievementsCollected: "Achievements",
   completionPct: "Completion",
   emptyCollection: "Complete a run to start your collection.",
+  // Trophy Hall per-encounter breakdown.
+  encountersTitle: "Encounters",
+  storyEvents: "Story Events",
+  minigamesTitle: "Minigames",
+  combatEncounters: "Combat",
+  stillToDiscover: "Still to discover",
+  showAll: "Show all",
+  showLess: "Show less",
+  allDiscovered: "All discovered",
 
   tooltip_turn: "One season of your life. Each turn you face a choice that shapes your fate.",
   tooltip_age: "Your age in years. Time flows one season per turn.",
@@ -530,6 +554,13 @@ const es: StringMap = {
   play: "Jugar",
   leaderboard: "Salón de Leyendas",
   loading: "Consultando al destino...",
+  // Superficie de errores: título del aviso, sugerencia de reintento, el id de
+  // correlación (renderizado como un "augurio" que el jugador puede citar al
+  // reportar) y el texto de fallo transitorio dentro de la partida.
+  errorTitle: "Los hados han tropezado",
+  errorTryAgain: "Recupera el aliento y vuelve a intentarlo.",
+  errorOmen: "Augurio: {id}",
+  fatesHesitate: "Los hados dudan... intenta de nuevo.",
   openMenu: "Abrir menú",
   closeMenu: "Cerrar menú",
   age: "Edad",
@@ -688,6 +719,14 @@ const es: StringMap = {
   lostEncounters: "Finales Perdidas",
   lostEncounterSingle: "encuentro decisivo perdido",
   lostEncounterPlural: "encuentros decisivos perdidos",
+  // Desplazamiento "Tu Historia" en la pantalla final.
+  yourStory: "Tu Historia",
+  storyTurn: "Turno {n}",
+  storySeason: "Temporada {n}",
+  // Chips de hitos especiales (entradas de tienda / clan / torneo en el historial).
+  storyKind_shop: "Tienda",
+  storyKind_clan: "Clan",
+  storyKind_tournament: "Torneo",
   peakMarketValue: "Valor Pico",
   legacyScore: "Legado",
   epithet: "Epíteto",
@@ -830,6 +869,15 @@ const es: StringMap = {
   achievementsCollected: "Logros",
   completionPct: "Completado",
   emptyCollection: "Completa una vida para comenzar tu colección.",
+  // Desglose por encuentro en el Salón de Trofeos.
+  encountersTitle: "Encuentros",
+  storyEvents: "Eventos de Historia",
+  minigamesTitle: "Minijuegos",
+  combatEncounters: "Combate",
+  stillToDiscover: "Por descubrir",
+  showAll: "Ver todo",
+  showLess: "Ver menos",
+  allDiscovered: "Todo descubierto",
 
   tooltip_turn:
     "Una temporada de tu vida. En cada turno enfrentas una elección que forja tu destino.",

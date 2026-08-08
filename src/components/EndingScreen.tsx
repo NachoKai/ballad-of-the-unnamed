@@ -1,4 +1,5 @@
-import { Castle, Landmark, Skull, Swords, Trophy, Crosshair } from "lucide-react"
+import { Fragment } from "react"
+import { Award, Castle, Crosshair, Flag, Landmark, ShoppingBag, Skull, Swords, Trophy } from "lucide-react"
 import { styled } from "styled-components"
 import { theme } from "../theme"
 import type {
@@ -8,6 +9,7 @@ import type {
   Locale,
   RelationshipEntry,
   RichEpilogueData,
+  TurnLogKind,
 } from "@shared/types"
 import { affinityTierId } from "@shared/config"
 import { interpolate } from "@shared/i18n"
@@ -167,6 +169,98 @@ function LostEncountersBlock({ locale, count }: { locale: Locale; count: number 
   )
 }
 
+// Icon per special life-beat kind, so the chip reads at a glance: a bag for
+// shop purchases, a banner for clan joins, a laurel for tournament wins.
+const STORY_KIND_ICON: Record<NonNullable<RichEpilogueData["story"][number]["kind"]>, typeof Award> = {
+  event: Trophy,
+  shop: ShoppingBag,
+  clan: Flag,
+  tournament: Award,
+}
+
+// Per-kind chip tint: shop = coin-blue, clan = sage green, tournament = gold.
+// `event` is unreachable for kind chips (regular turns render the personality
+// tag instead) but keeps the Record total for the union type.
+const STORY_KIND_TONE: Record<TurnLogKind, { fg: string; border: string; bg: string }> = {
+  event: { fg: theme.colors.gold, border: "rgba(201, 164, 76, 0.25)", bg: "transparent" },
+  shop: {
+    fg: theme.colors.rarity.rare,
+    border: "rgba(90, 134, 200, 0.45)",
+    bg: "rgba(90, 134, 200, 0.12)",
+  },
+  clan: {
+    fg: theme.colors.sage,
+    border: "rgba(111, 143, 106, 0.45)",
+    bg: "rgba(111, 143, 106, 0.12)",
+  },
+  tournament: {
+    fg: theme.colors.goldBright,
+    border: "rgba(201, 164, 76, 0.55)",
+    bg: "rgba(201, 164, 76, 0.12)",
+  },
+}
+
+// The run's "Your Story" scrollback: every resolved turn as a timeline of
+// headline + detail lines, with a season divider when the year turns over.
+function StoryBlock({
+  locale,
+  gender,
+  story,
+}: {
+  locale: Locale
+  gender: CharacterState["gender"]
+  story: RichEpilogueData["story"]
+}) {
+  if (story.length === 0) return null
+  return (
+    <Section>
+      <SectionTitle>{t(locale, "yourStory")}</SectionTitle>
+      <StoryScroller>
+        {story.map((s, i) => {
+          const prevSeason = i > 0 ? story[i - 1].season : s.season
+          // The index disambiguates rows that share a turn + headline (e.g. two
+          // purchases of the same item in one shop visit — the shop doesn't
+          // advance the turn, so both entries collide without it).
+          return (
+            <Fragment key={`${s.turn}-${i}-${s.headline.slice(0, 12)}`}>
+              {s.season !== prevSeason && (
+                <SeasonDivider>
+                  {interpolate(t(locale, "storySeason"), { n: s.season })}
+                </SeasonDivider>
+              )}
+              <StoryRow>
+                <StoryRail>
+                  <StoryDot />
+                  {i < story.length - 1 && <StoryLine />}
+                </StoryRail>
+                <StoryBody>
+                  <StoryMeta>
+                    <StoryTurn>
+                      {interpolate(t(locale, "storyTurn"), { n: s.turn })}
+                    </StoryTurn>
+                    {/* Special life beats (shop/clan/tournament) get a kind chip;
+                        encounter turns show the choice's personality tag. */}
+                    {s.kind && s.kind !== "event" ? (
+                      <StoryTag $kind={s.kind}>
+                        <StoryKindIcon as={STORY_KIND_ICON[s.kind]} size={11} strokeWidth={2.4} />
+                        {t(locale, `storyKind_${s.kind}` as never)}
+                      </StoryTag>
+                    ) : (
+                      s.tag && <StoryTag>{gt(locale, gender, `personality_tag_${s.tag}`)}</StoryTag>
+                    )}
+                  </StoryMeta>
+                  <StoryHeadline>{s.headline}</StoryHeadline>
+                  {s.detail && <StoryDetail>{s.detail}</StoryDetail>}
+                </StoryBody>
+              </StoryRow>
+            </Fragment>
+          )
+        })}
+      </StoryScroller>
+    </Section>
+  )
+}
+
 // The bonds forged over a life: every met NPC with their role, final affinity
 // tier, and last affinity. Same tier/role labels and tone logic as the HUD
 // strip, so a devoted ally reads sage and a sworn enemy reads blood.
@@ -275,6 +369,14 @@ export function EndingScreen({
             </StatCell>
           ))}
         </EndingStats>
+
+        {richEpilogueData && richEpilogueData.story.length > 0 && (
+          <StoryBlock
+            locale={locale}
+            gender={character.gender}
+            story={richEpilogueData.story}
+          />
+        )}
 
         {richEpilogueData && (
           <>
@@ -593,6 +695,127 @@ const DistinctionCount = styled.span`
   font-weight: 600;
   color: ${({ theme }) => theme.colors.gold};
   font-variant-numeric: tabular-nums;
+`
+
+const StoryScroller = styled.div`
+  max-height: 340px;
+  overflow-y: auto;
+  padding-right: 10px;
+  scrollbar-width: thin;
+  scrollbar-color: ${({ theme }) => theme.colors.line2} transparent;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: ${({ theme }) => theme.colors.line2};
+    border-radius: 999px;
+  }
+`
+
+const SeasonDivider = styled.div`
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.colors.gold};
+  margin: 16px 0 6px;
+  padding-left: 22px;
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    left: 2px;
+    top: 50%;
+    width: 10px;
+    height: 1px;
+    background: ${({ theme }) => theme.colors.gold};
+  }
+`
+
+const StoryRow = styled.div`
+  display: flex;
+  gap: 12px;
+`
+
+const StoryRail = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 14px;
+  flex-shrink: 0;
+`
+
+const StoryDot = styled.span`
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: ${({ theme }) => theme.colors.gold};
+  box-shadow: 0 0 0 3px rgba(201, 164, 76, 0.15);
+  margin-top: 5px;
+  flex-shrink: 0;
+`
+
+const StoryLine = styled.span`
+  flex: 1;
+  width: 1px;
+  background: ${({ theme }) => theme.colors.line2};
+  margin: 3px 0;
+`
+
+const StoryBody = styled.div`
+  flex: 1;
+  padding-bottom: 16px;
+`
+
+const StoryMeta = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 2px;
+`
+
+const StoryTurn = styled.span`
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.colors.muted};
+  font-variant-numeric: tabular-nums;
+`
+
+const StoryTag = styled.span<{ $kind?: TurnLogKind }>`
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: ${({ $kind }) => ($kind ? STORY_KIND_TONE[$kind].fg : theme.colors.gold)};
+  border: 1px solid
+    ${({ $kind }) => ($kind ? STORY_KIND_TONE[$kind].border : "rgba(201, 164, 76, 0.25)")};
+  border-radius: 999px;
+  padding: 1px 8px;
+  background: ${({ $kind }) => ($kind ? STORY_KIND_TONE[$kind].bg : "transparent")};
+  ${({ $kind }) => $kind && `font-weight: 600;`}
+`
+
+const StoryKindIcon = styled.span`
+  display: inline-flex;
+  align-items: center;
+`
+
+const StoryHeadline = styled.p`
+  font-size: 15px;
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.parchment};
+  margin: 0;
+`
+
+const StoryDetail = styled.p`
+  font-size: 14px;
+  color: ${({ theme }) => theme.colors.parchmentDim};
+  margin: 2px 0 0;
+  line-height: 1.45;
 `
 
 const LostEncountersCard = styled.div`

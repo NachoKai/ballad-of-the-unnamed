@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { styled } from "styled-components"
 import type { Locale } from "@shared/types"
 import { t } from "../i18n/strings"
-import { api, type AchievementView } from "../api"
+import { api, type AchievementView, type CollectionResponse, type EncounterView } from "../api"
 import { FactionFlag } from "./FactionFlag"
 import { Panel } from "./ui/Panel"
 import { BtnGhost } from "./ui/Button"
@@ -14,28 +14,18 @@ interface Props {
   onBack: () => void
 }
 
-interface CollectionData {
-  uniqueFactions: string[]
-  uniqueEndings: string[]
-  uniqueClasses: string[]
-  uniqueAchievements: string[]
-  totalRuns: number
-  completion: {
-    endings: { collected: number; total: number }
-    factions: { collected: number; total: number }
-    classes: { collected: number; total: number }
-    achievements: { collected: number; total: number }
-    overall: { collected: number; total: number; pct: number }
-  }
-}
+// How many "still to discover" chips render before the show-more toggle.
+const UNSEEN_LIMIT = 18
 
 export function CollectionScreen({ locale, onBack }: Props) {
-  const [data, setData] = useState<CollectionData | null>(null)
+  const [data, setData] = useState<CollectionResponse | null>(null)
   const [catalog, setCatalog] = useState<Record<string, AchievementView>>({})
+  // Per-bank "show all" flags for the still-to-discover chip lists.
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({})
 
   useEffect(() => {
     api
-      .collection()
+      .collection(locale)
       .then(setData)
       .catch(() => setData(null))
     api
@@ -209,9 +199,101 @@ export function CollectionScreen({ locale, onBack }: Props) {
               </TagGrid>
             )}
           </Section>
+
+          <Section>
+            <SectionTitle>{t(locale, "encountersTitle")}</SectionTitle>
+            <EncounterSub
+              locale={locale}
+              titleKey="storyEvents"
+              progress={data.encounterProgress.events}
+              unseen={data.encounters.events.filter((e) => !e.seen)}
+              expanded={Boolean(expanded.events)}
+              onToggle={() => setExpanded((s) => ({ ...s, events: !s.events }))}
+            />
+            <EncounterSub
+              locale={locale}
+              titleKey="minigamesTitle"
+              progress={data.encounterProgress.minigames}
+              unseen={data.encounters.minigames.filter((e) => !e.seen)}
+              expanded={Boolean(expanded.minigames)}
+              onToggle={() => setExpanded((s) => ({ ...s, minigames: !s.minigames }))}
+            />
+            <EncounterSub
+              locale={locale}
+              titleKey="combatEncounters"
+              progress={data.encounterProgress.combats}
+              unseen={data.encounters.combats.filter((e) => !e.seen)}
+              expanded={Boolean(expanded.combats)}
+              onToggle={() => setExpanded((s) => ({ ...s, combats: !s.combats }))}
+            />
+          </Section>
         </>
       )}
     </Screen>
+  )
+}
+
+// One encounter bank (story events / minigames / combat): a progress row plus
+// a "still to discover" chip list, capped with a show-more toggle.
+function EncounterSub({
+  locale,
+  titleKey,
+  progress,
+  unseen,
+  expanded,
+  onToggle,
+}: {
+  locale: Locale
+  titleKey: string
+  progress: { collected: number; total: number }
+  unseen: EncounterView[]
+  expanded: boolean
+  onToggle: () => void
+}) {
+  const total = Math.max(1, progress.total)
+  const shown = expanded ? unseen : unseen.slice(0, UNSEEN_LIMIT)
+  return (
+    <SubBlock>
+      <ProgressRow>
+        <ProgressLabel>{t(locale, titleKey)}</ProgressLabel>
+        <Bar>
+          <Fill pct={(progress.collected / total) * 100} />
+        </Bar>
+        <ProgressCount>
+          {progress.collected}/{progress.total}
+        </ProgressCount>
+      </ProgressRow>
+      {unseen.length === 0 ? (
+        <DoneMsg>{t(locale, "allDiscovered")}</DoneMsg>
+      ) : (
+        <>
+          <DiscoverLabel>
+            {t(locale, "stillToDiscover")} ({unseen.length})
+          </DiscoverLabel>
+          <TagGrid>
+            {shown.map((e) => {
+              // Only render the location tag when the group resolves to a real
+              // faction name (some events use non-faction locations like
+              // "road"/"dungeon"/"court", which have no localized label).
+              const groupKey = `faction_${e.group}`
+              const groupName = e.group ? t(locale, groupKey) : ""
+              const hasGroup = Boolean(e.group) && groupName !== groupKey
+              return (
+                <Tag key={e.id}>
+                  {hasGroup && <GroupTag>{groupName}</GroupTag>}
+                  {e.label}
+                </Tag>
+              )
+            })}
+          </TagGrid>
+          {unseen.length > UNSEEN_LIMIT && (
+            <ToggleBtn type="button" onClick={onToggle}>
+              {expanded ? t(locale, "showLess") : t(locale, "showAll")}
+            </ToggleBtn>
+          )}
+        </>
+      )}
+    </SubBlock>
   )
 }
 
@@ -334,4 +416,49 @@ const ProgressCount = styled.span`
   font-family: ${({ theme }) => theme.fonts.display};
   font-size: 15px;
   color: ${({ theme }) => theme.colors.goldBright};
+`
+
+const SubBlock = styled.div`
+  margin-bottom: 18px;
+`
+
+const DoneMsg = styled.p`
+  font-size: 14px;
+  color: ${({ theme }) => theme.colors.gold};
+  margin: 6px 0 0;
+`
+
+const DiscoverLabel = styled.p`
+  font-size: 13px;
+  color: ${({ theme }) => theme.colors.muted};
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 10px 0 8px;
+`
+
+const GroupTag = styled.span`
+  color: ${({ theme }) => theme.colors.gold};
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  &::after {
+    content: "\00a0·\00a0";
+    color: ${({ theme }) => theme.colors.line};
+  }
+`
+
+const ToggleBtn = styled.button`
+  margin-top: 10px;
+  padding: 4px 12px;
+  background: transparent;
+  border: 1px solid ${({ theme }) => theme.colors.line};
+  border-radius: 999px;
+  color: ${({ theme }) => theme.colors.gold};
+  font-size: 13px;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease;
+  &:hover {
+    border-color: ${({ theme }) => theme.colors.gold};
+    color: ${({ theme }) => theme.colors.goldBright};
+  }
 `

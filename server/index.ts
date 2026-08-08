@@ -3,12 +3,18 @@ import { createServer as createHttpServer } from "node:http"
 import { fileURLToPath } from "node:url"
 import { dirname, join } from "node:path"
 import app from "./app.js"
+import { ensureMigrated } from "./db/boot.js"
+import { log } from "./logger.js"
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const isProd = process.env.NODE_ENV === "production"
 const PORT = Number(process.env.PORT) || 8080
 
 async function main() {
+  // Ensure the schema is current before serving (idempotent; swallows failure
+  // when DATABASE_URL is unset so the server can still boot without Neon).
+  await ensureMigrated()
+
   // Explicit HTTP server so Vite's HMR WebSocket can ride the same port
   // (the preview proxy only routes one port; a separate WS port is unreachable).
   const httpServer = createHttpServer(app)
@@ -47,11 +53,11 @@ async function main() {
   }
 
   httpServer.listen(PORT, () => {
-    console.log(`[server] listening on http://localhost:${PORT} (prod=${isProd})`)
+    log.info("server listening", { port: PORT, prod: isProd })
   })
 }
 
 main().catch((err) => {
-  console.error("[server] fatal", err)
+  log.error("server fatal", { err })
   process.exit(1)
 })

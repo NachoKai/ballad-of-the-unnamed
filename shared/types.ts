@@ -561,6 +561,45 @@ export interface RelationshipEntry {
   lastSeenTurn: number
 }
 
+// What kind of beat a turn-log entry records. Regular playable encounters
+// (events, minigames, combats) are `event`; the special kinds are life beats
+// with no authored card — shop purchases, clan joins, tournament victories —
+// logged with a synthetic marker id and the real content id as the "choice".
+export type TurnLogKind = "event" | "shop" | "clan" | "tournament"
+
+// One resolved turn of the run's story, stored language-neutral on the
+// character (turnLog JSONB) and mirrored into the `turn_log` table at run end
+// — ids only, never baked prose, so the ending screen can re-render it in
+// either locale. `choiceId` is the chosen choice's id for regular events, a
+// `tier:<tier>` / `result:<result>` key for minigames and combat encounters,
+// or the item/faction/tournament id for the special kinds.
+export interface TurnLogEntry {
+  turn: number
+  eventId: string
+  choiceId: string
+  // the personality tag the choice carried (regular events only).
+  tag?: PersonalityTag
+  // what kind of beat this is; `event` (the default) is a playable encounter,
+  // the rest are special life beats. Optional for legacy persisted logs.
+  kind?: TurnLogKind
+}
+
+// One rendered row of the ending screen's "Your Story" scrollback.
+export interface StoryEntryView {
+  turn: number
+  season: number
+  // localized, slot-filled headline for the encounter (derived from the
+  // event narrative — events have no title field; special beats use the item
+  // name, faction name, or tournament name).
+  headline: string
+  // localized detail: the chosen option's label, the minigame outcome prose,
+  // the combat result phrase, or the special-beat phrase.
+  detail: string
+  tag?: PersonalityTag
+  // the beat kind, for the client's chip; `event`/undefined = personality tag.
+  kind?: TurnLogKind
+}
+
 export interface RivalState {
   name: string
   class: string
@@ -907,6 +946,15 @@ export interface CharacterState {
   clanMemberships: ClanMembershipEntry[]
   flags: Record<string, unknown>
   lastEventId?: string | null
+  // Every authored encounter (event/minigame/combat) served to the player this
+  // run, in serve order (deduped, synthetic `__*` beats excluded). Feeds the
+  // cross-run Trophy Hall per-encounter breakdown via the runs.seen_event_ids
+  // column. Optional so legacy persisted runs without it still load cleanly.
+  seenEventIds?: string[]
+  // One entry per resolved authored turn (language-neutral ids) — the raw
+  // material for the ending screen's "Your Story" scrollback and the `turn_log`
+  // table (mirrored at run end). Optional for legacy runs.
+  turnLog?: TurnLogEntry[]
   // Consecutive turns spent at 0 stamina (forced recovery trigger).
   staminaZeroStreak?: number
   // bench mechanic: while this turn is in the future, the character is
@@ -1126,4 +1174,7 @@ export interface RichEpilogueData {
   lostEncounters: number
   achievements: AchievementContent[]
   score: number
+  // The run's "Your Story" scrollback, rendered server-side from turnLog so
+  // either locale can be produced at end time.
+  story: StoryEntryView[]
 }

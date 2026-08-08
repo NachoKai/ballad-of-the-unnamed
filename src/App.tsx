@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { styled, keyframes } from "styled-components"
 import { CircleHelp } from "lucide-react"
 import type {
@@ -28,6 +28,7 @@ import { TutorialModal } from "./components/TutorialModal"
 import { ShopModal } from "./components/ShopModal"
 import { DetailsModal } from "./components/DetailsModal"
 import { Toasts, useAchievementToasts } from "./components/Toasts"
+import { errorMessage } from "./lib/errors"
 import { LinkBtn } from "./components/ui/Button"
 import { ShinyText } from "./components/ui/ShinyText"
 /* import { LightRays } from "./components/ui/LightRays" */
@@ -65,6 +66,12 @@ export default function App() {
     () => !localStorage.getItem(TUTORIAL_SEEN_KEY),
   )
   const [menuOpen, setMenuOpen] = useState(false)
+  // Always-current locale for the global error listeners below (registered once
+  // with [] deps, so they must read through a ref, not the captured value).
+  const localeRef = useRef(locale)
+  useEffect(() => {
+    localeRef.current = locale
+  }, [locale])
   // Result of the final move of an interactive minigame (banner + next event).
   const [pendingMinigameResult, setPendingMinigameResult] = useState<MinigameMoveResponse | null>(
     null,
@@ -85,8 +92,38 @@ export default function App() {
     toasts,
     push: pushToasts,
     pushCustom: pushCustomToast,
+    pushError: pushErrorToast,
     remove: dismissToast,
   } = useAchievementToasts(locale, (k) => makeT(locale)(k))
+
+  // Surface ANY uncaught client error as a toast (plus console) so nothing
+  // fails silently — the toast carries the same correlation id a server error
+  // would, so reports stay traceable end to end.
+  useEffect(() => {
+    function onUnhandledRejection(e: PromiseRejectionEvent) {
+      const err = e.reason
+      const current = localeRef.current
+      console.error("[client] unhandled rejection", err)
+      pushErrorToast([
+        { title: t(current, "errorTitle"), desc: errorMessage(err, current) },
+      ])
+    }
+    function onWindowError(e: ErrorEvent) {
+      if (!e.error) return // resource-load failures have no stack worth reporting
+      const current = localeRef.current
+      console.error("[client] uncaught error", e.error)
+      pushErrorToast([
+        { title: t(current, "errorTitle"), desc: errorMessage(e.error, current) },
+      ])
+    }
+    window.addEventListener("unhandledrejection", onUnhandledRejection)
+    window.addEventListener("error", onWindowError)
+    return () => {
+      window.removeEventListener("unhandledrejection", onUnhandledRejection)
+      window.removeEventListener("error", onWindowError)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   // Resume an in-progress run after reload.
   useEffect(() => {
@@ -200,15 +237,19 @@ export default function App() {
     let res: Awaited<ReturnType<typeof api.choose>>
     try {
       res = await api.choose({ runId: currentRunId, choiceId, cardId: choiceId })
-    } catch {
+    } catch (e) {
       // Check if the run still exists before abandoning.
       try {
         const state = await api.state(currentRunId)
         if (state.finished || !state.event) {
-          throw new Error("run finished or gone")
+          throw new Error("run finished or gone", { cause: e })
         }
-        // Run is still valid — transient error. Show a brief message.
-        setTurnNarrative("The fates hesitate... try again.")
+        // Run is still valid — transient error. Surface it (with its omen id)
+        // and let the player try again.
+        setTurnNarrative(t(locale, "fatesHesitate"))
+        pushErrorToast([
+          { title: t(locale, "errorTitle"), desc: errorMessage(e, locale) },
+        ])
         return
       } catch {
         // Run truly gone (server restart, DB reset, etc.). Recover gracefully.
@@ -217,6 +258,9 @@ export default function App() {
         setCharacter(null)
         setEvent(null)
         setScreen("creation")
+        pushErrorToast([
+          { title: t(locale, "errorTitle"), desc: errorMessage(e, locale) },
+        ])
         return
       }
     }
@@ -276,12 +320,15 @@ export default function App() {
         setPendingMinigameResult(res)
       }
       return res
-    } catch {
+    } catch (e) {
       // Mirror /choose recovery: transient error or the run is gone.
       try {
         const state = await api.state(currentRunId)
-        if (state.finished || !state.event) throw new Error("run finished or gone")
-        setTurnNarrative("The fates hesitate... try again.")
+        if (state.finished || !state.event) throw new Error("run finished or gone", { cause: e })
+        setTurnNarrative(t(locale, "fatesHesitate"))
+        pushErrorToast([
+          { title: t(locale, "errorTitle"), desc: errorMessage(e, locale) },
+        ])
         return { status: "playing" } as MinigameMoveResponse
       } catch {
         localStorage.removeItem(RUN_KEY)
@@ -289,6 +336,9 @@ export default function App() {
         setCharacter(null)
         setEvent(null)
         setScreen("creation")
+        pushErrorToast([
+          { title: t(locale, "errorTitle"), desc: errorMessage(e, locale) },
+        ])
         return { status: "playing" } as MinigameMoveResponse
       }
     }
@@ -306,12 +356,15 @@ export default function App() {
         setPendingCombatResult(res)
       }
       return res
-    } catch {
+    } catch (e) {
       // Mirror /choose recovery: transient error or the run is gone.
       try {
         const state = await api.state(currentRunId)
-        if (state.finished || !state.event) throw new Error("run finished or gone")
-        setTurnNarrative("The fates hesitate... try again.")
+        if (state.finished || !state.event) throw new Error("run finished or gone", { cause: e })
+        setTurnNarrative(t(locale, "fatesHesitate"))
+        pushErrorToast([
+          { title: t(locale, "errorTitle"), desc: errorMessage(e, locale) },
+        ])
         return { status: "playing" } as CombatMoveResponse
       } catch {
         localStorage.removeItem(RUN_KEY)
@@ -319,6 +372,9 @@ export default function App() {
         setCharacter(null)
         setEvent(null)
         setScreen("creation")
+        pushErrorToast([
+          { title: t(locale, "errorTitle"), desc: errorMessage(e, locale) },
+        ])
         return { status: "playing" } as CombatMoveResponse
       }
     }

@@ -152,6 +152,11 @@ CREATE TABLE IF NOT EXISTS turn_log (
 
 -- Migrations for columns added after initial table creation --------------------
 ALTER TABLE runs ADD COLUMN IF NOT EXISTS rival_rng_state BIGINT NOT NULL DEFAULT 0;
+-- Per-encounter completion tracking (roadmap §6): every authored encounter
+-- served is recorded on the run (CharacterState.seenEventIds, mirrored by
+-- saveRun). This column lives on runs, NOT characters — the characters table
+-- has its own seen_event_ids for the run-end snapshot.
+ALTER TABLE runs ADD COLUMN IF NOT EXISTS seen_event_ids JSONB NOT NULL DEFAULT '[]'::jsonb;
 ALTER TABLE leaderboard ADD COLUMN IF NOT EXISTS legacy_score INTEGER NOT NULL DEFAULT 0;
 ALTER TABLE leaderboard ADD COLUMN IF NOT EXISTS epithet TEXT;
 ALTER TABLE leaderboard ADD COLUMN IF NOT EXISTS leaderboard_tier TEXT NOT NULL DEFAULT 'standard';

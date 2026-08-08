@@ -5,7 +5,7 @@ Single source of truth for **remaining / open** work. Everything flagged 🟡 or
 `docs/improvement-plan.md` (the canonical status doc) and the git history; add
 every new shipped line here too so the "what's next" list is always accurate.
 
-> Last consolidated: 2026-08-06.
+> Last consolidated: 2026-08-08.
 
 ## Status Legend
 
@@ -167,17 +167,72 @@ Shipped pieces:
 
 ---
 
-### 6. Per-encounter completion tracking 🟡
+### 6. Per-encounter completion tracking ✅ shipped 2026-08-08
 
-> improvement-plan.md §5.4 (part). Trophy Hall (`CollectionScreen`) + overall
-> completion % are done. Missing: per-encounter completion breakdown.
+> improvement-plan.md §5.4 (final piece). Trophy Hall (`CollectionScreen`) +
+> overall completion % were already done; this lands the per-encounter
+> breakdown: which specific events/minigames/combat encounters you've faced
+> across all finished runs, and which remain uncollected.
 
-- Extend `GET /api/meta/collection` to list which specific
-  events/factions remain uncollected.
+- **Engine:** `CharacterState.seenEventIds` — `buildServedEvent` records every
+  authored encounter it serves (via `markEventSeen`), skipping synthetic `__*`
+  beats. The plumbing was already in the schema (`runs.seen_event_ids` JSONB)
+  but nothing ever wrote to it; `saveRun` now keeps the column in sync and
+  `persistCharacterSnapshot` mirrors the real list instead of `[]`.
+- **Endpoint:** `GET /api/meta/collection?locale=` returns an `encounters`
+  block (`events` / `minigames` / `combats`, each entry `{id, label, group,
+  seen}` — labels derived from the narrative since events have no title field,
+  `group` is the authored `location`) plus `encounterProgress`
+  (`collected`/`total` per bank). World events are excluded (ambient narration,
+  never playable encounters).
+- **UI:** `CollectionScreen` gains an "Encounters" section — three progress
+  rows (Story Events / Minigames / Combat) with "Still to discover" chip lists
+  (location-tagged, capped with a show-all toggle).
+- **Tests:** `engine.test.ts` "per-encounter seen tracking" suite — empty
+  start, authored ids recorded, synthetics never recorded, full-season
+  dedup/order, and seed-determinism (tracking never perturbs the main stream).
 
 ---
 
-### 7. Analytics ⬜ (optional)
+### 7. End-of-run "Your Story" scrollback ✅ shipped 2026-08-08
+
+> The `turn_log` table in `server/db/schema.sql` was dead schema — created but
+> never written. Wired end-to-end: every resolved authored turn is recorded on
+> the run (language-neutral ids) and the ending screen renders the whole life
+> as a scrollback.
+
+- **Engine:** `logTurn` (`server/engine/helpers.ts`) appends `{turn, eventId,
+  choiceId, tag?, kind?}` to `CharacterState.turnLog` — called from
+  `resolveChoice` (the choice id), `applyMinigameOutcome` (`tier:<tier>`),
+  `endCombat` (`result:<result>`), and `joinClan` (`__clan_join__` + faction id,
+  kind `clan`). Synthetic `__*` beats are never recorded unless a non-event
+  `kind` is passed explicitly.
+- **Life beats beyond encounters (2026-08-08):** the scrollback now also
+  records shop purchases (`/buy` → `__shop__` + item id, kind `shop`),
+  clan joins (`joinClan` → `__clan_join__` + faction id, kind `clan`), and
+  won tournaments (`applyMinigameOutcome` → `__tournament_win__` + name key,
+  kind `tournament`; runner-up finishes are not logged). `renderStoryLog`
+  resolves each from its content id (item/faction name, tournament name) and
+  the UI renders a gold kind chip (Shop / Clan / Tournament) instead of a
+  personality tag.
+- **Persistence:** `persistCharacterSnapshot` mirrors the log into `turn_log`
+  rows at run end (delete-then-insert, idempotent on re-finalize); the beat
+  `kind` rides the row's `vars` JSONB.
+- **Rendering:** `renderStoryLog` (`server/engine/epilogue.ts`) re-renders the
+  ids in either locale at end time (slot names re-filled from a stable
+  per-entry seed) and ships as `richEpilogueData.story`.
+- **UI:** `EndingScreen` gains a "Your Story" timeline — turn badges, the
+  chosen option / minigame outcome / combat result / life-beat phrase as the
+  detail line, personality-tag chips (and gold kind chips for life beats),
+  and season dividers.
+- **Tests:** `engine.test.ts` "turn log (Your Story recap)" suite — choice
+  recording, synthetic skip, minigame-tier + combat-result keys, clan/tournament
+  beat recording, bilingual `renderStoryLog`, per-seed determinism; plus a
+  `/buy` shop-beat test in `game.test.ts`.
+
+---
+
+### 8. Analytics ⬜ (optional)
 
 > improvement-plan.md §6.1. Not started. No telemetry, event tracking, or
 > run-data analytics. Recognized as optional — the AI narration section was

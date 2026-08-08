@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs"
 import { fileURLToPath } from "node:url"
 import { dirname, join } from "node:path"
 import { sql } from "./client.js"
+import { log } from "../logger.js"
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
@@ -23,7 +24,7 @@ export async function migrate(): Promise<void> {
   for (const statement of statements) {
     await sql(statement)
   }
-  console.log(`[db] migration complete (${statements.length} statements)`)
+  log.info("migration complete", { statements: statements.length })
 }
 
 // Allow running directly: `pnpm db:migrate`
@@ -31,7 +32,7 @@ if (process.argv[1]?.replace(/\\/g, "/").includes("migrate")) {
   migrate()
     .then(() => process.exit(0))
     .catch((err) => {
-      console.error("[db] migration failed:", err)
+      log.error("migration failed", { err })
       process.exit(1)
     })
 }

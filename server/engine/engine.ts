@@ -21,6 +21,7 @@ import { Rng } from "../../shared/rng.js"
 import {
   CLAN_SPECIALTIES,
   GAME_CONFIG,
+  TOURNAMENT_NAMES,
   arcForAge,
   RIVAL_FOCUSES,
   RIVAL_NAMES,
@@ -47,6 +48,7 @@ import {
   joinClan,
   leaveClanAmicably,
   localize,
+  logTurn,
   primaryReputation,
   recomputeDerived,
   regionOf,
@@ -151,6 +153,9 @@ export function createCharacter(input: {
     clanMemberships: [],
     flags: {},
     lastEventId: null,
+    // Per-encounter completion tracking: every authored encounter served to
+    // the player is recorded (see markEventSeen in buildServedEvent).
+    seenEventIds: [],
     lastClanOfferSeason: null,
     benchedUntilTurn: null,
     pendingJoinOffer: null,
@@ -611,13 +616,6 @@ export function negotiationFollowUpEvent(
 // whole-arc tournaments
 // ---------------------------------------------------------------------------
 
-const TOURNAMENT_NAMES: Record<string, { en: string; es: string }> = {
-  grand_melee: { en: "the Grand Melee", es: "la Gran Justa" },
-  high_duel: { en: "the High Duel", es: "el Duelo Mayor" },
-  tournament_of_arms: { en: "the Tournament of Arms", es: "el Torneo de Armas" },
-  champions_games: { en: "the Champions' Games", es: "los Juegos de los Campeones" },
-}
-
 function tournamentName(nameKey: string, locale: Locale): string {
   return TOURNAMENT_NAMES[nameKey]?.[locale] ?? TOURNAMENT_NAMES[nameKey]?.en ?? nameKey
 }
@@ -822,6 +820,18 @@ export function tournamentOutcomeEvent(c: CharacterState, registry: ContentRegis
   }
 }
 
+// Record an authored encounter as "seen" on the run for the cross-run Trophy
+// Hall per-encounter breakdown. Synthetic `__*` beats (season summaries, clan
+// offers, finales, forced recovery…) are never part of the content catalog, so
+// they are skipped — only playable events/minigames/combats count. Recorded in
+// serve order and deduped; a reload re-serving the pending event cannot
+// double-count (buildServedEvent is only reached when a NEW beat is picked).
+function markEventSeen(c: CharacterState, eventId: string): void {
+  if (!eventId || eventId.startsWith("__")) return
+  const seen = c.seenEventIds ?? (c.seenEventIds = [])
+  if (!seen.includes(eventId)) seen.push(eventId)
+}
+
 export function buildServedEvent(
   c: CharacterState,
   registry: ContentRegistry,
@@ -925,6 +935,7 @@ export function buildServedEvent(
     const capPool = registry.minigames.filter((ev) => ev.isCapstone && isEligible(ev, c))
     if (capPool.length > 0) {
       const picked = rng.weighted(capPool, (ev) => ev.weight)
+      markEventSeen(c, picked.id)
       const served = serveEvent(picked, c, c.locale, registry, rng, false)
       served.isCapstone = true
       served.capstoneKind = picked.capstoneKind ?? "debate"
@@ -1088,6 +1099,7 @@ export function buildServedEvent(
     }
   }
   const ev = selectEvent(c, registry, rng)
+  markEventSeen(c, ev.id)
   return {
     event: ev,
     served: serveEvent(ev, c, c.locale, registry, rng, false),
@@ -1440,6 +1452,8 @@ export function resolveChoice(
   if (wonBattle && !choice.countersDelta?.battles_won) bumpCounter(c, "battles_won")
   // Mark this event as completed (for one-shot gating).
   bumpCounter(c, `event_${event.id}`)
+  // The run's story: record this resolved turn (language-neutral ids).
+  logTurn(c, event.id, choice.id, choice.tag)
 
   updateMomentum(c, net)
   deductStamina(c)
@@ -1581,6 +1595,8 @@ export function applyMinigameOutcome(
     for (const k of outcome.countersReset) c.counters[k] = 0
   }
   bumpCounter(c, `event_${event.id}`)
+  // The run's story: minigame turns record the outcome tier as the "choice".
+  logTurn(c, event.id, `tier:${tier}`)
 
   // Season-end capstone: stash the verdict so the season summary surfaces it
   // next turn and swings that season's grade. resolveSeasonSummary clears it.
@@ -1605,10 +1621,14 @@ export function applyMinigameOutcome(
     c.pendingTournament.fixturesLeft -= 1
     if (wonBattle) c.pendingTournament.won += 1
     if (c.pendingTournament.fixturesLeft <= 0) {
+      const won = c.pendingTournament.won >= 2
       c.pendingTournamentResult = {
-        won: c.pendingTournament.won >= 2,
+        won,
         nameKey: c.pendingTournament.nameKey,
       }
+      // The run's story: only an actual victory is a memorable beat — a
+      // runner-up finish is narrated by the honor beat, not the scrollback.
+      if (won) logTurn(c, "__tournament_win__", c.pendingTournament.nameKey, undefined, "tournament")
       c.pendingTournament = null
     }
   }

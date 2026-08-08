@@ -1,5 +1,7 @@
 import { Router } from "express"
-import type { Request, Response } from "express"
+import type { NextFunction, Request, Response } from "express"
+import { asyncHandler, errorMiddleware, HttpError } from "../errors.js"
+import { log } from "../logger.js"
 import { Rng, hashSeed, rivalRngFor, todayDailySeed } from "../../shared/rng.js"
 import { computeScore, GAME_CONFIG } from "../../shared/config.js"
 import { genderize } from "../../shared/genderize.js"
@@ -31,6 +33,7 @@ import {
   buildRivalUpdate,
   computeSeasonGrade,
   localize,
+  logTurn,
   peakReputation,
   seasonHeadline,
   seasonRenownGains,
@@ -135,7 +138,9 @@ gameRouter.post("/archetype-draw", (req: Request, res: Response) => {
 })
 
 // POST /api/game/new  { name, classId, archetypeId, runType, locale }
-gameRouter.post("/new", async (req: Request, res: Response) => {
+gameRouter.post(
+  "/new",
+  asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
   try {
     const name =
       String(req.body?.name ?? "")
@@ -218,13 +223,17 @@ gameRouter.post("/new", async (req: Request, res: Response) => {
       event: served,
     })
   } catch (err) {
-    console.log("[v0] /new error", (err as Error).message)
-    return res.status(500).json({ error: "server_error" })
+    // Logged with full stack + request context by the global error middleware
+    // (server/errors.ts); the response carries an errorId for the player.
+    next(err)
   }
-})
+  }),
+)
 
 // GET /api/game/state?runId=...  — resume after reload.
-gameRouter.get("/state", async (req: Request, res: Response) => {
+gameRouter.get(
+  "/state",
+  asyncHandler(async (req: Request, res: Response) => {
   const run = await loadOwnedRun(req)
   if (!run) return res.status(404).json({ error: "not_found" })
   const locale = run.locale
@@ -281,10 +290,13 @@ gameRouter.get("/state", async (req: Request, res: Response) => {
     event: served,
     finished: run.finished,
   })
-})
+  }),
+)
 
 // GET /api/game/shop?runId=...  — available shop items for current run.
-gameRouter.get("/shop", async (req: Request, res: Response) => {
+gameRouter.get(
+  "/shop",
+  asyncHandler(async (req: Request, res: Response) => {
   const run = await loadOwnedRun(req)
   if (!run) return res.status(404).json({ error: "not_found" })
   const locale = run.locale
@@ -308,8 +320,11 @@ gameRouter.get("/shop", async (req: Request, res: Response) => {
       duration: item.duration,
       owned: c.inventory.find((inv) => inv.itemId === item.id)?.qty ?? 0,
     }))
+  // Debug-level market listing — only useful when tracing a specific run.
+  log.debug("shop.list", { runId: run.id, items: items.length, gold: c.gold })
   res.json({ items, gold: c.gold, inventory: c.inventory })
-})
+  }),
+)
 
 // POST /api/game/buy  { runId, itemId }
 //
@@ -317,7 +332,9 @@ gameRouter.get("/shop", async (req: Request, res: Response) => {
 // resolves them against its own active locale (Toasts, EndingScreen, and
 // App.tsx all use resolveLocaleMap), so pre-localizing here would bake the
 // run's language into the payload and break a mid-run locale toggle.
-gameRouter.post("/buy", async (req: Request, res: Response) => {
+gameRouter.post(
+  "/buy",
+  asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
   try {
     const run = await loadOwnedRun(req)
     if (!run) return res.status(404).json({ error: "not_found" })
@@ -352,6 +369,11 @@ gameRouter.post("/buy", async (req: Request, res: Response) => {
       c.inventory.push({ itemId, qty: 1, expiresAtTurn })
     }
 
+    // The run's story: a purchase is a life beat (the ending screen's "Your
+    // Story" names the item, this run's locale). Logged before any rewards so
+    // the scrollback order mirrors the run's actual beats.
+    logTurn(c, "__shop__", itemId, undefined, "shop")
+
     // Items can declare an achievementTrigger (e.g. the floating_realm luxury)
     // — bump that counter and unlock the achievement right away so the purchase
     // has a felt reward. `achievementTrigger` doubles as the counter key,
@@ -365,6 +387,16 @@ gameRouter.post("/buy", async (req: Request, res: Response) => {
     run.character = c
     await saveRun(run)
 
+    // Structured audit line for the market — which item, at what cost, and the
+    // gold left after. Greppable by runId (server/logger.ts).
+    log.info("shop.purchase", {
+      runId: run.id,
+      itemId,
+      cost: item.cost,
+      goldAfter: c.gold,
+      locale: run.locale,
+    })
+
     return res.json({
       character: c,
       purchased: itemId,
@@ -373,10 +405,10 @@ gameRouter.post("/buy", async (req: Request, res: Response) => {
       newAchievements,
     })
   } catch (err) {
-    console.log("[v0] /buy error", (err as Error).message)
-    return res.status(500).json({ error: "server_error" })
+    next(err)
   }
-})
+  }),
+)
 
 // Shared tail for /choose and the finished branch of /minigame-move: applies
 // quest/achievement bookkeeping, then either finalizes the ending or serves
@@ -428,7 +460,7 @@ async function finishResolvedTurn(
     run.rivalRngState = rivalRng.getState()
     await saveRun(run)
     await persistCharacterSnapshot(run)
-    await insertLeaderboardEntry({
+    const leaderboardTier = await insertLeaderboardEntry({
       runId: run.id,
       name: c.name,
       characterClass: c.class,
@@ -446,6 +478,15 @@ async function finishResolvedTurn(
       epilogue,
       runType: run.runType,
       seed: run.seed,
+    })
+    // Structured audit line for the leaderboard — the run's entry + its tier.
+    log.info("leaderboard.insert", {
+      runId: run.id,
+      name: c.name,
+      score,
+      endingType: outcome.endingType,
+      runType: run.runType,
+      tier: leaderboardTier ?? null,
     })
     return {
       character: c,
@@ -474,7 +515,9 @@ async function finishResolvedTurn(
 }
 
 // POST /api/game/choose  { runId, choiceId, cardId }
-gameRouter.post("/choose", async (req: Request, res: Response) => {
+gameRouter.post(
+  "/choose",
+  asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
   try {
     const run = await loadOwnedRun(req)
     if (!run) return res.status(404).json({ error: "not_found" })
@@ -501,22 +544,26 @@ gameRouter.post("/choose", async (req: Request, res: Response) => {
     return res.json(await finishResolvedTurn(run, outcome, rng, rivalRng))
   } catch (err) {
     const msg = (err as Error).message
-    console.log("[v0] /choose error", msg)
     if (
       msg.startsWith("unknown choice") ||
       msg.startsWith("unknown card") ||
       msg.startsWith("locked choice")
     ) {
-      return res.status(400).json({ error: "invalid_choice" })
+      // Expected client error — rendered by the route-level error middleware
+      // as { error: "invalid_choice", errorId }.
+      throw new HttpError(400, "invalid_choice")
     }
-    return res.status(500).json({ error: "server_error", detail: msg })
+    next(err)
   }
-})
+  }),
+)
 
 // POST /api/game/minigame-move  { runId, move } — one move of an interactive
 // minigame. Persists the game state after every move; the final move resolves
 // the outcome through the standard outcome pipeline and serves the next event.
-gameRouter.post("/minigame-move", async (req: Request, res: Response) => {
+gameRouter.post(
+  "/minigame-move",
+  asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
   try {
     const run = await loadOwnedRun(req)
     if (!run) return res.status(404).json({ error: "not_found" })
@@ -579,24 +626,26 @@ gameRouter.post("/minigame-move", async (req: Request, res: Response) => {
     })
   } catch (err) {
     const msg = (err as Error).message
-    console.log("[v0] /minigame-move error", msg)
     if (
       msg.startsWith("invalid tictactoe cell") ||
       msg.startsWith("invalid memotest card") ||
       msg.startsWith("invalid press option") ||
       msg.startsWith("invalid move for")
     ) {
-      return res.status(400).json({ error: "invalid_move" })
+      throw new HttpError(400, "invalid_move")
     }
-    return res.status(500).json({ error: "server_error", detail: msg })
+    next(err)
   }
-})
+  }),
+)
 
 // POST /api/game/combat-move  { runId, move } — one round of a combat
 // encounter. Persists the fight state after every round; the final round
 // resolves rewards/death through endCombat and serves the next event (same
 // tail as /choose and /minigame-move).
-gameRouter.post("/combat-move", async (req: Request, res: Response) => {
+gameRouter.post(
+  "/combat-move",
+  asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
   try {
     const run = await loadOwnedRun(req)
     if (!run) return res.status(404).json({ error: "not_found" })
@@ -665,8 +714,12 @@ gameRouter.post("/combat-move", async (req: Request, res: Response) => {
       ...payload,
     })
   } catch (err) {
-    const msg = (err as Error).message
-    console.log("[v0] /combat-move error", msg)
-    return res.status(500).json({ error: "server_error", detail: msg })
+    next(err)
   }
-})
+  }),
+)
+
+// Route-level error handling: logs the failure with its stack and returns a
+// structured { error, errorId } JSON response (the app-level middleware in
+// app.ts is the final safety net for anything outside these routes).
+gameRouter.use(errorMiddleware)

@@ -5,6 +5,7 @@ import type { Gender, Locale, Origin, RunType } from "@shared/types"
 import { api, type ArchetypeView, type ClassInfo } from "../api"
 import { t } from "../i18n/strings"
 import { readUnlockedClasses } from "../lib/archetypeUnlocks"
+import { errorMessage } from "../lib/errors"
 import { STAT_ABBR } from "../constants"
 import { AchIcon } from "./AchIcon"
 import { ArchetypeStep } from "./ArchetypeStep"
@@ -84,7 +85,7 @@ export function CreationScreen({ locale, onStart, onStartWithArchetype }: Props)
         setClasses(res.classes)
         setDailySeed(res.dailySeed)
       })
-      .catch((e) => active && setError(String(e.message)))
+      .catch((e) => active && setError(errorMessage(e, locale)))
     return () => {
       active = false
     }
@@ -144,7 +145,7 @@ export function CreationScreen({ locale, onStart, onStartWithArchetype }: Props)
         await onStart(n.trim() || "Wanderer", g, cid, runType, o)
       }
     } catch (e) {
-      setError(String((e as Error).message))
+      setError(errorMessage(e, locale))
     } finally {
       setBusy(false)
     }
@@ -164,7 +165,7 @@ export function CreationScreen({ locale, onStart, onStartWithArchetype }: Props)
         origin,
       )
     } catch (e) {
-      setError(String((e as Error).message))
+      setError(errorMessage(e, locale))
       setBusy(false)
     }
   }

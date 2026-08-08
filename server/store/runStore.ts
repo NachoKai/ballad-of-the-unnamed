@@ -150,6 +150,7 @@ export async function saveRun(run: RunRecord): Promise<void> {
            character = $4,
            pending_event = $5,
            finished = $6,
+           seen_event_ids = $7,
            updated_at = now()
      WHERE id = $1`,
     [
@@ -159,6 +160,7 @@ export async function saveRun(run: RunRecord): Promise<void> {
       JSON.stringify(run.character),
       run.pendingEvent ? JSON.stringify(run.pendingEvent) : null,
       run.finished,
+      JSON.stringify(run.character.seenEventIds ?? []),
     ],
   )
   // Keep the normalized rivals row in sync on every save.
@@ -227,7 +229,11 @@ export async function persistCharacterSnapshot(run: RunRecord): Promise<void> {
       c.huntedUntilTurn,
       c.locale,
       JSON.stringify(c.counters),
-      JSON.stringify([]),
+      // Per-encounter completion tracking: mirror the run's seen encounters so
+      // the Trophy Hall breakdown can read it without re-parsing the whole
+      // character JSONB (the runs.seen_event_ids column is kept in sync by
+      // saveRun on every save).
+      JSON.stringify(c.seenEventIds ?? []),
       run.runType,
       run.runType === "daily" ? run.seed : null,
       hashSeed(run.seed),
@@ -245,6 +251,30 @@ export async function persistCharacterSnapshot(run: RunRecord): Promise<void> {
        VALUES ($1, $2, $3)
        ON CONFLICT (character_id, tag) DO UPDATE SET count = EXCLUDED.count`,
       [c.id, tag, count],
+    )
+  }
+
+  // Turn log → normalized turn_log rows (the run's story, language-neutral
+  // event/choice ids). Replaced on re-finalize so the chronicle never
+  // duplicates if persistCharacterSnapshot is ever called twice for a run.
+  await query(`DELETE FROM turn_log WHERE character_id = $1`, [c.id])
+  for (const entry of c.turnLog ?? []) {
+    await query(
+      `INSERT INTO turn_log (id, character_id, turn_number, event_id, choice_id, tag, stat_deltas, vars, created_at)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)`,
+      [
+        randomUUID(),
+        c.id,
+        entry.turn,
+        entry.eventId,
+        entry.choiceId,
+        entry.tag ?? null,
+        null,
+        // `vars` carries the beat kind (shop/clan/tournament) for special
+        // entries; regular event rows keep it null.
+        entry.kind && entry.kind !== "event" ? JSON.stringify({ kind: entry.kind }) : null,
+        now,
+      ],
     )
   }
 }
@@ -268,7 +298,7 @@ export async function insertLeaderboardEntry(input: {
   epilogue: string
   runType: RunType
   seed: string
-}): Promise<void> {
+}): Promise<string> {
   // Determine tier: runs above the 99.9th percentile become "legendary"
   let tier = "standard"
   if (input.runType === "standard") {
@@ -316,6 +346,8 @@ export async function insertLeaderboardEntry(input: {
       tier,
     ],
   )
+  // Report the tier back so callers can log it (leaderboard.insert audit line).
+  return tier
 }
 
 export interface LeaderboardRow {
@@ -428,10 +460,20 @@ export interface CollectionData {
   uniqueEndings: string[]
   uniqueClasses: string[]
   uniqueAchievements: string[]
+  // Every authored encounter id seen across all finished runs (deduped).
+  // Feeds the per-encounter completion breakdown in GET /api/meta/collection.
+  seenEventIds: string[]
   totalRuns: number
 }
 
 export async function getCrossRunCollection(): Promise<CollectionData> {
+  // jsonb_array_elements_text on an empty array yields no rows, so the
+  // COALESCE alone is enough to tolerate legacy runs with a null column.
+  const seenRows = await query<{ id: string }>(
+    `SELECT DISTINCT jsonb_array_elements_text(COALESCE(seen_event_ids, '[]'::jsonb)) AS id
+     FROM runs
+     WHERE finished = true`,
+  )
   const factionRows = await query<{ faction: string }>(
     `SELECT DISTINCT jsonb_array_elements(character->'reputations')->>'faction' AS faction
      FROM runs WHERE finished = true AND jsonb_array_length(character->'reputations') > 0`,
@@ -466,6 +508,7 @@ export async function getCrossRunCollection(): Promise<CollectionData> {
       .filter(Boolean)
       .sort(),
     uniqueAchievements: achievementRows.map((r) => r.achievement).sort(),
+    seenEventIds: seenRows.map((r) => r.id).sort(),
     totalRuns: Number(countRow?.total ?? 0),
   }
 }

@@ -29,6 +29,7 @@ import {
   adjustReputation,
   clearExpiredHunted,
   deductStamina,
+  logTurn,
   recomputeDerived,
   registerMenaceKill,
   updateMarketValue,
@@ -525,6 +526,8 @@ export function endCombat(
   rng: Rng,
 ): CombatResolveOutput {
   c.turn += 1
+  // The run's story: combat turns record the outcome as the "choice".
+  logTurn(c, ev.id, `result:${state.result ?? "fled"}`)
   const creature = state.creature
   const loot = creature.loot
   let narrative: string
