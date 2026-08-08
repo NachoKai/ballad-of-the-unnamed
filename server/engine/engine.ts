@@ -308,11 +308,7 @@ export function generateClanOffer(
 // Rival advancement at season boundary
 // ---------------------------------------------------------------------------
 
-export function advanceRival(
-  c: CharacterState,
-  registry: ContentRegistry,
-  rng: Rng,
-): void {
+export function advanceRival(c: CharacterState, registry: ContentRegistry, rng: Rng): void {
   const rival = c.rival
   if (!rival) return
   rival.age = c.age
@@ -366,6 +362,19 @@ export function selectEvent(c: CharacterState, registry: ContentRegistry, rng: R
     )
     if (destinyPool.length > 0) {
       const picked = rng.weighted(destinyPool, (ev) => effectiveWeight(ev, c))
+      c.lastEventId = picked.id
+      return picked
+    }
+  }
+  // Combat encounters: a rare, separate rotation. The roll is its own draw so
+  // daily runs stay deterministic; the pool only ever contains combat events.
+  if (rng.bool(GAME_CONFIG.combatEncounterChance)) {
+    const combatPool = registry.combats.filter((ev) => isEligible(ev, c))
+    if (combatPool.length > 0) {
+      const noRepeat = combatPool.filter((ev) => ev.id !== c.lastEventId)
+      const picked = rng.weighted(noRepeat.length > 0 ? noRepeat : combatPool, (ev) =>
+        effectiveWeight(ev, c),
+      )
       c.lastEventId = picked.id
       return picked
     }
@@ -1155,7 +1164,7 @@ function applyStatDeltas(c: CharacterState, deltas?: StatDeltas, multiplier = 1)
   return net
 }
 
-function bumpCounter(c: CharacterState, key: string, by = 1): void {
+export function bumpCounter(c: CharacterState, key: string, by = 1): void {
   c.counters[key] = (c.counters[key] ?? 0) + by
 }
 
@@ -1169,7 +1178,7 @@ function recordRarity(c: CharacterState, rarity: Rarity): void {
 // Death / aging
 // ---------------------------------------------------------------------------
 
-function rollDeath(c: CharacterState, pendingInjuryRisk: number, rng: Rng): boolean {
+export function rollDeath(c: CharacterState, pendingInjuryRisk: number, rng: Rng): boolean {
   // Shop item injury risk modifier (battle_healer, season_healer).
   const shopMitigation = getActiveModifier(c, "injuryRiskModifier")
   // Injury/accident risk from the chosen outcome, mitigated by constitution + shop.
@@ -1187,7 +1196,7 @@ function rollDeath(c: CharacterState, pendingInjuryRisk: number, rng: Rng): bool
   return false
 }
 
-function ageUp(c: CharacterState): void {
+export function ageUp(c: CharacterState): void {
   if (c.turn % GAME_CONFIG.turnsPerYear === 0) {
     c.age += 1
     c.currentArc = arcForAge(c.age)
@@ -1629,12 +1638,12 @@ export function applyMinigameOutcome(
 
 // ---------------------------------------------------------------------------
 
-function defaultFaction(c: CharacterState): string {
+export function defaultFaction(c: CharacterState): string {
   return c.reputations[0]?.faction ?? "commoners"
 }
 
 // Classify the ending as heroic/peaceful vs. plain, based on standing.
-function heroicOrPeaceful(c: CharacterState, kind: "death" | "retirement"): EndingType {
+export function heroicOrPeaceful(c: CharacterState, kind: "death" | "retirement"): EndingType {
   // Renown is reachable through any of three paths: standing with a faction,
   // widespread fame, or raw power accrued over a long, successful life.
   const renowned = primaryReputation(c) >= 55 || c.fame >= 60 || c.powerLevel >= 65

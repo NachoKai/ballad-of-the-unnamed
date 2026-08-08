@@ -18,8 +18,10 @@ vi.mock("../store/runStore.js", () => ({
   saveRun: store.saveRun,
 }))
 
+import { Rng } from "../../shared/rng.js"
 import { gameRouter } from "./game.js"
 import { createCharacter } from "../engine/engine.js"
+import { startCombatState } from "../engine/combat/index.js"
 import { loadContent } from "../content/registry.js"
 import type { CharacterState, EventContent } from "../../shared/types.js"
 
@@ -145,6 +147,46 @@ async function postDraw(classId: string, unlockedClasses?: string[]) {
     method: "POST",
     url: "/archetype-draw",
     body: { classId, locale: "en", gender: "male", unlockedClasses },
+    query: {},
+  } as unknown as Request
+  gameRouter(req, res, () => {})
+  return jsonPromise
+}
+
+// Drive POST /combat-move with a pending combat event on the run.
+async function postCombatMove(run: CharacterState, pendingEvent: EventContent, move: unknown) {
+  let statusCode = 200
+  let resolveJson!: (v: { statusCode: number; body: unknown }) => void
+  const res = {
+    status(code: number) {
+      statusCode = code
+      return this
+    },
+    json(body: unknown) {
+      resolveJson({ statusCode, body })
+      return this
+    },
+  } as unknown as Response
+  store.getRun.mockResolvedValue({
+    id: run.id,
+    runType: "standard",
+    seed: "s",
+    rngState: 1,
+    rivalRngState: 1,
+    locale: "en",
+    character: run,
+    pendingEvent,
+    finished: false,
+  })
+  store.saveRun.mockResolvedValue(undefined)
+
+  const jsonPromise = new Promise<{ statusCode: number; body: unknown }>((r) => {
+    resolveJson = r
+  })
+  const req = {
+    method: "POST",
+    url: "/combat-move",
+    body: { runId: run.id, move },
     query: {},
   } as unknown as Request
   gameRouter(req, res, () => {})
@@ -666,5 +708,166 @@ describe("POST /minigame-move · circus_wheel lockup guard", () => {
     const out = await postMinigameMove(c, wheelEv, { kind: "circus_wheel", action: "leave" })
     expect(out.statusCode).toBe(200)
     expect((out.body as { status: string }).status).toBe("finished")
+  })
+})
+
+describe("POST /combat-move · combat encounters", () => {
+  const roadAmbush = reg.combats.find((e) => e.id === "road_ambush")!
+
+  function combatChar(): CharacterState {
+    const c = createCharacter({
+      id: "r1",
+      name: "Test",
+      classId: "warrior",
+      origin: "established",
+      locale: "en",
+      registry: reg,
+    })
+    c.turn = 4
+    return c
+  }
+
+  it("full fight to victory grants loot and counters", async () => {
+    const c = combatChar()
+    // Force a rat_swarm (18 hp) so the fight ends quickly.
+    c.pendingCombat = startCombatState(roadAmbush, c, reg, new Rng(2))
+    c.pendingCombat.creature = reg.creaturesById.get("rat_swarm")!
+    c.pendingCombat.creatureHealth = c.pendingCombat.creature.health
+
+    let last: { statusCode: number; body: unknown } | null = null
+    let guard = 0
+    while (guard < 30) {
+      last = await postCombatMove(c, roadAmbush, { kind: "attack" })
+      const res = last.body as { status: string }
+      if (res.status === "finished") break
+      guard++
+    }
+    expect(last).not.toBeNull()
+    const res = last!.body as {
+      status: string
+      ended: boolean
+      event?: unknown
+      character: CharacterState
+      loot: { gold: number; fame: number; items: { itemId: string; qty: number }[] } | null
+      combat: { game: string; view: { result: string } }
+    }
+    expect(res.status).toBe("finished")
+    expect(res.combat.game).toBe("combat")
+    expect(res.combat.view.result).toBe("won")
+    expect(res.ended).toBe(false)
+    expect(res.event).toBeDefined()
+    expect(res.character.counters["monsters_killed"]).toBe(1)
+    expect(res.character.counters["battles_won"]).toBe(1)
+    expect(res.loot).not.toBeNull()
+    expect(res.loot!.gold).toBeGreaterThan(0)
+    expect(store.saveRun).toHaveBeenCalled()
+  })
+
+  it("a non-final move returns status playing and persists", async () => {
+    const c = combatChar()
+    // stone_golem has 90 hp — an attack cannot end it in one round.
+    c.pendingCombat = startCombatState(roadAmbush, c, reg, new Rng(1))
+    c.pendingCombat.creature = reg.creaturesById.get("stone_golem")!
+    c.pendingCombat.creatureHealth = c.pendingCombat.creature.health
+    const { statusCode, body } = await postCombatMove(c, roadAmbush, { kind: "attack" })
+    expect(statusCode).toBe(200)
+    const res = body as { status: string; combat: { view: { round: number } }; feedback: null }
+    expect(res.status).toBe("playing")
+    expect(res.combat.view.round).toBe(1)
+    expect(res.feedback).toBeNull()
+    expect(c.pendingCombat).not.toBeNull()
+    expect(store.saveRun).toHaveBeenCalled()
+  })
+
+  it("flee grants no rewards and does not complete the encounter", async () => {
+    const c = combatChar()
+    c.pendingCombat = startCombatState(roadAmbush, c, reg, new Rng(1))
+    // smoke guarantees the flee succeeds.
+    c.pendingCombat.playerStatuses.push({ id: "smoke", turns: 0 })
+    const { statusCode, body } = await postCombatMove(c, roadAmbush, { kind: "flee" })
+    expect(statusCode).toBe(200)
+    const res = body as {
+      status: string
+      combat: { view: { result: string } }
+      character: CharacterState
+      loot: unknown
+    }
+    expect(res.status).toBe("finished")
+    expect(res.combat.view.result).toBe("fled")
+    expect(res.character.counters["flees_count"]).toBe(1)
+    expect(res.character.counters["battles_won"]).toBeUndefined()
+    expect(res.character.counters["event_road_ambush"]).toBeUndefined()
+    expect(res.loot).toBeNull()
+  })
+
+  it("death against a canKillPlayer creature ends the run", async () => {
+    const c = combatChar()
+    c.health = 20
+    c.pendingCombat = startCombatState(roadAmbush, c, reg, new Rng(1))
+    c.pendingCombat.creature = reg.creaturesById.get("werewolf")!
+    c.pendingCombat.creatureHealth = c.pendingCombat.creature.health
+
+    let last: { statusCode: number; body: unknown } | null = null
+    let guard = 0
+    while (guard < 40) {
+      last = await postCombatMove(c, roadAmbush, { kind: "attack" })
+      const res = last.body as { status: string }
+      if (res.status === "finished") break
+      guard++
+    }
+    const res = last!.body as { status: string; ended: boolean; endingType?: string }
+    expect(res.status).toBe("finished")
+    expect(res.ended).toBe(true)
+    expect(res.endingType).toBeDefined()
+    expect(c.status).toBe("dead")
+  })
+
+  it("rejects a move when no combat is pending", async () => {
+    const c = combatChar()
+    const { statusCode, body } = await postCombatMove(c, roadAmbush, { kind: "attack" })
+    expect(statusCode).toBe(400)
+    expect((body as { error: string }).error).toBe("no_pending_combat")
+  })
+
+  it("rejects a move whose pending event id mismatches", async () => {
+    const c = combatChar()
+    c.pendingCombat = startCombatState(roadAmbush, c, reg, new Rng(1))
+    // Serve a different combat event as the pending event.
+    const other = reg.combats.find((e) => e.id === "wolf_territory")!
+    const { statusCode, body } = await postCombatMove(c, other, { kind: "attack" })
+    expect(statusCode).toBe(400)
+    expect((body as { error: string }).error).toBe("combat_mismatch")
+  })
+
+  it("rejects unknown abilities and bad move kinds", async () => {
+    const c = combatChar()
+    c.pendingCombat = startCombatState(roadAmbush, c, reg, new Rng(1))
+    const unknown = await postCombatMove(c, roadAmbush, {
+      kind: "ability",
+      abilityId: "nope",
+    })
+    expect(unknown.statusCode).toBe(400)
+    expect((unknown.body as { error: string }).error).toBe("invalid_move")
+
+    const badKind = await postCombatMove(c, roadAmbush, { kind: "dance" })
+    expect(badKind.statusCode).toBe(400)
+    expect((badKind.body as { error: string }).error).toBe("invalid_move")
+  })
+
+  it("rejects a move after the fight is over", async () => {
+    const c = combatChar()
+    c.pendingCombat = startCombatState(roadAmbush, c, reg, new Rng(1))
+    c.pendingCombat.over = true
+    c.pendingCombat.result = "won"
+    const { statusCode, body } = await postCombatMove(c, roadAmbush, { kind: "attack" })
+    expect(statusCode).toBe(400)
+    expect((body as { error: string }).error).toBe("combat_already_finished")
+  })
+
+  it("/choose rejects combat events", async () => {
+    const c = combatChar()
+    const { statusCode, body } = await postChoose(c, roadAmbush, "anything")
+    expect(statusCode).toBe(400)
+    expect((body as { error: string }).error).toBe("combat_event")
   })
 })

@@ -23,6 +23,7 @@ import {
 import { generateDistinctions, generateEpilogue, generateEpithet } from "./epilogue.js"
 import { evaluateAchievements } from "./achievements.js"
 import { applyInteractiveMove, createInteractiveState, interactiveTier } from "./minigames/index.js"
+import { endCombat, prepareCombatServe, resolveCombatRound } from "./combat/index.js"
 import { MEMOTEST_CARD_COUNT } from "./minigames/memotest.js"
 import { loadContent } from "../content/registry.js"
 import {
@@ -1197,6 +1198,10 @@ describe("counter achievements", () => {
     ["alley_king", "street_fights_won", 3],
     ["master_alchemist", "alchemy_won", 3],
     ["clutch_artist", "clutch_duels", 1],
+    // Combat ladder: First Kill → Monster Slayer → (future tiers).
+    ["first_kill", "monsters_killed", 1],
+    ["giant_killer", "elite_kills", 1],
+    ["boss_slayer", "boss_kills", 1],
   ]
 
   it.each(COUNTER_ACH)("unlocks %s when counter %s reaches %d", (achId, key, value) => {
@@ -1226,8 +1231,10 @@ describe("counter achievements", () => {
       }
     }
     // bench_joined is bumped by the engine (joinClan), not content — checked
-    // in the bench mechanic tests. Every counter above must be bumped somewhere.
-    const engineBumped = new Set(["bench_joined"])
+    // in the bench mechanic tests; monsters_killed/elite_kills/boss_kills are
+    // bumped by endCombat in server/engine/combat (asserted in combat.test.ts).
+    // Every counter above must be bumped somewhere.
+    const engineBumped = new Set(["bench_joined", "monsters_killed", "elite_kills", "boss_kills"])
     for (const [, key] of COUNTER_ACH) {
       if (key === "jetset_life") continue // bumped by the /buy route, not content
       expect(bumped.has(key) || engineBumped.has(key), `${key} never incremented`).toBe(true)
@@ -2037,6 +2044,10 @@ describe("selectEvent no consecutive repeats", () => {
       ...reg,
       events: [first],
       minigames: [first],
+      // Empty the combat bank so the combat branch can't leak a real combat
+      // event into the single-event fallback check.
+      combats: [],
+      combatsById: new Map(),
     } as unknown as ContentRegistry
     const rng2 = new Rng(hashSeed("no-repeat-fallback"))
     const again = selectEvent(c, tinyRegistry, rng2)
@@ -2137,7 +2148,12 @@ describe("hasPlayableChoice", () => {
       const picked = selectEvent(weak, reg, new Rng(seed))
       // Interactive minigames carry no choices but are always playable through
       // the move loop — selectEvent treats them as playable when eligible.
-      const playable = picked.resolution?.type === "interactive" || hasPlayableChoice(picked, weak)
+      // Combat encounters resolve through the combat-move loop, likewise
+      // always playable when served.
+      const playable =
+        picked.combat !== undefined ||
+        picked.resolution?.type === "interactive" ||
+        hasPlayableChoice(picked, weak)
       expect(playable).toBe(true)
     }
   })
@@ -3439,6 +3455,25 @@ function playTurn(c: CharacterState, rng: Rng, pick?: (ids: string[]) => string)
   const { event, served } = buildServedEvent(c, reg, rng)
   const isMinigame = event.type === "minigame" || Boolean(event.cards)
 
+  // Combat encounters resolve round-by-round through the combat engine (never
+  // the card-pick roll). Auto-play the fight exactly like the combat-move
+  // route: attack until the fight ends, then apply endCombat's rewards/tail.
+  if (event.combat) {
+    if (!c.pendingCombat) prepareCombatServe(event, c, c.locale, reg, rng)
+    const state = c.pendingCombat!
+    const kit = reg.classKits[c.class]
+    let guard = 0
+    while (!state.over && guard < 40) {
+      resolveCombatRound(state, c, kit, { kind: "attack" }, rng)
+      guard++
+    }
+    const outcome = endCombat(c, event, state, reg, rng)
+    if (outcome.completedQuest) {
+      c.counters["quests_completed"] = (c.counters["quests_completed"] ?? 0) + 1
+    }
+    return outcome.ended
+  }
+
   // Interactive minigames resolve move-by-move through the minigame engine
   // (never the card-pick roll). Drive the match to completion exactly like
   // POST /api/game/minigame-move does, then apply the outcome tier.
@@ -3813,6 +3848,12 @@ describe(" global honors ", () => {
     expect(rows.some((r) => r.id === "champion_of_the_age")).toBe(true)
     expect(rows.find((r) => r.id === "deed_of_the_year")?.count).toBe(2)
   })
+
+  it("generateDistinctions counts monsters slain", () => {
+    const c = makeChar({ counters: { monsters_killed: 12 } })
+    const rows = generateDistinctions(c, reg)
+    expect(rows.find((r) => r.id === "monsters_killed")?.count).toBe(12)
+  })
 })
 
 describe(" class-partitioned epithets ", () => {
@@ -4111,5 +4152,67 @@ describe("interactive minigame serving", () => {
       }
     }
     expect(found).toBe(true)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Combat encounters in the event rotation
+// ---------------------------------------------------------------------------
+describe("combat in the event rotation", () => {
+  it("selectEvent can serve a combat encounter with a resolvable creature pool", () => {
+    // Property test: whenever the combat branch fires, the event is a combat
+    // encounter whose creature pool resolves against the registry.
+    const c = makeChar({ age: 16, currentArc: arcForAge(16) })
+    let sawCombat = false
+    for (let seed = 1; seed <= 200; seed++) {
+      const picked = selectEvent(c, reg, new Rng(seed))
+      if (picked.type === "combat") {
+        sawCombat = true
+        expect(picked.combat?.creatures.length).toBeGreaterThan(0)
+        for (const cid of picked.combat!.creatures) {
+          expect(reg.creaturesById.has(cid)).toBe(true)
+        }
+      }
+    }
+    expect(sawCombat).toBe(true)
+  })
+
+  it("combat encounters are never picked through the normal event pool", () => {
+    // Combat events have no choices/cards, so hasPlayableChoice is false — they
+    // can never leak into the minigame/event rotation branches of selectEvent.
+    for (const ev of reg.combats) {
+      expect(ev.type).toBe("combat")
+      expect(hasPlayableChoice(ev, makeChar())).toBe(false)
+    }
+  })
+
+  it("serveEvent initializes pendingCombat for combat events", () => {
+    const c = makeChar({ age: 16, currentArc: arcForAge(16) })
+    const ev = reg.combats.find((e) => e.id === "road_ambush")!
+    const served = serveEvent(ev, c, "en", reg, new Rng(7), false)
+    expect(served.combat?.view).toBeDefined()
+    expect(served.combat!.view.over).toBe(false)
+    expect(served.combat!.view.result).toBeNull()
+    expect(served.choices).toEqual([])
+    expect(c.pendingCombat).toBeDefined()
+    expect(c.pendingCombat!.eventId).toBe("road_ambush")
+  })
+
+  it("serveEvent resume reuses the persisted combat state", () => {
+    const c = makeChar({ age: 16, currentArc: arcForAge(16) })
+    const ev = reg.combats.find((e) => e.id === "road_ambush")!
+    serveEvent(ev, c, "en", reg, new Rng(7), false)
+    const creatureId = c.pendingCombat!.creature.id
+    // A different rng on resume must not re-roll the creature.
+    const again = serveEvent(ev, c, "en", reg, new Rng(99), false)
+    expect(again.combat!.view.creature.id).toBe(creatureId)
+  })
+
+  it("the choose path rejects combat events", () => {
+    // resolveChoice has no combat branch; the route guard (tested in the route
+    // suite) rejects them. Here we only assert the events carry the combat
+    // marker the guard checks.
+    const ev = reg.combats.find((e) => e.id === "road_ambush")!
+    expect(ev.combat).toBeDefined()
   })
 })

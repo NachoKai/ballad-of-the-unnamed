@@ -24,11 +24,7 @@ export type StatDeltas = Partial<Record<StatKey, number>>
 // ---- Interactive minigames (multi-move, server-authoritative) ----
 
 export type InteractiveGameKind =
-  | "tictactoe"
-  | "rps"
-  | "memotest"
-  | "press_conference"
-  | "circus_wheel"
+  "tictactoe" | "rps" | "memotest" | "press_conference" | "circus_wheel"
 
 // The five hand-signs of the goblin's game. Internal keys are language-neutral;
 // the client localizes them (e.g. rock → Piedra, paper → Pergamino, scissors →
@@ -69,13 +65,7 @@ export interface PressQuestion {
 // otherwise it costs `healthCost` health as a rigged-box injury, and `nothing`
 // pays nothing.
 export type CircusSegmentKind =
-  | "gold"
-  | "jackpot"
-  | "nothing"
-  | "freespin"
-  | "item"
-  | "fame"
-  | "mystery"
+  "gold" | "jackpot" | "nothing" | "freespin" | "item" | "fame" | "mystery"
 
 export interface CircusSegment {
   id: string
@@ -103,6 +93,218 @@ export type CircusMysterySide = "prize" | "injury"
 export interface CircusWheelConfig {
   cost: number
   segments: CircusSegment[]
+}
+
+// ---- Combat system (multi-round, server-authoritative) ----
+
+// Creature difficulty ladder — its OWN 5-tier scale, distinct from Choice rarity.
+export type CreatureRarity = "common" | "uncommon" | "rare" | "elite" | "boss"
+
+export type CombatSchool = "physical" | "magic"
+
+// Player ability effects. `school` decides which creature resistance applies
+// (physical → defense, magic → magicResistance).
+export type CombatAbilityEffect =
+  | "damage" // school-scaled damage
+  | "damage_and_debuff" // damage + creature slowed (attack x0.6, statusTurns)
+  | "damage_over_time" // poison: dotPerTurn dmg each round for statusTurns
+  | "heal" // heal = base + floor(stat * healCoefficient)
+  | "buff_attack" // player +attack for the fight (stacks; amount = base + stat*coeff)
+  | "buff_defense" // player damage mitigation +N for the fight (stacks)
+  | "stun" // creature skips its next action (chance = stunChance)
+  | "flee_boost" // flee auto-succeeds this round
+  | "steal" // small damage + gold equal to the damage dealt
+
+export interface CombatAbility {
+  id: string
+  label: LocaleMap
+  icon?: string
+  cost: number // resource cost (>= 1)
+  effect: CombatAbilityEffect
+  school: CombatSchool
+  stat: StatKey
+  coefficient: number
+  base: number
+  unlockAge?: number // ability locked until the character reaches this age
+  critChance?: number // default 0.05 for damage abilities
+  statusTurns?: number // damage_and_debuff / damage_over_time duration
+  dotPerTurn?: number // damage_over_time per-round damage
+  healCoefficient?: number // heal: default = coefficient
+  stunChance?: number // stun: default 1
+}
+
+// Per-class combat identity — authored as data, NEVER hardcoded in the UI.
+export interface ClassKit {
+  basicAttack: {
+    label: LocaleMap
+    stat: StatKey
+    coefficient: number
+    base: number
+    critChance: number
+  }
+  abilityMenuLabel: LocaleMap
+  resourceLabel: LocaleMap
+  resourceStat: StatKey
+  resourceMultiplier: number
+  fleeModifier: number
+  abilities: CombatAbility[]
+}
+
+export type CreatureMoveEffect =
+  | "damage" // damage = round((attack * damageMultiplier) * variance)
+  | "self_buff_attack" // creature attack x1.5 (enrage)
+  | "debuff_player_attack" // player attack -debuffAmount (min 1)
+  | "heal" // self heal = healAmount (clamped to max health)
+  | "flee_if_low_hp" // creature flees (no rewards)
+
+export interface CreatureMove {
+  id: string
+  name?: LocaleMap
+  weight: number // AI weighted pick
+  effect: CreatureMoveEffect
+  damageMultiplier?: number // damage: default 1
+  healAmount?: number
+  debuffAmount?: number // debuff_player_attack: default 3
+  // Phase gating: the move only enters the AI pool while the creature's health
+  // fraction (current/max) is within [minHealthFraction, maxHealthFraction].
+  minHealthFraction?: number
+  maxHealthFraction?: number
+}
+
+export interface CreatureLoot {
+  goldMin: number
+  goldMax: number
+  fameMin: number
+  fameMax: number
+  reputationDelta?: number
+  reputationFaction?: string
+  // item drop ids MUST reference existing shop.json item ids.
+  items?: { itemId: string; chance: number }[]
+}
+
+export interface CreatureContent {
+  id: string
+  name: LocaleMap
+  icon: string
+  rarity: CreatureRarity
+  arcs?: Arc[] // creature only served during these arcs; absent = all
+  canKillPlayer: boolean
+  health: number
+  attack: number
+  defense: number // reduces physical damage
+  magicResistance: number // reduces magic damage
+  moves: CreatureMove[]
+  loot: CreatureLoot
+  fleeDifficulty: number // 0..1; higher = harder to flee
+}
+
+// A status on one side of the fight. Language-neutral id; client localizes.
+// turns: rounds remaining (0 = permanent until cleared).
+export type CombatStatusId =
+  | "poisoned"
+  | "slowed" // creature attack x0.6
+  | "enraged" // creature attack x1.5
+  | "stunned" // creature skips its action this round
+  | "guarding" // player: incoming damage x combatGuardFactor this round
+  | "attack_up" // player +attack
+  | "attack_down" // player -attack
+  | "defense_up" // player +defense
+  | "smoke" // player: flee auto-succeeds
+
+export interface CombatStatus {
+  id: CombatStatusId
+  turns: number
+  amount?: number // poisoned dot / attack_up / attack_down / defense_up amount
+  // poisoned: the round it was applied — the first tick happens the round
+  // after, so the initial hit and the dot never land in the same round.
+  appliedRound?: number
+}
+
+// One round of the fight, language-neutral (client builds the prose lines).
+export interface CombatLogEntry {
+  round: number
+  playerAction: "attack" | "ability" | "defend" | "flee"
+  playerAbilityId?: string
+  playerDamage?: number
+  playerCrit?: boolean
+  playerHeal?: number
+  playerGold?: number
+  playerFled?: boolean
+  creatureMoveId?: string
+  creatureDamage?: number
+  creatureHeal?: number
+  creatureFled?: boolean
+  creatureSkipped?: boolean
+  poisonedTick?: number // poison damage applied to creature this round
+}
+
+// Server-persisted in-progress fight (stored in character.pendingCombat).
+// The creature is SNAPSHOTTED at encounter start so content edits mid-run
+// can't corrupt an active fight.
+export interface PendingCombatState {
+  eventId: string
+  creature: CreatureContent
+  creatureHealth: number
+  creatureStatuses: CombatStatus[]
+  playerBaseAttack: number // kit basicAttack base + floor(stat * coeff)
+  playerBaseDefense: number // floor(constitution * combatConMitigation)
+  playerStatuses: CombatStatus[]
+  resource: number
+  resourceMax: number
+  round: number
+  log: CombatLogEntry[]
+  over: boolean
+  result: "won" | "lost" | "fled" | null
+}
+
+// The fight as served to the client (localized labels only).
+export interface ServedCombatState {
+  creature: {
+    id: string
+    name: string
+    icon: string
+    rarity: CreatureRarity
+    currentHealth: number
+    maxHealth: number
+    attack: number // effective (x1.5 enraged, x0.6 slowed)
+    defense: number
+    magicResistance: number
+    statuses: CombatStatus[]
+  }
+  player: {
+    health: number
+    maxHealth: number
+    resource: number
+    resourceMax: number
+    resourceLabel: string
+    attack: number // effective
+    defense: number // effective
+    statuses: CombatStatus[]
+  }
+  kit: {
+    basicAttackLabel: string
+    abilityMenuLabel: string
+    abilities: { id: string; label: string; icon?: string; cost: number; unlocked: boolean }[]
+  }
+  round: number
+  log: CombatLogEntry[]
+  creatureMoveNames: Record<string, string>
+  over: boolean
+  result: "won" | "lost" | "fled" | null
+}
+
+// One action the client submits to /api/game/combat-move.
+export type CombatMove =
+  | { kind: "attack" }
+  | { kind: "ability"; abilityId: string }
+  | { kind: "defend" }
+  | { kind: "flee" }
+
+// Granted rewards returned by endCombat for the result screen breakdown.
+export interface CombatRewards {
+  gold: number
+  fame: number
+  items: { itemId: string; qty: number }[]
 }
 
 export type TicTacToeMark = "X" | "O"
@@ -493,7 +695,7 @@ export interface MinigameResolution {
 
 export interface EventContent {
   id: string
-  type?: "event" | "minigame" | "destiny" | "world"
+  type?: "event" | "minigame" | "destiny" | "world" | "combat"
   subtype?: string
   minAge: number
   maxAge: number
@@ -533,6 +735,9 @@ export interface EventContent {
   questions?: PressQuestion[]
   // circus_wheel: the authored wheel (cost + segments) for the wheel game.
   wheel?: CircusWheelConfig
+  // combat encounter: creature pool (ids into content/combat/creatures.json).
+  // Served as a combat frame instead of a card grid (like interactive minigames).
+  combat?: { creatures: string[] }
   resolution?: MinigameResolution
   outcomes?: Record<OutcomeTier, MinigameOutcome>
   primaryStat?: StatKey
@@ -703,6 +908,8 @@ export interface CharacterState {
   pendingCapstoneResult?: CapstoneResult | null
   // in-progress interactive minigame state, persisted across moves/reloads.
   pendingMinigame?: PendingMinigameState | null
+  // in-progress combat encounter state, persisted across moves/reloads.
+  pendingCombat?: PendingCombatState | null
 }
 
 export interface ReputationState {
@@ -773,6 +980,11 @@ export interface ServedEvent {
     game: InteractiveGameKind
     opponentName: string
     view: ServedInteractiveState
+  }
+  // Combat encounter: a multi-round fight served as a combat frame. When
+  // present, `choices` is empty and the client renders the combat component.
+  combat?: {
+    view: ServedCombatState
   }
 }
 

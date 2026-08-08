@@ -4,6 +4,7 @@ import { CircleHelp } from "lucide-react"
 import type {
   AchievementContent,
   CharacterState,
+  CombatMove,
   EndingType,
   Gender,
   InteractiveMove,
@@ -13,7 +14,7 @@ import type {
   RunType,
   ServedEvent,
 } from "@shared/types"
-import { type AchievementView, api, type MinigameMoveResponse } from "./api"
+import { type AchievementView, api, type CombatMoveResponse, type MinigameMoveResponse } from "./api"
 import { makeT, t } from "./i18n/strings"
 import { t as resolveLocaleMap } from "@shared/i18n"
 import { readUnlockedClasses, stampUnlockedClass } from "./lib/archetypeUnlocks"
@@ -68,6 +69,8 @@ export default function App() {
   const [pendingMinigameResult, setPendingMinigameResult] = useState<MinigameMoveResponse | null>(
     null,
   )
+  // Result of the final round of a combat encounter (result banner + next event).
+  const [pendingCombatResult, setPendingCombatResult] = useState<CombatMoveResponse | null>(null)
   const [resuming, setResuming] = useState(() => localStorage.getItem(RUN_KEY) !== null)
   const [runId, setRunId] = useState<string | null>(() => localStorage.getItem(RUN_KEY))
   const [lastAchievements, setLastAchievements] = useState<AchievementView[]>(() => {
@@ -291,6 +294,83 @@ export default function App() {
     }
   }
 
+  // One round of a combat encounter. The final round resolves the outcome;
+  // its payload is stashed so the combat frame can show the result banner, and
+  // applied when the player clicks Continue (onCombatFinished).
+  async function combatMove(move: CombatMove): Promise<CombatMoveResponse> {
+    const currentRunId = runId
+    if (!currentRunId) return { status: "playing" } as CombatMoveResponse
+    try {
+      const res = await api.combatMove({ runId: currentRunId, move })
+      if (res.status === "finished") {
+        setPendingCombatResult(res)
+      }
+      return res
+    } catch {
+      // Mirror /choose recovery: transient error or the run is gone.
+      try {
+        const state = await api.state(currentRunId)
+        if (state.finished || !state.event) throw new Error("run finished or gone")
+        setTurnNarrative("The fates hesitate... try again.")
+        return { status: "playing" } as CombatMoveResponse
+      } catch {
+        localStorage.removeItem(RUN_KEY)
+        setRunId(null)
+        setCharacter(null)
+        setEvent(null)
+        setScreen("creation")
+        return { status: "playing" } as CombatMoveResponse
+      }
+    }
+  }
+
+  // Apply the finished combat payload: fresh character, toasts, and either
+  // the next event or the ending — mirroring applyMinigameResult.
+  function applyCombatResult(res: CombatMoveResponse) {
+    setPendingCombatResult(null)
+    if (!res.character) return
+    setCharacter(res.character)
+    pushToasts(res.newAchievements ?? [])
+
+    if (res.ended && res.endingType) {
+      localStorage.removeItem(RUN_KEY)
+      if (res.character && stampUnlockedClass(res.character.class)) {
+        pushCustomToast([
+          {
+            icon: "key-round",
+            title: t(locale, "newArchetypeUnlocked"),
+            desc: `${t(locale, `class_${res.character.class}`)} · ${t(locale, "masterArchetype")}`,
+          },
+        ])
+      }
+      const fresh = (res.newAchievements ?? []).map((a) => ({
+        id: a.id,
+        icon: a.icon,
+        rarity: a.rarity,
+        hidden: false,
+        name: resolveLocaleMap(a.name, locale),
+        description: resolveLocaleMap(a.description, locale),
+      }))
+      const merged = new Map<string, AchievementView>()
+      for (const a of lastAchievements) merged.set(a.id, a)
+      for (const a of fresh) merged.set(a.id, a)
+      const all = [...merged.values()]
+      localStorage.setItem(ACH_KEY, JSON.stringify(all))
+      setLastAchievements(all)
+      setEnding({
+        endingType: res.endingType,
+        epilogue: res.epilogue ?? "",
+        score: res.score ?? 0,
+        achievements: res.newAchievements ?? [],
+        richEpilogueData: res.richEpilogueData,
+      })
+      setScreen("ending")
+      return
+    }
+    setTurnNarrative(res.narrative ?? null)
+    if (res.event) setEvent(res.event)
+  }
+
   // Apply the finished minigame payload: fresh character, toasts, and either
   // the next event or the ending — mirroring the /choose handler.
   function applyMinigameResult(res: MinigameMoveResponse) {
@@ -501,6 +581,11 @@ export default function App() {
               if (pendingMinigameResult) applyMinigameResult(pendingMinigameResult)
             }}
             minigameFinishedResult={pendingMinigameResult}
+            onCombatMove={combatMove}
+            onCombatFinished={() => {
+              if (pendingCombatResult) applyCombatResult(pendingCombatResult)
+            }}
+            combatFinishedResult={pendingCombatResult}
             onAbandon={abandonRun}
             onShopOpen={() => setShopOpen(true)}
             onDetailsOpen={() => setDetailsOpen(true)}

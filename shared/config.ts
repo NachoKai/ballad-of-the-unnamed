@@ -96,6 +96,18 @@ export const GAME_CONFIG = {
 
   // Top 0.1% of all-time runs get promoted to "legendary" tier.
   legendaryThresholdPercentile: 0.999,
+  // Combat system. Encounters replace a regular turn with this probability
+  // (rolled in selectEvent on its own draw). Resource refills every fight.
+  combatEncounterChance: 0.12,
+  combatCritMultiplier: 1.5,
+  combatVariance: 0.15, // +/-15% damage variance
+  combatSafetyFloor: 5, // canKillPlayer:false creatures can't drop health below this
+  combatFleeBase: 0.6,
+  combatFleeDexCoeff: 0.02, // +0.02 per dexterity point
+  combatConMitigation: 0.4, // player defense = floor(constitution * this)
+  combatGuardFactor: 0.5, // defend halves incoming damage this round
+  combatPoisonPerTurn: 3, // fallback dot for damage_over_time without dotPerTurn
+
 } as const
 
 import type { Arc, Rarity } from "./types.js"

@@ -24,6 +24,9 @@ export const theme = {
       volatile: "#c9803c",
       epic: "#b674e0",
       legendary: "#e6c874",
+      // Creature difficulty ladder (combat) — distinct from Choice rarity.
+      elite: "#d8763b",
+      boss: "#d13b3b",
     },
 
     rank1: "#ffd76e",

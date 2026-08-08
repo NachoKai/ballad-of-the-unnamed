@@ -1,0 +1,373 @@
+{
+  "warrior": {
+    "basicAttack": {
+      "label": { "en": "Strike", "es": "Golpe" },
+      "stat": "strength",
+      "coefficient": 1.2,
+      "base": 4,
+      "critChance": 0.1
+    },
+    "abilityMenuLabel": { "en": "Shout", "es": "Grito" },
+    "resourceLabel": { "en": "Rage", "es": "Furia" },
+    "resourceStat": "strength",
+    "resourceMultiplier": 2,
+    "fleeModifier": -0.1,
+    "abilities": [
+      {
+        "id": "rally_cry",
+        "label": { "en": "Rally Cry", "es": "Grito de Guerra" },
+        "icon": "flag",
+        "cost": 6,
+        "effect": "buff_attack",
+        "school": "physical",
+        "stat": "strength",
+        "coefficient": 0.3,
+        "base": 3,
+        "unlockAge": 18
+      },
+      {
+        "id": "battle_roar",
+        "label": { "en": "Battle Roar", "es": "Rugido de Batalla" },
+        "icon": "zap",
+        "cost": 10,
+        "effect": "stun",
+        "school": "physical",
+        "stat": "strength",
+        "coefficient": 0,
+        "base": 0,
+        "stunChance": 0.6,
+        "unlockAge": 24
+      },
+      {
+        "id": "cleave",
+        "label": { "en": "Cleave", "es": "Tajar" },
+        "icon": "swords",
+        "cost": 8,
+        "effect": "damage",
+        "school": "physical",
+        "stat": "strength",
+        "coefficient": 1.6,
+        "base": 2,
+        "unlockAge": 20
+      }
+    ]
+  },
+  "wizard": {
+    "basicAttack": {
+      "label": { "en": "Bonk", "es": "Golpe" },
+      "stat": "strength",
+      "coefficient": 0.5,
+      "base": 1,
+      "critChance": 0.05
+    },
+    "abilityMenuLabel": { "en": "Magic", "es": "Magia" },
+    "resourceLabel": { "en": "Mana", "es": "Maná" },
+    "resourceStat": "intelligence",
+    "resourceMultiplier": 3.5,
+    "fleeModifier": 0,
+    "abilities": [
+      {
+        "id": "arcane_bolt",
+        "label": { "en": "Arcane Bolt", "es": "Dardo Arcano" },
+        "icon": "sparkles",
+        "cost": 6,
+        "effect": "damage",
+        "school": "magic",
+        "stat": "intelligence",
+        "coefficient": 0.9,
+        "base": 1,
+        "unlockAge": 16
+      },
+      {
+        "id": "firebolt",
+        "label": { "en": "Firebolt", "es": "Bola de Fuego" },
+        "icon": "flame",
+        "cost": 8,
+        "effect": "damage",
+        "school": "magic",
+        "stat": "intelligence",
+        "coefficient": 1.5,
+        "base": 3,
+        "unlockAge": 16
+      },
+      {
+        "id": "mending",
+        "label": { "en": "Mending", "es": "Remedio" },
+        "icon": "heart-pulse",
+        "cost": 12,
+        "effect": "heal",
+        "school": "magic",
+        "stat": "intelligence",
+        "coefficient": 0,
+        "base": 6,
+        "healCoefficient": 1.5,
+        "unlockAge": 18
+      },
+      {
+        "id": "ice_shard",
+        "label": { "en": "Ice Shard", "es": "Esquirla de Hielo" },
+        "icon": "droplets",
+        "cost": 10,
+        "effect": "damage_and_debuff",
+        "school": "magic",
+        "stat": "intelligence",
+        "coefficient": 1.2,
+        "base": 2,
+        "statusTurns": 2,
+        "unlockAge": 22
+      },
+      {
+        "id": "firestorm",
+        "label": { "en": "Firestorm", "es": "Tormenta de Fuego" },
+        "icon": "flame",
+        "cost": 18,
+        "effect": "damage",
+        "school": "magic",
+        "stat": "intelligence",
+        "coefficient": 2.2,
+        "base": 5,
+        "unlockAge": 30
+      }
+    ]
+  },
+  "rogue": {
+    "basicAttack": {
+      "label": { "en": "Stab", "es": "Puñalada" },
+      "stat": "dexterity",
+      "coefficient": 1.0,
+      "base": 3,
+      "critChance": 0.25
+    },
+    "abilityMenuLabel": { "en": "Tricks", "es": "Trucos" },
+    "resourceLabel": { "en": "Focus", "es": "Enfoque" },
+    "resourceStat": "dexterity",
+    "resourceMultiplier": 2.5,
+    "fleeModifier": 0.2,
+    "abilities": [
+      {
+        "id": "poison_blade",
+        "label": { "en": "Poison Blade", "es": "Hoja Envenenada" },
+        "icon": "skull",
+        "cost": 7,
+        "effect": "damage_over_time",
+        "school": "physical",
+        "stat": "dexterity",
+        "coefficient": 0.6,
+        "base": 2,
+        "dotPerTurn": 3,
+        "statusTurns": 3,
+        "unlockAge": 16
+      },
+      {
+        "id": "smoke_bomb",
+        "label": { "en": "Smoke Bomb", "es": "Bomba de Humo" },
+        "icon": "cloud-fog",
+        "cost": 6,
+        "effect": "flee_boost",
+        "school": "physical",
+        "stat": "dexterity",
+        "coefficient": 0,
+        "base": 0,
+        "unlockAge": 18
+      },
+      {
+        "id": "pilfer",
+        "label": { "en": "Pilfer", "es": "Sustraer" },
+        "icon": "coins",
+        "cost": 8,
+        "effect": "steal",
+        "school": "physical",
+        "stat": "dexterity",
+        "coefficient": 0.8,
+        "base": 4,
+        "unlockAge": 20
+      },
+      {
+        "id": "cheap_shot",
+        "label": { "en": "Cheap Shot", "es": "Golpe Bajo" },
+        "icon": "ban",
+        "cost": 9,
+        "effect": "stun",
+        "school": "physical",
+        "stat": "dexterity",
+        "coefficient": 0,
+        "base": 0,
+        "stunChance": 0.7,
+        "unlockAge": 24
+      }
+    ]
+  },
+  "ranger": {
+    "basicAttack": {
+      "label": { "en": "Shoot", "es": "Disparar" },
+      "stat": "dexterity",
+      "coefficient": 1.05,
+      "base": 3,
+      "critChance": 0.15
+    },
+    "abilityMenuLabel": { "en": "Nature", "es": "Naturaleza" },
+    "resourceLabel": { "en": "Focus", "es": "Enfoque" },
+    "resourceStat": "dexterity",
+    "resourceMultiplier": 2.5,
+    "fleeModifier": 0.15,
+    "abilities": [
+      {
+        "id": "companion_strike",
+        "label": { "en": "Companion Strike", "es": "Golpe del Compañero" },
+        "icon": "footprints",
+        "cost": 8,
+        "effect": "damage",
+        "school": "physical",
+        "stat": "dexterity",
+        "coefficient": 1.3,
+        "base": 3,
+        "unlockAge": 16
+      },
+      {
+        "id": "herb_poultice",
+        "label": { "en": "Herb Poultice", "es": "Cataplasma" },
+        "icon": "leaf",
+        "cost": 10,
+        "effect": "heal",
+        "school": "magic",
+        "stat": "dexterity",
+        "coefficient": 0,
+        "base": 5,
+        "healCoefficient": 1.2,
+        "unlockAge": 18
+      },
+      {
+        "id": "entangle",
+        "label": { "en": "Entangle", "es": "Enredar" },
+        "icon": "layers",
+        "cost": 9,
+        "effect": "stun",
+        "school": "magic",
+        "stat": "dexterity",
+        "coefficient": 0,
+        "base": 0,
+        "stunChance": 0.65,
+        "unlockAge": 20
+      }
+    ]
+  },
+  "cleric": {
+    "basicAttack": {
+      "label": { "en": "Mace", "es": "Mazo" },
+      "stat": "strength",
+      "coefficient": 0.7,
+      "base": 2,
+      "critChance": 0.05
+    },
+    "abilityMenuLabel": { "en": "Miracles", "es": "Milagros" },
+    "resourceLabel": { "en": "Faith", "es": "Fe" },
+    "resourceStat": "charisma",
+    "resourceMultiplier": 2.5,
+    "fleeModifier": 0,
+    "abilities": [
+      {
+        "id": "smite",
+        "label": { "en": "Smite", "es": "Castigar" },
+        "icon": "wand",
+        "cost": 8,
+        "effect": "damage",
+        "school": "magic",
+        "stat": "intelligence",
+        "coefficient": 1.3,
+        "base": 2,
+        "unlockAge": 16
+      },
+      {
+        "id": "mend",
+        "label": { "en": "Mend", "es": "Sanar" },
+        "icon": "heart-pulse",
+        "cost": 10,
+        "effect": "heal",
+        "school": "magic",
+        "stat": "charisma",
+        "coefficient": 0,
+        "base": 8,
+        "healCoefficient": 1.8,
+        "unlockAge": 16
+      },
+      {
+        "id": "bulwark",
+        "label": { "en": "Bulwark", "es": "Baluarte" },
+        "icon": "shield",
+        "cost": 12,
+        "effect": "buff_defense",
+        "school": "magic",
+        "stat": "charisma",
+        "coefficient": 0.4,
+        "base": 3,
+        "unlockAge": 20
+      },
+      {
+        "id": "holy_word",
+        "label": { "en": "Holy Word", "es": "Palabra Sagrada" },
+        "icon": "sparkles",
+        "cost": 14,
+        "effect": "stun",
+        "school": "magic",
+        "stat": "charisma",
+        "coefficient": 0,
+        "base": 0,
+        "stunChance": 0.5,
+        "unlockAge": 26
+      }
+    ]
+  },
+  "bard": {
+    "basicAttack": {
+      "label": { "en": "Dagger", "es": "Daga" },
+      "stat": "dexterity",
+      "coefficient": 0.6,
+      "base": 2,
+      "critChance": 0.08
+    },
+    "abilityMenuLabel": { "en": "Verse", "es": "Versos" },
+    "resourceLabel": { "en": "Inspiration", "es": "Inspiración" },
+    "resourceStat": "charisma",
+    "resourceMultiplier": 2.5,
+    "fleeModifier": 0.1,
+    "abilities": [
+      {
+        "id": "cutting_verse",
+        "label": { "en": "Cutting Verse", "es": "Verso Cortante" },
+        "icon": "scroll-text",
+        "cost": 8,
+        "effect": "damage",
+        "school": "magic",
+        "stat": "charisma",
+        "coefficient": 1.4,
+        "base": 2,
+        "unlockAge": 16
+      },
+      {
+        "id": "inspiring_ballad",
+        "label": { "en": "Inspiring Ballad", "es": "Balada Inspiradora" },
+        "icon": "star",
+        "cost": 12,
+        "effect": "buff_attack",
+        "school": "magic",
+        "stat": "charisma",
+        "coefficient": 0.5,
+        "base": 3,
+        "unlockAge": 18
+      },
+      {
+        "id": "lullaby",
+        "label": { "en": "Lullaby", "es": "Canción de Cuna" },
+        "icon": "ban",
+        "cost": 10,
+        "effect": "stun",
+        "school": "magic",
+        "stat": "charisma",
+        "coefficient": 0,
+        "base": 0,
+        "stunChance": 0.55,
+        "unlockAge": 20
+      }
+    ]
+  }
+}

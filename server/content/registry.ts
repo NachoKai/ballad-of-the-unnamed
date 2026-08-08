@@ -5,12 +5,18 @@ import type {
   AchievementContent,
   ArchetypePool,
   ClassContent,
+  ClassKit,
+  CombatAbilityEffect,
+  CreatureContent,
+  CreatureMoveEffect,
+  CreatureRarity,
   EventContent,
   FactionContent,
   LocaleMap,
   ShopItem,
   SlotPools,
 } from "../../shared/types.js"
+import { STAT_KEYS } from "../../shared/types.js"
 import { LOCALES } from "../../shared/i18n.js"
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -49,7 +55,51 @@ export interface ContentRegistry {
   regions: Record<string, LocaleMap>
   reputationTiers: Record<string, LocaleMap>
   shop: ShopItem[]
+  // Combat system: class kits keyed by class id, the creature roster, and the
+  // combat encounter events (separate from the event/minigame banks).
+  combats: EventContent[]
+  combatsById: Map<string, EventContent>
+  classKits: Record<string, ClassKit>
+  creatures: CreatureContent[]
+  creaturesById: Map<string, CreatureContent>
 }
+
+const CREATURE_RARITIES = ["common", "uncommon", "rare", "elite", "boss"] as const
+
+export function isCreatureRarity(r: string): r is CreatureRarity {
+  return (CREATURE_RARITIES as readonly string[]).includes(r)
+}
+
+const ABILITY_EFFECTS: CombatAbilityEffect[] = [
+  "damage",
+  "damage_and_debuff",
+  "damage_over_time",
+  "heal",
+  "buff_attack",
+  "buff_defense",
+  "stun",
+  "flee_boost",
+  "steal",
+]
+
+const MOVE_EFFECTS: CreatureMoveEffect[] = [
+  "damage",
+  "self_buff_attack",
+  "debuff_player_attack",
+  "heal",
+  "flee_if_low_hp",
+]
+
+const COMBAT_SCHOOLS = ["physical", "magic"] as const
+
+const ARC_VALUES = [
+  "child",
+  "adventurer",
+  "mercenary",
+  "kingdom_hero",
+  "legend",
+  "old_hero",
+] as const
 
 let cached: ContentRegistry | null = null
 
@@ -230,9 +280,126 @@ export function loadContent(): ContentRegistry {
     }
   }
 
+  // Load combat class kits (keyed by class id) — every class must have one.
+  const classKits = readJson<Record<string, ClassKit>>("combat/class-kits.json")
+  for (const cls of classes) {
+    const kit = classKits[cls.id]
+    assert(kit, `class ${cls.id} has no combat kit`)
+    validateLocaleMap(kit.basicAttack.label, `kit ${cls.id} basicAttack label`)
+    validateLocaleMap(kit.abilityMenuLabel, `kit ${cls.id} abilityMenuLabel`)
+    validateLocaleMap(kit.resourceLabel, `kit ${cls.id} resourceLabel`)
+    assert(
+      (STAT_KEYS as readonly string[]).includes(kit.resourceStat),
+      `kit ${cls.id} invalid resourceStat`,
+    )
+    assert(kit.resourceMultiplier > 0, `kit ${cls.id} needs a positive resourceMultiplier`)
+    assert(kit.abilities.length > 0, `kit ${cls.id} has no abilities`)
+    for (const ab of kit.abilities) {
+      validateLocaleMap(ab.label, `kit ${cls.id} ability ${ab.id} label`)
+      assert(ab.cost >= 1, `kit ${cls.id} ability ${ab.id} needs a positive cost`)
+      assert(ABILITY_EFFECTS.includes(ab.effect), `kit ${cls.id} ability ${ab.id} invalid effect`)
+      assert(COMBAT_SCHOOLS.includes(ab.school), `kit ${cls.id} ability ${ab.id} invalid school`)
+      assert(
+        (STAT_KEYS as readonly string[]).includes(ab.stat),
+        `kit ${cls.id} ability ${ab.id} invalid stat`,
+      )
+      if (ab.unlockAge != null)
+        assert(ab.unlockAge >= 0, `kit ${cls.id} ability ${ab.id} bad unlockAge`)
+      if (ab.stunChance != null) {
+        assert(
+          ab.stunChance >= 0 && ab.stunChance <= 1,
+          `kit ${cls.id} ability ${ab.id} stunChance must be 0..1`,
+        )
+      }
+      if (ab.statusTurns != null)
+        assert(ab.statusTurns >= 1, `kit ${cls.id} ability ${ab.id} bad statusTurns`)
+    }
+  }
+
+  // Load the creature roster.
+  const creatures = readJson<CreatureContent[]>("combat/creatures.json")
+  for (const cr of creatures) {
+    validateLocaleMap(cr.name, `creature ${cr.id} name`)
+    assert(isCreatureRarity(cr.rarity), `creature ${cr.id} invalid rarity`)
+    assert(cr.health >= 1, `creature ${cr.id} needs health`)
+    assert(cr.attack >= 0, `creature ${cr.id} needs attack`)
+    assert(cr.defense >= 0, `creature ${cr.id} needs defense`)
+    assert(cr.magicResistance >= 0, `creature ${cr.id} needs magicResistance`)
+    assert(cr.moves.length > 0, `creature ${cr.id} has no moves`)
+    for (const mv of cr.moves) {
+      assert(mv.weight > 0, `creature ${cr.id} move ${mv.id} needs a positive weight`)
+      assert(MOVE_EFFECTS.includes(mv.effect), `creature ${cr.id} move ${mv.id} invalid effect`)
+      if (mv.name) validateLocaleMap(mv.name, `creature ${cr.id} move ${mv.id} name`)
+      if (mv.minHealthFraction != null) {
+        assert(
+          mv.minHealthFraction >= 0 && mv.minHealthFraction <= 1,
+          `creature ${cr.id} move ${mv.id} minHealthFraction must be 0..1`,
+        )
+      }
+      if (mv.maxHealthFraction != null) {
+        assert(
+          mv.maxHealthFraction >= 0 && mv.maxHealthFraction <= 1,
+          `creature ${cr.id} move ${mv.id} maxHealthFraction must be 0..1`,
+        )
+      }
+      if (mv.minHealthFraction != null && mv.maxHealthFraction != null) {
+        assert(
+          mv.minHealthFraction <= mv.maxHealthFraction,
+          `creature ${cr.id} move ${mv.id} minHealthFraction exceeds maxHealthFraction`,
+        )
+      }
+    }
+    for (const arc of cr.arcs ?? []) {
+      assert(
+        (ARC_VALUES as readonly string[]).includes(arc),
+        `creature ${cr.id} invalid arc ${arc}`,
+      )
+    }
+    assert(cr.loot.goldMax >= cr.loot.goldMin, `creature ${cr.id} loot gold range inverted`)
+    assert(cr.loot.fameMax >= cr.loot.fameMin, `creature ${cr.id} loot fame range inverted`)
+    for (const drop of cr.loot.items ?? []) {
+      assert(
+        shop.some((s) => s.id === drop.itemId),
+        `creature ${cr.id} item drop ${drop.itemId} not in shop`,
+      )
+      assert(
+        drop.chance >= 0 && drop.chance <= 1,
+        `creature ${cr.id} item drop ${drop.itemId} chance must be 0..1`,
+      )
+    }
+    assert(
+      cr.fleeDifficulty >= 0 && cr.fleeDifficulty <= 1,
+      `creature ${cr.id} fleeDifficulty must be 0..1`,
+    )
+  }
+  const creaturesById = new Map(creatures.map((cr) => [cr.id, cr]))
+
+  // Load combat encounters — separate bank, never part of the event rotation.
+  const combats: EventContent[] = []
+  for (const file of readdirSync(join(CONTENT_ROOT, "combat"))) {
+    if (!file.endsWith(".json") || file === "class-kits.json" || file === "creatures.json") {
+      continue
+    }
+    const arr = readJson<EventContent[]>(join("combat", file))
+    for (const ev of arr) {
+      validateLocaleMap(ev.narrative, `combat encounter ${ev.id} narrative`)
+      assert(ev.type === "combat", `combat encounter ${ev.id} must have type "combat"`)
+      assert(ev.weight > 0, `combat encounter ${ev.id} needs a positive weight`)
+      assert(
+        ev.combat && ev.combat.creatures.length > 0,
+        `combat encounter ${ev.id} has no creatures`,
+      )
+      for (const cid of ev.combat.creatures) {
+        assert(creaturesById.has(cid), `combat encounter ${ev.id} unknown creature ${cid}`)
+      }
+      combats.push(ev)
+    }
+  }
+
   const eventsById = new Map(events.map((e) => [e.id, e]))
   const classesById = new Map(classes.map((c) => [c.id, c]))
   const factionsById = new Map(factions.map((f) => [f.id, f]))
+  const combatsById = new Map(combats.map((e) => [e.id, e]))
 
   cached = {
     classes,
@@ -248,6 +415,11 @@ export function loadContent(): ContentRegistry {
     regions,
     reputationTiers,
     shop,
+    combats,
+    combatsById,
+    classKits,
+    creatures,
+    creaturesById,
   }
   return cached
 }

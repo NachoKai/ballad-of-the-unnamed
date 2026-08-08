@@ -3,18 +3,20 @@ import { AlertTriangle, Hourglass, Lock, Mic, Skull, Swords, Vote } from "lucide
 import { keyframes, styled } from "styled-components"
 import type {
   CharacterState,
+  CombatMove,
   InteractiveMove,
   ServedEvent,
   Rarity,
   RoleSignal,
 } from "@shared/types"
 import type { Locale } from "@shared/types"
-import type { MinigameMoveResponse } from "../api"
+import type { CombatMoveResponse, MinigameMoveResponse } from "../api"
 import { t } from "../i18n/strings"
 import { AchIcon } from "./AchIcon"
 import { FactionFlag } from "./FactionFlag"
 import { Hud } from "./Hud"
 import { MinigameFrame } from "./minigames/MinigameFrame"
+import { CombatGame } from "./combat/CombatGame"
 import { StatTag } from "./StatTag"
 import { LinkBtn } from "./ui/Button"
 import { TextPretty } from "./ui/Text"
@@ -38,6 +40,9 @@ interface Props {
   onMinigameMove: (move: InteractiveMove) => Promise<MinigameMoveResponse>
   onMinigameFinished: () => void
   minigameFinishedResult: MinigameMoveResponse | null
+  onCombatMove: (move: CombatMove) => Promise<CombatMoveResponse>
+  onCombatFinished: () => void
+  combatFinishedResult: CombatMoveResponse | null
   onAbandon: () => void
   onShopOpen?: () => void
   onDetailsOpen?: () => void
@@ -53,6 +58,9 @@ export function GameScreen({
   onMinigameMove,
   onMinigameFinished,
   minigameFinishedResult,
+  onCombatMove,
+  onCombatFinished,
+  combatFinishedResult,
   onAbandon,
   onShopOpen,
   onDetailsOpen,
@@ -291,7 +299,16 @@ export function GameScreen({
 
         <SceneNarrative>{capitalize(event.narrative)}</SceneNarrative>
 
-        {event.interactive ? (
+        {event.combat ? (
+          <CombatGame
+            key={event.eventId}
+            locale={locale}
+            event={event}
+            onMove={onCombatMove}
+            onFinished={onCombatFinished}
+            finishedResult={combatFinishedResult}
+          />
+        ) : event.interactive ? (
           <MinigameFrame
             key={event.eventId}
             locale={locale}

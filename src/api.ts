@@ -1,6 +1,7 @@
 import type {
   AchievementContent,
   CharacterState,
+  CombatMove,
   EndingType,
   Gender,
   InteractiveGameKind,
@@ -9,6 +10,7 @@ import type {
   Origin,
   RichEpilogueData,
   RunType,
+  ServedCombatState,
   ServedEvent,
   ServedInteractiveState,
 } from "@shared/types"
@@ -70,6 +72,27 @@ export interface ChooseResponse {
 export interface MinigameMoveResponse {
   status: "playing" | "finished"
   minigame?: { game: InteractiveGameKind; view: ServedInteractiveState }
+  feedback?: string | null
+  // finished — mirrors ChooseResponse:
+  character?: CharacterState
+  narrative?: string
+  newAchievements?: AchievementContent[]
+  ended?: boolean
+  endingType?: EndingType
+  epilogue?: string
+  score?: number
+  event?: ServedEvent
+  richEpilogueData?: RichEpilogueData
+}
+
+// Response of POST /api/game/combat-move. A "playing" status carries the
+// fresh fight view; "finished" resolves the outcome (loot + the standard
+// ChooseResponse fields) so the result banner can show the final fight.
+export interface CombatMoveResponse {
+  status: "playing" | "finished"
+  combat?: { game: "combat"; view: ServedCombatState }
+  // finished: loot breakdown granted on a win (null on flee/loss).
+  loot?: { gold: number; fame: number; items: { itemId: string; qty: number }[] } | null
   feedback?: string | null
   // finished — mirrors ChooseResponse:
   character?: CharacterState
@@ -189,6 +212,13 @@ export const api = {
   // One move of an interactive minigame (tictactoe / rps).
   minigameMove: (input: { runId: string; move: InteractiveMove }) =>
     jfetch<MinigameMoveResponse>("/api/game/minigame-move", {
+      method: "POST",
+      body: JSON.stringify(input),
+    }),
+
+  // One round of a combat encounter (attack / ability / defend / flee).
+  combatMove: (input: { runId: string; move: CombatMove }) =>
+    jfetch<CombatMoveResponse>("/api/game/combat-move", {
       method: "POST",
       body: JSON.stringify(input),
     }),

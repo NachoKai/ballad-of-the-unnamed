@@ -23,6 +23,7 @@ import {
 import { fmtInt } from "../../shared/format.js"
 import { genderize } from "../../shared/genderize.js"
 import { interactiveOpponentName, prepareInteractiveServe } from "./minigames/index.js"
+import { prepareCombatServe } from "./combat/index.js"
 
 // Fill {slot:pool} placeholders in a narrative string deterministically.
 // The same rng sequence + same seed => identical filled text for daily mode.
@@ -384,6 +385,21 @@ export function serveEvent(
   const narrative = fillSlots(localize(ev.narrative, locale), locale, registry, rng, c)
   const flagLabel = ev.flagLabel ? localize(ev.flagLabel, locale) : undefined
 
+  // Combat encounters are multi-round fights served as a combat frame. The
+  // initial view initializes the persisted state once (creature pick from the
+  // run Rng); resume re-serves from the persisted state, Rng-free.
+  if (ev.combat) {
+    const view = prepareCombatServe(ev, c, locale, registry, rng)
+    return {
+      eventId: ev.id,
+      narrative,
+      choices: [],
+      isRetirementOffer,
+      flagLabel,
+      hasTraps: false,
+      combat: { view },
+    }
+  }
   // Interactive minigames are multi-move games (tictactoe / rps) served as a
   // game frame instead of a card grid. The initial view is Rng-free and the
   // persisted state is initialized here once per event.
@@ -569,17 +585,17 @@ export function buildRivalUpdate(
   if (justSwitched && factionName) {
     const oldFaction = rv.lastFactionId ? registry.factionsById.get(rv.lastFactionId) : undefined
     const oldName = oldFaction ? localize(oldFaction.name, locale) : ""
-    factionClause = locale === "en"
-      ? oldName
-        ? ` — and has abandoned the ${oldName} for the ${factionName}!`
-        : ` — and has pledged to the ${factionName}!`
-      : oldName
-        ? ` — y ha abandonado ${oldName} para unirse a ${factionName}!`
-        : ` — y ha jurado lealtad a ${factionName}!`
+    factionClause =
+      locale === "en"
+        ? oldName
+          ? ` — and has abandoned the ${oldName} for the ${factionName}!`
+          : ` — and has pledged to the ${factionName}!`
+        : oldName
+          ? ` — y ha abandonado ${oldName} para unirse a ${factionName}!`
+          : ` — y ha jurado lealtad a ${factionName}!`
   } else if (factionName) {
-    factionClause = locale === "en"
-      ? `, riding with the ${factionName}`
-      : `, cabalgando con ${factionName}`
+    factionClause =
+      locale === "en" ? `, riding with the ${factionName}` : `, cabalgando con ${factionName}`
   }
   return locale === "en"
     ? `${rv.name} (${rvClass}) is active in ${localizeLocation(rv.location, locale)}${focusClause}${factionClause}. Power: ${rv.powerLevel}, score: ${rv.score}`

@@ -1,0 +1,136 @@
+[
+  {
+    "id": "road_ambush",
+    "type": "combat",
+    "minAge": 16,
+    "maxAge": 39,
+    "weight": 3,
+    "location": "road",
+    "narrative": {
+      "en": "Figures step onto the path ahead, blades catching the light. The road is far from {slot:worldLocation} and no help is coming. One of them grins. 'The toll, traveler. Paid in coin — or in blood.'",
+      "es": "Unas figuras se plantan en el sendero, hojas que destellan a la luz. El camino está lejos de {slot:worldLocation} y no vendrá ayuda. Una de ellas sonríe. 'El peaje, viajera. Se paga en monedas — o en sangre.'"
+    },
+    "combat": { "creatures": ["bandit", "wild_boar", "dire_wolf"] }
+  },
+  {
+    "id": "wolf_territory",
+    "type": "combat",
+    "minAge": 18,
+    "maxAge": 39,
+    "weight": 2,
+    "location": "road",
+    "narrative": {
+      "en": "Low growls ripple through the brush on both sides of the road. Eyes gleam between the trees, counting you. You have wandered into someone's hunting ground.",
+      "es": "Gruñidos bajos ondulan entre la maleza a ambos lados del camino. Unos ojos brillan entre los árboles, calculando. Te has adentrado en el coto de caza de alguien."
+    },
+    "combat": { "creatures": ["dire_wolf", "harpy", "werewolf"] }
+  },
+  {
+    "id": "cave_den",
+    "type": "combat",
+    "minAge": 20,
+    "maxAge": 39,
+    "weight": 2,
+    "location": "dungeon",
+    "narrative": {
+      "en": "The passage opens into a cavern piled with bones and broken gear. Something shifts in the dark, breathing slow and patient. There is no way forward but through.",
+      "es": "El pasaje desemboca en una caverna repleta de huesos y equipo destrozado. Algo se mueve en la oscuridad, respirando lento y paciente. No hay camino hacia adelante sino a través."
+    },
+    "combat": { "creatures": ["cave_troll", "werewolf", "rat_swarm"] }
+  },
+  {
+    "id": "swamp_horrors",
+    "type": "combat",
+    "minAge": 16,
+    "maxAge": 59,
+    "weight": 2,
+    "location": "foreign",
+    "narrative": {
+      "en": "The marsh closes in, mist curling around your ankles. Shapes move beneath the murk — or is that just the reeds? Then the water parts, and it is not reeds.",
+      "es": "El pantano se cierra, la niebla se enrosca en tus tobillos. Unas formas se mueven bajo la turbiedad — ¿o son solo los juncos? Entonces el agua se abre, y no son juncos."
+    },
+    "combat": { "creatures": ["phantom", "cave_troll", "ogre_chief"] }
+  },
+  {
+    "id": "ogre_raids",
+    "type": "combat",
+    "minAge": 26,
+    "maxAge": 59,
+    "weight": 2,
+    "location": "road",
+    "narrative": {
+      "en": "Rumor said an ogre warband was burning villages toward the {slot:worldLocation} pass. Rumor is now looking down at you from a height of eight feet, holding a tree trunk like a toothpick.",
+      "es": "El rumor decía que una banda de ogros estaba quemando aldeas rumbo al paso de {slot:worldLocation}. El rumor ahora te mira desde una altura de dos metros y medio, sosteniendo un tronco como si fuera un palillo."
+    },
+    "combat": { "creatures": ["ogre_chief", "stone_golem"] }
+  },
+  {
+    "id": "golem_awakening",
+    "type": "combat",
+    "minAge": 26,
+    "maxAge": 59,
+    "weight": 1,
+    "location": "dungeon",
+    "excludeIfCompletedIds": ["golem_awakening"],
+    "narrative": {
+      "en": "At the heart of the ruin, a colossus of carved stone sits on a throne of rubble. Ancient runes flicker along its limbs as your footsteps echo. Its eyes open — two chips of cold light — and the throne room becomes a cage.",
+      "es": "En el corazón de la ruina, un coloso de piedra tallada se sienta en un trono de escombros. Antiguas runas parpadean a lo largo de sus miembros cuando tus pasos hacen eco. Sus ojos se abren — dos astillas de luz fría — y la sala del trono se vuelve una jaula."
+    },
+    "combat": { "creatures": ["stone_golem"] }
+  },
+  {
+    "id": "shadow_haunts",
+    "type": "combat",
+    "minAge": 40,
+    "maxAge": 79,
+    "weight": 1,
+    "location": "court",
+    "narrative": {
+      "en": "The corridors of power have their own monsters. A figure in black plate blocks the antechamber, face hidden, hand resting on a blade that drinks light. Someone with influence wants you gone — and hired accordingly.",
+      "es": "Los pasillos del poder tienen sus propios monstruos. Una figura de armadura negra bloquea la antesala, rostro oculto, mano apoyada en una hoja que bebe la luz. Alguien con influencia quiere que desaparezcas — y ha pagado en consecuencia."
+    },
+    "combat": { "creatures": ["shadow_knight", "phantom"] }
+  },
+  {
+    "id": "dragon_hoard",
+    "type": "combat",
+    "minAge": 40,
+    "maxAge": 79,
+    "weight": 1,
+    "location": "foreign",
+    "excludeIfCompletedIds": ["dragon_hoard"],
+    "narrative": {
+      "en": "The mountain of gold spreads to the horizon of the cavern, and on top of it sleeps a dragon the color of embers. Every legend that warned you against this place was right. It opens one eye. It has been waiting.",
+      "es": "La montaña de oro se extiende hasta el horizonte de la caverna, y sobre ella duerme un dragón color brasa. Todas las leyendas que te advirtieron sobre este lugar tenían razón. Abre un ojo. Lleva tiempo esperando."
+    },
+    "combat": { "creatures": ["young_dragon"] }
+  },
+  {
+    "id": "elder_dragon_wake",
+    "type": "combat",
+    "minAge": 60,
+    "maxAge": 99,
+    "weight": 1,
+    "location": "foreign",
+    "excludeIfCompletedIds": ["elder_dragon_wake"],
+    "narrative": {
+      "en": "The peaks themselves seem to breathe. A shadow passes over the valley — not a cloud, but a wing the size of a village. The Elder Dragon has woken, and the sky belongs to it until someone proves otherwise.",
+      "es": "Las cumbres mismas parecen respirar. Una sombra cruza el valle — no es una nube, sino un ala del tamaño de una aldea. El Dragón Ancestral ha despertado, y el cielo le pertenece hasta que alguien demuestre lo contrario."
+    },
+    "combat": { "creatures": ["elder_dragon"] }
+  },
+  {
+    "id": "lich_tower",
+    "type": "combat",
+    "minAge": 60,
+    "maxAge": 99,
+    "weight": 1,
+    "location": "dungeon",
+    "excludeIfCompletedIds": ["lich_tower"],
+    "narrative": {
+      "en": "The tower rises from a dead field, bone-white against the grey. At its summit, a throne of antlers holds a king who has outlived his kingdom — and everyone who ever sang its songs. He raises a finger, and the doors close behind you.",
+      "es": "La torre se alza desde un campo muerto, blanca como un hueso contra el gris. En su cima, un trono de cornamentas sostiene a un rey que ha sobrevivido a su reino — y a todos los que cantaron sus canciones. Levanta un dedo, y las puertas se cierran detrás de ti."
+    },
+    "combat": { "creatures": ["lich_king"] }
+  }
+]

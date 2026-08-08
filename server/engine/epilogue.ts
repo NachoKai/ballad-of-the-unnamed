@@ -168,12 +168,19 @@ export function generateDistinctions(
   c: CharacterState,
   _registry: ContentRegistry,
 ): DistinctionEntry[] {
-  const distinctionKeys = ["battles_won", "quests_completed", "rare_cards", "legendary_cards"]
+  const distinctionKeys = [
+    "battles_won",
+    "quests_completed",
+    "rare_cards",
+    "legendary_cards",
+    "monsters_killed",
+  ]
   const labels: Record<string, { en: string; es: string }> = {
     battles_won: { en: "Battles Won", es: "Batallas Ganadas" },
     quests_completed: { en: "Quests Completed", es: "Misiones Completadas" },
     rare_cards: { en: "Rare Encounters Survived", es: "Encuentros Raros Superados" },
     legendary_cards: { en: "Legendary Moments", es: "Momentos Legendarios" },
+    monsters_killed: { en: "Monsters Slain", es: "Monstruos Abatidos" },
     champion_of_the_age: { en: "Champion of the Age", es: "Campeón de la Era" },
     deed_of_the_year: { en: "Deed of the Year", es: "Hazaña del Año" },
   }

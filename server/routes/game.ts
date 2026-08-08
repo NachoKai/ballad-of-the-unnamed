@@ -19,6 +19,7 @@ import {
   interactiveTier,
   interactiveView,
 } from "../engine/minigames/index.js"
+import { combatView, endCombat, resolveCombatRound } from "../engine/combat/index.js"
 import { evaluateAchievements } from "../engine/achievements.js"
 import {
   generateEpilogue,
@@ -45,6 +46,7 @@ import {
 import type {
   AchievementContent,
   ArchetypeContent,
+  CombatMove,
   Gender,
   InteractiveMove,
   Locale,
@@ -489,6 +491,9 @@ gameRouter.post("/choose", async (req: Request, res: Response) => {
     const isInteractive = event.resolution?.type === "interactive"
     if (isInteractive) return res.status(400).json({ error: "interactive_minigame" })
 
+    // Combat events resolve through /combat-move, never a single card-pick.
+    if (event.combat) return res.status(400).json({ error: "combat_event" })
+
     const outcome = isMinigame
       ? resolveMinigame(run.character, event, String(req.body?.cardId ?? ""), registry, rng)
       : resolveChoice(run.character, event, String(req.body?.choiceId ?? ""), registry, rng)
@@ -583,6 +588,85 @@ gameRouter.post("/minigame-move", async (req: Request, res: Response) => {
     ) {
       return res.status(400).json({ error: "invalid_move" })
     }
+    return res.status(500).json({ error: "server_error", detail: msg })
+  }
+})
+
+// POST /api/game/combat-move  { runId, move } — one round of a combat
+// encounter. Persists the fight state after every round; the final round
+// resolves rewards/death through endCombat and serves the next event (same
+// tail as /choose and /minigame-move).
+gameRouter.post("/combat-move", async (req: Request, res: Response) => {
+  try {
+    const run = await loadOwnedRun(req)
+    if (!run) return res.status(404).json({ error: "not_found" })
+    if (run.finished) return res.status(409).json({ error: "run_finished" })
+    const ev = run.pendingEvent
+    const c = run.character
+    if (!ev || !ev.combat || !c.pendingCombat) {
+      return res.status(400).json({ error: "no_pending_combat" })
+    }
+    if (c.pendingCombat.eventId !== ev.id) {
+      return res.status(400).json({ error: "combat_mismatch" })
+    }
+    const move = req.body?.move as CombatMove
+    if (
+      !move ||
+      typeof move !== "object" ||
+      !["attack", "ability", "defend", "flee"].includes(move.kind)
+    ) {
+      return res.status(400).json({ error: "invalid_move" })
+    }
+    const rng = new Rng(run.rngState)
+    const rivalRng = new Rng(run.rivalRngState)
+    const state = c.pendingCombat
+    const locale = c.locale
+    // Reject moves after the fight is already over: the round engine has no
+    // guard against post-over rounds (it would keep attacking a corpse), so
+    // the persisted state's over flag is the authoritative gate.
+    if (state.over) return res.status(400).json({ error: "combat_already_finished" })
+
+    let over: boolean
+    try {
+      over = resolveCombatRound(state, c, registry.classKits[c.class], move, rng).over
+    } catch (err) {
+      const msg = (err as Error).message
+      if (
+        msg.startsWith("unknown ability") ||
+        msg.startsWith("locked ability") ||
+        msg.startsWith("insufficient resource")
+      ) {
+        return res.status(400).json({ error: "invalid_move" })
+      }
+      throw err
+    }
+
+    if (!over) {
+      run.rngState = rng.getState()
+      await saveRun(run)
+      return res.json({
+        status: "playing",
+        combat: { game: "combat", view: combatView(state, c, locale, registry) },
+        feedback: null,
+      })
+    }
+
+    // Fight over: apply rewards/death and serve the next beat.
+    const finalView = combatView(state, c, locale, registry)
+    const outcome = endCombat(c, ev, state, registry, rng)
+    const payload = await finishResolvedTurn(run, outcome, rng, rivalRng)
+    // Loot breakdown for the result screen — endCombat returns the exact
+    // amounts granted (CombatResolveOutput.rewards), null when nothing won.
+    const loot = outcome.rewards ?? null
+    return res.json({
+      status: "finished",
+      combat: { game: "combat", view: finalView },
+      loot,
+      ...payload,
+    })
+  } catch (err) {
+    const msg = (err as Error).message
+    console.log("[v0] /combat-move error", msg)
     return res.status(500).json({ error: "server_error", detail: msg })
   }
 })

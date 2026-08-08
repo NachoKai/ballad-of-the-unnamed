@@ -1306,6 +1306,60 @@
         "en": "Sink to -80 affinity with any acquaintance.",
         "es": "Cae a -80 de afinidad con cualquier conocido."
       }
+    },
+    {
+      "id": "first_kill",
+      "icon": "skull",
+      "rarity": "common",
+      "condition": {
+        "type": "counter_gte",
+        "key": "monsters_killed",
+        "value": 1
+      },
+      "name": {
+        "en": "First Kill",
+        "es": "Primera Muerte"
+      },
+      "description": {
+        "en": "Slay your first monster.",
+        "es": "Abate tu primer monstruo."
+      }
+    },
+    {
+      "id": "giant_killer",
+      "icon": "dumbbell",
+      "rarity": "rare",
+      "condition": {
+        "type": "counter_gte",
+        "key": "elite_kills",
+        "value": 1
+      },
+      "name": {
+        "en": "Giant Killer",
+        "es": "Matagigantes"
+      },
+      "description": {
+        "en": "Defeat an elite monster.",
+        "es": "Vence a un monstruo de élite."
+      }
+    },
+    {
+      "id": "boss_slayer",
+      "icon": "crown",
+      "rarity": "epic",
+      "condition": {
+        "type": "counter_gte",
+        "key": "boss_kills",
+        "value": 1
+      },
+      "name": {
+        "en": "Dragon's Bane",
+        "es": "Pesadilla de Dragones"
+      },
+      "description": {
+        "en": "Slay a boss-tier monster.",
+        "es": "Abate un monstruo de rango jefe."
+      }
     }
   ]
 }
