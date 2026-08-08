@@ -539,9 +539,12 @@ export function rivalFocusLabel(focusId: string | undefined, locale: Locale): st
   return localize(focus.label, locale)
 }
 
-// The season-summary rival update line: who, where, their seasonal focus, and
-// power/score. Shared by the engine serve path and the /state resume route so
-// the text never drifts between a live serve and a page reload.
+// The season-summary rival update line: who, where, their seasonal focus, the
+// faction they ride with, and power/score. When the rival switched factions on
+// this season's advance (factionSwitchTurn === c.turn), the move is narrated
+// as the headline — "abandoned X for Y" — exactly once, since the turn
+// advances past it on the next serve. Shared by the engine serve path and the
+// /state resume route so the text never drifts between live serve and reload.
 export function buildRivalUpdate(
   c: CharacterState,
   registry: ContentRegistry,
@@ -557,9 +560,30 @@ export function buildRivalUpdate(
       ? `, chasing ${focus}`
       : `, persiguiendo ${focus}`
     : ""
+  const faction = rv.factionId ? registry.factionsById.get(rv.factionId) : undefined
+  const factionName = faction ? localize(faction.name, locale) : ""
+  const justSwitched = rv.factionSwitchTurn != null && rv.factionSwitchTurn === c.turn
+  // The switch itself is the news; the plain "riding with" clause is for the
+  // seasons where they stay put.
+  let factionClause = ""
+  if (justSwitched && factionName) {
+    const oldFaction = rv.lastFactionId ? registry.factionsById.get(rv.lastFactionId) : undefined
+    const oldName = oldFaction ? localize(oldFaction.name, locale) : ""
+    factionClause = locale === "en"
+      ? oldName
+        ? ` — and has abandoned the ${oldName} for the ${factionName}!`
+        : ` — and has pledged to the ${factionName}!`
+      : oldName
+        ? ` — y ha abandonado ${oldName} para unirse a ${factionName}!`
+        : ` — y ha jurado lealtad a ${factionName}!`
+  } else if (factionName) {
+    factionClause = locale === "en"
+      ? `, riding with the ${factionName}`
+      : `, cabalgando con ${factionName}`
+  }
   return locale === "en"
-    ? `${rv.name} (${rvClass}) is active in ${localizeLocation(rv.location, locale)}${focusClause}. Power: ${rv.powerLevel}, score: ${rv.score}`
-    : `${rv.name} (${rvClass}) está activo en ${localizeLocation(rv.location, locale)}${focusClause}. Poder: ${rv.powerLevel}, puntos: ${rv.score}`
+    ? `${rv.name} (${rvClass}) is active in ${localizeLocation(rv.location, locale)}${focusClause}${factionClause}. Power: ${rv.powerLevel}, score: ${rv.score}`
+    : `${rv.name} (${rvClass}) está activo en ${localizeLocation(rv.location, locale)}${focusClause}${factionClause}. Poder: ${rv.powerLevel}, puntos: ${rv.score}`
 }
 
 const LOCALE_LOCATION: Record<string, string> = {

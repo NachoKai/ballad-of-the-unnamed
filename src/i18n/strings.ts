@@ -349,6 +349,7 @@ const en: StringMap = {
   tooltip_faction: "The faction you serve — their halls back you, and their quarrels become yours.",
   tooltip_location: "Where you stand. Abroad, you are a stranger in a foreign region.",
   tooltip_rival_focus: "What your rival is chasing this run. Outpace them on this front for glory.",
+  tooltip_rival_faction: "Which banner your rival flies. Alliances shift — even for them.",
   tooltip_relationships:
     "The bonds you've forged — who remembers your name, and how they regard you.",
   tooltip_abandon: "Abandon this life and begin anew. This run's progress is lost forever.",
@@ -806,6 +807,7 @@ const es: StringMap = {
     "Dónde te encuentras. En el exterior, eres un extraño en una región extranjera.",
   tooltip_rival_focus:
     "Lo que tu rival persigue en esta vida. Supéralo en este frente para lograr gloria.",
+  tooltip_rival_faction: "Qué estandarte ondea tu rival. Las alianzas cambian — incluso para ellos.",
   tooltip_relationships: "Los vínculos que forjaste — quién recuerda tu nombre y cómo te ve.",
   tooltip_abandon:
     "Abandonar esta vida y empezar de nuevo. El progreso de esta partida se pierde para siempre.",

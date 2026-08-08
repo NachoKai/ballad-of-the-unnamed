@@ -28,6 +28,7 @@ import { loadContent } from "../content/registry.js"
 import {
   adjustAffinity,
   applyClanBetrayal,
+  buildRivalUpdate,
   clearExpiredHunted,
   computePowerLevel,
   ensureRelationship,
@@ -2485,8 +2486,8 @@ describe("Rival", () => {
       })
     const a = mk()
     const b = mk()
-    advanceRival(a, new Rng(99))
-    advanceRival(b, new Rng(99))
+    advanceRival(a, reg, new Rng(99))
+    advanceRival(b, reg, new Rng(99))
     expect(a.rival!.focusId).toBe(b.rival!.focusId)
     expect(RIVAL_FOCUSES.some((f) => f.id === a.rival!.focusId)).toBe(true)
   })
@@ -2525,8 +2526,8 @@ describe("Rival", () => {
     // the bonus gap of whatever focus each ends on — rotated or not.
     const rngA = new Rng(5)
     const rngB = new Rng(5)
-    advanceRival(c, rngA)
-    advanceRival(d, rngB)
+    advanceRival(c, reg, rngA)
+    advanceRival(d, reg, rngB)
     const bonus =
       RIVAL_FOCUSES.find((f) => f.id === c.rival!.focusId)!.scoreBonus -
       RIVAL_FOCUSES.find((f) => f.id === d.rival!.focusId)!.scoreBonus
@@ -2547,7 +2548,7 @@ describe("Rival", () => {
         lastAdvancedTurn: 0,
       },
     })
-    advanceRival(c, new Rng(42))
+    advanceRival(c, reg, new Rng(42))
     expect(c.rival!.powerLevel).toBeGreaterThanOrEqual(19)
     expect(c.rival!.lastAdvancedTurn).toBe(0)
   })
@@ -2607,7 +2608,7 @@ describe("archrival parallel RNG stream", () => {
         lastAdvancedTurn: 0,
       },
     })
-    advanceRival(c, rivalRng)
+    advanceRival(c, reg, rivalRng)
     expect(c.rival!.lastAdvancedTurn).toBe(0)
     expect(main.getState()).toBe(before)
   })
@@ -2630,8 +2631,8 @@ describe("archrival parallel RNG stream", () => {
       })
     const a = mk()
     const b = mk()
-    advanceRival(a, rivalRngFor("daily-1"))
-    advanceRival(b, rivalRngFor("daily-1"))
+    advanceRival(a, reg, rivalRngFor("daily-1"))
+    advanceRival(b, reg, rivalRngFor("daily-1"))
     expect(a.rival!.powerLevel).toBe(b.rival!.powerLevel)
     expect(a.rival!.score).toBe(b.rival!.score)
     expect(a.rival!.focusId).toBe(b.rival!.focusId)
@@ -2669,6 +2670,132 @@ describe("archrival parallel RNG stream", () => {
     expect(a.rival!.focusId).toBe(b.rival!.focusId)
     // The main streams advanced identically too (world events etc. stayed on them).
     expect(rngA.getState()).toBe(rngB.getState())
+  })
+})
+
+// ---------------------------------------------------------------------------
+//  Rival faction switches (roadmap item 4 note)
+// ---------------------------------------------------------------------------
+describe("rival faction switches", () => {
+  const mkRival = (over: Partial<CharacterState["rival"]> = {}) =>
+    makeChar({
+      rival: {
+        name: "Roderick",
+        class: "wizard",
+        factionId: "ironhold",
+        focusId: "war",
+        powerLevel: 20,
+        age: 16,
+        location: "capital",
+        achievementsCount: 0,
+        score: 0,
+        lastAdvancedTurn: 0,
+        ...over,
+      },
+    })
+
+  it("advanceRival can switch the rival's faction — always to a different one", () => {
+    let switched = 0
+    for (let seed = 0; seed < 500; seed++) {
+      const c = mkRival()
+      advanceRival(c, reg, new Rng(seed))
+      if (c.rival!.factionId !== "ironhold") {
+        switched++
+        expect(c.rival!.lastFactionId).toBe("ironhold")
+        expect(c.rival!.factionSwitchTurn).toBe(c.turn)
+        expect(reg.factions.some((f) => f.id === c.rival!.factionId)).toBe(true)
+      } else {
+        // Stayed put: no switch bookkeeping.
+        expect(c.rival!.lastFactionId).toBeUndefined()
+      }
+    }
+    // The 0.15 chance must actually fire over 500 seeds.
+    expect(switched).toBeGreaterThan(0)
+  })
+
+  it("a rival with a stale faction id is healed to a real faction on a switch", () => {
+    // A faction removed from content between runs leaves a stale factionId.
+    // The pool only ever contains registry factions, so once a switch fires
+    // the rival lands on a real faction — never the stale id again.
+    let healed = 0
+    for (let seed = 0; seed < 500; seed++) {
+      const c = mkRival({ factionId: "vanished_order" })
+      advanceRival(c, reg, new Rng(seed))
+      if (c.rival!.factionSwitchTurn != null) {
+        healed++
+        expect(reg.factions.some((f) => f.id === c.rival!.factionId)).toBe(true)
+      }
+    }
+    // The 0.15 chance must fire over 500 seeds; the old id never comes back.
+    expect(healed).toBeGreaterThan(0)
+  })
+
+  it("a rival without a faction never gains one from the switch roll", () => {
+    for (let seed = 0; seed < 200; seed++) {
+      const c = mkRival({ factionId: null })
+      advanceRival(c, reg, new Rng(seed))
+      expect(c.rival!.factionId).toBeNull()
+      expect(c.rival!.factionSwitchTurn).toBeUndefined()
+    }
+  })
+
+  it("faction switches are deterministic per seed", () => {
+    const a = mkRival()
+    const b = mkRival()
+    advanceRival(a, reg, new Rng(1234))
+    advanceRival(b, reg, new Rng(1234))
+    expect(a.rival!.factionId).toBe(b.rival!.factionId)
+    expect(a.rival!.lastFactionId).toBe(b.rival!.lastFactionId)
+    expect(a.rival!.factionSwitchTurn).toBe(b.rival!.factionSwitchTurn)
+  })
+
+  it("season summary narrates a faction switch, once, naming both factions", () => {
+    // Find a parallel-stream seed where the switch fires on the first advance.
+    let switchSeed = -1
+    for (let seed = 0; seed < 500; seed++) {
+      const c = mkRival()
+      c.turn = GAME_CONFIG.seasonLength
+      const { served } = buildServedEvent(c, reg, new Rng(1), rivalRngFor(`faction-switch-${seed}`))
+      if (c.rival!.factionSwitchTurn === c.turn) {
+        switchSeed = seed
+        // The served text must name both the abandoned and the new faction.
+        const oldName = reg.factionsById.get("ironhold")!.name.en
+        const newName = reg.factionsById.get(c.rival!.factionId!)!.name.en
+        expect(served.isSeasonSummary).toBe(true)
+        expect(served.rivalUpdate).toContain("abandoned")
+        expect(served.rivalUpdate).toContain(oldName)
+        expect(served.rivalUpdate).toContain(newName)
+        break
+      }
+    }
+    expect(switchSeed).toBeGreaterThanOrEqual(0)
+  })
+
+  it("after the switch season the plain 'riding with' clause returns", () => {
+    // Force a switch, then advance past the summary turn: the narration must
+    // not repeat, and the current faction is shown plainly instead.
+    let switchSeed = -1
+    for (let seed = 0; seed < 500; seed++) {
+      const c = mkRival()
+      c.turn = GAME_CONFIG.seasonLength
+      buildServedEvent(c, reg, new Rng(1), rivalRngFor(`faction-post-${seed}`))
+      if (c.rival!.factionSwitchTurn === c.turn) {
+        switchSeed = seed
+        break
+      }
+    }
+    expect(switchSeed).toBeGreaterThanOrEqual(0)
+    const c = mkRival()
+    c.turn = GAME_CONFIG.seasonLength
+    buildServedEvent(c, reg, new Rng(1), rivalRngFor(`faction-post-${switchSeed}`))
+    const newFaction = c.rival!.factionId!
+    const newName = reg.factionsById.get(newFaction)!.name.en
+    // The season summary resolved: turn advances past the switch turn.
+    resolveSeasonSummary(c, reg)
+    const later = buildRivalUpdate(c, reg, "en")
+    expect(later).not.toContain("abandoned")
+    expect(later).toContain("riding with")
+    expect(later).toContain(newName)
   })
 })
 
@@ -2721,7 +2848,7 @@ describe("Clans", () => {
         lastAdvancedTurn: 0,
       },
     })
-    advanceRival(c, new Rng(42))
+    advanceRival(c, reg, new Rng(42))
     expect(c.rival!.powerLevel).toBeGreaterThanOrEqual(19)
     expect(c.rival!.lastAdvancedTurn).toBe(0)
   })

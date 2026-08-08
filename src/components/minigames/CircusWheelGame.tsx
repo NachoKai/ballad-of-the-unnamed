@@ -1,11 +1,53 @@
 import { useEffect, useRef, useState } from "react"
 import { keyframes, styled } from "styled-components"
-import type { CircusMysterySide, CircusSegmentKind, Locale, ServedInteractiveState } from "@shared/types"
+import type {
+  CircusMysterySide,
+  CircusSegmentKind,
+  Locale,
+  ServedInteractiveState,
+} from "@shared/types"
 import { t } from "../../i18n/strings"
 import { AchIcon } from "../AchIcon"
 import { rise } from "../ui/Animation"
 
 type WheelView = Extract<ServedInteractiveState, { game: "circus_wheel" }>
+
+export interface WheelButtonsInput {
+  busy: boolean
+  spinning: boolean
+  over: boolean
+  gold: number
+  cost: number
+  freeSpins: number
+}
+
+export interface WheelButtonsState {
+  canSpin: boolean
+  spinDisabled: boolean
+  cashOutDisabled: boolean
+  noFunds: boolean
+}
+
+// Cash out must always be reachable once the wheel is up: the player who
+// banked a bad spin and can no longer afford one is never stranded — the night
+// can always end. Only an in-flight request (busy) or an already-finished match
+// locks it; the spin animation or a stuck spinner must not trap the player.
+export function wheelButtons({
+  busy,
+  spinning,
+  over,
+  gold,
+  cost,
+  freeSpins,
+}: WheelButtonsInput): WheelButtonsState {
+  const canSpin = freeSpins > 0 || gold >= cost
+  return {
+    canSpin,
+    spinDisabled: busy || spinning || over || !canSpin,
+    cashOutDisabled: busy || over,
+    noFunds: !canSpin && !over && freeSpins === 0,
+  }
+}
 
 interface Props {
   locale: Locale
@@ -16,7 +58,16 @@ interface Props {
 }
 
 // Alternating warm/cool circus palette so adjacent segments always contrast.
-const COLORS = ["#a8433c", "#3f6d8f", "#c9a44c", "#5a7a4f", "#8f3f6d", "#b0603a", "#44608f", "#7a5a9e"]
+const COLORS = [
+  "#a8433c",
+  "#3f6d8f",
+  "#c9a44c",
+  "#5a7a4f",
+  "#8f3f6d",
+  "#b0603a",
+  "#44608f",
+  "#7a5a9e",
+]
 
 // How long the wheel spins before it can be spun again (matches the CSS
 // transition below). The wheel stays visibly busy while it turns.
@@ -50,17 +101,23 @@ export function CircusWheelGame({ locale, view, busy, onSpin, onLeave }: Props) 
     if (view.lastSpin == null || view.spins <= animatedRef.current) return
     animatedRef.current = view.spins
     setSpinning(true)
-    const segCenter = (view.lastSpin + 0.5) * step
+    const segCenter = (view.lastSpin.segment + 0.5) * step
     setRotation((r) => {
-      const delta = ((360 - segCenter) - (r % 360) + 360) % 360
+      const delta = (360 - segCenter - (r % 360) + 360) % 360
       return r + 5 * 360 + delta
     })
     const t = setTimeout(() => setSpinning(false), SPIN_MS)
     return () => clearTimeout(t)
   }, [view.lastSpin, view.spins, step])
 
-  const locked = busy || spinning || view.over
-  const canSpin = view.freeSpins > 0 || view.gold >= view.cost
+  const buttons = wheelButtons({
+    busy,
+    spinning,
+    over: view.over,
+    gold: view.gold,
+    cost: view.cost,
+    freeSpins: view.freeSpins,
+  })
   const last = view.lastSpin != null ? view.segments[view.lastSpin.segment] : null
   const lastMystery = view.lastSpin?.mystery
   const gradient = view.segments
@@ -71,7 +128,12 @@ export function CircusWheelGame({ locale, view, busy, onSpin, onLeave }: Props) 
     <Game>
       <WheelWrap>
         <Pointer aria-hidden="true" />
-        <WheelDisc role="img" aria-label="wheel of fortune" $rotation={rotation} $gradient={gradient}>
+        <WheelDisc
+          role="img"
+          aria-label="wheel of fortune"
+          $rotation={rotation}
+          $gradient={gradient}
+        >
           {view.segments.map((s, i) => (
             <SegmentIcon key={s.id} $angle={(i + 0.5) * step}>
               <AchIcon name={s.icon} size={18} />
@@ -96,7 +158,8 @@ export function CircusWheelGame({ locale, view, busy, onSpin, onLeave }: Props) 
           {t(locale, "wheelSpins")} <StatB>{view.spins}</StatB>
         </Stat>
         <Stat>
-          {t(locale, "wheelNet")} <StatB $pos={view.net >= 0}>{view.net > 0 ? `+${view.net}` : view.net}</StatB>
+          {t(locale, "wheelNet")}{" "}
+          <StatB $pos={view.net >= 0}>{view.net > 0 ? `+${view.net}` : view.net}</StatB>
         </Stat>
         {view.freeSpins > 0 && (
           <FreeChip>
@@ -117,16 +180,16 @@ export function CircusWheelGame({ locale, view, busy, onSpin, onLeave }: Props) 
       )}
 
       <Buttons>
-        <SpinBtn type="button" disabled={locked || !canSpin} onClick={onSpin}>
-          {view.freeSpins > 0 ? t(locale, "wheelFreeSpin") : `${t(locale, "wheelSpin")} · ${view.cost}g`}
+        <SpinBtn type="button" disabled={buttons.spinDisabled} onClick={onSpin}>
+          {view.freeSpins > 0
+            ? t(locale, "wheelFreeSpin")
+            : `${t(locale, "wheelSpin")} · ${view.cost}g`}
         </SpinBtn>
-        <CashOutBtn type="button" disabled={locked} onClick={onLeave}>
+        <CashOutBtn type="button" disabled={buttons.cashOutDisabled} onClick={onLeave}>
           {t(locale, "wheelCashOut")}
         </CashOutBtn>
       </Buttons>
-      {!canSpin && !view.over && view.freeSpins === 0 && (
-        <NoFunds>{t(locale, "wheelNoFunds")}</NoFunds>
-      )}
+      {buttons.noFunds && <NoFunds>{t(locale, "wheelNoFunds")}</NoFunds>}
     </Game>
   )
 }
@@ -170,8 +233,8 @@ const SegmentIcon = styled.span<{ $angle: number }>`
   display: inline-flex;
   color: rgba(255, 246, 230, 0.94);
   filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.55));
-  transform: translate(-50%, -50%) rotate(${({ $angle }) => $angle}deg) translateY(calc(var(--rim) * -1))
-    rotate(${({ $angle }) => -$angle}deg);
+  transform: translate(-50%, -50%) rotate(${({ $angle }) => $angle}deg)
+    translateY(calc(var(--rim) * -1)) rotate(${({ $angle }) => -$angle}deg);
   pointer-events: none;
 `
 
@@ -197,7 +260,12 @@ const Hub = styled.div`
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #f3d98c, ${({ theme }) => theme.colors.gold} 62%, #7a5f22);
+  background: radial-gradient(
+    circle at 35% 30%,
+    #f3d98c,
+    ${({ theme }) => theme.colors.gold} 62%,
+    #7a5f22
+  );
   box-shadow:
     inset 0 -3px 6px rgba(0, 0, 0, 0.4),
     0 2px 8px rgba(0, 0, 0, 0.5);

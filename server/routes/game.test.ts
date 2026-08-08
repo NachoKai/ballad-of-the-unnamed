@@ -559,3 +559,112 @@ describe("POST /minigame-move · memotest", () => {
     expect(res.error).toBe("invalid_move")
   })
 })
+
+describe("POST /minigame-move · circus_wheel lockup guard", () => {
+  // The real wheel: 13 segments, costs 60 gold per spin. A player who banks a
+  // single "nothing" spin and drops to 51 gold (below the cost) is stranded —
+  // the Spin button dies, so the ONLY escape is cashing out. These tests pin
+  // that Cash Out always works (never a 400/500) and that a broke spin never
+  // flips the wheel over or crashes the night.
+  const wheelEv = reg.minigames.find((m) => m.id === "circus_wheel_of_fortune")!
+  const wheelCfg = wheelEv.wheel!
+
+  function wheelChar(gold: number): CharacterState {
+    const c = createCharacter({
+      id: "r1",
+      name: "Test",
+      classId: "warrior",
+      origin: "established",
+      locale: "en",
+      registry: reg,
+    })
+    c.turn = 4
+    c.gold = gold
+    return c
+  }
+
+  it("cash-out always resolves at 51 gold (broke after one nothing spin)", async () => {
+    const c = wheelChar(51)
+    c.pendingMinigame = {
+      eventId: wheelEv.id,
+      game: "circus_wheel",
+      wheel: {
+        segments: wheelCfg.segments,
+        cost: wheelCfg.cost,
+        spins: [0], // landed "Nothing"
+        freeSpins: 0,
+        net: -wheelCfg.cost,
+        hitJackpot: false,
+        over: false,
+        mysteryResults: {},
+      },
+    }
+    const { statusCode, body } = await postMinigameMove(c, wheelEv, {
+      kind: "circus_wheel",
+      action: "leave",
+    })
+    expect(statusCode).toBe(200)
+    const res = body as { status: string; event?: unknown; ended?: boolean }
+    expect(res.status).toBe("finished")
+    expect(res.ended).toBe(false)
+    // The wheel's night is done — the next, normal event is served, so the
+    // player is never trapped on the wheel screen.
+    expect(res.event).toBeDefined()
+  })
+
+  it("spin at 51 gold (cost 60) is rejected without marking the wheel over", async () => {
+    const c = wheelChar(51)
+    c.pendingMinigame = {
+      eventId: wheelEv.id,
+      game: "circus_wheel",
+      wheel: {
+        segments: wheelCfg.segments,
+        cost: wheelCfg.cost,
+        spins: [],
+        freeSpins: 0,
+        net: 0,
+        hitJackpot: false,
+        over: false,
+        mysteryResults: {},
+      },
+    }
+    const { statusCode, body } = await postMinigameMove(c, wheelEv, {
+      kind: "circus_wheel",
+      action: "spin",
+    })
+    expect(statusCode).toBe(400)
+    expect((body as { error: string }).error).toBe("invalid_move")
+    // No partial charge: gold untouched, net untouched, game still open so a
+    // reload won't see the wheel as already-finished.
+    expect(c.gold).toBe(51)
+    expect(c.pendingMinigame?.wheel?.net).toBe(0)
+    expect(c.pendingMinigame?.wheel?.over).toBe(false)
+  })
+
+  it("spin once then cash out ends the night (two-move session)", async () => {
+    const c = wheelChar(60)
+    c.pendingMinigame = {
+      eventId: wheelEv.id,
+      game: "circus_wheel",
+      wheel: {
+        segments: wheelCfg.segments,
+        cost: wheelCfg.cost,
+        spins: [],
+        freeSpins: 0,
+        net: 0,
+        hitJackpot: false,
+        over: false,
+        mysteryResults: {},
+      },
+    }
+    const spin = await postMinigameMove(c, wheelEv, { kind: "circus_wheel", action: "spin" })
+    expect(spin.statusCode).toBe(200)
+    const res = spin.body as { status: string; minigame: { view: { spins: number } } }
+    expect(res.status).toBe("playing")
+    expect(res.minigame.view.spins).toBe(1)
+    expect(c.gold).toBeLessThan(60)
+    const out = await postMinigameMove(c, wheelEv, { kind: "circus_wheel", action: "leave" })
+    expect(out.statusCode).toBe(200)
+    expect((out.body as { status: string }).status).toBe("finished")
+  })
+})

@@ -308,7 +308,11 @@ export function generateClanOffer(
 // Rival advancement at season boundary
 // ---------------------------------------------------------------------------
 
-export function advanceRival(c: CharacterState, rng: Rng): void {
+export function advanceRival(
+  c: CharacterState,
+  registry: ContentRegistry,
+  rng: Rng,
+): void {
   const rival = c.rival
   if (!rival) return
   rival.age = c.age
@@ -326,6 +330,22 @@ export function advanceRival(c: CharacterState, rng: Rng): void {
   const focusBonus = RIVAL_FOCUSES.find((f) => f.id === rival.focusId)?.scoreBonus ?? 0
   rival.score += rng.int(0, 5) + focusBonus
   rival.lastAdvancedTurn = c.turn
+  // Faction switch: occasionally the rival changes allegiance, always to a
+  // different faction (never the one they already ride with). The previous
+  // faction + the turn of the move are recorded so the season summary can
+  // narrate it exactly once. Rivals without a faction never switch.
+  if (rival.factionId && rng.bool(GAME_CONFIG.rivalFactionSwitchChance)) {
+    const switchPool = registry.factions.filter((f) => f.id !== rival.factionId)
+    if (switchPool.length > 0) {
+      // The pool filters out the current id, so a switch always lands on a
+      // different faction (and a stale id — removed from content — can never
+      // be picked back; the rival is healed to a real faction instead).
+      const next = rng.pick(switchPool)
+      rival.lastFactionId = rival.factionId
+      rival.factionId = next.id
+      rival.factionSwitchTurn = c.turn
+    }
+  }
   // Random flavor updates.
   const locations = [
     "the northern reaches",
@@ -424,7 +444,7 @@ export function generateSeasonSummary(
   // replays earlier draws and the rival diverges from a same-seed fresh run.
   clearExpiredHunted(c)
   if (c.rival) {
-    advanceRival(c, rivalRng ?? rng)
+    advanceRival(c, registry, rivalRng ?? rng)
   }
   return {
     id: "__season_summary__",
@@ -926,7 +946,8 @@ export function buildServedEvent(
       served.stipendEarned = seasonStipendFor(c, c.currentClanId, registry)
     }
 
-    // Rival update: name, class, location, seasonal focus, power/score.
+    // Rival update: name, class, location, seasonal focus, faction (incl. any
+    // faction switch narrated this season), power/score.
     served.rivalUpdate = buildRivalUpdate(c, registry, c.locale)
 
     return { event: ev, served, finaleStage: undefined }

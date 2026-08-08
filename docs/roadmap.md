@@ -115,13 +115,22 @@ achievement (future content).
   (`upsertRival` in `server/store/runStore.ts`); legacy runs default the stream
   position from the seed on load.
 
-> Note: rival **faction switches** (the rival's `factionId` is currently set once
-> at creation and never changes) are still unimplemented — the parallel stream
-> is what would drive them, and this pass puts that stream in place.
+- **Rival faction switches ✅ shipped 2026-08-07:** `advanceRival` now rolls a
+  seeded faction switch per season (`GAME_CONFIG.rivalFactionSwitchChance`,
+  0.15) on the parallel stream — the rival occasionally abandons its current
+  faction for a different one, never the same one twice in a row. The previous
+  faction + the switch turn are recorded on the rival (`lastFactionId` /
+  `factionSwitchTurn`), so the season summary narrates the move exactly once
+  ("Roderick has abandoned the Ironhold Guild for the Greywater Town!") before
+  settling back into the plain "riding with X" clause. Rivals without a faction
+  never switch.
 
 - **Tests:** `server/engine/engine.test.ts` — "archrival parallel RNG stream"
   suite (stream determinism/independence, main-stream isolation, seed-identical
-  advancement through the season-summary path).
+  advancement through the season-summary path) + "rival faction switches" suite
+  (switch fires over many seeds, never lands on the same faction, no faction =
+  no switch, per-seed determinism, one-shot season-summary narration naming
+  both factions, plain clause returns after the switch season).
 
 ---
 

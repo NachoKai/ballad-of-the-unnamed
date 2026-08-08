@@ -61,6 +61,12 @@ export const GAME_CONFIG = {
   // World events: how many to roll per season.
   worldEventsPerSeason: 2,
 
+  // Rival faction switches: per-season probability the archrival changes
+  // allegiance on a season advance (rolled on its own parallel stream, so
+  // daily runs stay deterministic). The old faction + switch turn are
+  // recorded on the rival so the season summary can narrate the move.
+  rivalFactionSwitchChance: 0.15,
+
   // Renown economy knobs.
   // Positive faction-reputation gains are scaled up by this factor (negative
   // deltas are untouched) so "Renombre" climbs faster — rebalanced from the

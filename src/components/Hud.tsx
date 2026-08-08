@@ -215,6 +215,14 @@ export function Hud({ character: c, locale, onShopOpen, canBuy }: Props) {
                 <b>{c.rival.score}</b>
               </Tag>
             </Tooltip>
+            {c.rival.factionId && (
+              <Tooltip content={t("tooltip_rival_faction")} side="bottom">
+                <FactionChip>
+                  <FactionFlag factionId={c.rival.factionId} size={12} />
+                  {t(`faction_${c.rival.factionId}`)}
+                </FactionChip>
+              </Tooltip>
+            )}
             {c.rival.focusId && (
               <Tooltip content={t("tooltip_rival_focus")} side="bottom">
                 <FocusChip>
@@ -553,6 +561,12 @@ const InvBadge = styled.span`
 
 const FocusChip = styled(Tag)`
   margin-left: auto;
+`
+
+const FactionChip = styled(Tag)`
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 `
 
 const RepTip = styled(Tooltip)`

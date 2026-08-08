@@ -346,6 +346,13 @@ export interface RivalState {
   // What the rival is "about" this season (see RIVAL_FOCUSES in config).
   // Optional so old persisted runs without a focus still load cleanly.
   focusId?: string
+  // Faction-switch bookkeeping: when the rival changes allegiance on a season
+  // advance, `lastFactionId` remembers the faction they left and
+  // `factionSwitchTurn` records when — so the season summary can narrate the
+  // move exactly once (buildRivalUpdate compares it to c.turn). Optional so
+  // legacy persisted rivals without switch history still load cleanly.
+  lastFactionId?: string | null
+  factionSwitchTurn?: number
   powerLevel: number
   age: number
   location: string
