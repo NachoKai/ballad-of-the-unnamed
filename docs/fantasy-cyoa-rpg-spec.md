@@ -819,11 +819,13 @@ Ephemeral runs (15-30 min, then reset) is a _retention_ property, not a reason t
 - No LLM in the critical path
 - No client-side game-state authority (server always recomputes/validates)
 
-## Open questions for the agent to resolve before scaffolding
+## Open questions — resolved
 
-- Express vs Fastify — pick based on what's fastest to wire with libSQL client + TS
-- Daily leaderboard seed strategy: server cron reseeds at UTC midnight, or per-timezone?
-- Auth: anonymous run token, resolved to an HTTP cookie (see Stack) vs real accounts for cross-device resume — cookie covers reload-resilience; add real accounts only if cross-device resume becomes a requirement
-- Season length in turns (config, e.g. 5) — needs a real balance pass once content volume is known, since it also sets the pace of Career arcs and World events
-- Elite-tier leaderboard split-off threshold (top 0.1%? top 1%?) — needs real run-score distribution data before it can be set sensibly
-- Destiny card frequency/count for v1 content — "roughly once every 8-10 years" is a placeholder, not tuned
+All decisions in this section were settled during implementation; see `docs/improvement-plan.md` for shipped status and `docs/roadmap.md` for remaining work.
+
+- **Express** (not Fastify) — wired with Neon Postgres via `@neondatabase/serverless` HTTP driver.
+- **Daily seed** — `todayDailySeed()` (UTC date), no per-timezone cron.
+- **Auth** — run id (server UUID) IS the auth capability; no cookie gating, no accounts (cross-site iframe never sends `sameSite:lax` cookies).
+- **Season length** — `GAME_CONFIG.seasonLength` (5 turns), balance-tuned in `shared/config.ts`.
+- **Elite-tier split-off** — `GAME_CONFIG.legendaryThresholdPercentile` (0.999).
+- **Destiny card frequency** — config-driven cadence (`destinyCardYears`), tuned in `shared/config.ts`.
