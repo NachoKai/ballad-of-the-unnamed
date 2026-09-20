@@ -797,5 +797,67 @@
         }
       }
     ]
+  },
+  {
+    "id": "road_wandering_champion",
+    "type": "road",
+    "minAge": 18,
+    "maxAge": 99,
+    "weight": 6,
+    "narrative": {
+      "en": "An old knight with a dented helm and a name placard from a hundred tourneys past blocks your path, sword angled in a playful formal salute. 'One bout. No blood, no glory game — I just want to remember what it felt like to be sharp.' They plant a purse of gold in the dirt between you. 'Win, and it's yours. Lose, and you buy the next round down the road.'",
+      "es": "Un caballero anciano con el yelmo abollado y un cartel de nombres de cien torneos pasados te corta el paso, con la espada en un saludo formal juguetón. 'Un combate. Sin sangre, sin juego de gloria — solo quiero recordar lo que se siente estar afilado.' Clavó una bolsa de oro en la tierra entre los dos. 'Si ganás, es tuya. Si perdés, pagás la próxima ronda más adelante.'"
+    },
+    "choices": [
+      {
+        "id": "accept_bout",
+        "label": {
+          "en": "Accept — a duel for old memories",
+          "es": "Aceptar — un duelo por viejos recuerdos"
+        },
+        "tag": "Confident",
+        "rarity": "common",
+        "requiresStat": { "stat": "strength", "min": 12 },
+        "statDeltas": { "strength": 2 },
+        "fameDelta": 3,
+        "goldDelta": 150,
+        "narrative": {
+          "en": "Their form is ancient and perfect. You match it, measure for measure, and when the final exchange comes they drop their guard on purpose, laughing. They press the gold purse into your hands. 'Sharp as a winter knife. That's all I needed.' Their pride is intact; yours is richer.",
+          "es": "Su forma es antigua y perfecta. La igualás, golpe por golpe, y en el intercambio final baja la guardia a propósito, riendo. Te meten la bolsa de oro en las manos. 'Filoso como un cuchillo de invierno. Eso era todo lo que necesitaba.' Su orgullo queda intacto; el tuyo, más rico."
+        }
+      },
+      {
+        "id": "drink_down_road",
+        "label": {
+          "en": "Refuse the blade, offer the road-wine",
+          "es": "Rechazar la hoja, ofrecer el vino de camino"
+        },
+        "tag": "Supportive",
+        "rarity": "common",
+        "statDeltas": { "charisma": 1 },
+        "goldDelta": -15,
+        "narrative": {
+          "en": "You pocket your sword and pull out the dark bottle you've been saving. They blink, then laugh until their ribs shake, and take a long pull. They tell you war stories until sundown, with no blood spilled and a friend gained where a scar might have been.",
+          "es": "Guardás tu espada y sacás la botella oscura que venías ahorrando. Parpadean, y luego ríen hasta que les tiemblan las costillas, y dan un trago largo. Te cuentan historias de guerra hasta el atardecer, sin derramar sangre y con un amigo ganado donde podría haber quedado una cicatriz."
+        }
+      },
+      {
+        "id": "mock_the_champion",
+        "label": {
+          "en": "Aged blade, worn sheen — mock them",
+          "es": "Hoja vieja, brillo gastado — burlarse"
+        },
+        "tag": "Cocky",
+        "rarity": "volatile",
+        "statDeltas": { "strength": 3 },
+        "goldDelta": -40,
+        "tradeoffDeltas": { "charisma": -2 },
+        "injuryRiskDelta": 0.2,
+        "narrative": {
+          "en": "You point out that their placard last held a winner's name before you were born. Their face goes very calm. The 'one bout' becomes a hard twenty minutes, and you earn the purse — plus a split lip you'll feel for a week, and a name the retired circuit won't soon forget.",
+          "es": "Señalás que su cartel tuvo un nombre ganador antes de que nacieras. Su cara se pone muy tranquila. El 'un combate' se vuelve veinte minutos duros, y ganás la bolsa — más un labio partido que vas a sentir durante una semana, y un nombre que el circuito retirado no va a olvidar pronto."
+        }
+      }
+    ]
   }
 ]

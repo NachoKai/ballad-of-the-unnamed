@@ -1994,5 +1994,107 @@
         }
       }
     }
+  },
+  {
+    "id": "duel_blade_dance",
+    "type": "minigame",
+    "subtype": "duel_strike",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 7,
+    "primaryStat": "dexterity",
+    "narrative": {
+      "en": "At the harvest fair, the Night-Switch Guild's blade-dancer challenges anyone to a lights-out duel: blades wrapped in ash and salt, a blindfold offered to you both. 'First to draw blood loses their coin purse to the other,' they call to the crowd. 'And the crowd decides who's the better liar with a sword.'",
+      "es": "En la feria de la cosecha, la bailarina de cuchillos del Gremio del Cambio Nocturno desafía a cualquiera a un duelo a oscuras: hojas envueltas en ceniza y sal, con una venda ofrecida a ambos. 'El primero que saque sangre pierde su bolsa a manos del otro', grita a la multitud. 'Y la multitud decide quién miente mejor con una espada.'"
+    },
+    "cards": [
+      {
+        "id": "slip_forward",
+        "icon": "footprints",
+        "label": {
+          "en": "Slip forward low",
+          "es": "Deslizarse hacia adelante, bajo"
+        }
+      },
+      {
+        "id": "mirror_stance",
+        "icon": "moon",
+        "label": {
+          "en": "Mirror their stance",
+          "es": "Copiar su postura"
+        }
+      },
+      {
+        "id": "silent_circle",
+        "icon": "wind",
+        "label": {
+          "en": "Circle in silence",
+          "es": "Girar en silencio"
+        }
+      },
+      {
+        "id": "stamp_strike",
+        "icon": "zap",
+        "label": {
+          "en": "Stamp and strike sudden",
+          "es": "Pisar fuerte y golpear de repente"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.45,
+      "statInfluence": {
+        "dexterity": 0.012,
+        "strength": 0.004
+      },
+      "cardModifiers": {
+        "silent_circle": {
+          "winChanceDelta": 0.1,
+          "critChanceDelta": 0.05
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": { "dexterity": 2 },
+        "fameDelta": 6,
+        "goldDelta": 180,
+        "countersDelta": { "battles_won": 1, "duels_won": 1, "clutch_duels": 1 },
+        "narrative": {
+          "en": "You read their breath before their blade — the blindfold is nothing when the crowd's hush tells you where they move. Your ash-tipped blade taps their wrist and the coin purse drops. The square erupts; the dancer bows with genuine delight.",
+          "es": "Leés su respiración antes que su hoja — la venda no es nada cuando el silencio de la multitud te dice hacia dónde se mueven. Tu hoja con punta de ceniza toca su muñeca y la bolsa de monedas cae. La plaza estalla; la bailarina se inclina con genuino deleite."
+        }
+      },
+      "success": {
+        "fameDelta": 3,
+        "goldDelta": 90,
+        "countersDelta": { "battles_won": 1, "duels_won": 1 },
+        "narrative": {
+          "en": "A clean touch on their shoulder earns the purse and a roar from the crowd. The dancer shakes their head, laughing, and buys the whole fair a round with the change.",
+          "es": "Un toque limpio en su hombro te da la bolsa y un rugido de la multitud. La bailarina niega con la cabeza, riendo, y convida a toda la feria con el cambio."
+        }
+      },
+      "partial": {
+        "goldDelta": -20,
+        "injuryRiskDelta": 0.15,
+        "countersReset": ["duel_streak"],
+        "narrative": {
+          "en": "You touch cloth, they touch skin — the dance is a draw and the crowd calls it so. You split the purse to buy ale for the square, and neither of you blinks first on the walk away.",
+          "es": "Vos tocás la tela, ellos tocan la piel — el baile es un empate y la multitud lo decide así. Dividís la bolsa para comprar cerveza para la plaza, y ninguno de los dos parpadea primero al alejarse."
+        }
+      },
+      "fail": {
+        "goldDelta": -50,
+        "injuryRiskDelta": 0.3,
+        "reputationDelta": -2,
+        "reputationFaction": "gildedtongue",
+        "countersReset": ["duel_streak"],
+        "narrative": {
+          "en": "Their blindfold is pure theater — they move like they have eyes in their shoulder blades. Ash meets your collar, the purse changes hands, and the dancer's bow is a little too deep to be kind.",
+          "es": "Su venda es puro teatro — se mueven como si tuvieran ojos en los omóplatos. La ceniza toca tu cuello, la bolsa cambia de manos, y la reverencia de la bailarina es un poco demasiado profunda para ser amable."
+        }
+      }
+    }
   }
 ]
