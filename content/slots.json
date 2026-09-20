@@ -299,6 +299,158 @@
     {
       "en": "itinerant seer",
       "es": "vidente ambulante"
+    },
+    {
+      "en": "fishmonger",
+      "es": "pescadero"
+    },
+    {
+      "en": "stablehand",
+      "es": "mozo de cuadra"
+    },
+    {
+      "en": "dyer",
+      "es": "tintorero"
+    },
+    {
+      "en": "coffin-maker",
+      "es": "carpintero de ataúdes"
+    },
+    {
+      "en": "tanner",
+      "es": "curtidor"
+    },
+    {
+      "en": "chimney sweep",
+      "es": "deshollinador"
+    },
+    {
+      "en": "locksmith",
+      "es": "cerrajero"
+    },
+    {
+      "en": "cooper",
+      "es": "tonelero"
+    },
+    {
+      "en": "well-digger",
+      "es": "pocero"
+    },
+    {
+      "en": "dove-keeper",
+      "es": "palomero"
+    },
+    {
+      "en": "rag-and-bone man",
+      "es": "trapero"
+    },
+    {
+      "en": "message-runner",
+      "es": "mensajero"
+    },
+    {
+      "en": "water-carrier",
+      "es": "aguador"
+    },
+    {
+      "en": "basket-weaver",
+      "es": "cestero"
+    },
+    {
+      "en": "town crier",
+      "es": "pregonero"
+    },
+    {
+      "en": "knife-grinder",
+      "es": "afilador"
+    },
+    {
+      "en": "pearl diver",
+      "es": "buceador de perlas"
+    },
+    {
+      "en": "canal boatman",
+      "es": "botero del canal"
+    },
+    {
+      "en": "furnace keeper",
+      "es": "custodio del horno"
+    },
+    {
+      "en": "scale-warden",
+      "es": "guardián de balanzas"
+    },
+    {
+      "en": "curfew bell-ringer",
+      "es": "campanero del toque de queda"
+    },
+    {
+      "en": "bailiff",
+      "es": "merino"
+    },
+    {
+      "en": "court scrivener",
+      "es": "escribano de la corte"
+    },
+    {
+      "en": "leech-gatherer",
+      "es": "recolector de sanguijuelas"
+    },
+    {
+      "en": "wolf-baiter",
+      "es": "cebador de lobos"
+    },
+    {
+      "en": "oath-sworn bodyguard",
+      "es": "guardaespaldas juramentado"
+    },
+    {
+      "en": "dead-letter courier",
+      "es": "cartero de las cartas perdidas"
+    },
+    {
+      "en": "crow-feeder",
+      "es": "cuidador de cuervos"
+    },
+    {
+      "en": "storm watcher",
+      "es": "vigilante de tormentas"
+    },
+    {
+      "en": "tide clock-keeper",
+      "es": "guardián del reloj de mareas"
+    },
+    {
+      "en": "ash-cleric",
+      "es": "clérigo de las cenizas"
+    },
+    {
+      "en": "bone diviner",
+      "es": "augur de huesos"
+    },
+    {
+      "en": "mirror-polisher",
+      "es": "pulidor de espejos"
+    },
+    {
+      "en": "siren-caller",
+      "es": "encantador de sirenas"
+    },
+    {
+      "en": "stargazer",
+      "es": "astrólogo"
+    },
+    {
+      "en": "relic hunter",
+      "es": "cazador de reliquias"
+    },
+    {
+      "en": "dawn warden",
+      "es": "vigilante del alba"
+    },
+    {
+      "en": "oracle's voice",
+      "es": "la voz del oráculo"
     }
   ],
   "npcName": [
@@ -617,6 +769,166 @@
     {
       "en": "Solvane",
       "es": "Solvane"
+    },
+    {
+      "en": "Alonso",
+      "es": "Alonso"
+    },
+    {
+      "en": "Amira",
+      "es": "Amira"
+    },
+    {
+      "en": "Asha",
+      "es": "Asha"
+    },
+    {
+      "en": "Besnik",
+      "es": "Besnik"
+    },
+    {
+      "en": "Birgit",
+      "es": "Birgit"
+    },
+    {
+      "en": "Cassia",
+      "es": "Casia"
+    },
+    {
+      "en": "Cian",
+      "es": "Cian"
+    },
+    {
+      "en": "Darío",
+      "es": "Darío"
+    },
+    {
+      "en": "Dreva",
+      "es": "Dreva"
+    },
+    {
+      "en": "Eldris",
+      "es": "Eldris"
+    },
+    {
+      "en": "Elysia",
+      "es": "Elisia"
+    },
+    {
+      "en": "Farid",
+      "es": "Farid"
+    },
+    {
+      "en": "Ferrán",
+      "es": "Ferrán"
+    },
+    {
+      "en": "Gytha",
+      "es": "Gytha"
+    },
+    {
+      "en": "Hanne",
+      "es": "Hanne"
+    },
+    {
+      "en": "Hesper",
+      "es": "Hesper"
+    },
+    {
+      "en": "Idris",
+      "es": "Idris"
+    },
+    {
+      "en": "Inés",
+      "es": "Inés"
+    },
+    {
+      "en": "Irina",
+      "es": "Irina"
+    },
+    {
+      "en": "Iskander",
+      "es": "Iskander"
+    },
+    {
+      "en": "Ivo",
+      "es": "Ivo"
+    },
+    {
+      "en": "Kellan",
+      "es": "Kellan"
+    },
+    {
+      "en": "Liora",
+      "es": "Liora"
+    },
+    {
+      "en": "Livia",
+      "es": "Livia"
+    },
+    {
+      "en": "Maeko",
+      "es": "Maeko"
+    },
+    {
+      "en": "Melisande",
+      "es": "Melisanda"
+    },
+    {
+      "en": "Nadir",
+      "es": "Nadir"
+    },
+    {
+      "en": "Omari",
+      "es": "Omari"
+    },
+    {
+      "en": "Orla",
+      "es": "Orla"
+    },
+    {
+      "en": "Petros",
+      "es": "Petros"
+    },
+    {
+      "en": "Quenby",
+      "es": "Quenby"
+    },
+    {
+      "en": "Ragna",
+      "es": "Ragna"
+    },
+    {
+      "en": "Renata",
+      "es": "Renata"
+    },
+    {
+      "en": "Roshan",
+      "es": "Roshan"
+    },
+    {
+      "en": "Soraya",
+      "es": "Soraya"
+    },
+    {
+      "en": "Tamsin",
+      "es": "Tamsin"
+    },
+    {
+      "en": "Uri",
+      "es": "Uri"
+    },
+    {
+      "en": "Violeta",
+      "es": "Violeta"
+    },
+    {
+      "en": "Wren",
+      "es": "Wren"
+    },
+    {
+      "en": "Yanis",
+      "es": "Yanis"
     }
   ],
   "locationName": [
@@ -855,6 +1167,126 @@
     {
       "en": "the raven-touched tower",
       "es": "la torre marcada por los cuervos"
+    },
+    {
+      "en": "the dyers' quarter",
+      "es": "el barrio de los tintoreros"
+    },
+    {
+      "en": "a smithy shuttered for the night",
+      "es": "una fragua cerrada por la noche"
+    },
+    {
+      "en": "the pigeon loft over the granary",
+      "es": "el palomar sobre el granero"
+    },
+    {
+      "en": "the fish-market back stalls",
+      "es": "los puestos traseros del mercado del pescado"
+    },
+    {
+      "en": "a garret reached by ladder",
+      "es": "una bohardilla accesible por escalera"
+    },
+    {
+      "en": "the bleaching green",
+      "es": "el campo de blanqueo"
+    },
+    {
+      "en": "a stilted tide-house",
+      "es": "una casa sobre zancos en la marea"
+    },
+    {
+      "en": "the bell tower's shadow",
+      "es": "la sombra del campanario"
+    },
+    {
+      "en": "a dry well at the square's edge",
+      "es": "un pozo seco al borde de la plaza"
+    },
+    {
+      "en": "the tallow room",
+      "es": "la sala de las velas de sebo"
+    },
+    {
+      "en": "a tea-colored stream",
+      "es": "un arroyo color té"
+    },
+    {
+      "en": "a snowed-in homestead",
+      "es": "una granja aislada por la nieve"
+    },
+    {
+      "en": "the midden mounds",
+      "es": "los montones de desechos"
+    },
+    {
+      "en": "the sluice-gates",
+      "es": "las compuertas del canal"
+    },
+    {
+      "en": "a lavender field",
+      "es": "un campo de lavanda"
+    },
+    {
+      "en": "the cider cellar",
+      "es": "la bodega de sidra"
+    },
+    {
+      "en": "a weir pool",
+      "es": "un remanso junto al azud"
+    },
+    {
+      "en": "the tannery run-off",
+      "es": "las aguas turbias de la curtiduría"
+    },
+    {
+      "en": "a chalk-white track",
+      "es": "un camino blanco de cal"
+    },
+    {
+      "en": "a rowboat shed by the ferry house",
+      "es": "el cobertizo de botes junto al ferry"
+    },
+    {
+      "en": "the bellfounder's yard",
+      "es": "el patio del fundidor de campanas"
+    },
+    {
+      "en": "a gibbous hill above the fog",
+      "es": "una colina gibosa sobre la niebla"
+    },
+    {
+      "en": "the drowned-trade quay",
+      "es": "el muelle del comercio hundido"
+    },
+    {
+      "en": "a salt-stained prayer hall",
+      "es": "una sala de oración manchada de sal"
+    },
+    {
+      "en": "a field of standing stones",
+      "es": "un campo de menhires"
+    },
+    {
+      "en": "the dung-pit",
+      "es": "la fosa del estiércol"
+    },
+    {
+      "en": "the cork-oak thicket",
+      "es": "el soto de alcornoques"
+    },
+    {
+      "en": "an empty pillory",
+      "es": "una picota vacía"
+    },
+    {
+      "en": "the undertow steps",
+      "es": "los escalones de la resaca"
+    },
+    {
+      "en": "the coopers' lane",
+      "es": "la calleja de los toneleros"
     }
   ],
   "worldLocation": [
@@ -949,6 +1381,54 @@
     {
       "en": "the Saltglass Dunes",
       "es": "las Dunas de Vidrio Salino"
+    },
+    {
+      "en": "the Frostbitten Marches",
+      "es": "los Páramos Escarchados"
+    },
+    {
+      "en": "the Shattered Foothills",
+      "es": "las Estribaciones Astilladas"
+    },
+    {
+      "en": "the Tideless Bay",
+      "es": "la Bahía Sin Mareas"
+    },
+    {
+      "en": "the Siren Sound",
+      "es": "el Estrecho de las Sirenas"
+    },
+    {
+      "en": "the Amber Shelf",
+      "es": "el Escarpe del Ámbar"
+    },
+    {
+      "en": "the Darkwater Trench",
+      "es": "la Fosa de las Aguas Oscuras"
+    },
+    {
+      "en": "the Silent Spire",
+      "es": "la Aguja Silenciosa"
+    },
+    {
+      "en": "the Gilded Channel",
+      "es": "el Canal Dorado"
+    },
+    {
+      "en": "the Marrow Flats",
+      "es": "los Llanos del Tuétano"
+    },
+    {
+      "en": "the Lonely Meres",
+      "es": "los Lagos Desolados"
+    },
+    {
+      "en": "the Wailing Wall",
+      "es": "el Muro de los Lamentos"
+    },
+    {
+      "en": "the Thousand Bells",
+      "es": "las Mil Campanas"
     }
   ],
   "creatureName": [
@@ -1191,6 +1671,126 @@
     {
       "en": "a burning wicker giant",
       "es": "un gigante de mimbre en llamas"
+    },
+    {
+      "en": "a blood-finned gar",
+      "es": "un pez lagarto de aletas rojas"
+    },
+    {
+      "en": "a starved feral cat",
+      "es": "un gato callejero famélico"
+    },
+    {
+      "en": "a gangly heron",
+      "es": "una garza larguirucha"
+    },
+    {
+      "en": "a screeching night-owl",
+      "es": "un búho chillón"
+    },
+    {
+      "en": "a thorn-riddled stag",
+      "es": "un ciervo acribillado de espinas"
+    },
+    {
+      "en": "a shoal of lampreys",
+      "es": "un banco de lampreas"
+    },
+    {
+      "en": "a seething mound of beetles",
+      "es": "un montículo hirviente de escarabajos"
+    },
+    {
+      "en": "a gut-rot toad",
+      "es": "un sapo de podredumbre"
+    },
+    {
+      "en": "a feral boarhound",
+      "es": "un mastín salvaje"
+    },
+    {
+      "en": "a molting raven",
+      "es": "un cuervo que muda el plumaje"
+    },
+    {
+      "en": "a field of walking leeches",
+      "es": "un campo de sanguijuelas errantes"
+    },
+    {
+      "en": "a wailing portrait",
+      "es": "un retrato que gime"
+    },
+    {
+      "en": "a key-thief imp",
+      "es": "un duende ladrón de llaves"
+    },
+    {
+      "en": "a tick-swollen bear",
+      "es": "un oso hinchado de garrapatas"
+    },
+    {
+      "en": "a lantern-jawed ghoul",
+      "es": "un ghul de quijadas de linterna"
+    },
+    {
+      "en": "a bone-clacking marionette",
+      "es": "una marioneta que castañetea huesos"
+    },
+    {
+      "en": "a garish flight of magpies",
+      "es": "una bandada de urracas estridentes"
+    },
+    {
+      "en": "a galley-ghost",
+      "es": "un fantasma de galera"
+    },
+    {
+      "en": "a rust-eaten automaton",
+      "es": "un autómata carcomido por el óxido"
+    },
+    {
+      "en": "a barnacle-ridged mermaid",
+      "es": "una sirena cubierta de percebes"
+    },
+    {
+      "en": "an antlered daemon",
+      "es": "un demonio astado"
+    },
+    {
+      "en": "a moon-scaled leviathan",
+      "es": "un leviatán de escamas lunares"
+    },
+    {
+      "en": "a smoldering sphinx",
+      "es": "una esfinge humeante"
+    },
+    {
+      "en": "a clockwork griffin",
+      "es": "un grifo mecánico"
+    },
+    {
+      "en": "a dethroned thunderbird",
+      "es": "un pájaro del trueno destronado"
+    },
+    {
+      "en": "an amphora spirit",
+      "es": "un espíritu de ánfora"
+    },
+    {
+      "en": "a koi-titan",
+      "es": "un titán koi"
+    },
+    {
+      "en": "a lotus-eater",
+      "es": "un devorador de lotos"
+    },
+    {
+      "en": "a thousand-throated choir",
+      "es": "un coro de mil gargantas"
+    },
+    {
+      "en": "an eclipse-winged colossus",
+      "es": "un coloso de alas de eclipse"
     }
   ],
   "guildName": [
