@@ -749,7 +749,7 @@
         "rarity": "rare",
         "requiresStat": {
           "stat": "charisma",
-          "value": 14
+          "min": 14
         },
         "wantedTags": {
           "Humble": 0.2,

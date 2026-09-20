@@ -577,7 +577,7 @@
         "label": { "en": "Call the cheat and take his table", "es": "Denunciar la trampa y ocupar su mesa" },
         "tag": "Aggressive",
         "rarity": "volatile",
-        "requiresStat": { "stat": "strength", "value": 12 },
+        "requiresStat": { "stat": "strength", "min": 12 },
         "statDeltas": { "strength": 2 },
         "healthDelta": -5,
         "injuryRiskDelta": 0.12,
@@ -592,7 +592,7 @@
         "label": { "en": "Play his game and bleed him dry", "es": "Jugar su juego y desplumarlo" },
         "tag": "Strategic",
         "rarity": "uncommon",
-        "requiresStat": { "stat": "intelligence", "value": 12 },
+        "requiresStat": { "stat": "intelligence", "min": 12 },
         "statDeltas": { "intelligence": 2 },
         "goldDelta": 150,
         "liabilityDelta": 10,
@@ -629,7 +629,7 @@
         "label": { "en": "Drink him under the table you promised to hold", "es": "Bebértelo bajo la mesa que prometiste sostener" },
         "tag": "Funny",
         "rarity": "rare",
-        "requiresStat": { "stat": "constitution", "value": 12 },
+        "requiresStat": { "stat": "constitution", "min": 12 },
         "statDeltas": { "constitution": 2 },
         "healthDelta": -3,
         "staminaDelta": -10,
@@ -680,7 +680,7 @@
         "label": { "en": "Step into the circle and dance her fire back", "es": "Entrar al círculo y devolverle su fuego" },
         "tag": "Cocky",
         "rarity": "rare",
-        "requiresStat": { "stat": "dexterity", "value": 12 },
+        "requiresStat": { "stat": "dexterity", "min": 12 },
         "statDeltas": { "dexterity": 2 },
         "injuryRiskDelta": 0.05,
         "goldDelta": 60,
@@ -730,7 +730,7 @@
         "label": { "en": "Find the hidden shelf she never shows", "es": "Encontrar el estante escondido que nunca muestra" },
         "tag": "Strategic",
         "rarity": "rare",
-        "requiresStat": { "stat": "dexterity", "value": 12 },
+        "requiresStat": { "stat": "dexterity", "min": 12 },
         "statDeltas": { "dexterity": 2, "intelligence": 1 },
         "countersDelta": { "lore_exchanged": 1 },
         "narrative": {
@@ -770,7 +770,7 @@
     "weight": 7,
     "narrative": {
       "en": "The board behind the {locationName} bar has a new contract, pinned over a week of older ones, written in the careful hand of a clerk who wanted a stranger to say yes. 'Warehouse on the drowned street — doors held shut by a bad story. My locksmith resigned when he saw what opens from the inside. Asking price is fair. Bring your own torch, and your own nerve.'",
-      "es": "El tablero detrás de la barra de {locationName} tiene un contrato nuevo, clavado sobre una semana de más viejos, escrito con la mano cuidadosa de un escribano que quería que una desconocida dijera que sí. 'Almacén en la calle anegada — puertas que sostiene una mala historia. Mi cerrajero renunció cuando vio lo que abre desde adentro. Precio justo. Traé tu propia antorcha y tu propio coraje.'"
+      "es": "El tablero detrás de la barra de {locationName} tiene un contrato nuevo, clavado sobre una semana de más viejos, escrito con la mano cuidadosa de un escribano que quería que un desconocido dijera que sí. 'Almacén en la calle anegada — puertas que sostiene una mala historia. Mi cerrajero renunció cuando vio lo que abre desde adentro. Precio justo. Traé tu propia antorcha y tu propio coraje.'"
     },
     "choices": [
       {
