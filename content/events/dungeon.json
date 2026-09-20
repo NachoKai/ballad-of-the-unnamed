@@ -658,5 +658,367 @@
         }
       }
     ]
+  },
+  {
+    "id": "dungeon_rat_king",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "narrative": {
+      "en": "At the bottom of a collapsed stair, the dark moves as one thing: a mass of rats braided into a single chittering crown of meat, wearing a headdress of bone and gristle. Beneath the writhing pile glints a lost signet — the kind that opens doors the realm forgot it locked.",
+      "es": "Al pie de una escalera derrumbada, la oscuridad se mueve como una sola cosa: una masa de ratas trenzadas en una sola corona chirriante de carne, con un tocado de hueso y cartílago. Bajo el montón que se retuerce brilla un anillo de sello perdido — de los que abren puertas que el reino olvidó que cerró."
+    },
+    "choices": [
+      {
+        "id": "break_the_crown",
+        "label": {
+          "en": "Break the crown apart to reach the signet",
+          "es": "Romper la corona para llegar al anillo"
+        },
+        "tag": "Aggressive",
+        "rarity": "rare",
+        "requiresStat": {
+          "stat": "strength",
+          "min": 12
+        },
+        "statDeltas": {
+          "strength": 2
+        },
+        "goldDelta": 60,
+        "fameDelta": 2,
+        "injuryRiskDelta": 0.12,
+        "narrative": {
+          "en": "You wade into the giving dark and tear the crown in two, and the rats scatter like a purse cut open. You come out with a hundred scratches, a lost signet, and a legend the lower hall will whisper as long as the rats keep their grudge.",
+          "es": "Te hundís en la oscuridad que cede y partís la corona en dos, y las ratas se dispersan como una bolsa abierta de un tajo. Salís con cien rasguños, un anillo de sello perdido y una leyenda que el salón inferior susurrará mientras las ratas guarden su rencor."
+        }
+      },
+      {
+        "id": "feed_it_copper",
+        "label": {
+          "en": "Feed the crown copper and take the ring while it eats",
+          "es": "Alimentar a la corona con cobre y tomar el anillo mientras come"
+        },
+        "tag": "Strategic",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "dexterity": 2
+        },
+        "goldDelta": -20,
+        "injuryRiskDelta": 0.05,
+        "narrative": {
+          "en": "You toss a purse of copper into the mass and the crown bends to eat as one stomach. In that soft moment you lift the signet from under the tide of fur and back out without a stampede. It cost you the copper; it earned you the ring.",
+          "es": "Arrojás una bolsa de cobre a la masa y la corona se dobla para comer como un solo estómago. En ese momento suave levantás el anillo de bajo la marea de pelo y retrocedés sin estampida. Te costó el cobre; te ganó el anillo."
+        }
+      },
+      {
+        "id": "back_out_slowly",
+        "label": {
+          "en": "Back out slowly and leave the crown its throne",
+          "es": "Retroceder despacio y dejarle a la corona su trono"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": {
+          "constitution": 1
+        },
+        "staminaDelta": 10,
+        "narrative": {
+          "en": "You hold the dark in both eyes and walk backward until the stair's mouth is behind you. The crown watches your back the whole way, unbothered, untroubled. Some thrones are best left crowned.",
+          "es": "Sostenés la oscuridad con ambos ojos y caminás hacia atrás hasta tener la boca de la escalera detrás. La corona te mira la espalda todo el camino, sin molestarse, sin inquietarse. Algunos tronos están mejor coronados."
+        }
+      }
+    ]
+  },
+  {
+    "id": "dungeon_drowning_chamber",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "narrative": {
+      "en": "The chamber's floor seeps black water too quickly, and the only way out is a grate far below the rising tide. A brass key hangs on a chain near the ceiling — the lock, an age older, waits under the dark. The room fills in bells, not hours.",
+      "es": "El piso de la cámara rezuma agua negra demasiado rápido, y la única salida es una reja muy por debajo de la marea que sube. Una llave de bronce cuelga de una cadena cerca del techo — la cerradura, mucho más vieja, espera bajo la oscuridad. La sala se llena en campanas, no en horas."
+    },
+    "choices": [
+      {
+        "id": "dive_the_low_grate",
+        "label": {
+          "en": "Dive to the grate and work the lock blind",
+          "es": "Bucear hasta la reja y abrir la cerradura a ciegas"
+        },
+        "tag": "Stoic",
+        "rarity": "rare",
+        "requiresStat": {
+          "stat": "constitution",
+          "min": 12
+        },
+        "statDeltas": {
+          "constitution": 2
+        },
+        "goldDelta": 60,
+        "healthDelta": -8,
+        "injuryRiskDelta": 0.12,
+        "narrative": {
+          "en": "You fill your lungs to the crown and reach the grate while the water is still waist-high. The lock's tumblers are older than your language, but the square stone behind it knows one trick, and your fingers remember. The grate swings, the tide pours through, and you surface in the next hall spitting black and richer than you entered.",
+          "es": "Llenás los pulmones hasta la corona y alcanzás la reja cuando el agua todavía llega a la cintura. Los pernos de la cerradura son más viejos que tu idioma, pero la piedra cuadrada de atrás conoce un truco, y tus dedos lo recuerdan. La reja se abre, la marea pasa de largo y salís a la superficie en el salón siguiente escupiendo negro y más rico de lo que entraste."
+        }
+      },
+      {
+        "id": "swing_for_the_key",
+        "label": {
+          "en": "Swing for the brass key before the water eats the room",
+          "es": "Saltar por la llave de bronce antes de que el agua devore la sala"
+        },
+        "tag": "Strategic",
+        "rarity": "uncommon",
+        "requiresStat": {
+          "stat": "dexterity",
+          "min": 12
+        },
+        "statDeltas": {
+          "dexterity": 2
+        },
+        "goldDelta": 30,
+        "healthDelta": -4,
+        "injuryRiskDelta": 0.06,
+        "narrative": {
+          "en": "You clear the rising water in one leap, catch the chain, and bring the brass key down with you. The lock turns like it was bored yesterday, the grate leads to a flooded treasury's low door, and you wade out with your lungs burning and a few crowns' worth of water-struck silver under your arm.",
+          "es": "Salvás el agua que sube de un solo salto, atrapás la cadena y bajás con la llave de bronce. La cerradura gira como si la hubieran taladrado ayer, la reja conduce a la puerta baja de una tesorería inundada, y salís a la orilla con los pulmones ardiendo y unos cuantos coronas en plata mojada bajo el brazo."
+        }
+      },
+      {
+        "id": "swim_the_wall_crack",
+        "label": {
+          "en": "Swim the crack in the far wall before the water seals it",
+          "es": "Nadar la grieta de la pared lejana antes de que el agua la selle"
+        },
+        "tag": "Aggressive",
+        "rarity": "common",
+        "statDeltas": {
+          "strength": 1
+        },
+        "healthDelta": -6,
+        "injuryRiskDelta": 0.12,
+        "staminaDelta": -10,
+        "narrative": {
+          "en": "You gamble that the crack in the far wall goes somewhere and swim for it with everything you have. The water squeezes your ribs at the worst moment, drags you through a hall of rust, and deposits you in a dry cellar, dripping and alive. Not every exit needs a key — some just need bad judgment and good lungs.",
+          "es": "Apostás a que la grieta de la pared lejana lleva a algún lado y nadás hacia ella con todo lo que tenés. El agua te aprieta las costillas en el peor momento, te arrastra por un pasillo de óxido y te deja en una bodega seca, chorreando y vivo. No toda salida necesita una llave — algunas necesitan mal juicio y buenos pulmones."
+        }
+      }
+    ]
+  },
+  {
+    "id": "dungeon_echo_hall",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "narrative": {
+      "en": "The hall answers a half-beat late, in a voice close to your own — finishing your sentences with the words you almost said. When you reach the fourth pillar it speaks the thing you've never once told truthfully, and waits. The doors ahead stand or fall on whether you own it.",
+      "es": "La sala responde con medio latido de retraso, con una voz parecida a la tuya — completando tus frases con las palabras que casi dijiste. Cuando llegás al cuarto pilar, dice la cosa que nunca contaste con verdad, y espera. Las puertas que hay delante se abren según la reconozcas o no."
+    },
+    "choices": [
+      {
+        "id": "own_the_echo",
+        "label": {
+          "en": "Turn and own the thing the echo said",
+          "es": "Darte vuelta y reconocer lo que dijo el eco"
+        },
+        "tag": "Humble",
+        "rarity": "rare",
+        "requiresStat": {
+          "stat": "charisma",
+          "min": 13
+        },
+        "statDeltas": {
+          "charisma": 2,
+          "intelligence": 1
+        },
+        "goldDelta": 40,
+        "narrative": {
+          "en": "You turn and say it back to the ceiling, the whole ungroomed truth of it, the words you've spent years not saying. The echo falls silent for the first time — and then it answers like a bell the exact shape of your voice, and every door ahead opens on its own hinge. The hall wasn't cruel. It was just waiting.",
+          "es": "Te das vuelta y se lo decís al techo, toda la verdad sin pulir, las palabras que pasaste años sin decir. El eco calla por primera vez — y después responde como una campana con la forma exacta de tu voz, y cada puerta de adelante se abre sola. La sala no era cruel. Solo estaba esperando."
+        }
+      },
+      {
+        "id": "drown_the_hall",
+        "label": {
+          "en": "Drown the echo in noise until it forgets the question",
+          "es": "Ahogar el eco en ruido hasta que olvide la pregunta"
+        },
+        "tag": "Funny",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "charisma": 2
+        },
+        "healthDelta": -4,
+        "staminaDelta": -10,
+        "narrative": {
+          "en": "You fill the hall with a song so loud and so wrong that the echo gives up matching you and starts following the song instead, shouting it back off-key. It opens the doors just to be rid of you — and stays behind, humming your tune, unable to remember what it wanted to ask.",
+          "es": "Llenás la sala con una canción tan fuerte y tan errada que el eco se rinde de imitarte y empieza a seguir la canción, gritándotela desafinada. Abre las puertas solo para librarse de vos — y se queda atrás, tarareando tu melodía, incapaz de recordar qué quería preguntar."
+        }
+      },
+      {
+        "id": "walk_unspeaking",
+        "label": {
+          "en": "Walk through unspeaking and let the secret stay yours",
+          "es": "Cruzar sin hablar y dejar que el secreto siga siendo tuyo"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": {
+          "constitution": 1
+        },
+        "staminaDelta": 8,
+        "narrative": {
+          "en": "You make no sound the whole length of the hall, and the echo pads along at your shoulder, whispering temptations you refuse to feed. At the last door it falls behind, unsatisfied — and some secrets are heavy enough to hide in a loud heart only you can hear.",
+          "es": "No hacés ningún sonido en toda la sala, y el eco avanza a tu hombro, susurrando tentaciones que te negás a alimentar. En la última puerta se queda atrás, insatisfecho — y hay secretos lo bastante pesados para esconderse en un corazón ruidoso que solo vos podés oír."
+        }
+      }
+    ]
+  },
+  {
+    "id": "dungeon_lost_altar",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "narrative": {
+      "en": "A shrine with no icon sits in the hall's silence; the stones hum around a name the realm forgot, but no one has ever spoken it last. A single black basin waits in the center. Leaving something here makes it yours in the old accounting. Naming what the stones remember wakes it.",
+      "es": "Un altar sin icono se alza en el silencio de la sala; las piedras zumban alrededor de un nombre que el reino olvidó, pero nadie lo ha dicho nunca en último lugar. Una sola jofaina negra espera en el centro. Dejar algo aquí lo hace tuyo en la vieja contabilidad. Nombrar lo que las piedras recuerdan lo despierta."
+    },
+    "choices": [
+      {
+        "id": "give_your_name",
+        "label": {
+          "en": "Drop your name in the basin for a night",
+          "es": "Dejar tu nombre en la jofaina por una noche"
+        },
+        "tag": "Humble",
+        "rarity": "volatile",
+        "statDeltas": {
+          "intelligence": 3
+        },
+        "tradeoffDeltas": {
+          "charisma": -1
+        },
+        "fameDelta": 1,
+        "narrative": {
+          "en": "You whisper your name to the black water and the basin drinks it like a structure with a thirst. For one turn of the world you are nameless — doors open for the old accounting, secrets shelve themselves under your absence, and the god stirs, fed, and asks nothing more. You wake whole, but for a breath the realm knew you only as a stranger.",
+          "es": "Le susurrás tu nombre al agua negra y la jofaina lo bebe como una estructura con sed. Por una vuelta del mundo no tenés nombre — las puertas se abren por la vieja contabilidad, los secretos se archivan bajo tu ausencia, y el dios se agita, alimentado, y no pide nada más. Despertás entero, pero por un instante el reino te conoció solo como un desconocido."
+        }
+      },
+      {
+        "id": "name_it_aloud",
+        "label": {
+          "en": "Name what the stones remember, out loud",
+          "es": "Nombrar en voz alta lo que las piedras recuerdan"
+        },
+        "tag": "Leader",
+        "rarity": "rare",
+        "requiresStat": {
+          "stat": "charisma",
+          "min": 12
+        },
+        "statDeltas": {
+          "charisma": 2
+        },
+        "goldDelta": 40,
+        "fameDelta": 2,
+        "countersDelta": {
+          "deeds_of_the_year": 1
+        },
+        "narrative": {
+          "en": "You speak the old name clearly, once, as an invitation rather than a summons, and the hall holds its breath. The god wakes to a courtesy instead of a chain, and the shrine's thanks come in old coin and a warmth that follows you up the corridor like a bodyguard no one else sees.",
+          "es": "Decís el nombre viejo con claridad, una sola vez, como invitación en lugar de conjuro, y la sala contiene el aliento. El dios despierta ante una cortesía en lugar de una cadena, y el agradecimiento del altar llega en moneda antigua y en un calor que te sigue por el pasillo como un guardaespaldas que nadie más ve."
+        }
+      },
+      {
+        "id": "leave_it_unnamed",
+        "label": {
+          "en": "Leave the basin dry and the name unspoken",
+          "es": "Dejar la jofaina seca y el nombre sin decir"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": {
+          "constitution": 1
+        },
+        "staminaDelta": 10,
+        "narrative": {
+          "en": "You keep your offering in your pocket and your name in your mouth. The stones keep humming, patient as geology. Some gods are better left asleep — and some names are better left exactly where they've always been: yours.",
+          "es": "Guardás tu ofrenda en el bolsillo y tu nombre en la boca. Las piedras siguen zumbando, pacientes como la geología. A algunos dioses conviene dejarlos dormidos — y a algunos nombres conviene dejarlos exactamente donde siempre estuvieron: con vos."
+        }
+      }
+    ]
+  },
+  {
+    "id": "dungeon_guards_truce",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "narrative": {
+      "en": "Two armored figures flank a sealed armory door: an old soldier and an older one, still in formation, spears crossed, neither one breathing. Their post outlived their war, and the dust on the threshold says nobody has crossed the line since. They need only one of them to vouch for you — the second one never trusted strangers, even alive.",
+      "es": "Dos figuras con armadura flanquean la puerta sellada de una armería: un soldado viejo y uno más viejo, aún en formación, lanzas cruzadas, sin que ninguno respire. Su puesto sobrevivió a su guerra, y el polvo del umbral dice que nadie cruzó la línea desde entonces. Solo necesitan que uno de ellos responda por vos — el segundo jamás confió en los extraños, ni en vida."
+    },
+    "choices": [
+      {
+        "id": "swear_the_old_oath",
+        "label": {
+          "en": "Swear the old oath and pass with both spears lowered",
+          "es": "Jurar el juramento viejo y pasar con ambas lanzas bajas"
+        },
+        "tag": "Humble",
+        "rarity": "rare",
+        "requiresStat": {
+          "stat": "charisma",
+          "min": 12
+        },
+        "statDeltas": {
+          "charisma": 2
+        },
+        "goldDelta": 80,
+        "narrative": {
+          "en": "You speak the watch-oath of the old line — the one your own teachers insisted was 'harmless old words' — and the senior guard's spear comes down first, a salute at your shoulder. The armory opens to a rack of blades that still hold an edge. You take one, seal the door behind you, and leave the two guards standing to a new oath they'll keep for the next worthy line.",
+          "es": "Decís el juramento de guardia de la línea vieja — el que tus propios maestros insistían eran 'viejas palabras inofensivas' — y la lanza del oficial mayor baja primero, saludando a tu hombro. La armería abre hacia un bastidor de hojas que todavía conservan filo. Tomás una, sellas la puerta detrás y dejás a los dos guardias de pie, guardando un juramento nuevo para la próxima línea que lo valga."
+        }
+      },
+      {
+        "id": "carry_the_token",
+        "label": {
+          "en": "Carry the found token in the old watch-pattern",
+          "es": "Llevar la ficha encontrada en el patrón de la guardia vieja"
+        },
+        "tag": "Strategic",
+        "rarity": "uncommon",
+        "requiresStat": {
+          "stat": "dexterity",
+          "min": 12
+        },
+        "statDeltas": {
+          "dexterity": 2,
+          "intelligence": 1
+        },
+        "goldDelta": 60,
+        "narrative": {
+          "en": "You walk the circuit exactly as the old drill teaches — three slow paces, a turn, the token held flat in the watching hand — and the younger guard steps aside alone. The door opens one blade's-width, enough for one honest find. You take less than you could have and leave before the other guard's faith shakes.",
+          "es": "Recorrés el circuito exactamente como enseña el viejo ejercicio — tres pasos lentos, una vuelta, la ficha extendida en la mano que vigila — y el guardia menor se hace a un lado solo. La puerta se abre el ancho de una hoja, lo suficiente para un hallazgo honesto. Tomás menos de lo que podrías haber tomado y te vas antes de que la fe del otro guardia se sacuda."
+        }
+      },
+      {
+        "id": "turn_and_walk",
+        "label": {
+          "en": "Turn and walk the other way",
+          "es": "Darte vuelta y caminar hacia el otro lado"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": {
+          "constitution": 1
+        },
+        "staminaDelta": 8,
+        "narrative": {
+          "en": "You meet the older guard's eyes in the dark, nod, and turn around. Some doors are sealed by worse than locks, and the armory will wait for someone the dead decide to trust. You leave them their watch and take the other road — lighter, and wiser for the letting go.",
+          "es": "Encontrás los ojos del guardia mayor en la oscuridad, asentís y te das vuelta. Hay puertas selladas por algo peor que las cerraduras, y la armería esperará a alguien en quien los muertos decidan confiar. Les dejás su puesto y tomás el otro camino — más liviano, y más sabio por haber soltado."
+        }
+      }
+    ]
   }
 ]

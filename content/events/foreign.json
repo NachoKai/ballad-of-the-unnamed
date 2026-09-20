@@ -669,5 +669,375 @@
         }
       }
     ]
+  },
+  {
+    "id": "foreign_international_marriage",
+    "minAge": 20,
+    "maxAge": 99,
+    "weight": 5,
+    "requiresForeign": true,
+    "narrative": {
+      "en": "House Orleos pins an offer to your gate with a seal heavier than a fist: a marriage — contract first, ceremony second — binding your deeds to the house and the house's doors to you. 'Not to a person,' the factor says. 'People leave. Houses remain.'",
+      "es": "La Casa Orleos clava una oferta en tu puerta con un sello más pesado que un puño: un matrimonio — contrato primero, ceremonia después — que une tus hazañas a la casa y las puertas de la casa a vos. 'No a una persona', dice el factor. 'Las personas se van. Las casas permanecen.'"
+    },
+    "choices": [
+      {
+        "id": "wed_the_house",
+        "label": {
+          "en": "Wed the house and take the doors it offers",
+          "es": "Casarte con la casa y tomar las puertas que ofrece"
+        },
+        "tag": "Professional",
+        "rarity": "rare",
+        "requiresStat": {
+          "stat": "charisma",
+          "min": 12
+        },
+        "statDeltas": {
+          "charisma": 2
+        },
+        "goldDelta": 150,
+        "reputationDelta": 3,
+        "reputationFaction": "crownguard",
+        "narrative": {
+          "en": "You sign, and the ceremony is a formality that takes half a bell. Orleos opens its ledgers, its doors, and its patience to you — and your deeds, from this day, carry the house's name forward. It is not a marriage of hearts. It is a marriage of doors, and both of you know it.",
+          "es": "Firmás, y la ceremonia es una formalidad que dura media campana. Orleos te abre sus libros, sus puertas y su paciencia — y tus hazañas, desde este día, llevan el nombre de la casa hacia adelante. No es un matrimonio de corazones. Es un matrimonio de puertas, y ambos lo saben."
+        }
+      },
+      {
+        "id": "read_the_second_page",
+        "label": {
+          "en": "Read the second page before you answer",
+          "es": "Leer la segunda página antes de responder"
+        },
+        "tag": "Strategic",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "fameDelta": 1,
+        "reputationDelta": 1,
+        "reputationFaction": "golden_lotus",
+        "narrative": {
+          "en": "The second page binds your name, your oaths, and your children's first oath to 'every hearth the house yet holds.' You fold the offer along that seam and hand it back with the clause circled. Orleos pales at the precision — and the clerks of the Lotus file the name of the foreigner who reads the deep page.",
+          "es": "La segunda página ata tu nombre, tus juramentos y el primer juramento de tus hijos a 'todo hogar que la casa aún guarde'. Doblas la oferta por esa costura y la devolvés con la cláusula marcada. Orleos palidece ante la precisión — y los escribanos del Loto archivan el nombre del forastero que lee la página profunda."
+        }
+      },
+      {
+        "id": "refuse_the_ink",
+        "label": {
+          "en": "Refuse the ink and keep your own name",
+          "es": "Rechazar la tinta y conservar tu propio nombre"
+        },
+        "tag": "Humble",
+        "rarity": "common",
+        "statDeltas": {
+          "charisma": 1
+        },
+        "countersDelta": {
+          "declined_offers": 1
+        },
+        "narrative": {
+          "en": "You hand the offer back untouched. House Orleos is a fine door, but you've carried your name a long way to keep it yours — and some signatures can't be unmade by the other side of a gate.",
+          "es": "Devolvés la oferta sin tocarla. La Casa Orleos es una puerta envidiable, pero cargaste tu nombre hasta muy lejos para conservarlo tuyo — y algunas firmas no pueden deshacerse al otro lado de un portón."
+        }
+      }
+    ]
+  },
+  {
+    "id": "foreign_tourist_marking",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "requiresForeign": true,
+    "narrative": {
+      "en": "The market of your new road-town has a word for you and it's pointing your way: a knot of children parroting your accent, an innkeeper doubling the price with a grin, and a merchant offering 'the tourist list' — tripled, and written in a hand that already knows you'll say yes.",
+      "es": "El mercado de tu nueva villa de camino tiene una palabra para vos y te está apuntando: un grupo de niños repitiendo tu acento, una posadera duplicando el precio con una sonrisa y un mercader ofreciendo 'la lista del turista' — triplicada, y escrita con una mano que ya sabe que vas a decir que sí."
+    },
+    "choices": [
+      {
+        "id": "own_the_act",
+        "label": {
+          "en": "Own the part they expect you to play",
+          "es": "Hacerte dueño del papel que esperan que juegues"
+        },
+        "tag": "Funny",
+        "rarity": "rare",
+        "requiresStat": {
+          "stat": "charisma",
+          "min": 12
+        },
+        "statDeltas": {
+          "charisma": 2
+        },
+        "goldDelta": 40,
+        "fameDelta": 2,
+        "narrative": {
+          "en": "You lean into the mask they've made for you — the wide-eyed tourist, the easy mark, the story they'll tell their cousins. By the second bell you've turned the act into a performance the whole market pays to watch, and the doubled prices bought you a standing ovation.",
+          "es": "Te hundís en la máscara que te hicieron — el turista de ojos abiertos, el blanco fácil, la historia que contarán a sus primos. Para la segunda campana convertiste el acto en una función que todo el mercado paga por ver, y los precios duplicados te compraron una ovación de pie."
+        }
+      },
+      {
+        "id": "learn_the_real_list",
+        "label": {
+          "en": "Learn the real list of prices and names",
+          "es": "Aprender la lista real de precios y de nombres"
+        },
+        "tag": "Strategic",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "goldDelta": 30,
+        "reputationDelta": 2,
+        "reputationFaction": "meridian_company",
+        "narrative": {
+          "en": "You buy the tourist list, laugh, and then spend the day learning the real one — whose hands move what, what the river boats actually cost, and which merchant's grin is a tax. By evening you can name half the market, and the merchants of the Meridian way file you under someone not to overcharge twice.",
+          "es": "Comprás la lista del turista, te reís, y después pasás el día aprendiendo la de verdad — qué mueve cada mano, cuánto cuestan de verdad los botes del río y qué sonrisa de mercader es un impuesto. Para la noche podés nombrar a media plaza, y los mercaderes de la ruta del Meridiano te archivan bajo alguien a quien no conviene cobrarle dos veces."
+        }
+      },
+      {
+        "id": "leave_before_legend",
+        "label": {
+          "en": "Leave before the story gets a name",
+          "es": "Irte antes de que la historia consiga un nombre"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": {
+          "constitution": 1
+        },
+        "narrative": {
+          "en": "You pay the tourist price twice — it's the price of leaving quietly — and take the road at dusk. Some towns only want one story from a foreigner, and you'd rather be the one who was there for half a day than the one they remember forever.",
+          "es": "Pagás dos veces el precio del turista — es el precio de irse en silencio — y tomás el camino al atardecer. Algunos pueblos solo quieren una historia de un forastero, y preferís ser el que estuvo media jornada que el que recuerdan para siempre."
+        }
+      }
+    ]
+  },
+  {
+    "id": "foreign_deportation_scare",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "requiresForeign": true,
+    "narrative": {
+      "en": "A herald's drum beats in the square: every foreigner must be counted by the new census — name, trade, and years of bread eaten here. The clerk behind the ledger is too eager, and everyone knows what a list becomes once it's finished. Your name is not in it yet. Tonight it will be.",
+      "es": "El tambor de un heraldo retumba en la plaza: todo forastero debe ser contado por el nuevo censo — nombre, oficio y años de pan comido aquí. El escribano detrás del registro está demasiado ansioso, y todos saben en qué se convierte una lista cuando se termina. Tu nombre todavía no está en ella. Esta noche lo estará."
+    },
+    "choices": [
+      {
+        "id": "bleed_the_ink",
+        "label": {
+          "en": "Bleed into the ledger and change your line",
+          "es": "Colarte en el registro y cambiar tu línea"
+        },
+        "tag": "Strategic",
+        "rarity": "rare",
+        "requiresStat": {
+          "stat": "dexterity",
+          "min": 12
+        },
+        "statDeltas": {
+          "dexterity": 2
+        },
+        "goldDelta": -20,
+        "liabilityDelta": 6,
+        "narrative": {
+          "en": "You slip past the sleeping clerk's lantern before dawn and add a line the census never demanded: a birth year older than the town itself, a trade that predates the decree. When the list is read aloud, your name is on it — and off it, in the same breath. Ink, a frightened clerk, and a green bribe. Worth every copper.",
+          "es": "Te deslizás junto a la linterna del escribano dormido antes del amanecer y agregás una línea que el censo nunca pidió: un año de nacimiento más viejo que la villa misma, un oficio anterior al decreto. Cuando leen la lista en voz alta, tu nombre está en ella — y fuera de ella, en el mismo aliento. Tinta, un escribano asustado y un soborno verde. Vale cada cobre."
+        }
+      },
+      {
+        "id": "challenge_the_count",
+        "label": {
+          "en": "Challenge the count in the square",
+          "es": "Desafiar la cuenta en la plaza"
+        },
+        "tag": "Confident",
+        "rarity": "uncommon",
+        "requiresStat": {
+          "stat": "charisma",
+          "min": 12
+        },
+        "statDeltas": {
+          "charisma": 2
+        },
+        "fameDelta": 2,
+        "reputationDelta": 2,
+        "reputationFaction": "crownguard",
+        "narrative": {
+          "en": "You step to the drum and ask the square one question the clerk didn't write down: who replaced the town's roofers, dug its wells, and carried its barges? The list survives — but it grows a margin note about 'the stranger who asked.' Some counts measure the town; yours measured the town's debts.",
+          "es": "Te parás ante el tambor y le preguntás a la plaza una cosa que el escribano no anotó: quién reemplazó los techos del pueblo, cavó sus pozos y cargó sus barcazas. La lista sobrevive — pero le crece una nota al margen sobre 'el forastero que preguntó'. Algunos censos miden el pueblo; el tuyo midió sus deudas."
+        }
+      },
+      {
+        "id": "leave_before_the_list",
+        "label": {
+          "en": "Leave before the list is read",
+          "es": "Irte antes de que lean la lista"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": {
+          "constitution": 1
+        },
+        "narrative": {
+          "en": "You pack your horse in the dark and take the north road, where the census stops. The list will be read without your name — and that is answer enough. Freedom, sometimes, is just being the entry they can't find.",
+          "es": "Empacás tu caballo en la oscuridad y tomás el camino norte, donde el censo se detiene. La lista se leerá sin tu nombre — y eso es suficiente respuesta. La libertad, a veces, es solo la entrada que no pueden encontrar."
+        }
+      }
+    ]
+  },
+  {
+    "id": "foreign_festival_crown",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "requiresForeign": true,
+    "narrative": {
+      "en": "The Festival of Strangers crowns one outsider each year as its Foreign Monarch — the one judged least at home here of them all. For one night the festival flatters the crown; for one year, everyone remembers who wore it.",
+      "es": "El Festival de los Forasteros corona cada año a un outsider como su Monarca Forastero — el que se juzga menos en su casa, estando aquí, de todos. Por una noche el festival halaga a la corona; por un año, todos recuerdan quién la llevó."
+    },
+    "choices": [
+      {
+        "id": "take_the_crown",
+        "label": {
+          "en": "Take the crown and wear it loud",
+          "es": "Tomar la corona y llevarla en alto"
+        },
+        "tag": "Cocky",
+        "rarity": "rare",
+        "requiresStat": {
+          "stat": "charisma",
+          "min": 12
+        },
+        "statDeltas": {
+          "charisma": 2
+        },
+        "fameDelta": 4,
+        "reputationDelta": -2,
+        "reputationFaction": "golden_lotus",
+        "narrative": {
+          "en": "You take the crown and the night it buys — wine, music, a seat at the fire with the whole festival at your feet. A year of resentment is the price of the memory, and the Lotus, who keep the capital's milder grudges, won't soon forget the stranger crowned where locals go uncrowned.",
+          "es": "Tomás la corona y la noche que compra — vino, música, un asiento junto al fuego con todo el festival a tus pies. Un año de rencor es el precio del recuerdo, y el Loto, que guarda los rencores más suaves de la capital, no olvidará pronto al forastero coronado donde los locales quedan sin corona."
+        }
+      },
+      {
+        "id": "give_the_crown_away",
+        "label": {
+          "en": "Crown a story instead: the sailor who never reached harbor",
+          "es": "Coronar a una historia en tu lugar: el marinero que nunca llegó al puerto"
+        },
+        "tag": "Supportive",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "charisma": 1
+        },
+        "fameDelta": 2,
+        "narrative": {
+          "en": "You stand, take the crown, and place it on a figure carved into the festival mast — the sailor who never reached home, whom every outsider's tale remembers. The festival roars, then goes quiet, then crowns the mast in its own way. They will retell the giver for years, and not the crown.",
+          "es": "Te parás, tomás la corona y la ponés sobre la figura tallada en el mástil del festival — el marinero que nunca llegó a casa, al que todo relato de forastero recuerda. El festival ruge, se queda en silencio y corona el mástil a su manera. Recordarán al que la dio durante años, no a la corona."
+        }
+      },
+      {
+        "id": "laugh_and_toast",
+        "label": {
+          "en": "Laugh it off and buy a round",
+          "es": "Tomarlo en broma y convidar una ronda"
+        },
+        "tag": "Funny",
+        "rarity": "common",
+        "statDeltas": {
+          "charisma": 2
+        },
+        "staminaDelta": 10,
+        "narrative": {
+          "en": "You wave the crown away with a laugh and buy the festival a round with the night's deepest purse. The toast becomes the story, the crown lands on the next unlucky soul, and you leave the foreign feast owed a good time and owing nothing back.",
+          "es": "Ahuyentás la corona con una risa y le convidás al festival una ronda con la bolsa más profunda de la noche. El brindis se vuelve la historia, la corona cae sobre la próxima alma desafortunada y salís del festín de los forasteros con una buena fiesta a tu favor y sin deber nada."
+        }
+      }
+    ]
+  },
+  {
+    "id": "foreign_mercenary_contract_outsider",
+    "minAge": 18,
+    "maxAge": 99,
+    "weight": 5,
+    "requiresForeign": true,
+    "narrative": {
+      "en": "A parchment is nailed to the galley of a mercenary band that hires only out-of-towners: a contract to remove the toll-lord the whole town hates, so the blame lands on a stranger's name and no feud kindles. Only an outsider could take it — and only an outsider could break it.",
+      "es": "Un pergamino está clavado en la galería de una banda de mercenarios que contrata solo a forasteros: un contrato para retirar al señor del peaje que todo el pueblo odia, para que la culpa caiga sobre el nombre de un desconocido y no encienda ninguna enemistad. Solo un forastero podría tomarlo — y solo un forastero podría romperlo."
+    },
+    "choices": [
+      {
+        "id": "sign_the_contract",
+        "label": {
+          "en": "Sign the contract and end the toll-lord's tolls",
+          "es": "Firmar el contrato y terminar con los peajes del señor"
+        },
+        "tag": "Aggressive",
+        "rarity": "volatile",
+        "requiresStat": {
+          "stat": "strength",
+          "min": 12
+        },
+        "statDeltas": {
+          "strength": 2
+        },
+        "tradeoffDeltas": {
+          "constitution": -1
+        },
+        "goldDelta": 200,
+        "injuryRiskDelta": 0.15,
+        "liabilityDelta": 10,
+        "narrative": {
+          "en": "You sign, and the toll-lord's gate comes down in a night the town will remember as weather. The town calls it justice on a stranger's blade; the road calls it a body with a price on its name. The gold is heavy, and heavier is the knowledge of who hired the hand that swung.",
+          "es": "Firmás, y la puerta del señor del peaje cae en una noche que el pueblo recordará como clima. El pueblo lo llama justicia en la hoja de un desconocido; el camino lo llama un cuerpo con precio sobre su nombre. El oro pesa, y pesa más saber quién contrató la mano que golpeó."
+        }
+      },
+      {
+        "id": "rewrite_the_clause",
+        "label": {
+          "en": "Rewrite 'remove' as a duel at the gate",
+          "es": "Reescribir 'retirar' como un duelo en la puerta"
+        },
+        "tag": "Strategic",
+        "rarity": "rare",
+        "requiresStat": {
+          "stat": "intelligence",
+          "min": 13
+        },
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "goldDelta": 120,
+        "fameDelta": 3,
+        "reputationDelta": 3,
+        "reputationFaction": "crownguard",
+        "narrative": {
+          "en": "You cross out one word and write another, then hand the contract back with the ink still wet: the toll-lord will face you at the gate, with witnesses and weather both watching. The band grumbles, then pays, and the town gets its duel instead of a disappearance. The gate comes down — in public, and in a way no feud can mumble about.",
+          "es": "Tachás una palabra y escribís otra, y devolvés el contrato con la tinta todavía húmeda: el señor del peaje te enfrentará en la puerta, con testigos y con el clima mirando. La banda refunfuña, y después paga, y el pueblo consigue su duelo en lugar de una desaparición. La puerta se cae — en público, y de una manera que ninguna enemistad puede murmurar."
+        }
+      },
+      {
+        "id": "burn_the_document",
+        "label": {
+          "en": "Burn the contract and name no price",
+          "es": "Quemar el contrato y no ponerle precio a nadie"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": {
+          "charisma": 1
+        },
+        "countersDelta": {
+          "declined_offers": 1
+        },
+        "narrative": {
+          "en": "You take the parchment to the fire and drop it in. The mercenaries watch a whole purse float up in smoke and call you a fool into the dark. But some hands don't take a stranger's name to hold a town's grudge — and a town that wants a murder to blame only its strangers is a town you can afford to leave unpaid.",
+          "es": "Llevás el pergamino al fuego y lo dejás caer. Los mercenarios ven arder toda una bolsa y te llaman necio en la oscuridad. Pero hay manos que no toman el nombre de un forastero para sostener el rencor de un pueblo — y un pueblo que quiere asesinar para culpar solo a sus extraños es un pueblo al que podés dejar sin cobrar."
+        }
+      }
+    ]
   }
 ]

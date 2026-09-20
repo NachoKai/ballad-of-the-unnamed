@@ -858,5 +858,429 @@
         }
       }
     ]
+  },
+  {
+    "id": "region_vale_pied_piper",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 7,
+    "requiresRegion": "vale",
+    "narrative": {
+      "en": "The children of the Vale go quiet during {slot:regionVariant}, drawn by a melody only they can hear. You cannot hear the music — but you can hear them laugh, and you can see where they walk.",
+      "es": "Los niños del Valle se quedan callados durante {slot:regionVariant}, atraídos por una melodía que solo ellos oyen. Vos no podés oír la música — pero podés oírlos reír, y podés ver hacia dónde caminan."
+    },
+    "choices": [
+      {
+        "id": "run_the_melody_down",
+        "label": {
+          "en": "Run the melody to its source before the children cross the water",
+          "es": "Correr tras la melodía hasta su origen antes de que los niños crucen el agua"
+        },
+        "tag": "Aggressive",
+        "rarity": "rare",
+        "statDeltas": {
+          "dexterity": 2
+        },
+        "fameDelta": 6,
+        "injuryRiskDelta": 0.06,
+        "countersDelta": {
+          "deeds_of_the_year": 1
+        },
+        "narrative": {
+          "en": "You race the dry ditches and catch the tune standing on the far bank — a small thing with a bone flute, smiling too wide for a child. You carry the children home, and the Vale learns your name between the water and the reeds.",
+          "es": "Corrés por las zanjas secas y alcanzás la melodía parada en la orilla opuesta — una cosa pequeña con una flauta de hueso, sonriendo demasiado ancho para ser un niño. Llevás a los niños a casa, y el Valle aprende tu nombre entre el agua y los juncos."
+        }
+      },
+      {
+        "id": "sing_over_it",
+        "label": {
+          "en": "Sing a rival song loud enough to break the spell",
+          "es": "Cantar una canción rival lo bastante fuerte para romper el hechizo"
+        },
+        "tag": "Supportive",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "charisma": 2
+        },
+        "staminaDelta": -10,
+        "reputationDelta": 3,
+        "reputationFaction": "whispering_reed",
+        "narrative": {
+          "en": "You raise a tavern song so big it drowns the bone-flute, and the children laugh and let go of the tune. The elders of the Caña Susurrante note who can sing a spell back into its case.",
+          "es": "Levantás una canción de taberna tan grande que ahoga la flauta de hueso, y los niños ríen y sueltan la melodía. Los ancianos de la Caña Susurrante anotan quién puede cantar un hechizo de vuelta a su estuche."
+        }
+      },
+      {
+        "id": "watch_from_the_hedge",
+        "label": {
+          "en": "Watch from the hedge and learn what the music wants",
+          "es": "Observar desde el seto y aprender qué quiere la música"
+        },
+        "tag": "Strategic",
+        "rarity": "common",
+        "statDeltas": {
+          "intelligence": 1
+        },
+        "staminaDelta": 12,
+        "narrative": {
+          "en": "You stay in the thorn-shadow and study the pattern: the melody always returns, always hungry, always the same three notes. Knowing the shape of a trap is halfway to never stepping in it.",
+          "es": "Te quedás en la sombra de las espinas y estudiás el patrón: la melodía siempre vuelve, siempre hambrienta, siempre las mismas tres notas. Conocer la forma de una trampa es la mitad del camino para nunca pisarla."
+        }
+      }
+    ]
+  },
+  {
+    "id": "region_coast_smuggler_cove",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 7,
+    "requiresRegion": "coast",
+    "narrative": {
+      "en": "A lantern blinks three times from the rocks north of the docks during {slot:regionVariant}. Below the tide-line, a cove of felt-footed boats waits for a moon that favors no one. The question the night asks you: are you a harbor official, or a tide?",
+      "es": "Una linterna parpadea tres veces desde las rocas al norte de los muelles durante {slot:regionVariant}. Bajo la línea de la marea, una cala de botes de paso furtivo espera una luna que no favorece a nadie. La pregunta que te hace la noche: ¿sos un oficial del puerto, o una marea?"
+    },
+    "choices": [
+      {
+        "id": "welcome_the_boats",
+        "label": {
+          "en": "Greet the boats under the gathering moon",
+          "es": "Saludar a los botes bajo la luna que se reúne"
+        },
+        "tag": "Cocky",
+        "rarity": "volatile",
+        "statDeltas": {
+          "dexterity": 2
+        },
+        "goldDelta": 160,
+        "liabilityDelta": 8,
+        "injuryRiskDelta": 0.06,
+        "narrative": {
+          "en": "You take a felt-footed boat out yourself and come back with a hold of goods no harbor clerk will ever list. The cove marks you as one of the tide — and the tide remembers debts in its own currency.",
+          "es": "Salís vos mismo en un bote de paso furtivo y volvés con una bodega de mercancías que ningún escribano del puerto registrará jamás. La cala te marca como uno de la marea — y la marea recuerda las deudas en su propia moneda."
+        }
+      },
+      {
+        "id": "answer_the_lantern_code",
+        "label": {
+          "en": "Answer the harbor authority's code and mark the cove",
+          "es": "Responder el código de la autoridad del puerto y señalar la cala"
+        },
+        "tag": "Professional",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "charisma": 1,
+          "intelligence": 1
+        },
+        "goldDelta": 90,
+        "reputationDelta": 3,
+        "reputationFaction": "sandspear",
+        "narrative": {
+          "en": "You memorize the lantern-code and quietly pass it to the harbormaster's man. The cove moves one rock north before dawn — and Sandspear learns that a stranger can be pointed the right way.",
+          "es": "Memorizás el código de las linternas y se lo pasás en silencio al hombre del maestre de puerto. La cala se mueve una roca al norte antes del amanecer — y la Lanza de las Arenas aprende que a un forastero se lo puede apuntar en la dirección correcta."
+        }
+      },
+      {
+        "id": "buy_close_ask_nothing",
+        "label": {
+          "en": "Buy cheap from the cove and ask nothing",
+          "es": "Comprar barato en la cala y no preguntar nada"
+        },
+        "tag": "Strategic",
+        "rarity": "common",
+        "statDeltas": {
+          "intelligence": 1
+        },
+        "goldDelta": 60,
+        "narrative": {
+          "en": "You take the smuggler's price, where the asking is light and the silence lighter. Some cargo is cheaper when you never learn where it came from.",
+          "es": "Pagás el precio del contrabandista, donde el pedido es liviano y el silencio más liviano aún. Alguna carga es más barata cuando nunca sabés de dónde vino."
+        }
+      }
+    ]
+  },
+  {
+    "id": "region_highlands_mine_collapse",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 7,
+    "requiresRegion": "highlands",
+    "narrative": {
+      "en": "The seam-mouth groans and the new mine at {slot:regionVariant} comes down in a single breath — dust, timber, silence. Men are trapped on the lowest level, and the foreman, who signed the inspection slips, is already saying it 'just happened.' The clans look at the passes, at the foreman, at you.",
+      "es": "La boca del filón gime y la mina nueva en {slot:regionVariant} se viene abajo en un solo aliento — polvo, madera, silencio. Hay hombres atrapados en el nivel más bajo, y el capataz, que firmó los partes de inspección, ya anda diciendo que 'simplemente pasó'. Los clanes miran los pasos, al capataz, a vos."
+    },
+    "choices": [
+      {
+        "id": "lead_the_dig",
+        "label": {
+          "en": "Take charge of the dig and shore the tunnel as you go",
+          "es": "Tomar el mando de la excavación y apuntalar el túnel a medida que avanzás"
+        },
+        "tag": "Leader",
+        "rarity": "rare",
+        "statDeltas": {
+          "strength": 2,
+          "constitution": 1
+        },
+        "staminaDelta": -15,
+        "fameDelta": 4,
+        "injuryRiskDelta": 0.14,
+        "countersDelta": {
+          "lives_saved": 1,
+          "deeds_of_the_year": 1
+        },
+        "narrative": {
+          "en": "You are the first one down the cracked timber and the last one up. Three miners come out breathing because you never stopped counting breaths. The clans bury their dead — and then they take the foreman by the arm for a long, quiet talk.",
+          "es": "Sos el primero en bajar por la madera agrietada y el último en subir. Tres mineros salen respirando porque nunca dejaste de contar respiraciones. Los clanes entierran a sus muertos — y después toman al capataz del brazo para una larga charla silenciosa."
+        }
+      },
+      {
+        "id": "question_the_foreman",
+        "label": {
+          "en": "Press the foreman on the inspection slips",
+          "es": "Apretar al capataz con los partes de inspección"
+        },
+        "tag": "Strategic",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "reputationDelta": 3,
+        "reputationFaction": "iron_covenant",
+        "narrative": {
+          "en": "You read the slips the way miners read rock — you find the seam where the numbers stop adding up. The Covenant takes an interest in anyone who can read a lie off a page.",
+          "es": "Leés los partes como los mineros leen la roca — encontrás la veta donde los números dejan de cuadrar. El Pacto de Hierro se interesa por cualquiera que pueda leer una mentira en una página."
+        }
+      },
+      {
+        "id": "walk_the_high_pass",
+        "label": {
+          "en": "Keep to the high pass and let the mountain settle its own score",
+          "es": "Seguir por el paso alto y dejar que la montaña salde su propia cuenta"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": {
+          "constitution": 1
+        },
+        "staminaDelta": -8,
+        "narrative": {
+          "en": "You leave the dust behind and climb. Behind you, the clans sort out the blame their own way — the mountains keep their scale, and so do you.",
+          "es": "Dejás el polvo atrás y subís. Detrás, los clanes ordenan las culpas a su manera — las montañas mantienen su escala, y vos también."
+        }
+      }
+    ]
+  },
+  {
+    "id": "region_capital_conspiracy_mural",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 7,
+    "requiresRegion": "capital",
+    "narrative": {
+      "en": "In the embassy hall at {slot:regionVariant}, a fresco of the old king hides a newer face. Someone painted a second portrait beneath the first — a face fresher, angrier, and impossible to unsee once you pull the plaster's edge. The room smells of wet lime and bad faith.",
+      "es": "En el salón de la embajada en {slot:regionVariant}, un fresco del viejo rey esconde una cara más nueva. Alguien pintó un segundo retrato bajo el primero — una cara más fresca, más furiosa, e imposible de dejar de ver una vez que levantás el borde del yeso. La sala huele a cal mojada y a mala fe."
+    },
+    "choices": [
+      {
+        "id": "peel_the_hidden_face",
+        "label": {
+          "en": "Peel back the plaster to the hidden face",
+          "es": "Levantar el yeso para ver la cara oculta"
+        },
+        "tag": "Cocky",
+        "rarity": "rare",
+        "statDeltas": {
+          "dexterity": 2,
+          "intelligence": 1
+        },
+        "goldDelta": 120,
+        "fameDelta": 5,
+        "liabilityDelta": 5,
+        "narrative": {
+          "en": "You lift the lime like a bandage and the hidden face stares out — a king that never sat, a name the histories skip. The capital pays well for secrets; it pays better for the ones that stay yours.",
+          "es": "Levantás la cal como una venda y la cara oculta te mira — un rey que nunca reinó, un nombre que las historias saltean. La capital paga bien por los secretos; paga mejor por los que se quedan en tu poder."
+        }
+      },
+      {
+        "id": "flag_the_mural",
+        "label": {
+          "en": "Report the tampering to the Golden Lotus",
+          "es": "Denunciar la manipulación al Loto Dorado"
+        },
+        "tag": "Professional",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "charisma": 1
+        },
+        "goldDelta": 80,
+        "reputationDelta": 3,
+        "reputationFaction": "golden_lotus",
+        "narrative": {
+          "en": "You dust the plaster off your hands and walk straight to the silk-and-ledger crowd. The Lotus files the name of the outsider who noticed — and secrets, in capital accounting, accrue interest.",
+          "es": "Te sacudís el yeso de las manos y caminás directo hacia la multitud de seda y libros de cuentas. El Loto anota el nombre del forastero que se dio cuenta — y los secretos, en la contabilidad de la capital, devengan intereses."
+        }
+      },
+      {
+        "id": "let_the_lime_set",
+        "label": {
+          "en": "Let the lime dry and see nothing",
+          "es": "Dejar que la cal seque y no ver nada"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": {
+          "intelligence": 1
+        },
+        "staminaDelta": 12,
+        "narrative": {
+          "en": "You let the plaster set and step back into the crowd. Some frescos want to be scraped; some want to stay buried. The wall keeps its secret, and so do you.",
+          "es": "Dejás que el yeso fragüe y volvés a meterte en la multitud. Algunos frescos quieren ser raspados; otros quieren seguir enterrados. La pared guarda su secreto, y vos también."
+        }
+      }
+    ]
+  },
+  {
+    "id": "region_wastelands_glass_storm",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 7,
+    "requiresRegion": "wastelands",
+    "narrative": {
+      "en": "A glass storm is building over the dead road at {slot:regionVariant}; the air turns to flying razor and the rust-priests are pulling scrap under a half-buried hull. The locals have one rule for what such a storm exposes: don't look at what the wind wants you to see.",
+      "es": "Una tormenta de vidrio se arma sobre el camino muerto en {slot:regionVariant}; el aire se vuelve navaja voladora y los sacerdotes del óxido arrastran chatarra bajo un casco medio enterrado. Los locales tienen una sola regla para lo que expone esa tormenta: no mires lo que el viento quiere que veas."
+    },
+    "choices": [
+      {
+        "id": "walk_the_glass_wind",
+        "label": {
+          "en": "Walk the glass wind to the thing calling from the wreck",
+          "es": "Caminar el viento de vidrio hasta lo que llama desde el naufragio"
+        },
+        "tag": "Aggressive",
+        "rarity": "rare",
+        "statDeltas": {
+          "constitution": 2
+        },
+        "staminaDelta": -15,
+        "fameDelta": 5,
+        "injuryRiskDelta": 0.16,
+        "countersDelta": {
+          "deeds_of_the_year": 1
+        },
+        "narrative": {
+          "en": "You walk the razor-wind with your eyes down and your hands out, and you come back with the wreck's heart — a whole mirror that still holds one reflection. The rust-priests want to burn it; the wind wanted you to carry it. Winds lie; you keep the mirror.",
+          "es": "Caminás el viento de navajas con los ojos bajos y las manos abiertas, y volvés con el corazón del naufragio — un espejo entero que todavía guarda un reflejo. Los sacerdotes del óxido quieren quemarlo; el viento quería que lo llevaras. Los vientos mienten; vos te quedás con el espejo."
+        }
+      },
+      {
+        "id": "learn_the_storm_rule",
+        "label": {
+          "en": "Take shelter with the rust-priests and learn their rule",
+          "es": "Refugiarte con los sacerdotes del óxido y aprender su regla"
+        },
+        "tag": "Supportive",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "charisma": 1,
+          "intelligence": 1
+        },
+        "reputationDelta": 3,
+        "reputationFaction": "rust_priests",
+        "narrative": {
+          "en": "You pack in under the hull with the rust-priests and let them teach you what the storm shows and what it wants you to miss. Out here, a rule that costs nothing to learn can save everything.",
+          "es": "Te acomodás bajo el casco con los sacerdotes del óxido y los dejás enseñarte qué muestra la tormenta y qué quiere que dejes de ver. En estas tierras, una regla que no cuesta nada aprender puede salvar todo."
+        }
+      },
+      {
+        "id": "seal_the_lamp_hut",
+        "label": {
+          "en": "Seal yourself in a lamp-hut until it passes",
+          "es": "Sellarte en la choza de las lámparas hasta que pase"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": {
+          "constitution": 1
+        },
+        "staminaDelta": 12,
+        "narrative": {
+          "en": "You wax the lamp-hut's seams and wait out the glass in the dark, listening to the wind comb the sand for something. Patience is armor in the wastes.",
+          "es": "Encerás las juntas de la choza y esperás a que el vidrio pase en la oscuridad, escuchando al viento peinar la arena en busca de algo. La paciencia es armadura en los yermos."
+        }
+      }
+    ]
+  },
+  {
+    "id": "region_isles_siren_singers",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 7,
+    "requiresRegion": "isles",
+    "narrative": {
+      "en": "The isles' choirs tune their voices to the tide during {slot:regionVariant}, and every song has two runs — one for the living, one for the drowned. The old singers say any tune you hear twice is the second kind. Tonight the chorus is practicing a song you have already heard once today.",
+      "es": "Los coros de las islas afinan sus voces con la marea durante {slot:regionVariant}, y cada canción tiene dos pasajes — uno para los vivos, uno para los ahogados. Los cantores viejos dicen que cualquier melodía que escuchás dos veces es de la segunda clase. Esta noche el coro ensaya una canción que ya escuchaste una vez hoy."
+    },
+    "choices": [
+      {
+        "id": "name_the_drowned_run",
+        "label": {
+          "en": "Name the drowned run out loud to the oldest singer",
+          "es": "Nombrar el pasaje de los ahogados en voz alta ante el cantor más viejo"
+        },
+        "tag": "Confident",
+        "rarity": "rare",
+        "statDeltas": {
+          "intelligence": 2,
+          "charisma": 1
+        },
+        "goldDelta": 90,
+        "fameDelta": 6,
+        "injuryRiskDelta": 0.08,
+        "countersDelta": {
+          "deeds_of_the_year": 1
+        },
+        "narrative": {
+          "en": "You speak the drowned run, note for note, in front of the elders. The tune goes quiet; the sea goes quieter. No one will say your name near the water for a season — and every singer on the isles will know it. Some songs buy fame with silence.",
+          "es": "Decís el pasaje de los ahogados, nota por nota, frente a los ancianos. La melodía se apaga; el mar se apaga aún más. Nadie dirá tu nombre cerca del agua por una temporada — y todo cantor de las islas lo sabrá. Algunas canciones compran fama con silencio."
+        }
+      },
+      {
+        "id": "join_the_choir_on_the_sand",
+        "label": {
+          "en": "Walk onto the strand and sing with the chorus",
+          "es": "Salir a la orilla y cantar con el coro"
+        },
+        "tag": "Funny",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "charisma": 2
+        },
+        "staminaDelta": -10,
+        "fameDelta": 4,
+        "reputationDelta": 3,
+        "reputationFaction": "silver_mask",
+        "narrative": {
+          "en": "You take your place on the wet sand and sing the living run back at them until the tide turns it. The elders raise a brow; the young ones pass you the good verses. The isles adopt singers who can hold a tune against the sea.",
+          "es": "Ocupás tu lugar en la arena mojada y les devolvés el pasaje de los vivos hasta que la marea lo voltea. Los ancianos levantan una ceja; los jóvenes te pasan las mejores estrofas. Las islas adoptan a los cantores que sostienen una melodía contra el mar."
+        }
+      },
+      {
+        "id": "stop_your_ears",
+        "label": {
+          "en": "Stop your ears with wax and porpoise-pebbles",
+          "es": "Taponarte los oídos con cera y piedras de tonina"
+        },
+        "tag": "Humble",
+        "rarity": "common",
+        "statDeltas": {
+          "constitution": 1
+        },
+        "staminaDelta": 8,
+        "narrative": {
+          "en": "You stop your ears with wax and river stones and keep your own counsel by the tide. The drowned song may call your name again — but tonight, you hear nothing you did not choose to carry.",
+          "es": "Te taponás los oídos con cera y piedras de río y guardás tu propia opinión junto a la marea. La canción de los ahogados podrá llamar tu nombre otra vez — pero esta noche no oís nada que no hayas elegido llevar."
+        }
+      }
+    ]
   }
 ]

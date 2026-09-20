@@ -781,5 +781,452 @@
         }
       }
     ]
+  },
+  {
+    "id": "court_hunting_party",
+    "minAge": 18,
+    "maxAge": 99,
+    "weight": 5,
+    "narrative": {
+      "en": "The Master of the Hunt gathers the court for the crown's boar-hunt with a grin that says sport and a voice that says ledger. The 'boar' is a debt-ridden huntsman who once kept the keys to the old treasury — the nobles want him run to ground, and they want the floor to look like an accident.",
+      "es": "El Maestre de la Caza reúne a la corte para la cacería de jabalíes de la corona con una sonrisa que dice deporte y una voz que dice libro de cuentas. El 'jabalí' es un cazador endeudado que una vez guardó las llaves del viejo tesoro — los nobles lo quieren apresado, y quieren que el suelo parezca un accidente."
+    },
+    "choices": [
+      {
+        "id": "ride_north_first",
+        "label": {
+          "en": "Ride ahead along the ridge and warn him",
+          "es": "Cabalgar adelante por la cresta para avisarle"
+        },
+        "tag": "Supportive",
+        "rarity": "rare",
+        "requiresStat": {
+          "stat": "dexterity",
+          "min": 12
+        },
+        "statDeltas": {
+          "dexterity": 2,
+          "intelligence": 1
+        },
+        "staminaDelta": -12,
+        "fameDelta": 2,
+        "countersDelta": {
+          "lives_saved": 1
+        },
+        "narrative": {
+          "en": "You take the ridge cross-country and reach the huntsman before the horns do. He looks at you once, understands, and melts into the gullies. The hunt finds a genuine boar instead, and the court never guesses who tipped the ledger.",
+          "es": "Tomás la cresta a campo traviesa y llegás al cazador antes que las trompas. Te mira una vez, entiende, y se funde en los barrancos. La cacería encuentra un jabalí auténtico en su lugar, y la corte nunca adivina quién inclinó el libro de cuentas."
+        }
+      },
+      {
+        "id": "press_him_yourself",
+        "label": {
+          "en": "Corner him yourself and press the secret",
+          "es": "Acorralarlo vos mismo y presionarlo por el secreto"
+        },
+        "tag": "Aggressive",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "strength": 2
+        },
+        "goldDelta": 100,
+        "liabilityDelta": 8,
+        "reputationDelta": -2,
+        "reputationFaction": "crownguard",
+        "narrative": {
+          "en": "You find him first, but where the nobles wanted a corpse you want a conversation. It costs you the crown's hunting favor and buys you the old treasury key's story — and the man walks away with his life, which is more than the court ordered.",
+          "es": "Lo encontrás primero, pero donde los nobles querían un cadáver vos querés una conversación. Te cuesta el favor de la corte y te compra la historia de la vieja llave del tesoro — y el hombre se va con vida, que es más de lo que la corte ordenó."
+        }
+      },
+      {
+        "id": "stay_with_the_horns",
+        "label": {
+          "en": "Ride the proper line and hunt the real boar",
+          "es": "Cabalgar la línea correcta y cazar el jabalí de verdad"
+        },
+        "tag": "Professional",
+        "rarity": "common",
+        "statDeltas": {
+          "constitution": 1
+        },
+        "staminaDelta": -8,
+        "reputationDelta": 2,
+        "reputationFaction": "crownguard",
+        "narrative": {
+          "en": "You ride the proper line, take your place in the wall of spears, and help bring down a true boar for the feast. The Crown Guard notes the stranger who knows how to hold a hunt — and you never ask what the nobles didn't find.",
+          "es": "Cabalguás la línea correcta, ocupás tu lugar en el muro de lanzas y ayudás a derribar un jabalí auténtico para el banquete. La Guardia de la Corona anota al forastero que sabe sostener una cacería — y nunca preguntás qué fue lo que los nobles no encontraron."
+        }
+      }
+    ]
+  },
+  {
+    "id": "court_spymaster_offer",
+    "minAge": 18,
+    "maxAge": 99,
+    "weight": 5,
+    "narrative": {
+      "en": "A reed-thin woman in grey takes the seat across from you at the court's late table. She names no office, offers no letter — just a quiet chair at a table that meets beneath the capital. 'No oath,' she says, 'no retainer. Information flows both ways when it helps. Ask me who else sits, and I will give you one name. Ask nothing, and the chair stays yours in silence.'",
+      "es": "Una mujer delgada como un junco en gris toma el asiento frente a vos en la mesa tardía de la corte. No nombra cargo ni ofrece carta — solo una silla tranquila en una mesa que se reúne bajo la capital. 'Sin juramento', dice, 'sin salario. La información fluye en ambas direcciones cuando ayuda. Preguntame quién más se sienta, y te doy un nombre. No preguntes nada, y la silla sigue siendo tuya en silencio.'"
+    },
+    "choices": [
+      {
+        "id": "take_the_chair",
+        "label": {
+          "en": "Take the quiet chair and the quietest door",
+          "es": "Tomar la silla silenciosa y la puerta más silenciosa"
+        },
+        "tag": "Strategic",
+        "rarity": "rare",
+        "requiresStat": {
+          "stat": "intelligence",
+          "min": 12
+        },
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "goldDelta": 120,
+        "liabilityDelta": 4,
+        "countersDelta": {
+          "dark_pacts": 1
+        },
+        "narrative": {
+          "en": "You sit. No one shakes your hand, and no one needs to — a seat at that table is a handshake by other means. Within a week, a name you never asked for arrives on your doorstep wrapped in oiled cloth, and the strings begin, invisible as they always said they'd be.",
+          "es": "Te sentás. Nadie te da la mano y nadie lo necesita — una silla en esa mesa es un apretón de manos por otros medios. En una semana, un nombre que nunca pediste llega a tu puerta envuelto en tela aceitada, y las cuerdas empiezan, invisibles como siempre dijeron que serían."
+        }
+      },
+      {
+        "id": "ask_one_name",
+        "label": {
+          "en": "Take the chair and ask whose name is already on it",
+          "es": "Tomar la silla y preguntar qué nombre ya está en ella"
+        },
+        "tag": "Confident",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "charisma": 2,
+          "intelligence": 1
+        },
+        "fameDelta": 1,
+        "narrative": {
+          "en": "You sit and ask for the one name she promised. She tells you a courtier you would never suspect — and watching that courtier across the hall for the next week is like reading a letter you were never meant to unfold. Knowledge drips in, one drop at a time.",
+          "es": "Te sentás y pedís el único nombre que prometió. Te dice un cortesano que jamás hubieras sospechado — y observar a ese cortesano al otro lado del salón durante la semana siguiente es como leer una carta que nunca debiste desplegar. El conocimiento gotea, de a una gota."
+        }
+      },
+      {
+        "id": "leave_the_chair",
+        "label": {
+          "en": "Leave the chair empty and keep your name off the guest book",
+          "es": "Dejar la silla vacía y mantener tu nombre fuera del registro"
+        },
+        "tag": "Humble",
+        "rarity": "common",
+        "statDeltas": {
+          "charisma": 1
+        },
+        "countersDelta": {
+          "declined_offers": 1
+        },
+        "narrative": {
+          "en": "You stand, thank her for the offer, and walk into the night. Some doors, once seen, cost more to keep than to close — and you'd rather owe this table nothing, not even a chair.",
+          "es": "Te parás, le agradecés la oferta y caminás hacia la noche. Algunas puertas, una vez vistas, cuestan más mantenerlas que cerrarlas — y preferís no deberle nada a esa mesa, ni siquiera una silla."
+        }
+      }
+    ]
+  },
+  {
+    "id": "court_prisoner_visit",
+    "minAge": 18,
+    "maxAge": 99,
+    "weight": 5,
+    "narrative": {
+      "en": "The turnkey lets you into the yard cell where the capital holds its famous prisoner. Everyone insists he poisoned three merchants with a cup of hawthorn wine. He looks up from the straw and speaks quietly, like it's the truest thing he's ever said: 'You were there. You saw the cellar door. You know a poisoner from a man handed a key.'",
+      "es": "El carcelero te deja entrar a la celda del patio donde la capital tiene a su famoso preso. Todos juran que envenenó a tres mercaderes con una copa de vino de espino. Te mira desde la paja y habla en voz baja, como si fuera lo más cierto que dijo jamás: 'Vos estabas ahí. Viste la puerta de la bodega. Sabés distinguir a un envenenador de un hombre al que le dieron una llave.'"
+    },
+    "choices": [
+      {
+        "id": "testify_in_his_name",
+        "label": {
+          "en": "Speak for him at the review hearing",
+          "es": "Hablar por él en la audiencia de revisión"
+        },
+        "tag": "Leader",
+        "rarity": "rare",
+        "requiresStat": {
+          "stat": "charisma",
+          "min": 13
+        },
+        "statDeltas": {
+          "charisma": 2,
+          "intelligence": 1
+        },
+        "fameDelta": 3,
+        "reputationDelta": 3,
+        "reputationFaction": "crownguard",
+        "countersDelta": {
+          "deeds_of_the_year": 1,
+          "lives_saved": 1
+        },
+        "narrative": {
+          "en": "You stand before the reviewing council and tell them exactly what you saw at that cellar door — nothing more. The merchants' poison sits unclaimed, and the prisoner walks to the gate a freer man than the capital intended. Half the court calls you a fool; the other half takes your name for the good books.",
+          "es": "Te parás ante el consejo de revisión y contás exactamente lo que viste en esa puerta de bodega — nada más. El veneno de los mercaderes queda sin dueño, y el preso camina hacia la puerta más libre de lo que la capital planeó. Media corte te llama necio; la otra mitad anota tu nombre en los buenos libros."
+        }
+      },
+      {
+        "id": "take_the_letter",
+        "label": {
+          "en": "Take the real secret he trades for silence",
+          "es": "Aceptar el secreto real que cambia por tu silencio"
+        },
+        "tag": "Strategic",
+        "rarity": "volatile",
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "tradeoffDeltas": {
+          "constitution": -1
+        },
+        "goldDelta": 140,
+        "liabilityDelta": 8,
+        "narrative": {
+          "en": "He slides you the letter that cost him his freedom — a list of names the capital would rather forget are poor. You take it, and you don't testify. The gold in it is real; so is the weight, and the door it quietly closes behind you.",
+          "es": "Te desliza la carta que le costó la libertad — una lista de nombres que la capital preferiría olvidar que son pobres. La aceptás y no testificás. El oro que contiene es real; también su peso, y la puerta que cierra en silencio detrás de vos."
+        }
+      },
+      {
+        "id": "walk_the_yard_clean",
+        "label": {
+          "en": "Leave the yard and let the courts sort their own knots",
+          "es": "Salir del patio y dejar que los tribunales deshagan sus propios nudos"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": {
+          "charisma": 1
+        },
+        "countersDelta": {
+          "declined_dark_offers": 1
+        },
+        "narrative": {
+          "en": "You leave the cell without promising anything. He watches you go with the look of a man who's learned not to hope, and the capital stays exactly as it was. Some truths are heavy enough to carry; nothing says you must carry this one.",
+          "es": "Salís de la celda sin prometer nada. Te mira irse con la mirada de un hombre que aprendió a no esperar, y la capital queda exactamente como estaba. Algunas verdades son lo bastante pesadas para cargar; nada dice que tengas que cargar esta."
+        }
+      }
+    ]
+  },
+  {
+    "id": "court_sumptuary_law",
+    "minAge": 18,
+    "maxAge": 99,
+    "weight": 5,
+    "narrative": {
+      "en": "The new decree nails itself to the court door: only houses that can show three generations of ledgers may wear crimson in the capital square. A young noble with a fighter's name and a clown's grin drops a folded coat at your feet. 'Adventurer. No crest — no one to fine. Wear it across the square for one full bell and the dare is yours; if the watch stops you first, I pay every copper.'",
+      "es": "El decreto nuevo se clava en la puerta de la corte: solo las casas que puedan mostrar tres generaciones de libros de cuentas pueden vestir carmesí en la plaza de la capital. Un noble joven con nombre de luchador y sonrisa de payaso deja caer un abrigo doblado a tus pies. 'Sin cresta — no hay a quién multar. Cruzá la plaza con esto por una campana entera y la jugada es tuya; si la guardia te detiene primero, yo pago cada cobre.'"
+    },
+    "choices": [
+      {
+        "id": "wear_the_crimson",
+        "label": {
+          "en": "Wear the crimson clear across the square",
+          "es": "Vestir el carmesí a través de toda la plaza"
+        },
+        "tag": "Cocky",
+        "rarity": "rare",
+        "requiresStat": {
+          "stat": "charisma",
+          "min": 12
+        },
+        "statDeltas": {
+          "charisma": 2
+        },
+        "goldDelta": 50,
+        "fameDelta": 4,
+        "injuryRiskDelta": 0.04,
+        "narrative": {
+          "en": "You wear it like a flag and cross the square at the pace of a man who has never once been late. The watch looks, twitches, lets you pass — the noble's coin and the crowd's laughter decide the fine isn't worth the joke. By the bell's last ring, the whole square knows the decree has an exception now: you.",
+          "es": "Lo vestís como una bandera y cruzás la plaza al paso de un hombre que nunca llegó tarde. La guardia mira, se tensa, te deja pasar — la moneda del noble y la risa de la multitud deciden que la multa no vale la broma. En el último tañido de la campana, toda la plaza sabe que el decreto tiene una excepción nueva: vos."
+        }
+      },
+      {
+        "id": "find_the_hunting_clause",
+        "label": {
+          "en": "Wear it, but cite the hunting-jerkin clause",
+          "es": "Vestirlo, pero citar la cláusula de la casaca de caza"
+        },
+        "tag": "Strategic",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "dexterity": 1,
+          "intelligence": 1
+        },
+        "goldDelta": 30,
+        "reputationDelta": 2,
+        "reputationFaction": "golden_lotus",
+        "narrative": {
+          "en": "You read the decree twice before you wear it, and find the seam the lawyers left: crimson hunting leathers worn 'in the field' are exempt. You cross the square with a borrowed bow and a straight face, and when the watch stops you, you show the page. The Lotus clerks love a man who reads the fine print on the other side of a dare.",
+          "es": "Leés el decreto dos veces antes de vestirlo y encontrás la costura que dejaron los abogados: el cuero carmesí de caza usado 'en campo' está exento. Cruzás la plaza con un arco prestado y cara seria, y cuando la guardia te detiene, mostrás la página. Los escribanos del Loto Dorado aman a un hombre que lee la letra chica del otro lado de una apuesta."
+        }
+      },
+      {
+        "id": "wear_the_grey",
+        "label": {
+          "en": "Hand the coat back and wear the grey",
+          "es": "Devolver el abrigo y vestir el gris"
+        },
+        "tag": "Professional",
+        "rarity": "common",
+        "statDeltas": {
+          "constitution": 1
+        },
+        "reputationDelta": 1,
+        "reputationFaction": "crownguard",
+        "narrative": {
+          "en": "You thank the young noble and hand the crimsons back. The square respects a man who knows which laws are not worth his name yet — and the watch files your face under 'not a problem.' The gray fits fine.",
+          "es": "Le agradecés al noble joven y le devolvés los carmesíes. La plaza respeta a un hombre que sabe qué leyes todavía no valen su nombre — y la guardia archiva tu cara bajo 'no es un problema'. El gris te queda bien."
+        }
+      }
+    ]
+  },
+  {
+    "id": "court_ancestor_portrait",
+    "minAge": 20,
+    "maxAge": 99,
+    "weight": 5,
+    "narrative": {
+      "en": "House Aldermont commissions a portrait of its founder for the long gallery. The family wants the legend: the founder with his sword at the surrendered pass. The court's young archivist pulls you aside with the register — the founder kept the toll gate, the spear was honest, and the pass was sold, not won. Both parties ask if you'll hold the brush.",
+      "es": "La Casa Aldermont encarga un retrato de su fundador para la galería larga. La familia quiere la leyenda: el fundador con su espada en el paso rendido. El joven archivista de la corte te lleva aparte con el registro — el fundador cuidaba el peaje, la lanza era honesta y el paso se vendió, no se ganó. Ambas partes te preguntan si vas a sostener el pincel."
+    },
+    "choices": [
+      {
+        "id": "paint_the_truth",
+        "label": {
+          "en": "Paint the toll-keeper with the honest spear",
+          "es": "Pintar al peajero con la lanza honesta"
+        },
+        "tag": "Humble",
+        "rarity": "rare",
+        "requiresStat": {
+          "stat": "intelligence",
+          "min": 13
+        },
+        "statDeltas": {
+          "intelligence": 2,
+          "charisma": 1
+        },
+        "goldDelta": 40,
+        "fameDelta": 1,
+        "reputationDelta": 3,
+        "reputationFaction": "arcanum",
+        "narrative": {
+          "en": "You paint what the register says, and the portrait hangs in the gallery like a gently opened ledger. The family fumes for a season; the archivists quietly move their best favors your way. Truth, it turns out, has its own commission — smaller, and paid in a better currency.",
+          "es": "Pintás lo que dice el registro, y el retrato cuelga en la galería como un libro de cuentas suavemente abierto. La familia hierve por una temporada; los archivistas mueven en silencio sus mejores favores hacia vos. La verdad, resulta, tiene su propia comisión — más pequeña, y pagada en mejor moneda."
+        }
+      },
+      {
+        "id": "paint_the_legend",
+        "label": {
+          "en": "Paint the founding sword at the pass",
+          "es": "Pintar la espada fundacional en el paso"
+        },
+        "tag": "Professional",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "charisma": 2
+        },
+        "goldDelta": 120,
+        "reputationDelta": 3,
+        "reputationFaction": "crownguard",
+        "narrative": {
+          "en": "You paint the sword, the pass, the bowed enemy — exactly what the family pays to see. Aldermont pays generously, and the long gallery gets its legend. The archivist's register stays closed; so does your mouth.",
+          "es": "Pintás la espada, el paso, el enemigo arrodillado — exactamente lo que la familia paga por ver. Aldermont paga con generosidad, y la galería larga consigue su leyenda. El registro del archivista queda cerrado; también tu boca."
+        }
+      },
+      {
+        "id": "refuse_the_brush",
+        "label": {
+          "en": "Refuse the brush for both sides",
+          "es": "Rechazar el pincel para ambas partes"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": {
+          "constitution": 2
+        },
+        "narrative": {
+          "en": "You tell both the family and the archivist the same thing: portraits are not for you to choose. Neither side remembers you fondly, but neither side owns your hand — and the wall stays empty, which is also a kind of truth.",
+          "es": "Le decís lo mismo a la familia y al archivista: los retratos no son algo que te toque elegir. Ninguna de las dos partes te recuerda con afecto, pero ninguna es dueña de tu mano — y la pared queda vacía, que también es una clase de verdad."
+        }
+      }
+    ]
+  },
+  {
+    "id": "court_winter_feast",
+    "minAge": 18,
+    "maxAge": 99,
+    "weight": 5,
+    "narrative": {
+      "en": "The winter feast of the capital seat is as much a seating chart as a meal — every chair is a message. The steward finds you in the entry and offers you the last word. Beside the cold duke: the crown's ear, and the duke's silence. Beside the disgraced poet: a story the whole room will retell. At the foot of the table: a warm meal and nothing owed.",
+      "es": "La fiesta de invierno de la capital es tanto un diagrama de asientos como una comida — cada silla es un mensaje. El mayordomo te encuentra en la entrada y te ofrece la última palabra. Junto al duque frío: el oído de la corona, y el silencio del duque. Junto al poeta caído: una historia que toda la sala repetirá. Al pie de la mesa: una comida caliente y nada que debas."
+    },
+    "choices": [
+      {
+        "id": "work_the_room",
+        "label": {
+          "en": "Take the high chair and work the whole room",
+          "es": "Tomar la silla alta y trabajar toda la sala"
+        },
+        "tag": "Leader",
+        "rarity": "rare",
+        "requiresStat": {
+          "stat": "charisma",
+          "min": 13
+        },
+        "statDeltas": {
+          "charisma": 2,
+          "intelligence": 1
+        },
+        "staminaDelta": -10,
+        "fameDelta": 4,
+        "reputationDelta": 3,
+        "reputationFaction": "crownguard",
+        "narrative": {
+          "en": "You take the seat beside the cold duke, drink the crown's cup, and move. By the second course you've spoken to every chair worth speaking to, and by the third the room is rearranging itself around you. The winter feast ends with your name on a dozen lips and a lodger's key in your pocket.",
+          "es": "Tomás el asiento junto al duque frío, bebés la copa de la corona y te movés. Para el segundo plato hablaste con todas las sillas que valía la pena, y para el tercero la sala se reordena alrededor tuyo. La fiesta de invierno termina con tu nombre en una docena de labios y una llave de huésped en el bolsillo."
+        }
+      },
+      {
+        "id": "sit_with_the_poet",
+        "label": {
+          "en": "Take the poet's chair and the story he tells",
+          "es": "Tomar la silla del poeta y la historia que cuenta"
+        },
+        "tag": "Funny",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "charisma": 2
+        },
+        "fameDelta": 2,
+        "narrative": {
+          "en": "You sit beside the disgraced poet, and between the soup and the roast he tells you the whole scandal in three sentences and one gesture. By the end of the evening you know the version of the story the room will repeat — and the room watches you laugh with the one man it exiled. The story, and the company, are yours.",
+          "es": "Te sentás junto al poeta caído, y entre la sopa y el asado te cuenta todo el escándalo en tres frases y un gesto. Para el final de la velada sabés la versión de la historia que la sala repetirá — y la sala te ve reír con el único hombre que exilió. La historia, y la compañía, son tuyas."
+        }
+      },
+      {
+        "id": "take_the_foot",
+        "label": {
+          "en": "Take the foot of the table and a full plate",
+          "es": "Tomar el pie de la mesa y un plato lleno"
+        },
+        "tag": "Humble",
+        "rarity": "common",
+        "statDeltas": {
+          "constitution": 2
+        },
+        "staminaDelta": 15,
+        "narrative": {
+          "en": "You sit at the foot of the table, eat the feast at the pace it deserves, and leave owing no one a word. The winter feast is a machine for making debts; tonight, you are the only one who arrived hungry and left nothing behind.",
+          "es": "Te sentás al pie de la mesa, comés el banquete al ritmo que merece y te vas sin deberle una palabra a nadie. La fiesta de invierno es una máquina para hacer deudas; esta noche, sos el único que llegó con hambre y no dejó nada atrás."
+        }
+      }
+    ]
   }
 ]
