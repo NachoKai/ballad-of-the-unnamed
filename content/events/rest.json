@@ -1509,5 +1509,794 @@
         }
       }
     ]
+  },
+  {
+    "id": "rest_moonlit_lake",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "location": "road",
+    "narrative": {
+      "en": "A lake opens in the trees at {locationName}, black glass under the moon. The water hums, low and clean, like a struck bell a long way off. No one is here to stop you. The surface is waiting.",
+      "es": "Un lago se abre entre los árboles en {locationName}, vidrio negro bajo la luna. El agua zumba, bajo y limpio, como una campana golpeada a lo lejos. No hay nadie aquí para detenerte. La superficie está esperando."
+    },
+    "choices": [
+      {
+        "id": "midnight_swim",
+        "label": {
+          "en": "Strip down and swim in the moonlit water",
+          "es": "Quitarte la ropa y nadar en el agua bajo la luna"
+        },
+        "tag": "Humble",
+        "rarity": "uncommon",
+        "staminaDelta": 40,
+        "healthDelta": 4,
+        "statDeltas": {
+          "constitution": 1
+        },
+        "narrative": {
+          "en": "The cold hum pulls the ache out of you like a hand drawing a thread. You swim out, turn, float, and watch the moon do its patient work on the water. When you climb out, the night feels newly pressed and entirely yours.",
+          "es": "El zumbido frío te saca el dolor como una mano que tira de un hilo. Nadás mar adentro, girás, flotás y mirás a la luna hacer su trabajo paciente sobre el agua. Cuando salís, la noche se siente recién planchada y enteramente tuya."
+        }
+      },
+      {
+        "id": "sit_by_the_shore",
+        "label": {
+          "en": "Sit at the shore and listen",
+          "es": "Sentarte en la orilla y escuchar"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "staminaDelta": 25,
+        "statDeltas": {
+          "intelligence": 1
+        },
+        "narrative": {
+          "en": "You don't disturb it. You sit where the water meets the bank and let the hum tune the day's noise out of your ears. It has a shape, that sound — like a note the world forgot it kept.",
+          "es": "No lo perturbás. Te sentás donde el agua se encuentra con la orilla y dejás que el zumbido afine el ruido del día fuera de tus oídos. Tiene una forma, ese sonido — como una nota que el mundo olvidó que guardaba."
+        }
+      },
+      {
+        "id": "fill_a_skin",
+        "label": {
+          "en": "Fill a waterskin and carry the cold with you",
+          "es": "Llenar un odre y llevarte el frío contigo"
+        },
+        "tag": "Strategic",
+        "rarity": "common",
+        "staminaDelta": 15,
+        "statDeltas": {
+          "intelligence": 1
+        },
+        "narrative": {
+          "en": "You bottle the hum into a waterskin, cork it, and walk on. On a long march tomorrow, one cold sip will taste like this stillness.",
+          "es": "Embalsás el zumbido en un odre, lo tapás y seguís. En la marcha larga de mañana, un sorbo frío sabrá a esta quietud."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rest_book_binding",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "location": "road",
+    "narrative": {
+      "en": "A binder's cottage at {locationName} smells of glue, thread, and old paper forgiven of its water. The binder, half buried in a book the size of a shield, looks up. 'Your boots are loud and your hands are idle. Sit. There's a spine needs sewing.'",
+      "es": "La casa de una encuadernadora en {locationName} huele a cola, hilo y papel viejo perdonado por el agua. La encuadernadora, medio enterrada en un libro del tamaño de un escudo, levanta la vista. 'Tus botas hacen ruido y tus manos están ociosas. Sentate. Hay un lomo que necesita costura.'"
+    },
+    "choices": [
+      {
+        "id": "learn_the_stitch",
+        "label": {
+          "en": "Sit and learn the binder's stitch",
+          "es": "Sentarte y aprender la costura de la encuadernadora"
+        },
+        "tag": "Humble",
+        "rarity": "uncommon",
+        "staminaDelta": 35,
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "narrative": {
+          "en": "She shows you the stitch with hands that move like water. By the time the spine is whole, the day's road has unhooked itself from your back. She sends you off with a needle and a warning: 'Now every torn page you meet will want you to fix it.'",
+          "es": "Te muestra la costura con manos que se mueven como agua. Para cuando el lomo está entero, el camino del día se te ha desenganchado de la espalda. Te despide con una aguja y una advertencia: 'Ahora toda página rota que encuentres querrá que la arregles.'"
+        }
+      },
+      {
+        "id": "rest_by_the_fire",
+        "label": {
+          "en": "Bank the fire and rest while she works",
+          "es": "Avivar el fuego y descansar mientras ella trabaja"
+        },
+        "tag": "Supportive",
+        "rarity": "common",
+        "staminaDelta": 30,
+        "healthDelta": 4,
+        "statDeltas": {
+          "constitution": 1
+        },
+        "narrative": {
+          "en": "You feed the fire, boil the kettle, and let the smell of glue turn the day soft. She hums a tune with no name. You wake from a half doze to a corked mug of tea and a whole night's patience.",
+          "es": "Avivás el fuego, ponés la tetera y dejás que el olor a cola ablande el día. Ella tararea una melodía sin nombre. Despertás de un semisueño con una taza de té tapada y una noche entera de paciencia."
+        }
+      },
+      {
+        "id": "trade_a_story",
+        "label": {
+          "en": "Trade a road-story for the book she's mending",
+          "es": "Cambiar una historia de camino por el libro que está arreglando"
+        },
+        "tag": "Funny",
+        "rarity": "common",
+        "goldDelta": 15,
+        "staminaDelta": 25,
+        "statDeltas": {
+          "charisma": 1
+        },
+        "narrative": {
+          "en": "You tell her about the donkey with a grudge and the toll that accepted insults as payment. She laughs into the glue, then presses the finished book into your hands. 'A road worth telling is a road worth keeping.'",
+          "es": "Le contás lo del burro rencoroso y el peaje que aceptaba insultos como pago. Se ríe entre la cola y luego te mete el libro terminado en las manos. 'Un camino que vale la pena contar es un camino que vale la pena conservar.'"
+        }
+      }
+    ]
+  },
+  {
+    "id": "rest_shepherd_hut",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "location": "road",
+    "narrative": {
+      "en": "A shepherd's hut at {locationName} holds a low fire and a clay pot of mutton broth dark with pepper. The shepherd gestures at the spare bench with a spoon. 'Eat. The night is long and the wolves are polite tonight.'",
+      "es": "Una cabaña de pastor en {locationName} guarda un fuego bajo y una olla de barro con caldo de cordero oscuro de pimienta. El pastor señala el banco libre con la cuchara. 'Comé. La noche es larga y los lobos están educados esta noche.'"
+    },
+    "choices": [
+      {
+        "id": "share_the_broth",
+        "label": {
+          "en": "Sit and share the broth",
+          "es": "Sentarte y compartir el caldo"
+        },
+        "tag": "Supportive",
+        "rarity": "common",
+        "staminaDelta": 45,
+        "healthDelta": 8,
+        "statDeltas": {
+          "constitution": 2
+        },
+        "narrative": {
+          "en": "The broth is black with pepper and honest as weather. You eat until your spine remembers it has a shape, and the shepherd watches the fire like it owes him money. He points to the loft without a word. You sleep better than the road deserves.",
+          "es": "El caldo es negro de pimienta y honesto como el clima. Comés hasta que tu espalda recuerda que tiene forma, y el pastor mira el fuego como si le debiera plata. Señala el altillo sin decir palabra. Dormís mejor de lo que el camino merece."
+        }
+      },
+      {
+        "id": "tend_the_flock",
+        "label": {
+          "en": "Help him move the flock before dark",
+          "es": "Ayudarlo a mover el rebaño antes del anochecer"
+        },
+        "tag": "Professional",
+        "rarity": "common",
+        "staminaDelta": 20,
+        "statDeltas": {
+          "strength": 1
+        },
+        "narrative": {
+          "en": "Two shorthanded hours in the dusk and the sheep are in the fold, black on white on the far slope. The shepherd nods once. 'Never met a traveler who knew the uphill side of a shepherd.' The broth tastes better for having earned it.",
+          "es": "Dos horas sin ayuda en el crepúsculo y las ovejas están en el redil, negras sobre blancas en la ladera lejana. El pastor asiente una vez. 'Nunca conocí un viajero que supiera el lado cuesta arriba de un pastor.' El caldo sabe mejor por haberlo ganado."
+        }
+      },
+      {
+        "id": "buy_a_spot",
+        "label": {
+          "en": "Toss coin for the floor and stay out of the way",
+          "es": "Arrojar monedas por el suelo y no estorbar"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "goldDelta": -10,
+        "staminaDelta": 30,
+        "statDeltas": {
+          "constitution": 1
+        },
+        "narrative": {
+          "en": "You pay for the floor's kindness and keep your mouth shut. The fire does its work; the shepherd does his. By morning you've learned nothing new and rested like a stone — sometimes that's the whole of a good night.",
+          "es": "Pagás por la amabilidad del suelo y mantenés la boca cerrada. El fuego hace su trabajo; el pastor, el suyo. Para la mañana no aprendiste nada nuevo y descansaste como una piedra — a veces eso es toda una buena noche."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rest_tea_house",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "location": "road",
+    "narrative": {
+      "en": "A thatched tea house at {locationName} serves one kind of tea — dark, bitter, and patient. The owner pours a second cup for anyone who looks like they're carrying yesterday. The steam smells like remembering.",
+      "es": "Una casa de té con techo de paja en {locationName} sirve una sola clase de té — oscuro, amargo y paciente. La dueña sirve una segunda taza a todo el que parezca cargar con el día de ayer. El vapor huele a recuerdo."
+    },
+    "choices": [
+      {
+        "id": "drink_it_slow",
+        "label": {
+          "en": "Drink it slow and let the bitterness do its work",
+          "es": "Bebértelo despacio y dejar que la amargura haga su trabajo"
+        },
+        "tag": "Stoic",
+        "rarity": "uncommon",
+        "staminaDelta": 30,
+        "healthDelta": 4,
+        "statDeltas": {
+          "intelligence": 1
+        },
+        "narrative": {
+          "en": "You sip until the bitter turns into something with a bottom, and the yesterday you were carrying goes quiet. The owner nods at your empty cup like it passed a test. 'Bitter twice,' she says, 'and it becomes the taste of a place you were.'",
+          "es": "Sorbés hasta que lo amargo se vuelve algo con fondo, y el ayer que cargabas se queda callado. La dueña asiente ante tu taza vacía como si hubiera pasado una prueba. 'Amargo dos veces', dice, 'y se convierte en el sabor de un lugar donde estuviste.'"
+        }
+      },
+      {
+        "id": "talk_with_the_owner",
+        "label": {
+          "en": "Ask the owner which roads led here",
+          "es": "Preguntarle a la dueña qué camino la trajo hasta aquí"
+        },
+        "tag": "Supportive",
+        "rarity": "common",
+        "staminaDelta": 25,
+        "statDeltas": {
+          "charisma": 1
+        },
+        "narrative": {
+          "en": "She tells you about a war, a debt, and a kettle that outlived both. 'I don't miss the road,' she says. 'I miss who I was on it.' You leave with your pack lighter and your ears full of someone else's distance — which is, at least, that much weight less of your own.",
+          "es": "Te cuenta lo de una guerra, una deuda y una tetera que sobrevivió a ambas. 'No extraño el camino', dice. 'Extraño al que era en él.' Te vas con la mochila más liviana y los oídos llenos de la distancia de otra persona — que es, al menos, ese peso menos de la tuya."
+        }
+      },
+      {
+        "id": "tea_and_go",
+        "label": {
+          "en": "Take the tea as a splash for the road",
+          "es": "Llevarte el té como un trago para el camino"
+        },
+        "tag": "Strategic",
+        "rarity": "common",
+        "staminaDelta": 20,
+        "statDeltas": {
+          "constitution": 1
+        },
+        "narrative": {
+          "en": "You have the second cup standing, refill your flask, and pay double for quiet. Some teas are better carried than drunk; some mornings you want the remembering to wait.",
+          "es": "Tomás la segunda taza de parado, llenás la petaca y pagás doble por el silencio. Algunos tés se llevan mejor que se beben; algunas mañanas querés que el recuerdo espere."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rest_cemetery_silence",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 4,
+    "location": "road",
+    "narrative": {
+      "en": "A small cemetery at {locationName} keeps its stones in rows like an honor guard with nowhere else to be. The gate is unlatched. The quiet is thick enough to sit on.",
+      "es": "Un cementerio pequeño en {locationName} mantiene sus piedras en filas como una guardia de honor sin otro lugar donde estar. El portón está sin llave. El silencio es lo bastante espeso para sentarse encima de él."
+    },
+    "choices": [
+      {
+        "id": "sit_with_the_names",
+        "label": {
+          "en": "Walk the rows and read the names",
+          "es": "Recorrer las filas y leer los nombres"
+        },
+        "tag": "Stoic",
+        "rarity": "uncommon",
+        "staminaDelta": 25,
+        "healthDelta": 4,
+        "statDeltas": {
+          "intelligence": 1
+        },
+        "narrative": {
+          "en": "You read the stones like a slow book: blacksmith, sailor, someone beloved three ways. The quiet presses in and finds the shallow places. When you leave, the names file past the inside of your eyes like a debt paid in attention.",
+          "es": "Leés las piedras como un libro lento: herrero, marinero, alguien querido de tres maneras. El silencio se aprieta y encuentra los lugares superficiales. Cuando te vas, los nombres desfilan por detrás de tus ojos como una deuda pagada con atención."
+        }
+      },
+      {
+        "id": "rest_at_the_gate",
+        "label": {
+          "en": "Take a slow hour at the gate and rest",
+          "es": "Tomar una hora lenta en el portón y descansar"
+        },
+        "tag": "Humble",
+        "rarity": "common",
+        "staminaDelta": 30,
+        "statDeltas": {
+          "constitution": 1
+        },
+        "narrative": {
+          "en": "You sit where the living and the quiet meet and let the day's noise drain out of your ankles into the grass. It is not sad. It is settled. You rise rested, and the stones do not look at you.",
+          "es": "Te sentás donde los vivos y la quietud se encuentran y dejás que el ruido del día se escurra de tus tobillos hacia el pasto. No es triste. Es asentado. Te levantás descansado, y las piedras no te miran."
+        }
+      },
+      {
+        "id": "offer_a_candle",
+        "label": {
+          "en": "Set a candle on the newest stone",
+          "es": "Poner una vela en la piedra más nueva"
+        },
+        "tag": "Supportive",
+        "rarity": "common",
+        "goldDelta": -2,
+        "staminaDelta": 20,
+        "statDeltas": {
+          "charisma": 1
+        },
+        "narrative": {
+          "en": "You have no name for the newest stone's tenant, only the date — last spring. You trade two coins for a candle at the sexton's shed and set it. Someone should be wanted by the living, even briefly.",
+          "es": "No tenés nombre para el inquilino de la piedra más nueva, solo la fecha — la primavera pasada. Cambiás dos monedas por una vela en la caseta del sepulturero y la encendés. Alguien debería ser querido por los vivos, aunque sea brevemente."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rest_ledge_hammock",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "location": "road",
+    "narrative": {
+      "en": "A sleeping ledge overhangs the canyon at {locationName}, where the wind has carved a natural hammock from the rock. Below, the gorge gathers the dark. The wind sings on its way down.",
+      "es": "Un saliente dormido se asoma sobre el cañón en {locationName}, donde el viento ha tallado una hamaca natural en la roca. Abajo, el desfiladero junta la oscuridad. El viento canta en su caída."
+    },
+    "choices": [
+      {
+        "id": "swing_in_the_wind",
+        "label": {
+          "en": "Sling your blanket and let the wind rock you",
+          "es": "Colgar la manta y dejar que el viento te acompañe"
+        },
+        "tag": "Cocky",
+        "rarity": "volatile",
+        "staminaDelta": 45,
+        "healthDelta": 5,
+        "statDeltas": {
+          "constitution": 2
+        },
+        "narrative": {
+          "en": "You put your back to the drop and let the wind take over the rocking. It sings you down past the day's sharp edges into a sleep with the sound of distance in it. You wake whole, flattered by the height for having trusted it.",
+          "es": "Le das la espalda al vacío y dejás que el viento se encargue de arrullarte. Te canta más allá de los bordes afilados del día hacia un sueño con sonido de distancia. Despertás entero, halagado por la altura por haberle tenido confianza."
+        }
+      },
+      {
+        "id": "watch_the_gorge",
+        "label": {
+          "en": "Sit and watch the gorge swallow the light",
+          "es": "Sentarte y ver cómo el desfiladero se traga la luz"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "staminaDelta": 20,
+        "statDeltas": {
+          "intelligence": 1
+        },
+        "narrative": {
+          "en": "You sit with your legs over the edge and watch the light drain down into the gorge like it has a meeting below. The dark comes up like water. It is a fine thing to be reminded of the size of the world when you'd forgotten your own troubles had already shrunk.",
+          "es": "Te sentás con las piernas sobre el borde y mirás la luz escurrirse hacia el desfiladero como si tuviera una cita abajo. La oscuridad sube como el agua. Es bueno que te recuerden el tamaño del mundo cuando ya habías olvidado que tus problemas ya se habían encogido."
+        }
+      },
+      {
+        "id": "find_ground_level",
+        "label": {
+          "en": "Skip the ledge and camp on solid ground",
+          "es": "Saltarte el saliente y acampar en tierra firme"
+        },
+        "tag": "Professional",
+        "rarity": "common",
+        "staminaDelta": 25,
+        "healthDelta": 3,
+        "statDeltas": {
+          "constitution": 1
+        },
+        "narrative": {
+          "en": "You look at the ledge, at the drop, at your life, and choose the flat ground a respectful distance away. The wind sings for someone else tonight. You sleep solid and unbothered, which is its own kind of daring.",
+          "es": "Mirás el saliente, el vacío, tu vida, y elegís el suelo plano a una distancia respetuosa. El viento canta para otro esta noche. Dormís sólido y sin molestias, que es su propia clase de atrevimiento."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rest_fog_valley_inn",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "location": "road",
+    "narrative": {
+      "en": "An inn stands in the fog at {locationName}, its windows lit like something patient. The landlord turns a rag in a glass behind the bar and says good evening like he's saying it for the thousandth time — which he has. He does not ask where you're from.",
+      "es": "Una posada se alza en la niebla en {locationName}, sus ventanas encendidas como algo paciente. El posadero pasa un trapo por un vaso detrás de la barra y dice buenas noches como si lo dijera por milésima vez — y así es. No pregunta de dónde venís."
+    },
+    "choices": [
+      {
+        "id": "take_the_warm_room",
+        "label": {
+          "en": "Take the warm room and the bread",
+          "es": "Tomar la habitación caliente y el pan"
+        },
+        "tag": "Professional",
+        "rarity": "common",
+        "goldDelta": -30,
+        "staminaDelta": 45,
+        "healthDelta": 8,
+        "statDeltas": {
+          "constitution": 1
+        },
+        "narrative": {
+          "en": "The room has a bed that remembers how to hold a sleeper, and the bread arrives warm enough to fog the window. You sleep through the fog's whole grey business. In the morning the valley has burned off and the landlord nods once, unsurprised.",
+          "es": "La habitación tiene una cama que recuerda cómo sostener a alguien que duerme, y el pan llega tibio como para empañar la ventana. Dormís a través de todo el negocio gris de la niebla. A la mañana el valle se ha despejado y el posadero asiente una vez, sin sorpresa."
+        }
+      },
+      {
+        "id": "ask_nothing",
+        "label": {
+          "en": "Drink quietly and ask nothing",
+          "es": "Beber en silencio y no preguntar nada"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "staminaDelta": 25,
+        "statDeltas": {
+          "constitution": 1
+        },
+        "narrative": {
+          "en": "You take a cup and the landlord refills it exactly once. The fog keeps its stories; you keep yours. When you settle the tab he says, 'You paid in silence,' and refuses the coin. Some debts are best kept settled both ways.",
+          "es": "Tomás una taza y el posadero la rellena exactamente una vez. La niebla guarda sus historias; vos, las tuyas. Cuando pagás la cuenta dice: 'Pagaste en silencio', y rechaza la moneda. Hay deudas que se saldan mejor de las dos maneras."
+        }
+      },
+      {
+        "id": "trade_weather",
+        "label": {
+          "en": "Trade fog stories for a second glass",
+          "es": "Cambiar historias de niebla por una segunda copa"
+        },
+        "tag": "Funny",
+        "rarity": "uncommon",
+        "staminaDelta": 30,
+        "statDeltas": {
+          "charisma": 2
+        },
+        "narrative": {
+          "en": "You trade the worst fog story you've ever survived for the landlord's best, which involves a cart, a fiddler, and a hill that should not have been where it was. He laughs like it costs him something and pours a second glass on the house. You two are even.",
+          "es": "Cambiás la peor historia de niebla que sobreviviste por la mejor del posadero, que involucra una carreta, un violinista y una colina que no debería haber estado donde estaba. Se ríe como si le costara algo y sirve una segunda copa con cargo a la casa. Quedan en paz."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rest_orphan_dinner",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "location": "road",
+    "narrative": {
+      "en": "The orphanage at {locationName} keeps a long table and a rule: whoever sits at it eats. The children drag a spare chair to the place beside yours and argue over the bread like it's a council.",
+      "es": "El orfanato en {locationName} tiene una mesa larga y una regla: quien se sienta en ella, come. Los chicos arrastran una silla libre hasta el lugar junto al tuyo y discuten por el pan como si fuera un consejo."
+    },
+    "choices": [
+      {
+        "id": "pull_up_a_chair",
+        "label": {
+          "en": "Pull up a chair and share the whole pot",
+          "es": "Acercar una silla y compartir toda la olla"
+        },
+        "tag": "Supportive",
+        "rarity": "common",
+        "staminaDelta": 40,
+        "healthDelta": 6,
+        "statDeltas": {
+          "charisma": 2
+        },
+        "narrative": {
+          "en": "You let them win the bread arguments, which they were always going to. By the end of dinner you've been adopted ten times over, taught the clapping game, and given a rock as a badge of office. You wear it in your pocket until the road asks for your attention again.",
+          "es": "Los dejás ganar las discusiones por el pan, que de todos modos siempre iban a ganar. Para cuando termina la cena te adoptaron diez veces, te enseñaron el juego de las palmas y te dieron una piedra como insignia del cargo. La llevás en el bolsillo hasta que el camino vuelve a pedir tu atención."
+        }
+      },
+      {
+        "id": "tell_a_story",
+        "label": {
+          "en": "Tell the one about the bear and the toll",
+          "es": "Contar la del oso y el peaje"
+        },
+        "tag": "Funny",
+        "rarity": "common",
+        "staminaDelta": 25,
+        "statDeltas": {
+          "charisma": 1
+        },
+        "narrative": {
+          "en": "You tell the story with gestures the size of the room. The smallest listener gasps in the right places, which you'd forgotten someone could. When you finish, they vote to hear it again tomorrow. You write it down on a scrap for the keeper and leave it in better hands than yours.",
+          "es": "Contás la historia con gestos del tamaño del salón. El oyente más pequeño se lleva el aire en los lugares correctos, lo que habías olvidado que alguien podía hacer. Cuando terminás, votan para escucharla mañana. La escribís en un papel para la encargada y la dejás en mejores manos que las tuyas."
+        }
+      },
+      {
+        "id": "help_clear_the_table",
+        "label": {
+          "en": "Help clear the table and scrub the pots",
+          "es": "Ayudar a levantar la mesa y restregar las ollas"
+        },
+        "tag": "Professional",
+        "rarity": "common",
+        "staminaDelta": 20,
+        "statDeltas": {
+          "strength": 1
+        },
+        "narrative": {
+          "en": "You take the stack of bowls and the argument that comes with it. Two songs and three pots later, the keeper looks at you with the tired approval of someone who has been shown the shape of a useful stranger. You sleep in the hay by the fire, warm enough.",
+          "es": "Tomás la pila de cuencos y la discusión que viene con ella. Dos canciones y tres ollas después, la encargada te mira con la aprobación cansada de alguien a quien le mostraron la forma de un desconocido útil. Dormís en el heno junto al fuego, con el calor suficiente."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rest_blacksmith_song",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "location": "road",
+    "narrative": {
+      "en": "A blacksmith shack at {locationName} rings with the last hour of work and an old work-song hummed under it. The smith waves you in without stopping the rhythm. 'Bank the coals and earn your keep.'",
+      "es": "Una fragua en {locationName} suena con la última hora de trabajo y una vieja canción de faena tarareada por debajo. El herrero te hace pasar sin cortar el ritmo. 'Avivá las brasas y ganate el pan.'"
+    },
+    "choices": [
+      {
+        "id": "take_up_the_hammer",
+        "label": {
+          "en": "Take up a hammer and join the rhythm",
+          "es": "Tomar un martillo y entrar en el ritmo"
+        },
+        "tag": "Supportive",
+        "rarity": "common",
+        "staminaDelta": 20,
+        "healthDelta": 5,
+        "statDeltas": {
+          "strength": 2
+        },
+        "narrative": {
+          "en": "The work-song has a second voice in it you didn't know you remembered. You match the smith's swings and the rhythm carries you past the ache. When the last bar cools, the smith grunts, 'Not bad, for a traveler's thumbs.' High praise, delivered flat.",
+          "es": "La canción de faena tiene una segunda voz que no sabías que recordabas. Igualás los golpes del herrero y el ritmo te lleva más allá del dolor. Cuando refresca la última barra, el herrero gruñe: 'Nada mal, para los pulgares de un viajero.' Un elogio alto, dicho plano."
+        }
+      },
+      {
+        "id": "sit_and_listen",
+        "label": {
+          "en": "Sit by the forge and let the song work",
+          "es": "Sentarte junto a la fragua y dejar que la canción haga su trabajo"
+        },
+        "tag": "Humble",
+        "rarity": "common",
+        "staminaDelta": 30,
+        "statDeltas": {
+          "constitution": 1
+        },
+        "narrative": {
+          "en": "You sit where the heat reaches without blaming you and let the work-song steam the knots out of your shoulders. It is the oldest kind of music: hands in time, no audience. You leave warm in the places the road went cold.",
+          "es": "Te sentás donde el calor llega sin acusarte y dejás que la canción de faena te saque los nudos de los hombros con vapor. Es la música más vieja que existe: manos a tiempo, sin público. Te vas caliente en los lugares donde el camino se enfrió."
+        }
+      },
+      {
+        "id": "offer_the_flask",
+        "label": {
+          "en": "Split your road-flask with the smith",
+          "es": "Compartir tu petaca de camino con el herrero"
+        },
+        "tag": "Funny",
+        "rarity": "common",
+        "goldDelta": -5,
+        "staminaDelta": 25,
+        "statDeltas": {
+          "charisma": 1
+        },
+        "narrative": {
+          "en": "The smith raises the flask, smells it, and judges it roadworthy. 'One song for the flask,' they say, and sing the second verse of a ballad about a horse that out-lived the man who swore it. You split the difference, warm and wordless, and the coals keep the whole room company.",
+          "es": "El herrero levanta la petaca, la huele y la declara apta para el camino. 'Una canción por la petaca', dice, y canta la segunda estrofa de una balada sobre un caballo que le sobrevivió al hombre que lo juró. Reparten la diferencia, calientes y sin palabras, y las brasas hacen compañía a todo el salón."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rest_stargazer_ridge",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "location": "road",
+    "narrative": {
+      "en": "The ridge above {locationName} offers itself like a table set for the sky. Camped here, you see the constellations naked — a cart, a liar, a river that spills upward. The sky has more names than you do, and it is giving them out.",
+      "es": "La cresta sobre {locationName} se ofrece como una mesa puesta para el cielo. Acampado aquí, ves las constelaciones desnudas — una carreta, un mentiroso, un río que se derrama hacia arriba. El cielo tiene más nombres que vos, y los está repartiendo."
+    },
+    "choices": [
+      {
+        "id": "count_the_constellations",
+        "label": {
+          "en": "Lie back and learn the sky's names",
+          "es": "Recostarte y aprender los nombres del cielo"
+        },
+        "tag": "Humble",
+        "rarity": "uncommon",
+        "staminaDelta": 40,
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "narrative": {
+          "en": "You give the stars your full attention and they hand back names: the Wheel, the Debt, the Road that Misses Home. You fall asleep under a roof of them and wake with the map of it behind your eyes. Somewhere it will be useful — probably nowhere, and maybe that's the point.",
+          "es": "Les das a las estrellas toda tu atención y te devuelven nombres: la Rueda, la Deuda, el Camino que Extraña el Hogar. Dormís bajo un techo de ellas y despertás con su mapa detrás de los ojos. En algún lugar te servirá — probablemente en ninguno, y quizá ese sea el punto."
+        }
+      },
+      {
+        "id": "wish_on_a_falling_star",
+        "label": {
+          "en": "Catch a falling star and make it a wish",
+          "es": "Atrapar una estrella fugaz y convertirla en deseo"
+        },
+        "tag": "Cocky",
+        "rarity": "volatile",
+        "staminaDelta": 30,
+        "healthDelta": 4,
+        "statDeltas": {
+          "constitution": 1
+        },
+        "narrative": {
+          "en": "A star drops while you're watching, slow enough to count four colors. You make the wish with your whole chest — the kind you don't share. The sky takes it without comment. You sleep with the warmth of having asked for something, which is more than most nights offer.",
+          "es": "Una estrella cae mientras mirás, lo bastante lenta para contarle cuatro colores. Hacés el deseo con todo el pecho — de los que no se comparten. El cielo lo toma sin comentarios. Dormís con la calidez de haber pedido algo, que es más de lo que ofrecen la mayoría de las noches."
+        }
+      },
+      {
+        "id": "chart_the_map_for_tomorrow",
+        "label": {
+          "en": "Read the stars for tomorrow's road",
+          "es": "Leer las estrellas para el camino de mañana"
+        },
+        "tag": "Strategic",
+        "rarity": "common",
+        "staminaDelta": 25,
+        "statDeltas": {
+          "intelligence": 1
+        },
+        "narrative": {
+          "en": "You match the sky to the ridge you'll cross and put a name on tomorrow's weather. You are wrong about the weather — you were always going to be — but the ritual leaves you sure-footed anyway. Confidence is a compass, of sorts.",
+          "es": "Encajás el cielo con la cresta que cruzarás y le ponés nombre al clima de mañana. Te equivocás sobre el clima — siempre ibas a equivocarte — pero el ritual te deja con paso firme de todos modos. La confianza es una brújula, de algún modo."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rest_river_hum",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "location": "road",
+    "narrative": {
+      "en": "The river at {locationName} talks low all night, a chorus with no verses. Its bank is soft and warm from the day, and the current keeps the dark company.",
+      "es": "El río en {locationName} conversa bajo toda la noche, un coro sin versos. Su orilla está suave y tibia del día, y la corriente le hace compañía a la oscuridad."
+    },
+    "choices": [
+      {
+        "id": "sleep_to_the_chorus",
+        "label": {
+          "en": "Sleep on the bank with the chorus",
+          "es": "Dormir en la orilla con el coro"
+        },
+        "tag": "Stoic",
+        "rarity": "uncommon",
+        "staminaDelta": 45,
+        "healthDelta": 5,
+        "statDeltas": {
+          "constitution": 1
+        },
+        "narrative": {
+          "en": "The current takes up the night's thinking for you, a low and steady chorus that drowns the small sounds of your own mind. You sleep like a stone under water. You wake damp, rested, and with the current still running through you.",
+          "es": "La corriente hace el pensamiento de la noche por vos, un coro bajo y constante que ahoga los sonidos pequeños de tu propia mente. Dormís como una piedra bajo el agua. Despertás húmedo, descansado y con la corriente todavía corriendo por tu cuerpo."
+        }
+      },
+      {
+        "id": "bank_a_fire_first",
+        "label": {
+          "en": "Bank a small fire, then sleep",
+          "es": "Arreglar un fuego pequeño y después dormir"
+        },
+        "tag": "Professional",
+        "rarity": "common",
+        "staminaDelta": 35,
+        "healthDelta": 4,
+        "statDeltas": {
+          "strength": 1
+        },
+        "narrative": {
+          "en": "You build the night's oven properly — embers that will outlast the chorus. The heat and the water hum make a double bed of the bank. You wake to the smell of your own coffee, which is its own small triumph.",
+          "es": "Armás bien el horno de la noche — brasas que van a durar más que el coro. El calor y el zumbido del agua hacen una cama doble de la orilla. Despertás con el olor de tu propio café, que es su propio pequeño triunfo."
+        }
+      },
+      {
+        "id": "set_and_forget",
+        "label": {
+          "en": "Set the line, sleep, and check at dawn",
+          "es": "Tender la línea, dormir y revisar al amanecer"
+        },
+        "tag": "Strategic",
+        "rarity": "common",
+        "goldDelta": 10,
+        "staminaDelta": 30,
+        "statDeltas": {
+          "dexterity": 1
+        },
+        "narrative": {
+          "en": "You set a simple line with a hook that asks nothing and lets the river work your breakfast. Dawn brings a fish small enough to be humble and honest enough to be food. Efficiency, served cold and grilled.",
+          "es": "Tendés una línea simple con un anzuelo que no pide nada y deja que el río te trabaje el desayuno. El amanecer trae un pez lo bastante pequeño para ser humilde y lo bastante honesto para ser comida. Eficiencia, servida fría y a la parrilla."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rest_old_innkeeper",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "location": "road",
+    "narrative": {
+      "en": "The innkeeper at {locationName} is old in the way roads are old — full of people who passed through and are gone. Over a low fire they start, unprompted, 'This is the story of how the road brought me here.' You sit. It is a long one.",
+      "es": "El posadero en {locationName} es viejo de la manera en que los caminos son viejos — lleno de gente que pasó y se fue. Junto a un fuego bajo, empieza, sin que le pidan: 'Esta es la historia de cómo el camino me trajo hasta aquí.' Te sentás. Es larga."
+    },
+    "choices": [
+      {
+        "id": "hear_the_whole_road",
+        "label": {
+          "en": "Hear the whole story to the last mile",
+          "es": "Escuchar toda la historia hasta la última milla"
+        },
+        "tag": "Humble",
+        "rarity": "uncommon",
+        "staminaDelta": 40,
+        "healthDelta": 5,
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "narrative": {
+          "en": "The story has wars, a bridge that wasn't there, a debt paid in mutton, and a love the size of a kitchen fire. By the end the fire is low and your pack is heavy with the feeling of having inherited a life for one night. The innkeeper nods. 'Now you carry it a mile too.'",
+          "es": "La historia tiene guerras, un puente que no estaba, una deuda pagada en cordero y un amor del tamaño de un fuego de cocina. Para el final, el fuego está bajo y tu mochila pesa con la sensación de haber heredado una vida por una noche. El posadero asiente. 'Ahora vos también la llevás una milla.'"
+        }
+      },
+      {
+        "id": "offer_your_own",
+        "label": {
+          "en": "Trade a stretch of your own road",
+          "es": "Cambiar un tramo de tu propio camino"
+        },
+        "tag": "Supportive",
+        "rarity": "common",
+        "staminaDelta": 30,
+        "statDeltas": {
+          "charisma": 2
+        },
+        "narrative": {
+          "en": "You trade your own long road for theirs, and for a while two strangers share the weight in both directions. Some stories only get lighter by being told twice — this was one. The innkeeper laughs at your best part like it's an old friend. You leave with the night warmer than you found it.",
+          "es": "Cambiás tu propio camino largo por el de ellos, y por un rato dos desconocidos comparten el peso en las dos direcciones. Hay historias que solo se alivian contándose dos veces — esta era una. El posadero se ríe en tu mejor parte como con un viejo amigo. Te vas con la noche más cálida de lo que la encontraste."
+        }
+      },
+      {
+        "id": "half_listen",
+        "label": {
+          "en": "Sit by the fire and let it wash over you",
+          "es": "Sentarte junto al fuego y dejar que pase sobre vos"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "staminaDelta": 35,
+        "healthDelta": 4,
+        "statDeltas": {
+          "constitution": 1
+        },
+        "narrative": {
+          "en": "You let the story run without chasing it, the way old people cook — slow, not caring if you catch every detail. Somewhere past the third war you're asleep in the chair, and the innkeeper covers you with a blanket that smells like the road. You wake to the embers and a place at the table.",
+          "es": "Dejás que la historia corra sin perseguirla, como cocinan los viejos — despacio, sin importar si atrapás cada detalle. En algún punto pasado de la tercera guerra te dormís en la silla, y el posadero te cubre con una manta que huele a camino. Despertás con las brasas y un lugar en la mesa."
+        }
+      }
+    ]
   }
 ]

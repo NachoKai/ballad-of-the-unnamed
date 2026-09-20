@@ -859,5 +859,429 @@
         }
       }
     ]
+  },
+  {
+    "id": "road_toll_bridge",
+    "type": "road",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "narrative": {
+      "en": "A bridge keeper in a rusted mail coat plants himself mid-plank at {locationName} and names a price. Then he sees how your purse moves and names a second, far higher one, smiling like the first was only the road's way of testing your patience.",
+      "es": "Un guardia de puente con cota de malla oxidada se planta en la mitad del tablón en {locationName} y pone un precio. Luego ve cómo se mueve tu bolsa y pone un segundo precio, bastante más alto, sonriendo como si el primero hubiera sido solo la manera que tiene el camino de probar tu paciencia."
+    },
+    "choices": [
+      {
+        "id": "pay_toll",
+        "label": {
+          "en": "Pay the inflated toll and cross",
+          "es": "Pagar el peaje inflado y cruzar"
+        },
+        "tag": "Professional",
+        "rarity": "common",
+        "goldDelta": -60,
+        "statDeltas": {
+          "intelligence": 1
+        },
+        "narrative": {
+          "en": "Coin changes hands, the gate rises, and you cross fuming. The keeper waves. 'Come back when your purse is quieter.'",
+          "es": "Las monedas cambian de manos, el portón sube y cruzas echando humo. El guardia te saluda. 'Volvé cuando tu bolsa esté más callada.'"
+        }
+      },
+      {
+        "id": "haggle_toll",
+        "label": {
+          "en": "Haggle — name your own price and stare him down",
+          "es": "Regatear — imponer tu propio precio y sostenerle la mirada"
+        },
+        "tag": "Confident",
+        "rarity": "volatile",
+        "requiresStat": {
+          "stat": "charisma",
+          "min": 12
+        },
+        "goldDelta": -20,
+        "statDeltas": {
+          "charisma": 2
+        },
+        "narrative": {
+          "en": "You hold his stare plank by plank and name a coin that makes him blink. He takes it, offended and impressed at once. The road keeps its own arithmetic.",
+          "es": "Le sostenés la mirada tabla por tabla y nombrás una moneda que lo hace parpadear. La acepta, ofendido e impresionado a la vez. El camino guarda su propia aritmética."
+        }
+      },
+      {
+        "id": "ford_the_river",
+        "label": {
+          "en": "Skip the toll — leap the rail and ford the shallows",
+          "es": "Saltear el peaje — saltar la baranda y vadear los bajos"
+        },
+        "tag": "Cocky",
+        "rarity": "volatile",
+        "requiresStat": {
+          "stat": "dexterity",
+          "min": 12
+        },
+        "healthDelta": -5,
+        "injuryRiskDelta": 0.08,
+        "statDeltas": {
+          "dexterity": 2
+        },
+        "narrative": {
+          "en": "You take the rail at a run and land hard in the shallows, soaked to the waist. The keeper hurls insults, not bolts. Waterlogged and grinning, you count the swim as a bargain.",
+          "es": "Tomás la baranda de corrido y caés de golpe en los bajos, empapado hasta la cintura. El guardia lanza insultos, no pernos. Empapado y sonriendo, contás el nado como un buen negocio."
+        }
+      }
+    ]
+  },
+  {
+    "id": "road_pilgrim_challenge",
+    "type": "road",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "narrative": {
+      "en": "A band of pilgrims blocks the fork at {locationName}, staffs crossed, their sandals white with walking. The eldest plants herself before you. 'The shrine asks something of every traveler: show us the road is worth walking. Prove it, or turn back.'",
+      "es": "Una banda de peregrinos bloquea el cruce en {locationName}, bastones cruzados y sandalias blancas de caminar. La mayor se planta ante vos. 'El santuario pide algo a cada viajero: mostranos que el camino vale la pena. Demostralo, o da la vuelta.'"
+    },
+    "choices": [
+      {
+        "id": "show_the_road",
+        "label": {
+          "en": "Show them what the road taught you",
+          "es": "Mostrarles lo que el camino te enseñó"
+        },
+        "tag": "Confident",
+        "rarity": "common",
+        "fameDelta": 2,
+        "statDeltas": {
+          "constitution": 2
+        },
+        "narrative": {
+          "en": "You walk a straight line through their questions, showing the calluses and the calm that only miles give. The eldest nods. 'The road passed. Pass, road-walker.' They part like an honor guard of the faithful.",
+          "es": "Caminás en línea recta entre sus preguntas, mostrando los callos y la calma que solo dan las millas. La mayor asiente. 'El camino aprobó. Pasá, caminante del camino.' Se abren como una guardia de honor de los fieles."
+        }
+      },
+      {
+        "id": "carry_the_packs",
+        "label": {
+          "en": "Shoulder the heavy packs over the hill",
+          "es": "Cargar los bultos pesados cuesta la colina"
+        },
+        "tag": "Supportive",
+        "rarity": "common",
+        "staminaDelta": -15,
+        "reputationDelta": 3,
+        "reputationFaction": "luminari",
+        "statDeltas": {
+          "strength": 1
+        },
+        "narrative": {
+          "en": "You shoulder the heaviest packs and lead the climb. By the top the pilgrims are telling stories of your strength in the future tense. The shrine's candle gutters — in your honor, they insist.",
+          "es": "Cargás los bultos más pesados y guiás la subida. En la cima, los peregrinos ya cuentan historias de tu fuerza en tiempo futuro. La vela del santuario parpadea — en tu honor, insisten."
+        }
+      },
+      {
+        "id": "mock_their_certitude",
+        "label": {
+          "en": "Mock their certitude and walk through",
+          "es": "Burlarte de su certeza y pasar de largo"
+        },
+        "tag": "Cocky",
+        "rarity": "volatile",
+        "requiresStat": {
+          "stat": "charisma",
+          "min": 12
+        },
+        "fameDelta": 1,
+        "liabilityDelta": 2,
+        "statDeltas": {
+          "charisma": 2
+        },
+        "narrative": {
+          "en": "You step past the eldest mid-blessing. 'Which road did your shrine walk to get here?' The pilgrims fume; some of them laugh. You take the fork with your name on the village's lips for the rest of the evening — for better or worse.",
+          "es": "Pasás de largo delante de la mayor en plena bendición. '¿Qué camino caminó su santuario para llegar hasta aquí?' Los peregrinos bufaban; algunos se ríen. Tomás el cruce con tu nombre en boca del pueblo el resto de la tarde — para bien o para mal."
+        }
+      }
+    ]
+  },
+  {
+    "id": "road_abandoned_wagon",
+    "type": "road",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "narrative": {
+      "en": "A wagon sits at {locationName}, sunk to its axles in mud that looks a day old and smells older. The canvas is whole and the cargo bulges under it. Nothing moves around it — but the mud has drag marks that say something left recently, and may return.",
+      "es": "Una carreta descansa en {locationName}, hundida hasta los ejes en un barro que parece de ayer y huele a más viejo. La lona está entera y la carga abulta debajo. Nada se mueve a su alrededor — pero el barro tiene marcas de arrastre que dicen que algo se fue hace poco, y puede volver."
+    },
+    "choices": [
+      {
+        "id": "ransack_the_cargo",
+        "label": {
+          "en": "Slit the canvas and take the best of the load",
+          "es": "Rajarla lona y llevarte lo mejor de la carga"
+        },
+        "tag": "Cocky",
+        "rarity": "volatile",
+        "requiresStat": {
+          "stat": "dexterity",
+          "min": 12
+        },
+        "goldDelta": 120,
+        "liabilityDelta": 8,
+        "statDeltas": {
+          "dexterity": 2
+        },
+        "narrative": {
+          "en": "You work the canvas open on a held breath and lift what earns its keep — coin, salt, a stamped strongbox. You leave the rest for the mud and the road. The wagon will be found lighter, and some merchant will curse a name he'll never know.",
+          "es": "Rajás la lona conteniendo la respiración y sacás lo que se gana el sustento — monedas, sal, un cofre sellado. Dejás el resto para el barro y el camino. Encontrarán la carreta más liviana, y algún mercader maldecirá un nombre que nunca llegará a conocer."
+        }
+      },
+      {
+        "id": "wait_for_the_owner",
+        "label": {
+          "en": "Wait and see who returns",
+          "es": "Esperar para ver quién vuelve"
+        },
+        "tag": "Strategic",
+        "rarity": "common",
+        "goldDelta": 40,
+        "statDeltas": {
+          "intelligence": 1
+        },
+        "narrative": {
+          "en": "You settle into the tree line and wait. Near dusk a ragged figure returns, collects the wagon's true load, and presses a coin into your hand without asking how long you've watched. Some cargo travels safer with a witness.",
+          "es": "Te acomodás en el borde del bosque y esperás. Cerca del anochecer, una figura harapienta regresa, recoge la carga verdadera de la carreta y te mete una moneda en la mano sin preguntar cuánto hace que mirás. Hay cargas que viajan más seguras con un testigo."
+        }
+      },
+      {
+        "id": "leave_it_be",
+        "label": {
+          "en": "Take the high side of the road and leave it",
+          "es": "Tomar el lado alto del camino y dejarla atrás"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": {
+          "intelligence": 1
+        },
+        "narrative": {
+          "en": "The mud can keep its treasure. You take the high side of the road and don't look back — some things sink on their own schedule, and none of it is yours.",
+          "es": "El barro puede quedarse con su tesoro. Tomás el lado alto del camino y no mirás atrás — algunas cosas se hunden por su cuenta, y ninguna es tuya."
+        }
+      }
+    ]
+  },
+  {
+    "id": "road_mudslide",
+    "type": "road",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 7,
+    "narrative": {
+      "en": "A mudslide has swallowed the pass at {locationName} — a fresh brown wound a hundred paces wide. Locals dig along its edge, arguing about whether it was the rain, the quarry blasting, or the saint they buried angry.",
+      "es": "Un deslizamiento de barro ha engullido el paso en {locationName} — una herida marrón recién hecha, de cien pasos de ancho. Los lugareños cavan en su borde discutiendo si fue la lluvia, las voladuras de la cantera o el santo al que enterraron enojado."
+    },
+    "choices": [
+      {
+        "id": "dig_shoulder_to_shoulder",
+        "label": {
+          "en": "Take a shovel and dig with them",
+          "es": "Tomar una pala y cavar con ellos"
+        },
+        "tag": "Supportive",
+        "rarity": "common",
+        "staminaDelta": -15,
+        "reputationDelta": 2,
+        "reputationFaction": "ironhold",
+        "statDeltas": {
+          "constitution": 2
+        },
+        "narrative": {
+          "en": "You dig where the mud is deepest, beside two farmers who stop arguing just long enough to be impressed. By dusk the pass breathes again. Someone mutters you have the look of a fixer. You take it as praise.",
+          "es": "Cavás donde el barro es más profundo, junto a dos granjeros que dejan de discutir lo justo para quedarse impresionados. Al anochecer, el paso vuelve a respirar. Alguien murmura que tenés cara de arreglador. Lo tomás como un elogio."
+        }
+      },
+      {
+        "id": "blame_the_quarry",
+        "label": {
+          "en": "Say 'quarry' where the foremen can hear",
+          "es": "Decir 'cantera' donde los capataces puedan oír"
+        },
+        "tag": "Cocky",
+        "rarity": "volatile",
+        "requiresStat": {
+          "stat": "charisma",
+          "min": 12
+        },
+        "fameDelta": 2,
+        "liabilityDelta": 2,
+        "statDeltas": {
+          "charisma": 2
+        },
+        "narrative": {
+          "en": "You say the word 'quarry' where the foremen can hear. A crowd forms, then a handful of thrown tools, then a grudging apology from a man whose title is half 'powder.' The pass stays stuck, but your name rides the argument all the way to town.",
+          "es": "Decís la palabra 'cantera' donde los capataces puedan oírla. Se arma un grupo, luego un par de herramientas volando, luego una disculpa a regañadientes de un hombre cuyo cargo es mitad 'pólvora.' El paso sigue trabado, pero tu nombre cabalga la discusión hasta el pueblo."
+        }
+      },
+      {
+        "id": "find_the_drovers_track",
+        "label": {
+          "en": "Scout a route around the slide",
+          "es": "Buscar una ruta alrededor del deslizamiento"
+        },
+        "tag": "Strategic",
+        "rarity": "common",
+        "fameDelta": 1,
+        "statDeltas": {
+          "dexterity": 2
+        },
+        "narrative": {
+          "en": "You walk the tree line until you find the old drovers' track the mud forgot. When you come back with the news, the locals look at your feet like they've met a pathfinder. The pass opens an hour before the mud committee finishes blaming the rain.",
+          "es": "Caminás el borde del bosque hasta encontrar el viejo sendero de arrieros que el barro se olvidó. Cuando volvés con la noticia, los lugareños miran tus pies como quien conoce a un rastreador. El paso se abre una hora antes de que el comité del barro termine de culpar a la lluvia."
+        }
+      }
+    ]
+  },
+  {
+    "id": "road_night_encampment",
+    "type": "road",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 7,
+    "narrative": {
+      "en": "A night encampment glows ahead at {locationName}, three strangers sharing a fire that needs feeding. They wave you in with warmth — all but one, who watches your hands at the pit like they're reading a map. The night is long, and not everyone in it is here to sleep.",
+      "es": "Un campamento nocturno brilla más adelante en {locationName}, tres desconocidos compartiendo un fuego que pide leña. Te invitan con calidez — todos menos uno, que mira tus manos en el fogón como quien lee un mapa. La noche es larga, y no todos los que están aquí vinieron a dormir."
+    },
+    "choices": [
+      {
+        "id": "sit_and_watch",
+        "label": {
+          "en": "Sit, share, and keep one eye open",
+          "es": "Sentarte, compartir y mantener un ojo abierto"
+        },
+        "tag": "Strategic",
+        "rarity": "common",
+        "staminaDelta": 25,
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "narrative": {
+          "en": "You take the seat with the best view of every hand in camp. The food is honest, the stories are lies, and when the fire sinks low the watcher drifts off like a disappointed predator. You wake to a cold camp and one fewer stranger.",
+          "es": "Tomás el asiento con la mejor vista de cada mano del campamento. La comida es honesta, las historias son mentiras, y cuando el fuego baja, el que vigilaba cae dormido como un depredador decepcionado. Despertás con el campamento frío y un desconocido menos."
+        }
+      },
+      {
+        "id": "name_the_watcher",
+        "label": {
+          "en": "Name the watcher before the fire dies",
+          "es": "Señalar al que vigila antes de que muera el fuego"
+        },
+        "tag": "Confident",
+        "rarity": "volatile",
+        "requiresStat": {
+          "stat": "intelligence",
+          "min": 12
+        },
+        "fameDelta": 2,
+        "injuryRiskDelta": 0.1,
+        "statDeltas": {
+          "charisma": 2
+        },
+        "narrative": {
+          "en": "You say, quiet, 'You've been reading my hands since sunset. Here they are.' The camp goes still; the watcher laughs, low and ruined, and admits to sizing you up for a grave's company. The others bind them with rope and thanks. You sleep with the fire at your back and a story to tell.",
+          "es": "Decís, bajito: 'Venís leyendo mis manos desde el atardecer. Acá están.' El campamento queda en silencio; el que vigilaba se ríe, bajo y deshecho, y admite que te estuvo midiendo para la compañía de una tumba. Los otros lo atan con soga y agradecimientos. Dormís con el fuego a la espalda y una historia para contar."
+        }
+      },
+      {
+        "id": "walk_on_easy",
+        "label": {
+          "en": "Thank them and walk on",
+          "es": "Agradecerles y seguir camino"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "staminaDelta": -10,
+        "statDeltas": {
+          "constitution": 1
+        },
+        "narrative": {
+          "en": "You thank the camp and take the road's offer. Some fires are warmer from a distance, and the night has a second, safer face for the walking. The firelight holds its shape behind you until you can't see it anymore.",
+          "es": "Agradecés el campamento y aceptás la oferta del camino. Algunos fuegos son más cálidos desde lejos, y la noche tiene una segunda cara, más segura, para quien camina. La luz del fuego mantiene su forma detrás tuyo hasta que dejás de verla."
+        }
+      }
+    ]
+  },
+  {
+    "id": "road_river_ferry",
+    "type": "road",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "narrative": {
+      "en": "The ferry at {locationName} rides a brown current running fast to somewhere hungrier. The ferryman — a woman who counts the sky before she counts your coin — names a price to cross. 'If you want the far bank before sundown,' she adds, 'it costs more. The river owes you no daylight.'",
+      "es": "El ferry de {locationName} cabalga una corriente marrón que corre rápida hacia algún lugar más hambriento. La barquera — una mujer que cuenta el cielo antes que tus monedas — pone un precio para cruzar. 'Si querés la orilla lejana antes del atardecer', agrega, 'cuesta más. El río no te debe la luz del día.'"
+    },
+    "choices": [
+      {
+        "id": "pay_for_sundown",
+        "label": {
+          "en": "Pay for the rush and cross by light",
+          "es": "Pagar por la prisa y cruzar con luz"
+        },
+        "tag": "Professional",
+        "rarity": "uncommon",
+        "goldDelta": -60,
+        "staminaDelta": 15,
+        "statDeltas": {
+          "constitution": 1
+        },
+        "narrative": {
+          "en": "The price stings, but the west bank arrives under an orange sky, dry and smug. The ferryman pockets the coin without ceremony. 'Time is the river's tax,' she says. 'You paid twice and kept your day.'",
+          "es": "El precio duele, pero la orilla oeste llega bajo un cielo naranja, seco y satisfecho. La barquera guarda la moneda sin ceremonia. 'El tiempo es el impuesto del río', dice. 'Pagaste dos veces y te quedaste con el día.'"
+        }
+      },
+      {
+        "id": "work_the_oars",
+        "label": {
+          "en": "Trade a shift at the oars for the lower price",
+          "es": "Cambiar un turno de remos por el precio menor"
+        },
+        "tag": "Supportive",
+        "rarity": "common",
+        "goldDelta": -20,
+        "staminaDelta": -20,
+        "statDeltas": {
+          "strength": 2
+        },
+        "narrative": {
+          "en": "You trade the coin for muscle, and the ferry cuts the current like it owes you speed. At the far shore your arms hum and the ferryman's scowl settles into a nod. 'The river takes no silver from working hands,' she says, and lets you keep the change.",
+          "es": "Cambiás la moneda por músculo, y el ferry corta la corriente como si te debiera velocidad. En la orilla lejana tus brazos zumban y el ceño de la barquera se asienta en un asentimiento. 'El río no saca plata de las manos que trabajan', dice, y te deja guardar el cambio."
+        }
+      },
+      {
+        "id": "swim_the_current",
+        "label": {
+          "en": "Swim for it and beat the sun yourself",
+          "es": "Nadar y ganarle al sol por tu cuenta"
+        },
+        "tag": "Cocky",
+        "rarity": "volatile",
+        "requiresStat": {
+          "stat": "constitution",
+          "min": 12
+        },
+        "healthDelta": -8,
+        "staminaDelta": -10,
+        "injuryRiskDelta": 0.1,
+        "statDeltas": {
+          "constitution": 2
+        },
+        "narrative": {
+          "en": "You strip to the essentials and take the river head-on. The current argues, the cold casts a vote, and you haul out on the far bank shaking but early, the sun still a finger above the hills. The ferryman watches from mid-river, shaking her head — half curse, half applause.",
+          "es": "Te quedás con lo esencial y enfrentás el río de frente. La corriente discute, el frío vota, y salís a la orilla lejana temblando pero temprano, con el sol todavía a un dedo sobre las colinas. La barquera mira desde la mitad del río, negando con la cabeza — mitad maldición, mitad aplauso."
+        }
+      }
+    ]
   }
 ]

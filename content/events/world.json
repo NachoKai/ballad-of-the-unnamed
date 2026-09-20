@@ -683,5 +683,353 @@
         }
       }
     ]
+  },
+  {
+    "id": "world_heretic_burning",
+    "type": "world",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 4,
+    "narrative": {
+      "en": "A heretic burns in {slot:worldLocation}, bound to the pyre while his doubt is read aloud to the crowd. The priests call it mercy; the smoke carries something that tastes like a question.",
+      "es": "Un hereje arde en {slot:worldLocation}, atado a la pira mientras su duda se lee en voz alta ante la multitud. Los sacerdotes lo llaman misericordia; el humo trae algo que sabe a pregunta."
+    },
+    "worldEventHeadline": {
+      "en": "Heretic Burned in {slot:worldLocation}",
+      "es": "Un Hereje Quemado en {slot:worldLocation}"
+    },
+    "choices": [
+      {
+        "id": "acknowledge",
+        "rarity": "common",
+        "label": {
+          "en": "The world moves on",
+          "es": "El mundo sigue"
+        },
+        "narrative": {
+          "en": "Faith wins the square today. The questions wait by the fire.",
+          "es": "La fe gana la plaza hoy. Las preguntas esperan junto al fuego."
+        }
+      }
+    ]
+  },
+  {
+    "id": "world_market_crash",
+    "type": "world",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 3,
+    "narrative": {
+      "en": "The silver-leaf markets collapse overnight, and the {slot:guildName} exchange follows like a house of mis-dealt cards. Coin loses faith faster than it loses value — hoarders smile, debtors vanish before dawn.",
+      "es": "Los mercados de hoja de plata se derrumban de la noche a la mañana, y la bolsa de los {slot:guildName} sigue el ejemplo como un castillo de naipes mal repartidos. La moneda pierde fe más rápido que valor — los acaparadores sonríen, los deudores desaparecen antes del alba."
+    },
+    "worldEventHeadline": {
+      "en": "{slot:guildName} Markets Collapse",
+      "es": "Se Derrumban los Mercados de los {slot:guildName}"
+    },
+    "choices": [
+      {
+        "id": "acknowledge",
+        "rarity": "common",
+        "label": {
+          "en": "The world moves on",
+          "es": "El mundo sigue"
+        },
+        "narrative": {
+          "en": "Paper promises burn in the cold. Gold remembers who held it.",
+          "es": "Las promesas de papel arden en el frío. El oro recuerda quién lo tuvo."
+        }
+      }
+    ]
+  },
+  {
+    "id": "world_explorer_voyage",
+    "type": "world",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 3,
+    "narrative": {
+      "en": "The explorer's ship returns to {slot:worldLocation} after three years beyond the rim, and the crew swears the sea bends there. Charts multiply overnight, and the horizon suddenly looks much smaller.",
+      "es": "El barco del explorador regresa a {slot:worldLocation} tras tres años más allá del borde, y la tripulación jura que el mar se curva allí. Los mapas se multiplican de la noche a la mañana, y el horizonte de pronto parece mucho más pequeño."
+    },
+    "worldEventHeadline": {
+      "en": "Explorer Returns from Beyond the Rim",
+      "es": "Un Explorador Regresa del Más Allá del Borde"
+    },
+    "choices": [
+      {
+        "id": "acknowledge",
+        "rarity": "common",
+        "label": {
+          "en": "The world moves on",
+          "es": "El mundo sigue"
+        },
+        "narrative": {
+          "en": "Every map is a confession of what we didn't know yesterday.",
+          "es": "Todo mapa es una confesión de lo que no sabíamos ayer."
+        }
+      }
+    ]
+  },
+  {
+    "id": "world_locust_plague",
+    "type": "world",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 4,
+    "narrative": {
+      "en": "Locusts the color of brass cross {slot:worldLocation}, eating the green out of the land province by province. Their sound is a saw on dry wood, and every granary is counting its days.",
+      "es": "Langostas del color del bronce cruzan {slot:worldLocation}, comiéndose el verde de la tierra provincia por provincia. Su sonido es una sierra sobre madera seca, y todos los graneros cuentan sus días."
+    },
+    "worldEventHeadline": {
+      "en": "Brass Locusts Strip {slot:worldLocation}",
+      "es": "Langostas de Bronce Devoran {slot:worldLocation}"
+    },
+    "choices": [
+      {
+        "id": "acknowledge",
+        "rarity": "common",
+        "label": {
+          "en": "The world moves on",
+          "es": "El mundo sigue"
+        },
+        "narrative": {
+          "en": "The fields go quiet. The sky keeps the insects and their hunger.",
+          "es": "Los campos quedan en silencio. El cielo guarda a los insectos y su hambre."
+        }
+      }
+    ]
+  },
+  {
+    "id": "world_border_wall",
+    "type": "world",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 3,
+    "narrative": {
+      "en": "The king across the border raises a wall of stone and thorn, sealing the passes overnight. Caravans queue at gates that no longer open, and rumors — being lighter than carts — slip through anyway.",
+      "es": "El rey del otro lado de la frontera levanta un muro de piedra y espinas, sellando los pasos de la noche a la mañana. Las caravanas hacen cola ante puertas que ya no se abren, y los rumores — siendo más livianos que las carretas — se cuelan igual."
+    },
+    "worldEventHeadline": {
+      "en": "Border Wall Seals the Passes",
+      "es": "Un Muro de Frontera Sella los Pasos"
+    },
+    "choices": [
+      {
+        "id": "acknowledge",
+        "rarity": "common",
+        "label": {
+          "en": "The world moves on",
+          "es": "El mundo sigue"
+        },
+        "narrative": {
+          "en": "Walls change the map. They never change the road's mood.",
+          "es": "Los muros cambian el mapa. Nunca cambian el ánimo del camino."
+        }
+      }
+    ]
+  },
+  {
+    "id": "world_colossus_sighted",
+    "type": "world",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 4,
+    "narrative": {
+      "en": "A walker the size of a hill crosses the wastes beyond {slot:worldLocation}, heading for the old sea. Dust trails off its shoulders, and nobody knows what woke it — or where it means to stand.",
+      "es": "Un caminante del tamaño de una colina cruza las tierras yermas más allá de {slot:worldLocation}, rumbo al mar viejo. El polvo cae de sus hombros, y nadie sabe qué lo despertó — ni dónde piensa detenerse."
+    },
+    "worldEventHeadline": {
+      "en": "Colossus Sighted Crossing the Wastes",
+      "es": "Avistan un Coloso Cruzando las Tierras Yermas"
+    },
+    "choices": [
+      {
+        "id": "acknowledge",
+        "rarity": "common",
+        "label": {
+          "en": "The world moves on",
+          "es": "El mundo sigue"
+        },
+        "narrative": {
+          "en": "Some things were never small. We only forgot their scale.",
+          "es": "Algunas cosas nunca fueron pequeñas. Solo olvidamos su escala."
+        }
+      }
+    ]
+  },
+  {
+    "id": "world_sea_monster",
+    "type": "world",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 4,
+    "narrative": {
+      "en": "Sailors along the coast swear a leviathan the width of a harbor mouth surfaced for a single breath, then went back under. Half the fleet wants to hunt it; the other half is redrawing its trade routes.",
+      "es": "Los marineros de la costa juran que un leviatán del ancho de una boca de puerto asomó por un solo aliento y volvió a sumergirse. La mitad de la flota quiere cazarlo; la otra mitad está trazando de nuevo sus rutas de comercio."
+    },
+    "worldEventHeadline": {
+      "en": "Leviathan Sighted off the Coast",
+      "es": "Avistan un Leviatán en la Costa"
+    },
+    "choices": [
+      {
+        "id": "acknowledge",
+        "rarity": "common",
+        "label": {
+          "en": "The world moves on",
+          "es": "El mundo sigue"
+        },
+        "narrative": {
+          "en": "The sea keeps its largest tenants to itself — most days.",
+          "es": "El mar guarda a sus inquilinos más grandes para sí — casi todos los días."
+        }
+      }
+    ]
+  },
+  {
+    "id": "world_dwarven_dig",
+    "type": "world",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 3,
+    "narrative": {
+      "en": "Deepfolk miners break through into something titanic that was buried on purpose — a hall with its own light and its own cold. The ground trembles for leagues, and every kingdom with a pickaxe is suddenly interested in geology.",
+      "es": "Los mineros de las profundidades rompen hacia algo titánico enterrado a propósito — un salón con luz propia y frío propio. El suelo tiembla durante leguas, y todo reino con un pico de pronto se interesa por la geología."
+    },
+    "worldEventHeadline": {
+      "en": "Deepfolk Dig Unearths a Buried Titan",
+      "es": "La Excavación de las Gentes Profundas Desentierra un Titán"
+    },
+    "choices": [
+      {
+        "id": "acknowledge",
+        "rarity": "common",
+        "label": {
+          "en": "The world moves on",
+          "es": "El mundo sigue"
+        },
+        "narrative": {
+          "en": "What sleeps underground was put there for a reason. Someone is about to learn it.",
+          "es": "Lo que duerme bajo tierra fue puesto allí por una razón. Alguien está por averiguarla."
+        }
+      }
+    ]
+  },
+  {
+    "id": "world_royal_wedding",
+    "type": "world",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 3,
+    "narrative": {
+      "en": "A royal wedding is announced in {slot:worldLocation}, and every court in the realm freezes its wars, its debts, and its plots for the season. Invitations go out by galleon, courier, and rumor.",
+      "es": "Se anuncia una boda real en {slot:worldLocation}, y cada corte del reino congela sus guerras, sus deudas y sus conspiraciones por la temporada. Las invitaciones salen en galeones, correos y rumores."
+    },
+    "worldEventHeadline": {
+      "en": "Royal Wedding Freezes the Courts",
+      "es": "Una Boda Real Congela las Cortes"
+    },
+    "choices": [
+      {
+        "id": "acknowledge",
+        "rarity": "common",
+        "label": {
+          "en": "The world moves on",
+          "es": "El mundo sigue"
+        },
+        "narrative": {
+          "en": "Two houses marry, and the whole chessboard shifts.",
+          "es": "Dos casas se casan, y todo el tablero se mueve."
+        }
+      }
+    ]
+  },
+  {
+    "id": "world_minstrel_frenzy",
+    "type": "world",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 4,
+    "narrative": {
+      "en": "A single ballad has caught the realm by the ear — one verse about a wrong stolen back in the night. Inns pay double to any singer who knows it, and the wrong in the song is starting to sound like someone's orders.",
+      "es": "Una sola balada ha tomado al reino del oído — un verso sobre un agravio robado de vuelta en la noche. Las posadas pagan el doble a cualquier cantor que la sepa, y el agravio de la canción empieza a sonar como una orden de alguien."
+    },
+    "worldEventHeadline": {
+      "en": "One Ballad Catches the Realm",
+      "es": "Una Balada Conquista el Reino"
+    },
+    "choices": [
+      {
+        "id": "acknowledge",
+        "rarity": "common",
+        "label": {
+          "en": "The world moves on",
+          "es": "El mundo sigue"
+        },
+        "narrative": {
+          "en": "Songs move slower than armies and cut deeper.",
+          "es": "Las canciones se mueven más lentas que los ejércitos y cortan más hondo."
+        }
+      }
+    ]
+  },
+  {
+    "id": "world_cursed_relic_auction",
+    "type": "world",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 3,
+    "narrative": {
+      "en": "A relic older than the kingdoms surfaces at auction in {slot:worldLocation}, and the capital fills with bidders, forgers, and people who intend to tender a dagger instead of a bid. They say the relic remembers being cursed.",
+      "es": "Una reliquia más vieja que los reinos sale a subasta en {slot:worldLocation}, y la capital se llena de postores, falsificadores y gente que piensa ofertar con una daga en lugar de una puja. Dicen que la reliquia recuerda haber sido maldita."
+    },
+    "worldEventHeadline": {
+      "en": "Cursed Relic Hits the Auction Block",
+      "es": "Una Reliquia Maldita Sale a Subasta"
+    },
+    "choices": [
+      {
+        "id": "acknowledge",
+        "rarity": "common",
+        "label": {
+          "en": "The world moves on",
+          "es": "El mundo sigue"
+        },
+        "narrative": {
+          "en": "Old curses and old money find each other quickly.",
+          "es": "Las maldiciones viejas y el dinero viejo se encuentran rápido."
+        }
+      }
+    ]
+  },
+  {
+    "id": "world_king_abdicates",
+    "type": "world",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "narrative": {
+      "en": "The old king of {slot:worldLocation} abdicates to a monastery, leaving his crown between his heirs like a cold supper. Claimants sharpen their claims and their excuses — the succession season has begun.",
+      "es": "El viejo rey de {slot:worldLocation} abdica a favor de un monasterio, dejando su corona entre sus herederos como una cena fría. Los pretendientes afilan sus reclamos y sus excusas — ha comenzado la temporada de sucesión."
+    },
+    "worldEventHeadline": {
+      "en": "King Abdicates to a Monastery",
+      "es": "Abdica un Rey a un Monasterio"
+    },
+    "choices": [
+      {
+        "id": "acknowledge",
+        "rarity": "common",
+        "label": {
+          "en": "The world moves on",
+          "es": "El mundo sigue"
+        },
+        "narrative": {
+          "en": "Thrones are never empty. Someone is always sitting on the approach to one.",
+          "es": "Los tronos nunca están vacíos. Alguien siempre se sienta sobre el camino hacia uno."
+        }
+      }
+    ]
   }
 ]
