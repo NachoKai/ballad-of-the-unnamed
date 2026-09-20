@@ -4662,7 +4662,7 @@ describe("story threads — selectEvent serves the active beat", () => {
 
   it("serves the current beat regardless of the random pool", () => {
     noCombats()
-    const c = makeChar({ turn: 1, activeThread: { id: "smoke_thread", beatIndex: 0 } })
+    const c = makeChar({ turn: 1, activeThread: { id: "the_drunkard_knight", beatIndex: 0 } })
     for (let seed = 1; seed <= 20; seed++) {
       const picked = selectEvent(c, reg, new Rng(seed))
       expect(picked.id).toBe("tavern_stranger")
@@ -4671,14 +4671,14 @@ describe("story threads — selectEvent serves the active beat", () => {
 
   it("serves the next beat once the current one is resolved", () => {
     noCombats()
-    const c = makeChar({ turn: 1, activeThread: { id: "smoke_thread", beatIndex: 1 } })
+    const c = makeChar({ turn: 1, activeThread: { id: "the_drunkard_knight", beatIndex: 1 } })
     const picked = selectEvent(c, reg, new Rng(3))
     expect(picked.id).toBe("tavern_gamble")
   })
 
   it("falls back to the random pool when the beat references no event", () => {
     noCombats()
-    const c = makeChar({ turn: 1, activeThread: { id: "smoke_thread", beatIndex: 99 } })
+    const c = makeChar({ turn: 1, activeThread: { id: "the_drunkard_knight", beatIndex: 99 } })
     const picked = selectEvent(c, reg, new Rng(3))
     expect(picked.id).toBeDefined()
     expect(c.activeThread).toBeNull()
@@ -4686,9 +4686,9 @@ describe("story threads — selectEvent serves the active beat", () => {
 
   it("surfaces the active thread title on the served event", () => {
     noCombats()
-    const c = makeChar({ turn: 1, activeThread: { id: "smoke_thread", beatIndex: 0 } })
+    const c = makeChar({ turn: 1, activeThread: { id: "the_drunkard_knight", beatIndex: 0 } })
     const { served } = buildServedEvent(c, reg, new Rng(1))
-    expect(served.threadTitle).toBe("The Smoke Test")
+    expect(served.threadTitle).toBe("The Drunkard Knight")
   })
 
   it("omits the thread title when no thread is active", () => {
@@ -4703,36 +4703,41 @@ describe("story threads — selectEvent serves the active beat", () => {
 // ---------------------------------------------------------------------------
 describe("story threads — advanceThread", () => {
   it("advances the beat index after one beat resolves", () => {
-    const c = makeChar({ activeThread: { id: "smoke_thread", beatIndex: 0 } })
+    const c = makeChar({ activeThread: { id: "the_drunkard_knight", beatIndex: 0 } })
     advanceThread(c, reg)
-    expect(c.activeThread).toEqual({ id: "smoke_thread", beatIndex: 1 })
+    expect(c.activeThread).toEqual({ id: "the_drunkard_knight", beatIndex: 1 })
     expect(c.completedThreads).toBeUndefined()
   })
 
   it("completes the thread on the final beat and applies the reward once", () => {
-    const c = makeChar({ activeThread: { id: "smoke_thread", beatIndex: 1 } })
+    const c = makeChar({ activeThread: { id: "the_drunkard_knight", beatIndex: 3 } })
     advanceThread(c, reg)
     expect(c.activeThread).toBeNull()
-    expect(c.completedThreads).toEqual(["smoke_thread"])
-    expect(c.fame).toBe(1)
-    expect(c.flags["smoke_thread_done"]).toBe(true)
+    expect(c.completedThreads).toEqual(["the_drunkard_knight"])
+    expect(c.fame).toBe(3)
+    expect(c.gold).toBe(160)
+    expect(c.flags["the_drunkard_knight_done"]).toBe(true)
   })
 
   it("does not advance when the resolved event is not the current beat (preemption)", () => {
-    const c = makeChar({ activeThread: { id: "smoke_thread", beatIndex: 0 } })
+    const c = makeChar({ activeThread: { id: "the_drunkard_knight", beatIndex: 0 } })
     advanceThread(c, reg, "some_other_event")
-    expect(c.activeThread).toEqual({ id: "smoke_thread", beatIndex: 0 })
+    expect(c.activeThread).toEqual({ id: "the_drunkard_knight", beatIndex: 0 })
     expect(c.fame).toBe(0)
   })
 
   it("advances through the beat chain to completion in order", () => {
-    const c = makeChar({ activeThread: { id: "smoke_thread", beatIndex: 0 } })
+    const c = makeChar({ activeThread: { id: "the_drunkard_knight", beatIndex: 0 } })
     advanceThread(c, reg, "tavern_stranger")
-    expect(c.activeThread).toEqual({ id: "smoke_thread", beatIndex: 1 })
+    expect(c.activeThread).toEqual({ id: "the_drunkard_knight", beatIndex: 1 })
     advanceThread(c, reg, "tavern_gamble")
+    expect(c.activeThread).toEqual({ id: "the_drunkard_knight", beatIndex: 2 })
+    advanceThread(c, reg, "dk_knight_confession")
+    expect(c.activeThread).toEqual({ id: "the_drunkard_knight", beatIndex: 3 })
+    advanceThread(c, reg, "dk_knight_departure")
     expect(c.activeThread).toBeNull()
-    expect(c.completedThreads).toEqual(["smoke_thread"])
-    expect(c.fame).toBe(1)
+    expect(c.completedThreads).toEqual(["the_drunkard_knight"])
+    expect(c.fame).toBe(3)
   })
 })
 
@@ -4760,12 +4765,12 @@ describe("story threads — planThreadOpen", () => {
   })
 
   it("does not open while a thread is already active", () => {
-    const c = makeChar({ activeThread: { id: "smoke_thread", beatIndex: 0 } })
+    const c = makeChar({ activeThread: { id: "the_drunkard_knight", beatIndex: 0 } })
     expect(planThreadOpen(c, reg, new Rng(findSeed(true))).open).toBe(false)
   })
 
   it("does not open a thread that is already completed", () => {
-    const c = makeChar({ completedThreads: ["smoke_thread"] })
+    const c = makeChar({ completedThreads: ["the_drunkard_knight"] })
     expect(planThreadOpen(c, reg, new Rng(findSeed(true))).open).toBe(false)
   })
 
@@ -4798,7 +4803,7 @@ describe("story threads — planThreadOpen", () => {
   })
 
   it("consumes no draws when it bails before the roll", () => {
-    const c = makeChar({ activeThread: { id: "smoke_thread", beatIndex: 0 } })
+    const c = makeChar({ activeThread: { id: "the_drunkard_knight", beatIndex: 0 } })
     const rng = new Rng(123)
     const before = rng.getState()
     expect(planThreadOpen(c, reg, rng).open).toBe(false)
@@ -4943,7 +4948,7 @@ describe("dialogue events — resolution", () => {
   })
 
   it("branches to nextBeat when the interpretation names one", () => {
-    const c = makeChar({ activeThread: { id: "smoke_thread", beatIndex: 0 } })
+    const c = makeChar({ activeThread: { id: "the_drunkard_knight", beatIndex: 0 } })
     const branching: EventContent = {
       ...event,
       interpretations: [
@@ -4952,7 +4957,7 @@ describe("dialogue events — resolution", () => {
       ],
     }
     resolveDialogue(c, branching, "boast", reg, new Rng(1))
-    expect(c.activeThread).toEqual({ id: "smoke_thread", beatIndex: 1 })
+    expect(c.activeThread).toEqual({ id: "the_drunkard_knight", beatIndex: 1 })
   })
 
   it("falls back to a linear thread advance without nextBeat", () => {

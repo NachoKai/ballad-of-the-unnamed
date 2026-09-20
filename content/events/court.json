@@ -82,7 +82,8 @@
           "insulted_baron_vex": {
             "turn": 0,
             "severity": "grave"
-          }
+          },
+          "baron_vex_insulted": true
         },
         "narrative": {
           "en": "Your words land like daggers. The court erupts in murmurs. Baron Vex's face darkens — he will not forget this.",

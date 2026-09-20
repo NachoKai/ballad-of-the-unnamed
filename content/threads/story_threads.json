@@ -1,0 +1,60 @@
+[
+  {
+    "id": "the_drunkard_knight",
+    "title": {
+      "en": "The Drunkard Knight",
+      "es": "El Caballero Borracho"
+    },
+    "minAge": 16,
+    "weight": 2,
+    "beats": ["tavern_stranger", "tavern_gamble", "dk_knight_confession", "dk_knight_departure"],
+    "reward": {
+      "fameDelta": 3,
+      "goldDelta": 60,
+      "setsFlag": {
+        "the_drunkard_knight_done": true
+      }
+    }
+  },
+  {
+    "id": "the_highland_oath",
+    "title": {
+      "en": "The Highland Oath",
+      "es": "El Juramento de las Tierras Altas"
+    },
+    "minAge": 18,
+    "requiresRegion": "highlands",
+    "weight": 1,
+    "beats": ["ho_call_to_banner", "ho_oath_dialogue", "ho_pass_ambush", "ho_banner_final"],
+    "reward": {
+      "fameDelta": 4,
+      "statDeltas": {
+        "charisma": 1,
+        "constitution": 1
+      },
+      "setsFlag": {
+        "the_highland_oath_done": true
+      }
+    }
+  },
+  {
+    "id": "the_barons_memory",
+    "title": {
+      "en": "The Baron's Memory",
+      "es": "La Memoria del Barón"
+    },
+    "minAge": 16,
+    "requiresFlag": {
+      "baron_vex_insulted": true
+    },
+    "weight": 1,
+    "beats": ["bv_court_summons", "bv_vex_dialogue", "bv_duel_final"],
+    "reward": {
+      "fameDelta": 5,
+      "goldDelta": 50,
+      "setsFlag": {
+        "the_barons_memory_done": true
+      }
+    }
+  }
+]

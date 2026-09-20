@@ -1,0 +1,751 @@
+[
+  {
+    "id": "dk_knight_confession",
+    "type": "dialogue",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 1,
+    "requiresThread": "the_drunkard_knight",
+    "location": "greywater",
+    "narrative": {
+      "en": "The knight drinks until the room thins, then sets his cup down and stares at the table. 'That was the last coin of my lord's pilgrimage alms. I swore beneath a banner I would carry it to the shrine of the Northstar, and I lost it to a pair of loaded dice.' He looks up, raw. 'So tell me, stranger. What is a vow worth when you are two lands from home and no one is watching?'",
+      "es": "El caballero bebe hasta que la sala se vacía, y entonces deja la copa y mira la mesa. 'Esa era la última moneda de las limosnas de peregrinaje de mi señor. Juré bajo un estandarte que la llevaría al santuario de la Estrella del Norte, y la perdí contra unos dados cargados.' Levanta la vista, en carne viva. 'Así que decime, forastero. ¿Cuánto vale un voto cuando estás a dos tierras de tu casa y nadie te observa?'"
+    },
+    "dialoguePrompt": {
+      "en": "What answer do you give the knight?",
+      "es": "¿Qué respuesta le das al caballero?"
+    },
+    "rubricInstructions": {
+      "en": "Sort the player's advice into: upholding the vow at all cost, sharing money or burden to help, mocking oaths as worthless, or a neutral pragmatic observation.",
+      "es": "Clasifica el consejo del jugador en: defender el voto a toda costa, compartir dinero o carga para ayudar, burlarse de los juramentos por inútiles, o una observación neutral y práctica."
+    },
+    "maxLength": 240,
+    "interpretations": [
+      {
+        "id": "honor_the_vow",
+        "intent": {
+          "en": "insists the vow must be honored no matter the cost",
+          "es": "insiste en que el voto debe cumplirse sin importar el costo"
+        },
+        "outcomeNarrative": {
+          "en": "You name the shrine and tell him a knight is only what he swore. He studies the empty tabletop, then bows his head. 'Then I walk. I will sweep every inn between here and the Northstar until the coin is found, or earn it thrice over to replace it.' He leaves you the last of his water and a promise to look for you again on better roads.",
+          "es": "Nombra el santuario y le decís que un caballero es solo lo que juró ser. Él estudia la mesa vacía y luego inclina la cabeza. 'Entonces camino. Barreré cada posada entre aquí y la Estrella del Norte hasta encontrar la moneda, o la ganaré tres veces para reponerla.' Te deja el resto de su agua y la promesa de volver a buscarte por caminos mejores."
+        },
+        "shortcutLabel": {
+          "en": "Uphold his vow",
+          "es": "Defender su voto"
+        },
+        "tag": "Humble",
+        "statDeltas": {
+          "charisma": 1
+        },
+        "setsFlag": {
+          "dk_vow_kept": true
+        }
+      },
+      {
+        "id": "share_the_burden",
+        "intent": {
+          "en": "offers money or company to help him finish the pilgrimage",
+          "es": "ofrece dinero o compañía para ayudarlo a terminar la peregrinación"
+        },
+        "outcomeNarrative": {
+          "en": "You slide a purse across the table and tell him alms are alms whether they come from a knight or the road. His eyes go wet and he laughs a raw, breaking laugh. 'Then it is not lost. It is only... delayed.' He swears the coin will reach the shrine or he will know the reason why. You part as partners of the pilgrimage, strangers keeping each other honest.",
+          "es": "Deslizás una bolsa a través de la mesa y le decís que las limosnas son limosnas, vengan de un caballero o del camino. Se le llenan los ojos y suelta una risa ronca y quebrada. 'Entonces no está perdida. Solo... demorada.' Jura que la moneda llegará al santuario o sabrá por qué. Se separan como socios de la peregrinación, forasteros que se mantienen honestos entre sí."
+        },
+        "shortcutLabel": {
+          "en": "Share your coin",
+          "es": "Compartir tu moneda"
+        },
+        "tag": "Supportive",
+        "goldDelta": -40,
+        "statDeltas": {
+          "charisma": 2
+        },
+        "setsFlag": {
+          "dk_debt_shared": true
+        }
+      },
+      {
+        "id": "mock_the_oath",
+        "intent": {
+          "en": "treats vows as empty words to be laughed at",
+          "es": "trata los juramentos como palabras vacías que dan risa"
+        },
+        "outcomeNarrative": {
+          "en": "You tell him the only shrines that matter are full bellies and paid debts, and the table is yours until morning. He laughs loud enough for the innkeeper to turn — but it is a bitter laugh, and by the time you look again he is gone, his cup still warm. The tale of the stranger who mocked a knight's oath begins making the rounds before midnight.",
+          "es": "Le decís que los únicos santuarios que importan son la panza llena y las deudas pagadas, y que la mesa es tuya hasta la mañana. Ríe tan fuerte que el posadero se da vuelta — pero es una risa amarga, y para cuando volvés a mirar ya no está, su copa aún caliente. El cuento del forastero que se burló del voto de un caballero empieza a circular antes de la medianoche."
+        },
+        "shortcutLabel": {
+          "en": "Mock his vow",
+          "es": "Burlarte de su voto"
+        },
+        "tag": "Cocky",
+        "fameDelta": 3,
+        "liabilityDelta": 4,
+        "setsFlag": {
+          "dk_vow_mocked": true
+        }
+      },
+      {
+        "id": "pragmatic_words",
+        "intent": {
+          "en": "gives a neutral, practical answer without judgment",
+          "es": "da una respuesta neutral y práctica sin juzgar"
+        },
+        "outcomeNarrative": {
+          "en": "You shrug and say a vow is worth exactly what it costs to keep — and if he knows the cost now, he can still choose. He turns the words over slowly, then nods. 'Then I will pay what it costs.' He rises to gather a mule and a map, steadier than when he sat down.",
+          "es": "Te encogés de hombros y decís que un voto vale exactamente lo que cuesta cumplirlo — y que si ya conoce el costo, todavía puede elegir. Él le da vueltas a las palabras despacio y luego asiente. 'Entonces pagaré lo que cuesta.' Se levanta a buscar una mula y un mapa, más firme que cuando se sentó."
+        },
+        "tag": "Strategic",
+        "statDeltas": {
+          "intelligence": 2
+        }
+      }
+    ],
+    "fallback": "pragmatic_words"
+  },
+  {
+    "id": "dk_knight_departure",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 1,
+    "requiresThread": "the_drunkard_knight",
+    "narrative": {
+      "en": "Dawn finds the drunkard knight saddled at the gate of {locationName}, the pilgrim's satchel thumping against his hip. 'The road to the Northstar shrine crosses the Cinder Pass,' he says, 'and the pass is dangerous. I could use a blade I trust — or I ride alone and you owe me nothing. Choose.'",
+      "es": "El amanecer encuentra al caballero borracho ensillado en la puerta de {locationName}, el zurrón de peregrino golpeteándole la cadera. 'El camino al santuario de la Estrella del Norte cruza el Paso de la Ceniza', dice, 'y el paso es peligroso. Me vendría bien una hoja en la que confiar — o cabalgo solo y no me debés nada. Elegí.'"
+    },
+    "choices": [
+      {
+        "id": "ride_together",
+        "label": {
+          "en": "Ride the pass with him",
+          "es": "Cruzar el paso con él"
+        },
+        "tag": "Confident",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "strength": 1,
+          "constitution": 1
+        },
+        "goldDelta": 40,
+        "injuryRiskDelta": 0.08,
+        "narrative": {
+          "en": "Two riders and a satchel take the pass. The wolves and brigands on the far side decide the shrine coin is not worth a fight against the pair of you — and the knight pays your ale all the way to the Northstar out of the very alms he swore to deliver.",
+          "es": "Dos jinetes y un zurrón toman el paso. Los lobos y bandidos del otro lado deciden que la moneda del santuario no vale una pelea contra ustedes dos — y el caballero te paga la cerveza hasta la Estrella del Norte, del mismo dinero de limosnas que juró entregar."
+        }
+      },
+      {
+        "id": "let_him_go",
+        "label": {
+          "en": "Let him ride alone",
+          "es": "Dejarlo cabalgar solo"
+        },
+        "tag": "Professional",
+        "rarity": "common",
+        "statDeltas": {
+          "intelligence": 1
+        },
+        "narrative": {
+          "en": "He nods once, as if he expected nothing less, and wheels the mule north. 'Then the shrine has two pilgrims in spirit,' he calls over his shoulder. 'One of them will tell the story.' Months later, the rumor reaches you that the shrine gained its coin.",
+          "es": "Asiente una vez, como si no esperara otra cosa, y gira la mula hacia el norte. 'Entonces el santuario tiene dos peregrinos en espíritu', grita al partir. 'Uno de ellos contará la historia.' Meses después te llega el rumor de que el santuario recibió su moneda."
+        }
+      },
+      {
+        "id": "press_the_claim",
+        "label": {
+          "en": "Demand he repay the debt first",
+          "es": "Exigirle que pague la deuda primero"
+        },
+        "tag": "Strategic",
+        "rarity": "rare",
+        "goldDelta": 60,
+        "fameDelta": 1,
+        "narrative": {
+          "en": "A vow is a contract, and you collect. The knight pays you from his purse with cold courtesy, then rides north alone with the satchel. The tale told in the inns thickens: some say you were right to squeeze a debtor, others mark the face of a knight who was bled of coin before his shrine.",
+          "es": "Un voto es un contrato, y cobrás. El caballero te paga de su bolsa con cortesía fría, y luego cabalga solo hacia el norte con el zurrón. El cuento crece en las posadas: algunos dicen que hiciste bien en exprimir a un deudor, otros recuerdan la cara de un caballero al que le sangraron las monedas antes de su santuario."
+        }
+      }
+    ]
+  },
+  {
+    "id": "ho_call_to_banner",
+    "minAge": 18,
+    "maxAge": 99,
+    "weight": 1,
+    "requiresThread": "the_highland_oath",
+    "requiresRegion": "highlands",
+    "narrative": {
+      "en": "A courier with a broken arm and a snow-wet cloak finds you on the highland road and all but falls from his mule. 'Thane Wulfric calls the oath-given,' he rasps. 'The Iron Covenant has taken the Cinder Pass with mercenaries and means to cut the shrine road before the thaw. Every blade that ever swore to the stonewardens is summoned to the wall — and the thane says the last battle needs all the oaths it can hold.'",
+      "es": "Un mensajero con el brazo roto y una capa empapada de nieve te encuentra en el camino de las tierras altas y casi cae de la mula. 'El Thane Wulfric llama a los jurados', ronca. 'El Pacto de Hierro tomó el Paso de la Ceniza con mercenarios y piensa cortar el camino del santuario antes del deshielo. Toda hoja que haya jurado a los Guardapiedra es convocada al muro — y el thane dice que la última batalla necesita todos los juramentos que pueda contener.'"
+    },
+    "choices": [
+      {
+        "id": "swear_in",
+        "label": {
+          "en": "Swear to the stonewardens and ride",
+          "es": "Jurar a los Guardapiedra y cabalgar"
+        },
+        "tag": "Confident",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "strength": 2,
+          "constitution": 1
+        },
+        "reputationDelta": 4,
+        "reputationFaction": "stonewardens",
+        "countersDelta": {
+          "quests_completed": 1
+        },
+        "narrative": {
+          "en": "You lay your hand on the thane's banner and swear. The courier almost smiles. 'Then you come with me, oath-brother — the pass will be glad of you.'",
+          "es": "Apoyás la mano en el estandarte del thane y juras. El mensajero casi sonríe. 'Entonces venís conmigo, hermano de juramento — el paso se va a alegrar de tenerte.'"
+        }
+      },
+      {
+        "id": "seek_the_war_chest",
+        "label": {
+          "en": "Ask what the banner pays",
+          "es": "Preguntar cuánto paga el estandarte"
+        },
+        "tag": "Professional",
+        "rarity": "common",
+        "goldDelta": 30,
+        "statDeltas": {
+          "intelligence": 1
+        },
+        "narrative": {
+          "en": "The courier shrugs and names a contract sum. A sworn blade is a sworn blade whether it fights for honor or for wages, and the war chest is deep this season. You ride north holding the coin in your purse and the oath lightly on your tongue.",
+          "es": "El mensajero se encoge de hombros y nombra una suma de contrato. Una hoja jurada es una hoja jurada, luche por honor o por salario, y el cofre de guerra está lleno esta temporada. Cabalgás al norte con la moneda en la bolsa y el juramento apenas rozando tu lengua."
+        }
+      },
+      {
+        "id": "refuse_the_call",
+        "label": {
+          "en": "Refuse and stay out of the pass",
+          "es": "Negarte y mantenerte fuera del paso"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": {
+          "constitution": 1
+        },
+        "narrative": {
+          "en": "You tell the courier your oaths are spoken, not inherited. He studies you a moment, disappointed but not surprised. 'Then the pass held one fewer oath than it needed. It will still hold.' He salutes and presses on alone, and you are left with the weight of the road behind you.",
+          "es": "Le decís al mensajero que tus juramentos se hablan, no se heredan. Él te estudia un momento, decepcionado pero no sorprendido. 'Entonces el paso tuvo un juramento menos de los que necesitaba. Aún así aguantará.' Te saluda y sigue solo, y vos quedás con el peso del camino a tus espaldas."
+        }
+      }
+    ]
+  },
+  {
+    "id": "ho_oath_dialogue",
+    "type": "dialogue",
+    "minAge": 18,
+    "maxAge": 99,
+    "weight": 1,
+    "requiresThread": "the_highland_oath",
+    "requiresRegion": "highlands",
+    "location": "highlands",
+    "narrative": {
+      "en": "The war camp reeks of pine smoke and wet leather. Thane Wulfric — a wall of grey braid and scarred hands — sits by the fire and studies you as the wind tears at the banners. 'You came for the oath or the coin? It matters. The Covenant offers the pass to anyone who will hold it. The stonewardens offer nothing but a chance to die where your grandfather died. Choose what you are buying before the snow buries the road.'",
+      "es": "El campamento de guerra huele a humo de pino y cuero mojado. El Thane Wulfric — una muralla de trenzas grises y manos marcadas — se sienta junto al fuego y te estudia mientras el viento desgarra los estandartes. '¿Viniste por el juramento o por la moneda? Importa. El Pacto ofrece el paso a cualquiera que lo sostenga. Los Guardapiedra no ofrecen nada salvo la chance de morir donde murió tu abuelo. Elegí qué estás comprando antes de que la nieve entierre el camino.'"
+    },
+    "dialoguePrompt": {
+      "en": "What do you tell Thane Wulfric?",
+      "es": "¿Qué le decís al Thane Wulfric?"
+    },
+    "rubricInstructions": {
+      "en": "Sort the player's reply into: solemn commitment to the oath, honest mercenary terms, defying the war itself as foolish, or a tactical view of the battle ahead.",
+      "es": "Clasifica la respuesta del jugador en: compromiso solemne con el juramento, términos mercenarios honestos, burlarse de la guerra misma por insensata, o una visión táctica de la batalla que viene."
+    },
+    "maxLength": 240,
+    "interpretations": [
+      {
+        "id": "oath_without_price",
+        "intent": {
+          "en": "swears without conditions and names the honor as payment enough",
+          "es": "jura sin condiciones y nombra al honor como pago suficiente"
+        },
+        "outcomeNarrative": {
+          "en": "'Oath,' you say. No more. Wulfric stares a long moment, then a crack of a smile splits the grey beard. 'Good. The pass needs one less coin-counter and one more grave-digger of Covenant steel.' He hands you a battered horn borrowed from a dead thane — and the camp, for a night, treats you as his kin.",
+          "es": "'Juramento', decís. Nada más. Wulfric te mira largamente, y un destello de sonrisa le parte la barba gris. 'Bien. El paso necesita un contador de monedas menos y un cavador de tumbas de acero del Pacto más.' Te entrega un cuerno abollado heredado de un thane muerto — y el campamento, por una noche, te trata como a un pariente."
+        },
+        "shortcutLabel": {
+          "en": "Swear without condition",
+          "es": "Jurar sin condiciones"
+        },
+        "tag": "Humble",
+        "statDeltas": {
+          "charisma": 1,
+          "constitution": 1
+        },
+        "setsFlag": {
+          "ho_oath_free": true
+        }
+      },
+      {
+        "id": "name_the_rate",
+        "intent": {
+          "en": "haggles openly and demands a real price for the fight",
+          "es": "regatea abiertamente y exige un precio real por la pelea"
+        },
+        "outcomeNarrative": {
+          "en": "You name your rate plainly, soldier to soldier. Wulfric laughs a short, approving laugh. 'Good. A man who names his price keeps his word elsewhere.' He pays a fair advance on the spot, and the deal is clean: steel for silver, no oaths between. The camp respects a blade it can price.",
+          "es": "Nombra tu tarifa con claridad, soldado a soldado. Wulfric ríe una risa corta y aprobatoria. 'Bien. Un hombre que pone nombre a su precio cumple su palabra en otros lados.' Paga un adelanto justo en el acto, y el trato queda limpio: acero por plata, sin juramentos de por medio. El campamento respeta una hoja a la que puede ponerle precio."
+        },
+        "shortcutLabel": {
+          "en": "Name your rate",
+          "es": "Ponerle precio"
+        },
+        "tag": "Professional",
+        "goldDelta": 50,
+        "statDeltas": {
+          "intelligence": 1
+        },
+        "setsFlag": {
+          "ho_oath_paid": true
+        }
+      },
+      {
+        "id": "call_the_war_foolish",
+        "intent": {
+          "en": "argues the whole war is a waste of both banners",
+          "es": "argumenta que toda la guerra es un desperdicio de ambos estandartes"
+        },
+        "outcomeNarrative": {
+          "en": "You tell him the Covenant and the stonewardens are bleeding shepherds over a road both sides could share, and Wulfric's jaw tightens. 'You talk like a poet standing outside the fire,' he growls. 'The fire does not care. Hold the line with us in the morning — or don't.' The camp goes quiet and watches to see which you are.",
+          "es": "Le decís que el Pacto y los Guardapiedra están desangrando pastores por un camino que ambos podrían compartir, y a Wulfric se le tensa la mandíbula. 'Hablás como un poeta de pie fuera del fuego', gruñe. 'Al fuego no le importa. Sostene la línea con nosotros a la mañana — o no.' El campamento se queda en silencio y observa para ver cuál de los dos sos."
+        },
+        "shortcutLabel": {
+          "en": "Call the war foolish",
+          "es": "Llamar insensata a la guerra"
+        },
+        "tag": "Cocky",
+        "fameDelta": 4,
+        "setsFlag": {
+          "ho_oath_scorned": true
+        }
+      },
+      {
+        "id": "see_the_battle_plain",
+        "intent": {
+          "en": "analyzes the pass itself, the Covenant's flanks, what must be held",
+          "es": "analiza el paso en sí, los flancos del Pacto, lo que hay que sostener"
+        },
+        "outcomeNarrative": {
+          "en": "You talk terrain — the switchback, the avalanche slope above the Covenant line, the one flat yard where a shield wall lives or dies. Wulfric leans in, and for the first time you are not a stranger to him but a hand on the same map. 'Ride the night scout with me,' he says. 'You see the pass like a stonewarden.'",
+          "es": "Hablás del terreno — el zigzag, la ladera de avalancha sobre la línea del Pacto, el único patio plano donde un muro de escudos vive o muere. Wulfric se inclina, y por primera vez no sos un forastero sino una mano sobre el mismo mapa. 'Cabalgá el reconocimiento nocturno conmigo', dice. 'Veés el paso como un Guardapiedra.'"
+        },
+        "shortcutLabel": {
+          "en": "Talk terrain and tactics",
+          "es": "Hablar de terreno y táctica"
+        },
+        "tag": "Strategic",
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "setsFlag": {
+          "ho_oath_scout": true
+        }
+      }
+    ],
+    "fallback": "oath_without_price"
+  },
+  {
+    "id": "ho_pass_ambush",
+    "minAge": 18,
+    "maxAge": 99,
+    "weight": 1,
+    "requiresThread": "the_highland_oath",
+    "requiresRegion": "highlands",
+    "narrative": {
+      "en": "Halfway up the switchback, the snow before you erupts. Covenant mercenaries — twenty steel caps and a knot of archers on the ridge — have been waiting since before dawn. Behind you, the banner of the stonewardens toggles in the wind; ahead, the ambush is already loose. There is no road around it, only through.",
+      "es": "Subiendo el zigzag, la nieve frente a vos se abre en erupción. Los mercenarios del Pacto — veinte yelmos de acero y un nudo de arqueros en la cresta — esperaban desde antes del amanecer. Detrás tuyo, el estandarte de los Guardapiedra flamea al viento; delante, la emboscada ya está suelta. No hay camino que la rodee, solo uno que la atraviesa."
+    },
+    "choices": [
+      {
+        "id": "charge_the_archers",
+        "label": {
+          "en": "Charge the ridge and silence the archers",
+          "es": "Cargar la cresta y silenciar a los arqueros"
+        },
+        "tag": "Aggressive",
+        "rarity": "rare",
+        "requiresStat": {
+          "stat": "strength",
+          "min": 12
+        },
+        "statDeltas": {
+          "strength": 2,
+          "constitution": 1
+        },
+        "healthDelta": -6,
+        "injuryRiskDelta": 0.14,
+        "countersDelta": {
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "You take the slope like a thrown axe, and the ridge breaks. Archers scatter and die quiet. The shield wall below orders the advance behind you, and the pass — for now — stays open.",
+          "es": "Subís la cuesta como un hacha lanzada, y la cresta se rompe. Los arqueros se dispersan y mueren en silencio. El muro de escudos abajo ordena el avance detrás de vos, y el paso — por ahora — sigue abierto."
+        }
+      },
+      {
+        "id": "hold_the_switchback",
+        "label": {
+          "en": "Hold the switchback until the wall arrives",
+          "es": "Sostener el zigzag hasta que llegue el muro"
+        },
+        "tag": "Confident",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "dexterity": 2
+        },
+        "injuryRiskDelta": 0.1,
+        "countersDelta": {
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "You plant your feet where the trail bottlenecks and dare anyone to come through. Three try; none make it. The archers lose their nerve as the shield wall crests behind you, and the Covenant line folds into the tree line.",
+          "es": "Afirmás los pies donde el sendero se estrecha y desafiás a cualquiera a pasar. Tres lo intentan; ninguno lo logra. Los arqueros pierden los nervios cuando el muro de escudos corona detrás de vos, y la línea del Pacto se repliega hacia el bosque."
+        }
+      },
+      {
+        "id": "yell_the_retreat",
+        "label": {
+          "en": "Call the retreat and save the banner",
+          "es": "Ordenar la retirada y salvar el estandarte"
+        },
+        "tag": "Strategic",
+        "rarity": "common",
+        "statDeltas": {
+          "intelligence": 2,
+          "constitution": 1
+        },
+        "fameDelta": 2,
+        "narrative": {
+          "en": "You judge the ambush no fair fight and yell the retreat before the wall is committed. The banner comes down whole, and the column slips back down the pass. It costs the campaign a day — and saves it a slaughter. The thane names you, grudgingly, a soldier who counts.",
+          "es": "Juzgás que la emboscada no es una pelea justa y gritás la retirada antes de que el muro se comprometa. El estandarte baja entero, y la columna se escurre de vuelta por el paso. Le cuesta a la campaña un día — y le ahorra una masacre. El thane te nombra, a regañadientes, un soldado que sabe contar."
+        }
+      }
+    ]
+  },
+  {
+    "id": "ho_banner_final",
+    "minAge": 18,
+    "maxAge": 99,
+    "weight": 1,
+    "requiresThread": "the_highland_oath",
+    "requiresRegion": "highlands",
+    "narrative": {
+      "en": "It ends the way highland wars end: with the thaw and a parley on the open flats, both banners muddy and bleeding, and no clear hand raising victory. Thane Wulfric finds you by the fires of the truce. 'The pass will be shared at last,' he says. 'The Covenant holds the east switchback, we hold the shrine road. It was never going to be more than that.' He offers his hand and a word that, in the highlands, is worth more than coin: 'Oath-keeper.'",
+      "es": "Termina como terminan las guerras de las tierras altas: con el deshielo y una parlamento en los llanos abiertos, ambos estandartes embarrados y sangrando, y ninguna mano levantada proclamando victoria. El Thane Wulfric te encuentra junto a los fuegos del alto el fuego. 'El paso se va a compartir por fin', dice. 'El Pacto sostiene el zigzag del este, nosotros el camino del santuario. Nunca iba a ser más que eso.' Te ofrece la mano y una palabra que, en las tierras altas, vale más que la moneda: 'Guardián del juramento.'"
+    },
+    "choices": [
+      {
+        "id": "take_the_hand",
+        "label": {
+          "en": "Take his hand and part as kin",
+          "es": "Tomar su mano y partir como parientes"
+        },
+        "tag": "Humble",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "charisma": 2
+        },
+        "fameDelta": 2,
+        "reputationDelta": 5,
+        "reputationFaction": "stonewardens",
+        "narrative": {
+          "en": "You clasp the thane's hand and the camp honors you as a true heart of the pass. The shrine road opens, and by spring the pilgrims travel it freely. Your name rides the wind ahead of you — sworn, worn, and clean.",
+          "es": "Apretás la mano del thane y el campamento te honra como un corazón verdadero del paso. El camino del santuario se abre, y para la primavera los peregrinos lo recorren en libertad. Tu nombre cabalga el viento delante de vos — jurado, gastado y limpio."
+        }
+      },
+      {
+        "id": "ask_for_land",
+        "label": {
+          "en": "Ask for a holding in the highlands",
+          "es": "Pedir una tierra en las tierras altas"
+        },
+        "tag": "Professional",
+        "rarity": "rare",
+        "goldDelta": 80,
+        "reputationDelta": 2,
+        "reputationFaction": "stonewardens",
+        "narrative": {
+          "en": "The thane considers the request and grants you a fallow holding at the foot of the pass, deed and all. You leave the campaign with land and a ledger, richer than any oath you carried. The highlands are slow to call you kin, but faster than they call you stranger.",
+          "es": "El thane considera la petición y te concede una tierra en barbecho al pie del paso, con escritura y todo. Dejás la campaña con tierra y un libro de cuentas, más rico que cualquier juramento que hayas cargado. Las tierras altas tardan en llamarte pariente, pero se apuran más que en llamarte forastero."
+        }
+      },
+      {
+        "id": "walk_away_quiet",
+        "label": {
+          "en": "Walk away before the celebrations",
+          "es": "Irte antes de las celebraciones"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": {
+          "constitution": 2
+        },
+        "narrative": {
+          "en": "You slip out under the parley banners while the horns blow, owing nothing and owning nothing. The highlands will remember a blade that came, held the line, and vanished — which is, by their reckoning, the best kind of oath to keep.",
+          "es": "Te escabullís bajo los estandartes del alto el fuego mientras suenan los cuernos, sin deber nada y sin poseer nada. Las tierras altas recordarán a una hoja que vino, sostuvo la línea y se desvaneció — que es, según su modo de contar, la mejor clase de juramento que se puede cumplir."
+        }
+      }
+    ]
+  },
+  {
+    "id": "bv_court_summons",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 1,
+    "requiresThread": "the_barons_memory",
+    "narrative": {
+      "en": "A herald in Baron Vex's livery finds you at the edge of {locationName} and bows precisely. 'The baron has remembered you, stranger. He says a name that earned his attention deserves a proper ending. Tomorrow at the old dueling yard — sunrise, witnesses, and one last chance to set the story straight. He asks that you not be a coward twice.'",
+      "es": "Un heraldo con la librea del Barón Vex te encuentra al borde de {locationName} y hace una reverencia precisa. 'El barón se ha acordado de vos, forastero. Dice que un nombre que ganó su atención merece un final digno. Mañana en el viejo patio de duelo — al amanecer, con testigos, y una última oportunidad de enderezar la historia. Pide que no seas cobarde dos veces.'"
+    },
+    "choices": [
+      {
+        "id": "accept_the_duel",
+        "label": {
+          "en": "Accept the duel on his terms",
+          "es": "Aceptar el duelo en sus términos"
+        },
+        "tag": "Confident",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "strength": 2,
+          "dexterity": 1
+        },
+        "fameDelta": 2,
+        "injuryRiskDelta": 0.1,
+        "countersDelta": {
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "You bow back and accept. The herald's face shows, for a fraction of a breath, a flicker of relief — the baron did not expect you to come. Now ten thousand eyes will see the sun rise over the old dueling yard.",
+          "es": "Respondés con una reverencia y aceptás. En el rostro del heraldo asoma, por una fracción de respiro, un relámpago de alivio — el barón no esperaba que vinieras. Ahora diez mil ojos verán salir el sol sobre el viejo patio de duelo."
+        }
+      },
+      {
+        "id": "leave_town_first",
+        "label": {
+          "en": "Leave town before sunrise",
+          "es": "Irte del pueblo antes del amanecer"
+        },
+        "tag": "Professional",
+        "rarity": "common",
+        "statDeltas": {
+          "dexterity": 1
+        },
+        "fameDelta": -2,
+        "narrative": {
+          "en": "You take the north road before first light. The story of the stranger who ran from Baron Vex will spread — but it will be a short story, and you will not be in town to hear the rest of it. Survival is its own victory.",
+          "es": "Tomás el camino del norte antes del alba. El cuento del forastero que huyó del Barón Vex se va a esparcir — pero va a ser un cuento corto, y vos no vas a estar en el pueblo para oír el final. Sobrevivir es su propia victoria."
+        }
+      },
+      {
+        "id": "send_the_return_message",
+        "label": {
+          "en": "Send the baron a message of your own",
+          "es": "Enviarle al barón un mensaje propio"
+        },
+        "tag": "Cocky",
+        "rarity": "rare",
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "fameDelta": 4,
+        "goldDelta": -20,
+        "narrative": {
+          "en": "You pay the town crier to announce, at full voice under the baron's own window, that the stranger accepts — the old yard at sunrise, first blood, no seconds. The town howls with delight, and Baron Vex's revenge has just become a public performance he must win cleanly.",
+          "es": "Le pagás al pregonero de la villa para que anuncie, a toda voz bajo la ventana del propio barón, que el forastero acepta — el patio viejo al amanecer, primera sangre, sin padrinos. El pueblo aúlla de placer, y la venganza del Barón Vex acaba de convertirse en una función pública que debe ganar con limpieza."
+        }
+      }
+    ]
+  },
+  {
+    "id": "bv_vex_dialogue",
+    "type": "dialogue",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 1,
+    "requiresThread": "the_barons_memory",
+    "location": "capital",
+    "narrative": {
+      "en": "The dueling yard is muddy with dawn. On the far side stands Baron Vex — sword drawn, pride staked, a lifetime of court slights sharpened into a single point. 'You have one word before I correct the record,' he calls across the yard. 'Spend it well: apology, offer, or insult. The yard will remember which you chose.'",
+      "es": "El patio de duelo está embarrado por el amanecer. Al otro lado, el Barón Vex — espada en mano, orgullo en juego, toda una vida de desaires de corte afilada en un solo punto. 'Tenés una palabra antes de que corrija el registro', grita a través del patio. 'Gastala bien: disculpa, oferta o insulto. El patio va a recordar cuál elegiste.'"
+    },
+    "dialoguePrompt": {
+      "en": "What is your one word to Baron Vex?",
+      "es": "¿Cuál es tu única palabra para el Barón Vex?"
+    },
+    "rubricInstructions": {
+      "en": "Sort the player's one-word reply into: a dignified apology softening the feud, an open purchase of peace with gold, a fresh insult sharpening the grudge, or a silent steely resolve that offers nothing.",
+      "es": "Clasifica la palabra única del jugador en: una disculpa digna que suaviza la enemistad, una compra abierta de la paz con oro, un insulto fresco que afila la rencilla, o un silencio acerado que no ofrece nada."
+    },
+    "maxLength": 120,
+    "interpretations": [
+      {
+        "id": "dignified_apology",
+        "intent": {
+          "en": "apologizes with dignity and names the insult a mistake",
+          "es": "se disculpa con dignidad y llama al insulto un error"
+        },
+        "outcomeNarrative": {
+          "en": "'I was wrong to speak it.' The yard goes quiet. Baron Vex studies you a long time, then sheathes his sword — half a yard at a time, like a man putting down a shovel. 'Wrong is a word a noble can trade on,' he says. The feud closes, for now, with witnesses and a grudging bow on both sides.",
+          "es": "'Estuve mal en decirlo.' El patio se queda en silencio. El Barón Vex te estudia largamente, y luego envaina la espada — media pulgada a la vez, como un hombre que deja una pala. 'Equivocado es una palabra con la que un noble puede comerciar', dice. La enemistad se cierra, por ahora, con testigos y una reverencia a regañadientes de ambos lados."
+        },
+        "shortcutLabel": {
+          "en": "Offer a dignified apology",
+          "es": "Ofrecer una disculpa digna"
+        },
+        "tag": "Humble",
+        "statDeltas": {
+          "charisma": 2
+        },
+        "setsFlag": {
+          "bv_peace_made": true
+        }
+      },
+      {
+        "id": "buy_the_peace",
+        "intent": {
+          "en": "offers gold openly to settle the grudge",
+          "es": "ofrece oro abiertamente para zanjar la rencilla"
+        },
+        "outcomeNarrative": {
+          "en": "'A price,' you say, and name it. The yard murmurs — fights are fought in the court that way more often than with steel. Baron Vex accepts with a thin smile, and the gold changes hands before the bell. It is expensive, and it is peace, and the court will whisper that you bought your way out with a lord's cunning.",
+          "es": "'Un precio', decís, y lo nombrás. El patio murmura — en la corte las peleas se libran así más seguido que con acero. El Barón Vex acepta con una sonrisa fina, y el oro cambia de manos antes de la campana. Es caro, y es paz, y la corte va a susurrar que compraste tu salida con astucia de señor."
+        },
+        "shortcutLabel": {
+          "en": "Buy the peace",
+          "es": "Comprar la paz"
+        },
+        "tag": "Professional",
+        "goldDelta": -80,
+        "setsFlag": {
+          "bv_peace_bought": true
+        }
+      },
+      {
+        "id": "fresh_insult",
+        "intent": {
+          "en": "answers with a sharper insult than the first",
+          "es": "responde con un insulto más afilado que el primero"
+        },
+        "outcomeNarrative": {
+          "en": "You call him, to his face and before the town, exactly what the court whispers about him. The crowd gasps, then holds its breath. Baron Vex's smile dies, and something old and cold climbs into his eyes. 'Then let the yard decide who was right.' Your names are now bound together in every inn in the land — his by blood, yours by thunder.",
+          "es": "Lo llamás, en su cara y ante el pueblo, exactamente lo que la corte susurra sobre él. La multitud contiene el aliento. La sonrisa del Barón Vex muere, y algo viejo y frío trepa a sus ojos. 'Entonces que el patio decida quién tenía razón.' Sus nombres quedan atados juntos en cada posada de la tierra — el suyo por sangre, el tuyo por trueno."
+        },
+        "shortcutLabel": {
+          "en": "Answer with an insult",
+          "es": "Responder con un insulto"
+        },
+        "tag": "Cocky",
+        "fameDelta": 6,
+        "liabilityDelta": 6,
+        "injuryRiskDelta": 0.12,
+        "setsFlag": {
+          "bv_war_declared": true
+        }
+      },
+      {
+        "id": "say_nothing",
+        "intent": {
+          "en": "offers silent steel and no words at all",
+          "es": "ofrece acero silencioso y ninguna palabra"
+        },
+        "outcomeNarrative": {
+          "en": "You say nothing. You draw. The yard understands, and that silence is read as the gravest answer of the morning — the declaration of a blade that has decided the talking is over. Whatever happens next, they will say the stranger spoke more in silence than the baron in all his speech.",
+          "es": "No decís nada. Desenvainás. El patio lo entiende, y ese silencio se lee como la respuesta más grave de la mañana — la declaración de una hoja que decidió que hablar terminó. Pase lo que pase ahora, dirán que el forastero habló más en silencio que el barón en todos sus discursos."
+        },
+        "shortcutLabel": {
+          "en": "Draw in silence",
+          "es": "Desenvainar en silencio"
+        },
+        "tag": "Stoic",
+        "statDeltas": {
+          "dexterity": 2
+        },
+        "fameDelta": 3,
+        "setsFlag": {
+          "bv_silent_steel": true
+        }
+      }
+    ],
+    "fallback": "dignified_apology"
+  },
+  {
+    "id": "bv_duel_final",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 1,
+    "requiresThread": "the_barons_memory",
+    "narrative": {
+      "en": "The duel runs its course — whether it ends with blood, with a bow, or with gold changing hands is decided as much by the baron's pride as by your choices. What remains is the reckoning: the yard, the witnesses, and the prize of your name in every mouth from {locationName} to the capital. However it ends, Baron Vex is now either your enemy to the grave or a debt settled. Choose how the story should read.",
+      "es": "El duelo sigue su curso — si termina con sangre, con una reverencia o con oro cambiando de manos, lo deciden tanto el orgullo del barón como tus elecciones. Lo que queda es el recuento: el patio, los testigos, y el premio de tu nombre en todas las bocas desde {locationName} hasta la capital. Termine como termine, el Barón Vex ahora es tu enemigo hasta la tumba o una deuda saldada. Elegí cómo debe leerse la historia."
+    },
+    "choices": [
+      {
+        "id": "spare_him",
+        "label": {
+          "en": "Spare him and grant mercy",
+          "es": "Perdonarlo y ofrecerle clemencia"
+        },
+        "tag": "Humble",
+        "rarity": "rare",
+        "statDeltas": {
+          "charisma": 2
+        },
+        "fameDelta": 5,
+        "reputationDelta": 4,
+        "reputationFaction": "crownguard",
+        "narrative": {
+          "en": "When the moment comes, you stop short of the killing blow and spare the baron before the whole yard. The debt is paid in mercy, and the court — which loves a good redemption — begins to tell your name as one that turns enemies into uneasy friends. The baron, to his credit, pays the debt twice over in silence.",
+          "es": "Cuando llega el momento, te detenés antes del golpe mortal y perdonás al barón ante todo el patio. La deuda se paga con clemencia, y la corte — que adora una buena redención — empieza a contar tu nombre como el de alguien que convierte enemigos en amigos incómodos. El barón, para su crédito, paga la deuda dos veces en silencio."
+        }
+      },
+      {
+        "id": "finish_it",
+        "label": {
+          "en": "Finish the grudge for good",
+          "es": "Terminar la rencilla de una vez"
+        },
+        "tag": "Aggressive",
+        "rarity": "rare",
+        "requiresStat": {
+          "stat": "strength",
+          "min": 12
+        },
+        "statDeltas": {
+          "strength": 2
+        },
+        "fameDelta": 8,
+        "liabilityDelta": 12,
+        "injuryRiskDelta": 0.08,
+        "narrative": {
+          "en": "You end it. The yard learns how the story closes for those who sharpen a stranger's name into an insult and call it honor. The court will fear you now — some call it justice, some call it a blow that echoes — and Baron Vex's retainers will remember your face for the rest of their lives.",
+          "es": "Lo terminás. El patio aprende cómo se cierra la historia para quienes afilan el nombre de un forastero en un insulto y lo llaman honor. La corte ahora te va a temer — algunos lo llaman justicia, otros un golpe que resuena — y los vasallos del Barón Vex recordarán tu cara el resto de sus vidas."
+        }
+      },
+      {
+        "id": "walk_out_the_yard",
+        "label": {
+          "en": "Sheathe your blade and walk out",
+          "es": "Envainar tu hoja y salir caminando"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": {
+          "constitution": 1
+        },
+        "fameDelta": 2,
+        "narrative": {
+          "en": "Before the bell, you sheathe your blade, turn, and walk out of the yard with the crowd parting around you. Baron Vex is left standing with his point drawn and nothing to strike. Some call it the bitterest cut of all. The story writes itself: the stranger who could not be baited into a game he did not want to play.",
+          "es": "Antes de la campana, envainás tu hoja, te das vuelta y salís del patio caminando mientras la multitud se abre a tu paso. El Barón Vex queda parado con su punta desenvainada y nada a qué golpear. Algunos lo llaman el corte más amargo de todos. La historia se escribe sola: el forastero que no se dejó llevar a un juego que no quería jugar."
+        }
+      }
+    ]
+  }
+]
