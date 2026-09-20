@@ -561,5 +561,256 @@
         }
       }
     ]
+  },
+  {
+    "id": "tavern_card_game",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 7,
+    "narrative": {
+      "en": "In the corner of the {locationName} tavern, a quiet man deals from a deck your eyes know too well: the marks are painted in the same shade as the smoke. He wins every hand without smiling. Someone has been eating weeks of wages at this table, and the cards have not turned over a single honest edge all night.",
+      "es": "En un rincón de la taberna de {locationName}, un hombre callado reparte de un mazo que tus ojos conocen demasiado: las marcas están pintadas del mismo tono que el humo. Gana cada mano sin sonreír. Alguien lleva semanas de salario comidas en esa mesa, y las cartas no han mostrado un solo borde honesto en toda la noche."
+    },
+    "choices": [
+      {
+        "id": "call_cheat",
+        "label": { "en": "Call the cheat and take his table", "es": "Denunciar la trampa y ocupar su mesa" },
+        "tag": "Aggressive",
+        "rarity": "volatile",
+        "requiresStat": { "stat": "strength", "value": 12 },
+        "statDeltas": { "strength": 2 },
+        "healthDelta": -5,
+        "injuryRiskDelta": 0.12,
+        "goldDelta": 120,
+        "narrative": {
+          "en": "You tip the table and show the room the marks. The man folds fast and pays the bar what he owes — and then finds you outside with a blade and bad luck. You leave him in the mud with empty pockets, the way all cheaters eventually meet the road.",
+          "es": "Volteás la mesa y le mostrás al salón las marcas. El hombre dobla rápido y le paga a la barra lo que debe — y entonces te encuentra afuera con una hoja y mala suerte. Lo dejás en el barro con los bolsillos vacíos, como todos los tramposos terminan encontrándose con el camino."
+        }
+      },
+      {
+        "id": "raise_the_stakes",
+        "label": { "en": "Play his game and bleed him dry", "es": "Jugar su juego y desplumarlo" },
+        "tag": "Strategic",
+        "rarity": "uncommon",
+        "requiresStat": { "stat": "intelligence", "value": 12 },
+        "statDeltas": { "intelligence": 2 },
+        "goldDelta": 150,
+        "liabilityDelta": 10,
+        "narrative": {
+          "en": "You sit across from him and give him every win he expects for two rounds, then take three hands in a row by reading the deck he taught you to read. He leaves his purse patting his coat for something that isn't there — a man with a name now, and a grudge with your name on it.",
+          "es": "Te sentás frente a él y le das las dos rondas de victorias que espera, y entonces ganás tres manos seguidas leyendo el mazo que él te enseñó a leer. Sale dejando su cartera y palmeándose el saco buscando algo que ya no está — un hombre con un nombre ahora, y un rencor con tu nombre puesto."
+        }
+      },
+      {
+        "id": "fold_early",
+        "label": { "en": "Fold early and watch from the rail", "es": "Tirar la mano temprano y mirar desde la baranda" },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": { "charisma": 1 },
+        "narrative": {
+          "en": "One look at the deck and you fold early, settling by the rail to watch the lesson the room needs: the marks turn over hand after hand, and the marks only get bolder with more eyes. You'll tell the others in the morning, one careful person at a time.",
+          "es": "Con una sola mirada al mazo tirás la mano temprano y te acomodás en la baranda a mirar la lección que el salón necesita: las marcas se dan vuelta mano tras mano, y las marcas solo se vuelven más audaces con más ojos encima. Mañana se lo vas a contar a los demás, una persona cuidadosa a la vez."
+        }
+      }
+    ]
+  },
+  {
+    "id": "tavern_drunk_knight",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 7,
+    "narrative": {
+      "en": "A knight has claimed the north corner of the {locationName} tavern like a battlefield, and every drink in him is one held armistice. He's been buying rounds to hear his old campaign told back to him, and tonight the telling has run out of arms to raise. A serving hand catches your eye from behind the bar: he's about to arm-wrestle-claim the house, or fall into it.",
+      "es": "Un caballero ha ocupado el rincón norte de la taberna de {locationName} como un campo de batalla, y cada trago en él es una tregua sostenida. Lleva rondas compradas para oír contar su vieja campaña, y esta noche el relato se quedó sin brazos que alzar. Una mano que sirve te mira desde detrás de la barra: está a punto de armar un reclamo de pulso contra la casa, o de caerse dentro de ella."
+    },
+    "choices": [
+      {
+        "id": "out_drink_him",
+        "label": { "en": "Drink him under the table you promised to hold", "es": "Bebértelo bajo la mesa que prometiste sostener" },
+        "tag": "Funny",
+        "rarity": "rare",
+        "requiresStat": { "stat": "constitution", "value": 12 },
+        "statDeltas": { "constitution": 2 },
+        "healthDelta": -3,
+        "staminaDelta": -10,
+        "reputationDelta": 3,
+        "narrative": {
+          "en": "You take a seat across from him, and the next hour is a duel of flagons that ends with the knight asleep in the sawdust, still holding his story like a banner. The room buys you a round to match. He wakes at dawn, buys you breakfast, and gives you the medal he won at the ford — because, he says, it's the only duel he's ever lost with both parties laughing.",
+          "es": "Te sentás frente a él, y la siguiente hora es un duelo de jarras que termina con el caballero dormido en el aserrín, todavía aferrado a su historia como a un estandarte. El salón te paga una ronda para corresponderte. Despierta al amanecer, te invita el desayuno y te regala la medalla que ganó en el vado — porque, dice, es el único duelo que perdió con las dos partes riéndose."
+        }
+      },
+      {
+        "id": "tell_his_story",
+        "label": { "en": "Tell his story back to the room", "es": "Contarle su historia al salón" },
+        "tag": "Supportive",
+        "rarity": "uncommon",
+        "statDeltas": { "charisma": 2 },
+        "countersDelta": { "talked_down": 1 },
+        "reputationDelta": 4,
+        "narrative": {
+          "en": "You raise your flagon and tell his campaign back the way he wishes it had gone, with all the banners high — and the room raises a cheer that sits the man down easy, miles from any fight. He grips your arm with the gratitude of a soldier who was one sentence away from a sword's old habit. 'A man forgets he's survived,' he says thick. 'Tonight I remembered.'",
+          "es": "Alzás tu jarra y le contás su campaña como él quisiera que hubiera ido, con todos los estandartes en alto — y el salón levanta un aplauso que sienta al hombre con calma, a kilómetros de cualquier pelea. Te aprieta el brazo con la gratitud de un soldado que estuvo a una frase de la vieja costumbre de la espada. 'Un hombre olvida que sobrevivió', dice, ronco. 'Esta noche me acordé.'"
+        }
+      },
+      {
+        "id": "slip_out_the_back",
+        "label": { "en": "Slip out the back door", "es": "Salir por la puerta de atrás" },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": { "intelligence": 1 },
+        "narrative": {
+          "en": "He's used to company, not to help, and you've learned which door leads where. You slip out the back and leave him to the sawdust and the dawn, where soldiers finish every story they won't tell with a sword in their hand. The kinder end isn't yours to write tonight.",
+          "es": "Está acostumbrado a la compañía, no a la ayuda, y aprendiste qué puerta lleva adónde. Salís por atrás y lo dejás con el aserrín y el amanecer, donde los soldados terminan toda historia que no van a contar con una espada en la mano. El final más amable no es tuyo para escribirlo esta noche."
+        }
+      }
+    ]
+  },
+  {
+    "id": "tavern_fire_dancer",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 7,
+    "narrative": {
+      "en": "The fire dancer has closed her circle in the middle of the {locationName} floor, torches spinning slow, and her eyes keep landing on the crowd. She's working the room for one more body to step in — and the ones who don't step in, she spins past until they're part of the choreography anyway. It takes a certain nerve to meet that fire and take the center spot.",
+      "es": "La bailarina del fuego ha cerrado su círculo en el medio del salón de {locationName}, antorchas girando lento, y sus ojos no dejan de caer sobre la gente. Está trabajando el salón buscando un cuerpo más que entre — y a los que no entran, los hace girar de todos modos hasta que terminan formando parte de la danza. Hace falta cierto nervio para ir contra ese fuego y ocupar el centro."
+    },
+    "choices": [
+      {
+        "id": "dance_her_circle",
+        "label": { "en": "Step into the circle and dance her fire back", "es": "Entrar al círculo y devolverle su fuego" },
+        "tag": "Cocky",
+        "rarity": "rare",
+        "requiresStat": { "stat": "dexterity", "value": 12 },
+        "statDeltas": { "dexterity": 2 },
+        "injuryRiskDelta": 0.05,
+        "goldDelta": 60,
+        "reputationDelta": 4,
+        "narrative": {
+          "en": "You step into the whip of the flames and take the center spot without burning a sleeve, turning her own torches into a second hand on the dance. When the last flame banks, she dips her head once, slow — the salute of someone who doesn't give them. The crowd pays the hat twice for the two of you, and her name, for one night, has yours next to it.",
+          "es": "Entrás al látigo de las llamas y ocupás el centro sin quemar una manga, convirtiendo sus propias antorchas en una segunda mano de la danza. Cuando baja la última llama, inclina la cabeza una vez, lento — el saludo de quien no los da. La gente paga el sombrero dos veces por ustedes dos, y su nombre, por una noche, lleva el tuyo al lado."
+        }
+      },
+      {
+        "id": "buy_the_round",
+        "label": { "en": "Buy the room a round and let her dance alone", "es": "Invitar una ronda al salón y dejar que bailé sola" },
+        "tag": "Supportive",
+        "rarity": "uncommon",
+        "goldDelta": -50,
+        "reputationDelta": 3,
+        "narrative": {
+          "en": "You buy the room a round as a toast to the dancer, and the night warms around her flame instead of crowding it. When she finishes, she finds your table and sets an unlit torch beside your mug: 'For the one who knows a good show is half the people watching it. Next fire, come dance — and if you won't, at least bring the kind of room that makes me look like a miracle.'",
+          "es": "Invitas una ronda al salón como brindis por la bailarina, y la noche se calienta alrededor de su llama en vez de apretarla. Cuando termina, encuentra tu mesa y deja una antorcha apagada junto a tu jarra: 'Para el que sabe que un buen espectáculo es mitad la gente que lo mira. En el próximo fuego, vení a bailar — y si no, por lo menos traé la clase de salón que me hace parecer un milagro.'"
+        }
+      },
+      {
+        "id": "keep_the_table",
+        "label": { "en": "Keep your table and your distance", "es": "Quedarte en tu mesa y a distancia" },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": { "intelligence": 1 },
+        "narrative": {
+          "en": "You keep your tankard where it is; the fire is her craft and her stage, not a dare for strangers to answer. She spins past your table once, torch painting a slow arc that never comes close, and pays you the unspoken thanks of a performer whose circle is still her own.",
+          "es": "Mantenés tu jarra donde está; el fuego es su oficio y su escenario, no un desafío para que los desconocidos respondan. Gira frente a tu mesa una vez, la antorcha arqueando un trazo lento que nunca se acerca, y te paga el agradecimiento no dicho de una artista cuyo círculo sigue siendo suyo."
+        }
+      }
+    ]
+  },
+  {
+    "id": "tavern_cook_secret",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "narrative": {
+      "en": "The cook of the {locationName} tavern has a pot that smells like the old campaign kitchens — the kind of smell that makes a soldier stop mid-sentence and stare at nothing. She catches you smelling the steam. 'Twenty years people have asked me what's in it,' she says, ladle running. 'Fifteen year I've told them. The real answer is a fire that never went out, and the hands that fed the way back from the war. You want the recipe, or the story?'",
+      "es": "La cocinera de la taberna de {locationName} tiene una olla que huele a las viejas cocinas de campaña — la clase de olor que hace a un soldado cortar la frase y quedarse mirando la nada. Te pilla olfateando el vapor. 'Veinte años lleva la gente preguntándome qué tiene adentro', dice, moviendo el cucharón. 'Quince años se los dije. La verdad es un fuego que nunca se apagó, y las manos que alimentaron el camino de vuelta de la guerra. ¿Querés la receta, o la historia?'"
+    },
+    "choices": [
+      {
+        "id": "find_the_oak_bark",
+        "label": { "en": "Find the hidden shelf she never shows", "es": "Encontrar el estante escondido que nunca muestra" },
+        "tag": "Strategic",
+        "rarity": "rare",
+        "requiresStat": { "stat": "dexterity", "value": 12 },
+        "statDeltas": { "dexterity": 2, "intelligence": 1 },
+        "countersDelta": { "lore_exchanged": 1 },
+        "narrative": {
+          "en": "You spot the seam in the shelving behind the kegs, and behind it a single jar of oak bark — the winter bark from the old kitchen's ration, the piece that was never supposed to run out. She catches you holding it and laughs, the first real one she's let out in a week of counting copper. 'The recipe was never the point,' she says. 'The point is it survived. Sit down; you just earned the story behind it.'",
+          "es": "Notás la costura del estante detrás de los barriles, y detrás, un único frasco de corteza de roble — la corteza de invierno de la ración de la vieja cocina, la parte que nunca debía acabarse. Te pilla sosteniéndolo y se ríe, la primera de verdad en una semana de contar cobre. 'La receta nunca fue el punto', dice. 'El punto es que sobrevivió. Sentate; recién te ganaste la historia que hay detrás.'"
+        }
+      },
+      {
+        "id": "ask_for_the_story",
+        "label": { "en": "Sit and take the story as given", "es": "Sentarte y tomar la historia tal como se da" },
+        "tag": "Supportive",
+        "rarity": "uncommon",
+        "statDeltas": { "charisma": 2 },
+        "countersDelta": { "lore_exchanged": 1 },
+        "narrative": {
+          "en": "You ask for the story, and she sweeps the counter clear of two generations of gossip to tell it: the winter kitchen that fed a retreat, the barrel of bark that outlasted the war, the boy who carried it who is now the only man she'd feed before herself. You leave with the recipe written in her hand on a beer-soaked scrap, and her best advice set over it in ink: 'Feed the ones who come home wrong first.'",
+          "es": "Pedís la historia, y despeja el mostrador de dos generaciones de chismes para contarla: la cocina del invierno que alimentó una retirada, el barril de corteza que sobrevivió a la guerra, el muchacho que la llevó y que hoy es el único hombre al que alimentaría antes que a sí misma. Te vas con la receta escrita de su mano en un papel manchado de cerveza, y su mejor consejo encima, en tinta: 'Primero, alimentá a los que vuelven a casa rotos.'"
+        }
+      },
+      {
+        "id": "leave_the_steam",
+        "label": { "en": "Leave the pot to its secrets", "es": "Dejar la olla con sus secretos" },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": { "intelligence": 1 },
+        "narrative": {
+          "en": "Some things that smell like the war should stay where the war put them. You leave the pot to its steam and take the lesson without the recipe: a fire that never went out has already taught everyone who needs it. She watches you go and nods — the quiet kind of respect, ladle steady.",
+          "es": "Algunas cosas que huelen a guerra deberían quedarse donde la guerra las dejó. Dejás la olla con su vapor y te llevás la lección sin la receta: un fuego que nunca se apagó ya le enseñó a cualquiera que lo necesita. Te ve partir y asiente — la clase callada de respeto, cucharón firme."
+        }
+      }
+    ]
+  },
+  {
+    "id": "tavern_contract_board",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 7,
+    "narrative": {
+      "en": "The board behind the {locationName} bar has a new contract, pinned over a week of older ones, written in the careful hand of a clerk who wanted a stranger to say yes. 'Warehouse on the drowned street — doors held shut by a bad story. My locksmith resigned when he saw what opens from the inside. Asking price is fair. Bring your own torch, and your own nerve.'",
+      "es": "El tablero detrás de la barra de {locationName} tiene un contrato nuevo, clavado sobre una semana de más viejos, escrito con la mano cuidadosa de un escribano que quería que una desconocida dijera que sí. 'Almacén en la calle anegada — puertas que sostiene una mala historia. Mi cerrajero renunció cuando vio lo que abre desde adentro. Precio justo. Traé tu propia antorcha y tu propio coraje.'"
+    },
+    "choices": [
+      {
+        "id": "take_the_contract",
+        "label": { "en": "Tear it down and take the job", "es": "Arrancarlo y tomar el trabajo" },
+        "tag": "Professional",
+        "rarity": "rare",
+        "statDeltas": { "dexterity": 2, "intelligence": 1 },
+        "countersDelta": { "quests_completed": 1 },
+        "goldDelta": 120,
+        "liabilityDelta": 5,
+        "injuryRiskDelta": 0.08,
+        "narrative": {
+          "en": "You tear the contract off the board and spend the night learning the drowned street's lesson: the story is a lock, and you turn it the way locks turn — slow, certain, without asking it to be anything but what it is. The crates come out intact, the doors shut behind you, and the clerk pays double because the story expected you to run. 'The next one,' he says, 'is yours if you want it.' It is.",
+          "es": "Arrancás el contrato del tablero y pasás la noche aprendiendo la lección de la calle anegada: la historia es una cerradura, y la girás como se giran las cerraduras — lento, seguro, sin pedirle que sea otra cosa de lo que es. Los cajones salen intactos, las puertas se cierran detrás de vos, y el escribano paga el doble porque la historia esperaba que corrieras. 'El próximo', dice, 'es tuyo si lo querés.' Lo es."
+        }
+      },
+      {
+        "id": "leave_coin_for_cleanup",
+        "label": { "en": "Leave coin for the locksmith and pass it on", "es": "Dejar moneda para el cerrajero y seguir" },
+        "tag": "Humble",
+        "rarity": "uncommon",
+        "goldDelta": -40,
+        "reputationDelta": 3,
+        "narrative": {
+          "en": "You leave a purse that covers the locksmith's resigning wage and pass the contract to the next table. Some doors are worth more as a lesson than as a job, and a stranger's bad story doesn't need your name on it. The bar keeps the coin where the clerk will find it, with no name attached.",
+          "es": "Dejás una bolsa que cubre el sueldo de la renuncia del cerrajero y pasás el contrato a la mesa siguiente. Algunas puertas valen más como lección que como trabajo, y la mala historia de un desconocido no necesita tu nombre encima. La barra guarda la moneda donde el escribano la encontrará, sin nombre adjunto."
+        }
+      },
+      {
+        "id": "leave_it_pinned",
+        "label": { "en": "Leave it pinned and buy the night's peace", "es": "Dejarlo clavado y comprar la paz de la noche" },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": { "intelligence": 1 },
+        "narrative": {
+          "en": "You leave the contract where the clerk pinned it; the drowned street has waited this long and will wait passed. Some bad stories outlast the ones who plan to meet them, and the calmest end of that night is the one that doesn't add your nerve to the price. The board will find its stranger. It always does.",
+          "es": "Dejás el contrato donde lo clavó el escribano; la calle anegada esperó hasta ahora y esperará un poco más. Algunas malas historias sobreviven a los que planean encontrarse con ellas, y el final más tranquilo de esa noche es el que no suma tu coraje al precio. El tablero va a encontrar a su desconocido. Siempre lo encuentra."
+        }
+      }
+    ]
   }
 ]

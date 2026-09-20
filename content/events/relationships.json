@@ -1554,5 +1554,722 @@
         }
       }
     ]
+  },
+  {
+    "id": "rel_mira_letter",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "requiresRelationshipId": "sister_mira",
+    "narrative": {
+      "en": "Sister Mira meets you behind the clinic with a sealed letter and no stamp. 'There's a midwife across the river who takes in my patients when the roads run wrong,' she says. 'The new lord's men watch my house now — if they see where I ride, they find her, and the ward loses its one safe door. Can you carry a letter with no name on it, and bring back her answer without a word?'",
+      "es": "La hermana Mira te encuentra detrás de la clínica con una carta sellada y sin sello. 'Hay una partera al otro lado del río que recibe a mis pacientes cuando los caminos se ponen difíciles', dice. 'Los hombres del nuevo señor vigilan mi casa ahora — si ven hacia dónde cabalgo, la encuentran, y la enfermería pierde su única puerta segura. ¿Podés llevar una carta sin nombre y traer su respuesta sin decir palabra?'"
+    },
+    "choices": [
+      {
+        "id": "carry_it",
+        "label": { "en": "Carry the letter across the river", "es": "Llevar la carta al otro lado del río" },
+        "tag": "Supportive",
+        "rarity": "rare",
+        "statDeltas": { "dexterity": 2 },
+        "countersDelta": { "quests_completed": 1 },
+        "affinityDelta": 25,
+        "narrative": {
+          "en": "You ride the long way around and cross at the shallows, and the midwife takes the letter with no more than a nod — because Mira taught her to trust hands that carry things unseen. When you return empty-handed, Mira watches you for a long moment, then tells you the clinic's oldest secret: it was built on a promise to a plague town that no one would die unnamed while she still had two hands to work. 'Few people carry that letter and come back,' she says. 'You're one of the few.'",
+          "es": "Cabalgás dando un rodeo y cruzás por el vado, y la partera toma la carta con un simple asentimiento — porque Mira le enseñó a confiar en manos que cargan cosas que nadie ve. Cuando volvés con las manos vacías, Mira te observa un largo momento y te cuenta el secreto más viejo de la clínica: se construyó sobre una promesa a una aldea de peste — que nadie moriría sin nombre mientras ella tuviera dos manos para trabajar. 'Pocos llevan esa carta y vuelven', dice. 'Vos sos uno de los pocos.'"
+        }
+      },
+      {
+        "id": "fund_a_courier",
+        "label": { "en": "Pay a courier to carry it blind", "es": "Pagar a un mensajero para que la lleve a ciegas" },
+        "tag": "Professional",
+        "rarity": "uncommon",
+        "goldDelta": -60,
+        "affinityDelta": 10,
+        "narrative": {
+          "en": "You can't ride, so you pay a miller's boy who owes the clinic a favor to carry it blind. The answer comes back three days late and mostly told. Mira thanks you — and by the way her eyes check the road, you know this one mattered.",
+          "es": "No podés cabalgar, así que le pagás a un mozo del molino, que le debe un favor a la clínica, para que la lleve a ciegas. La respuesta llega tres días tarde y a medias. Mira te agradece — y por el modo en que sus ojos revisan el camino, entendés que esto importaba."
+        }
+      },
+      {
+        "id": "refuse",
+        "label": { "en": "Decline — your road runs the other way", "es": "Negarte — tu camino va para el otro lado" },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": { "intelligence": 1 },
+        "affinityDelta": -20,
+        "narrative": {
+          "en": "You tell her your road runs the other way. She nods, folds the letter into her sleeve, and walks back to the cots without another word. The midwife will wait; the letter can wait. But a door that waited too long once nearly closed for good.",
+          "es": "Le decís que tu camino va para el otro lado. Asiente, dobla la carta en su manga y vuelve a los catres sin decir palabra. La partera esperará; la carta puede esperar. Pero una puerta que esperó demasiado una vez casi se cerró para siempre."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rel_lyra_duet_return",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "requiresRelationshipId": "bard_lyra",
+    "narrative": {
+      "en": "You find Lyra in the back room of a rival song-house, her lute chained to the wall in wax and her voice a dry scrape. 'They caught me with a contract I signed in wine,' she says. 'Three nights of my voice for a loan against the fire that burned my old stage. A trap dressed as a rescue. But contracts have one hole: a duet. If I walk out owing them nothing, singing the way I sing when you're behind me, that's a story no house can cage. Stand with me?'",
+      "es": "Encontrás a Lyra en el cuarto trasero de una casa de canto rival, su laúd encadenado a la pared con cera y su voz como un rasguño seco. 'Me atraparon con un contrato que firmé con vino', dice. 'Tres noches de mi voz por un préstamo contra el incendio que quemó mi viejo escenario. Una trampa disfrazada de rescate. Pero los contratos tienen una sola grieta: un dúo. Si salgo de aquí sin deberles nada, cantando como canto cuando te tengo detrás, es una historia que ninguna casa puede enjaular. ¿Te quedás conmigo?'"
+    },
+    "choices": [
+      {
+        "id": "sing_the_duet",
+        "label": { "en": "Step into the circle and sing with her", "es": "Entrar al círculo y cantar con ella" },
+        "tag": "Supportive",
+        "rarity": "rare",
+        "statDeltas": { "charisma": 3 },
+        "countersDelta": { "allies_made": 1 },
+        "affinityDelta": 30,
+        "narrative": {
+          "en": "You step into the circle with her and sing the old river-duet note for note until the house holds its breath. The contract dies on its own terms. On the street afterward, Lyra tells you the thing she never told anyone: 'The fire that burned my stage wasn't an accident. I set it — the hall was sold, and I'd rather watch my song burn than hear it owned. You're the first one who ever sang with me instead of for me.' You hold that like the note it was.",
+          "es": "Entrás al círculo con ella y cantás el viejo dúo del río nota por nota hasta que la casa contiene el aliento. El contrato muere en sus propios términos. En la calle, ya de noche, Lyra te cuenta lo que nunca le contó a nadie: 'El incendio que quemó mi escenario no fue un accidente. Lo inicié yo — la sala estaba vendida, y prefería ver arder mi canción a oírla en propiedad. Sos el primero que canta conmigo y no para mí.' Guardás eso como la nota que fue."
+        }
+      },
+      {
+        "id": "pay_off_the_contract",
+        "label": { "en": "Buy the contract back clean", "es": "Comprar el contrato en limpio" },
+        "tag": "Professional",
+        "rarity": "uncommon",
+        "goldDelta": -120,
+        "affinityDelta": 10,
+        "narrative": {
+          "en": "You buy the contract back clean, gold for silence, and the house lets her walk out — poorer, freer, and furious at the cost. She repays you in a song she writes about the stranger who paid what no song is worth. The irony is not lost on her.",
+          "es": "Comprás el contrato en limpio, oro por silencio, y la casa la deja salir — más pobre, más libre y furiosa por el precio. Te lo devuelve con una canción que escribe sobre quien pagó lo que ninguna canción vale. La ironía no se le escapa."
+        }
+      },
+      {
+        "id": "walk_away",
+        "label": { "en": "Leave her to her contract", "es": "Dejarla con su contrato" },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": { "intelligence": 1 },
+        "affinityDelta": -25,
+        "narrative": {
+          "en": "You have your own battles, and her cage is of her own making. She watches you go, and the song she sings that third night is for a house full of strangers — all of them clapping at the shape of her, none of them behind her.",
+          "es": "Tenés tus propias batallas, y su jaula es obra suya. Te ve partir, y la canción que canta esa tercera noche es para una casa llena de desconocidos — todos aplaudiendo la forma de ella, ninguno detrás de ella."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rel_fenwick_market",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "requiresRelationshipId": "alchemist_fenwick",
+    "narrative": {
+      "en": "Fenwick waves you into his shop and dumps a sack of sealed vials onto the counter. 'A supplier sold me a king's discount,' he says, tapping the wax. 'Turns out the crate came off a cart bound for the plague wards — the infirmary is missing this whole stock. I can return it and kiss a year's margin goodbye, or hold my tongue and nobody has to know the difference. It's your kind of mathematics. What does the correct answer cost me?'",
+      "es": "Fenwick te hace pasar a su taller y vuelca una bolsa de frascos sellados sobre el mostrador. 'Un proveedor me vendió un descuento de rey', dice, tocando la cera. 'Resulta que la caja salió de un carro rumbo a las salas de peste — a la enfermería le falta todo este lote. Puedo devolverlo y despedirme de un año de ganancia, o callarme la boca y nadie tiene que saber la diferencia. Es tu clase de matemática. ¿Cuánto me cuesta la respuesta correcta?'"
+    },
+    "choices": [
+      {
+        "id": "return_the_lot",
+        "label": { "en": "Return the lot to the infirmary with him", "es": "Devolver el lote a la enfermería con él" },
+        "tag": "Humble",
+        "rarity": "rare",
+        "statDeltas": { "charisma": 2 },
+        "countersDelta": { "lives_saved": 1 },
+        "reputationDelta": 4,
+        "reputationFaction": "greywater",
+        "affinityDelta": 22,
+        "narrative": {
+          "en": "You help him load the cart back and drive it to the infirmary gate yourselves, before any ledger catches the missing stock. The matron who signs it in gives Fenwick a look that could frost a window — but she takes both your names, and that is not nothing. On the ride back, Fenwick tells you about the winter he apprenticed under a herbalist who paid debts the slow way: rumor for rumor, favor for favor. 'You just bought a piece of my name,' he says. 'I'll spend it on you.'",
+          "es": "Lo ayudás a volver a cargar el carro y a llevarlo a la puerta de la enfermería, antes de que ningún libro de cuentas note el faltante. La administradora que lo firma le da a Fenwick una mirada capaz de congelar una ventana — pero anota los dos nombres, y eso no es poca cosa. De vuelta, Fenwick te cuenta del invierno en que fue aprendiz de una herborista que pagaba las deudas del modo lento: rumor por rumor, favor por favor. 'Acabás de comprarte un trozo de mi nombre', dice. 'Lo voy a gastar en vos.'"
+        }
+      },
+      {
+        "id": "keep_the_silent_deal",
+        "label": { "en": "Keep the stock and the margin", "es": "Quedarse con el lote y el margen" },
+        "tag": "Strategic",
+        "rarity": "uncommon",
+        "goldDelta": 150,
+        "liabilityDelta": 8,
+        "affinityDelta": -15,
+        "narrative": {
+          "en": "The vials stay under his counter, and the margin stays fat. But the infirmary reorders what it lost, and somewhere a clerk counts the difference and files it where such things are only noticed twice: once in gold, once in trust. Fenwick doesn't tell you about the trust part — he's still working it out himself.",
+          "es": "Los frascos quedan bajo su mostrador, y el margen sigue gordo. Pero la enfermería reordena lo que perdió, y en algún lado un escribano cuenta la diferencia y la archiva donde tales cosas se notan dos veces: una en oro, otra en confianza. Fenwick no te cuenta la parte de la confianza — todavía la está resolviendo consigo mismo."
+        }
+      },
+      {
+        "id": "report_the_supplier",
+        "label": { "en": "Demand he name the supplier to the guild", "es": "Exigirle que nombre al proveedor ante el gremio" },
+        "tag": "Aggressive",
+        "rarity": "common",
+        "statDeltas": { "strength": 1 },
+        "affinityDelta": -20,
+        "narrative": {
+          "en": "You tell him plain: return it, and name the supplier to the guild. He does, unsure, and the guild marks him — a small stain on a tall ledger. What you didn't count on is that his margin was the only thing keeping his shop open. Weeks later, word reaches you that his storefront is up for sale.",
+          "es": "Se lo decís sin vueltas: que lo devuelva y que nombre al proveedor ante el gremio. Lo hace, sin estar seguro, y el gremio lo anota — una mancha chica en un libro alto. Lo que no contaste es que su margen era lo único que mantenía abierto su taller. Semanas después, te llega la noticia de que su local está en venta."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rel_merra_sanctuary",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "requiresRelationshipId": "innkeeper_merra",
+    "narrative": {
+      "en": "You find Merra's inn quiet in a way an inn should never be, and a new face behind the stove pouring ale like they were born to it. Later, Merra pulls you into the pantry. 'She's a defector off the Ironhold wall — three days,' she says, low. 'A hunter came by asking in your name, neighbor to neighbor. She's under my roof now, and that roof has never once leaked a guest. Can you look a hunter in the eye and tell him no without saying her name?'",
+      "es": "Encontrás la posada de Merra callada de un modo en que una posada nunca debería estar, y una cara nueva detrás de la cocina sirviendo cerveza como si hubiera nacido para eso. Después, Merra te lleva a la despensa. 'Desertó de la muralla de Fuertehierro — hace tres días', dice, en voz baja. 'Un cazador vino a preguntar en tu nombre, de vecino a vecino. Está bajo mi techo ahora, y ese techo nunca dejó filtrar a un huésped. ¿Podés mirar a un cazador a los ojos y negarle sin decir su nombre?'"
+    },
+    "choices": [
+      {
+        "id": "claim_the_kitchen_hand",
+        "label": { "en": "Claim her as kin and face the hunter", "es": "Asegurar que es de tu familia y encarar al cazador" },
+        "tag": "Supportive",
+        "rarity": "rare",
+        "statDeltas": { "charisma": 2 },
+        "liabilityDelta": 8,
+        "reputationDelta": 3,
+        "reputationFaction": "greywater",
+        "affinityDelta": 30,
+        "narrative": {
+          "en": "You tell the hunter she's your cousin from the south, and you tell it so warm and so boring that he believes you and buys a round out of respect for the family. When he's gone, Merra presses her best wine into your hands and says one true thing: 'Twenty years of thresholds, and I can count the people I'd hide behind on one fist. You just made it to the thumb.'",
+          "es": "Le decís al cazador que ella es tu prima del sur, y se lo contás tan cálido y tan aburrido que te cree y paga una ronda por respeto a la familia. Cuando se va, Merra te pone su mejor vino en las manos y dice una sola cosa verdadera: 'Veinte años de umbrales, y puedo contar con un puño a la gente detrás de la que esconderme. Recién llegaste al pulgar.'"
+        }
+      },
+      {
+        "id": "send_her_east",
+        "label": { "en": "Fund her passage east under a new name", "es": "Financiar su pasaje al este con otro nombre" },
+        "tag": "Professional",
+        "rarity": "uncommon",
+        "goldDelta": -80,
+        "affinityDelta": 10,
+        "narrative": {
+          "en": "You can't swear to a stranger's story you don't know, so you fund her passage east under a different name, and Merra sees her off the way only someone who has hidden people before can. Her relief is real. 'Not the deepest debt, but a real one,' she says. 'If the road ever needs a table and a lie, both are still standing.'",
+          "es": "No podés jurar la historia de una desconocida que no conocés, así que financiás su pasaje al este con otro nombre, y Merra la despide del único modo en que puede hacerlo alguien que ya escondió gente antes. Su alivio es real. 'No es la deuda más honda, pero es una deuda de verdad', dice. 'Si el camino alguna vez necesita una mesa y una mentira, las dos siguen en pie.'"
+        }
+      },
+      {
+        "id": "tell_the_hunter",
+        "label": { "en": "Tell the hunter enough to find her", "es": "Decirle al cazador lo suficiente para encontrarla" },
+        "tag": "Aggressive",
+        "rarity": "rare",
+        "affinityDelta": -35,
+        "narrative": {
+          "en": "You decide the hunter will find her either way, and that clean streets are worth one stranger's story. You tell him enough — not her name, but her corner. The defector is gone by dawn, and Merra serves you your meal with a stillness that is worse than rage. The inn will feed you again. It will never again welcome you.",
+          "es": "Decidís que el cazador la va a encontrar igual, y que las calles limpias valen la historia de una desconocida. Le decís lo suficiente — no su nombre, pero sí su rincón. La desertora se va al amanecer, y Merra te sirve la comida con una quietud peor que la ira. La posada volverá a darte de comer. No volverá a recibirte jamás."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rel_bram_blacksmith",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "requiresRelationshipId": "captain_bram",
+    "narrative": {
+      "en": "Captain Bram's hammer rings thin at his forge on the edge of {locationName}, and you find him staring at a bar of ore that glitters like teeth. 'Came out of the east hills,' he says. 'Looks like iron, weighs like lead. A good fire might make it sing — or crack my anvil and take the last good year I've got left. I've got one furnace-load of hope, and it burns either way. You've seen me at war and at fire. What do your eyes say?'",
+      "es": "El martillo del capitán Bram resuena flaco en su forja, al borde de {locationName}, y lo encontrás mirando una barra de mineral que brilla como dientes. 'Salió de los montes del este', dice. 'Parece hierro, pesa como plomo. Un buen fuego podría hacerla cantar — o partir mi yunque y llevarse el último buen año que me queda. Tengo una carga de horno de esperanza, y arde igual de cualquier modo. Me viste en la guerra y en el fuego. ¿Qué dicen tus ojos?'"
+    },
+    "choices": [
+      {
+        "id": "work_the_bellows",
+        "label": { "en": "Work the bellows past midnight with him", "es": "Trabajar el fuelle con él hasta pasada la medianoche" },
+        "tag": "Humble",
+        "rarity": "rare",
+        "statDeltas": { "strength": 2, "constitution": 1 },
+        "countersDelta": { "smithing_won": 1 },
+        "affinityDelta": 25,
+        "narrative": {
+          "en": "You bank the fire with him past midnight, and the ore teaches you both its name the hard way: a metal that holds an edge like winter water, stubborn and bright. Bram names the blade after the place where the fire almost won, which is also the place where you were standing. 'Days like this,' he says, wiping his face, 'are why I stopped counting the war dead and started counting the dawns.' Two dawns came for the price of one.",
+          "es": "Atizás el fuego con él hasta pasada la medianoche, y el mineral les enseña su nombre del modo difícil: un metal que aguanta filo como agua de invierno, terco y brillante. Bram nombra la hoja por el lugar donde el fuego casi ganó, que es también el lugar donde estabas parado. 'Estos días', dice, secándose la cara, 'son la razón por la que dejé de contar los muertos de la guerra y empecé a contar los amaneceres.' Llegaron dos amaneceres por el precio de uno."
+        }
+      },
+      {
+        "id": "buy_good_iron",
+        "label": { "en": "Fund a proper shipment and set the ore aside", "es": "Financiar un envío decente y guardar el mineral" },
+        "tag": "Professional",
+        "rarity": "uncommon",
+        "goldDelta": -120,
+        "affinityDelta": 10,
+        "narrative": {
+          "en": "You can't read ores, but you can read coin, so you fund a proper shipment from the foundry town and set the strange bar at the back of the shed. The forge breathes again, and Bram accepts the help the only way a soldier can — by never mentioning it and never forgetting it. He teaches you to strike a straight line, and that trade is older than any debt.",
+          "es": "No podés leer minerales, pero sí leer monedas, así que financiás un envío decente desde la ciudad de las fundiciones y guardás la barra rara al fondo del galpón. La forja vuelve a respirar, y Bram acepta la ayuda del único modo en que puede un soldado: sin mencionarla jamás y sin olvidarla nunca. Te enseña a golpear en línea recta, y ese oficio es más viejo que cualquier deuda."
+        }
+      },
+      {
+        "id": "bury_the_ore",
+        "label": { "en": "Advise him to bury the strange ore", "es": "Aconsejarle enterrar el mineral raro" },
+        "tag": "Strategic",
+        "rarity": "common",
+        "statDeltas": { "intelligence": 1 },
+        "affinityDelta": -15,
+        "narrative": {
+          "en": "You tell him plainly: it's a stranger's metal, and a forge that risks its owner's last year is a bad trade. He nods, seals the bar in an oiled cloth, and sets it where he puts the things he's decided to outlive. The forge is safer. Something in his shoulders settles, but it settles lower than before.",
+          "es": "Se lo decís sin vueltas: es metal de desconocidos, y una forja que arriesga el último año de su dueño es un mal negocio. Asiente, sella la barra en un paño aceitado y la guarda junto a las cosas que decidió sobrevivir. La forja está más segura. Algo en sus hombros se asienta, pero se asienta más bajo que antes."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rel_jorin_foundry",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "requiresRelationshipId": "apprentice_jorin",
+    "narrative": {
+      "en": "Jorin's bench is buried in copper shavings and two sleepless nights, and the air smells like too much hope. 'A lord wants a bell,' he says, '— a bell so deep it carries from the foundry to the harbor. Cast in a week. They're paying a fortune, which is also half the foundry's pay, sitting on my bench over the fire. I've seen you read an alloy like a letter. Tell me it's possible, or tell me to run.'",
+      "es": "El banco de Jorin está tapado de virutas de cobre y de dos noches sin dormir, y el aire huele a demasiada esperanza. 'Un señor quiere una campana', dice, '— una campana tan honda que llegue de la fundición hasta el puerto. Fundida en una semana. Pagan una fortuna, que también es la mitad del salario de la fundición, apoyada en mi banco sobre el fuego. Te vi leer una aleación como se lee una carta. Decime que es posible, o decime que corra.'"
+    },
+    "choices": [
+      {
+        "id": "bank_the_fire_with_him",
+        "label": { "en": "Bank the fire beside him all night", "es": "Atizar el fuego a su lado toda la noche" },
+        "tag": "Supportive",
+        "rarity": "rare",
+        "statDeltas": { "strength": 2, "intelligence": 1 },
+        "healthDelta": -4,
+        "staminaDelta": -10,
+        "countersDelta": { "quests_completed": 1 },
+        "affinityDelta": 25,
+        "narrative": {
+          "en": "You stoke the furnace beside him until your hands shake and your sight blurs, and the bell rings true — a note so deep the harbor men swear the tide heard it. Jorin looks at you the way a man looks at a raft that carried him ashore, and tells you the story he's never told: the foundry was his father's, and his father died owing a bell he never cast. 'Today,' Jorin says, 'is the first day that forge owes nothing.'",
+          "es": "Atizás la hornalla a su lado hasta que te tiemblan las manos y se te nubla la vista, y la campana suena limpia — una nota tan honda que los hombres del puerto juran que la marea la oyó. Jorin te mira como mira un hombre a la balsa que lo trajo a tierra, y te cuenta la historia que nunca contó: la fundición era de su padre, y su padre murió debiendo una campana que nunca fundió. 'Hoy', dice Jorin, 'es el primer día que esa forja no debe nada.'"
+        }
+      },
+      {
+        "id": "fund_the_safety_margin",
+        "label": { "en": "Stake the margin for a failed casting", "es": "Apostar el margen por si la fundición falla" },
+        "tag": "Professional",
+        "rarity": "uncommon",
+        "goldDelta": -100,
+        "affinityDelta": 15,
+        "narrative": {
+          "en": "You don't know bells, but you know ruin, so you stake him the margin that keeps the foundry afloat if the casting cracks. It doesn't crack. He repays you with interest and a look that says more than the ledger: nobody else on earth offered to lose money so he could fail safely. 'That's the kind of number,' he says, 'I'll owe until the day I close.'",
+          "es": "No sabés de campanas, pero sí de ruina, así que le prestás el margen que mantiene a flote la fundición si la fundición se agrieta. No se agrieta. Te devuelve el préstamo con intereses y una mirada que dice más que el libro mayor: nadie más en el mundo ofreció perder plata para que él pudiera fracasar en paz. 'Esa clase de número', dice, 'lo voy a deber hasta el día que cierre.'"
+        }
+      },
+      {
+        "id": "talk_him_out_of_it",
+        "label": { "en": "Talk him out of the gamble", "es": "Convencerlo de no apostar" },
+        "tag": "Strategic",
+        "rarity": "common",
+        "statDeltas": { "intelligence": 1 },
+        "affinityDelta": -15,
+        "narrative": {
+          "en": "You tell him the math plainly: a week is not enough, and a foundry that bets its whole pay is a foundry that's already gone. He refunds the lord's advance in the morning, and the foundry keeps walking the tightrope it always walked. He thanks you, and means it — but you can hear, under the thanks, the part of him that wanted you to say it was possible.",
+          "es": "Se lo decís con la matemática en la mano: una semana no alcanza, y una fundición que apuesta todo su salario es una fundición que ya se fue. Devuelve el adelanto del señor en la mañana, y la fundición sigue caminando por la cuerda floja de siempre. Te agradece, y lo dice en serio — pero se oye, bajo el agradecimiento, la parte de él que quería que dijeras que era posible."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rel_tess_clinic",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "requiresRelationshipId": "orphan_tess",
+    "narrative": {
+      "en": "Tess — your Tess, the fierce gutter child with the ledger eyes — runs a clinic out of the old tannery, and tonight it's three deep on the floor. 'The mill's cough is back,' she says, rolling her sleeves past her elbows. 'Two hands, one bucket of salve, every cot taken. You taught me the difference between saving a life and being owed one. Which kind of help are you tonight?'",
+      "es": "Tess — tu Tess, la niña fiera del arroyo con ojos de libro mayor — maneja una clínica en la vieja tenería, y esta noche hay tres filas de gente en el piso. 'Volvió la tos del molino', dice, arremangándose hasta los codos. 'Dos manos, un balde de ungüento, todos los catres ocupados. Me enseñaste la diferencia entre salvar una vida y deber una. ¿Qué clase de ayuda sos esta noche?'"
+    },
+    "choices": [
+      {
+        "id": "work_the_floor",
+        "label": { "en": "Work the floor until the bucket runs dry", "es": "Trabajar el piso hasta que se seque el balde" },
+        "tag": "Humble",
+        "rarity": "rare",
+        "statDeltas": { "charisma": 2, "constitution": 1 },
+        "healthDelta": -4,
+        "staminaDelta": -15,
+        "countersDelta": { "lives_saved": 1 },
+        "affinityDelta": 30,
+        "narrative": {
+          "en": "You work the floor until the bucket runs dry and the last cough settles, and somewhere past midnight Tess tells you the thing she's been carrying: 'The tannery's roof leaks over the north cots. The money for the new roof comes from the mill, and the mill is where the cough comes from. I've been telling myself that timing is a coincidence, but I keep the books — I know better.' She looks at you the way she used to look at half-full pockets. 'Stay till close, and I'll owe you a roof.'",
+          "es": "Trabajás el piso hasta que se seca el balde y se calma la última tos, y en algún momento pasado la medianoche, Tess te cuenta lo que viene cargando: 'El techo de la tenería gotea sobre los catres del norte. El dinero para el techo nuevo viene del molino, y del molino viene la tos. Me vengo diciendo que es una coincidencia de fechas, pero yo llevo los libros — sé más.' Te mira como solía mirar los bolsillos medio llenos. 'Quedate hasta el cierre, y te deberé un techo.'"
+        }
+      },
+      {
+        "id": "send_supplies",
+        "label": { "en": "Send a cart of salve and bandages", "es": "Enviar un carro de ungüento y vendas" },
+        "tag": "Professional",
+        "rarity": "uncommon",
+        "goldDelta": -100,
+        "reputationDelta": 2,
+        "reputationFaction": "greywater",
+        "affinityDelta": 15,
+        "narrative": {
+          "en": "You can't stay, but you fund a cart of salve and bandages from the merchant quarter before the night is out. Tess takes delivery with a nod sharp as a ledger line. 'Half the town would have paid this to look heroic,' she says. 'You paid it to not look at the floor.' The mill's cough shortens by a week.",
+          "es": "No podés quedarte, pero financiás un carro de ungüento y vendas desde el barrio mercante antes de que termine la noche. Tess recibe la entrega con un asentimiento exacto como una línea de libro. 'Media ciudad habría pagado esto por parecer heroica', dice. 'Vos lo pagaste para no mirar al piso.' La tos del molino se acorta una semana."
+        }
+      },
+      {
+        "id": "turn_your_eyes",
+        "label": { "en": "Press a coin in her palm and go", "es": "Dejarle una moneda en la palma y seguir" },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": { "intelligence": 1 },
+        "goldDelta": -30,
+        "affinityDelta": -25,
+        "narrative": {
+          "en": "Some fights are made of other people's choices, and you've learned to count the cost of stepping into them. You press a coin into her palm — the price of a night's sleep, you tell yourself — and go. Tess doesn't stop you. She just says it, flat: 'A debt is not a life. Remember which coin you left.'",
+          "es": "Algunas luchas están hechas de elecciones ajenas, y aprendiste a contar el costo de meterse en ellas. Le dejás una moneda en la palma — el precio de una noche de sueño, te decís — y te vas. Tess no te detiene. Solo lo dice, plano: 'Una deuda no es una vida. Acordate de cuál moneda dejaste.'"
+        }
+      }
+    ]
+  },
+  {
+    "id": "rel_elara_reunion",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "requiresRelationshipId": "swordmaiden_elara",
+    "narrative": {
+      "en": "Elara meets you by the river with a whistle on her lips like she's been chewing on it for days. 'There's a tune my mother hummed the summer before the war,' she says, 'and I've lost the middle of it. I can hear the first notes and the last, but the part where the fishing boats come home is gone. I need a witness — someone who was in that summer with me, to hum it back until it fits. There's no one else I'd ask.'",
+      "es": "Elara te encuentra junto al río con un silbido en los labios, como si lo estuviera masticando desde hace días. 'Hay una melodía que mi madre tarareaba el verano antes de la guerra', dice, 'y perdí el medio. Oigo las primeras notas y las últimas, pero la parte donde los barcos de pesca vuelven a casa se fue. Necesito una testigo — a alguien que estuviera en ese verano conmigo, para tararearla hasta que calce. No hay nadie más a quien se lo pediría.'"
+    },
+    "choices": [
+      {
+        "id": "hum_it_back",
+        "label": { "en": "Hum the missing half back to her", "es": "Tararearle la mitad que falta" },
+        "tag": "Supportive",
+        "rarity": "rare",
+        "statDeltas": { "charisma": 3 },
+        "affinityDelta": 30,
+        "narrative": {
+          "en": "You hum it back the way you remember the river humming, note by note, until the middle fits — a stretch about a summer where nothing was burning and the boats came home full. Elara closes her eyes, and when she opens them the swordmaiden's walls are down the way they almost never are. 'It was a lullaby for the daughter who came back from the sea,' she says. 'She never told me it ended. Thank you for remembering it the whole way through.'",
+          "es": "Se lo tarareás como recordás que tarareaba el río, nota por nota, hasta que el medio calza — un tramo sobre un verano donde nada ardía y los barcos volvían llenos. Elara cierra los ojos, y cuando los abre, las murallas de la espadachina están abajo como casi nunca están. 'Era una canción de cuna para la hija que volvió del mar', dice. 'Nunca me contó cómo terminaba. Gracias por recordarla hasta el final.'"
+        }
+      },
+      {
+        "id": "hum_along_badly",
+        "label": { "en": "Hum along and fumble it together", "es": "Tararear con ella y equivocarse juntos" },
+        "tag": "Funny",
+        "rarity": "uncommon",
+        "statDeltas": { "charisma": 1 },
+        "affinityDelta": 15,
+        "narrative": {
+          "en": "You hum along and get it gloriously, completely wrong in the middle, and she laughs so hard she has to sit down on the riverbank. By the third pass the wrong notes are yours and the right ones are hers, and the tune walks out of the river whole anyway. 'It's better this way,' she says, wiping her eyes. 'Now the middle is ours.'",
+          "es": "Tarareás con ella y lo hacés gloriosamente, completamente mal en el medio, y se ríe tan fuerte que tiene que sentarse en la orilla. Para la tercera pasada, las notas equivocadas son tuyas y las correctas son de ella, y la melodía sale del río entera de todos modos. 'Es mejor así', dice, secándose los ojos. 'Ahora el medio es nuestro.'"
+        }
+      },
+      {
+        "id": "hurry_on",
+        "label": { "en": "Let her carry the tune alone", "es": "Dejar que lleve la melodía sola" },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": { "intelligence": 1 },
+        "affinityDelta": -20,
+        "narrative": {
+          "en": "You tell her your road runs to the harbor by dusk, and melodies can wait the way people can. She nods, and the whistle goes quiet. 'Then the middle stays lost,' she says, and smiles the way swordmaidens smile when they've already let something go. The tune follows you for a day: first notes and last, no middle.",
+          "es": "Le decís que tu camino llega al puerto al anochecer, y que las melodías pueden esperar como pueden esperar las personas. Asiente, y el silbido se calla. 'Entonces el medio se queda perdido', dice, y sonríe como sonríen las espadachinas cuando ya soltaron algo. La melodía te sigue por un día: primeras notas y últimas, sin medio."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rel_grimble_warehouse",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "requiresRelationshipId": "merchant_grimble",
+    "narrative": {
+      "en": "Grimble's warehouse is coughing smoke at the docks, and he stands outside in his nightclothes with a madman's calm. 'The genever-crate is in there — the one with every keepsake from my first voyage,' he says. 'Let the gold burn. Let the ledger burn. That crate is my whole first year above water. They're lining up to watch the roof fall. Will you be the one who walks in?'",
+      "es": "El almacén de Grimble escupe humo en los muelles, y él está afuera en ropa de dormir con una calma de loco. 'El cajón de la ginebra está adentro — el que tiene todos los recuerdos de mi primer viaje', dice. 'Que arda el oro. Que arda el libro mayor. Ese cajón es todo mi primer año a flote. Están haciendo fila para ver caer el techo. ¿Vas a ser vos el que entre?'"
+    },
+    "choices": [
+      {
+        "id": "run_in_for_the_crate",
+        "label": { "en": "Run in under the smoke for the crate", "es": "Entrar bajo el humo por el cajón" },
+        "tag": "Aggressive",
+        "rarity": "volatile",
+        "statDeltas": { "strength": 3, "constitution": 1 },
+        "healthDelta": -8,
+        "injuryRiskDelta": 0.18,
+        "goldDelta": 150,
+        "affinityDelta": 30,
+        "narrative": {
+          "en": "You go in low, where the air still holds, find the crate by feel in the smoke, and drag it out as the beams groan overhead. Grimble falls to his knees by the open lid, touching the relics one by one — and then looks up at you with the raw, rare honesty of a man who almost lost everything twice in one night. 'I've made a thousand deals,' he says. 'This is the only one that ever gave me something back.'",
+          "es": "Entrás agachado, donde el aire todavía aguanta, encontrás el cajón a tientas entre el humo y lo arrastrás afuera mientras las vigas crujen arriba. Grimble cae de rodillas junto a la tapa abierta, tocando los recuerdos uno por uno — y entonces te mira con la honestidad cruda y rara de un hombre que casi pierde todo dos veces en una noche. 'Hice mil negocios', dice. 'Este es el único que alguna vez me devolvió algo.'"
+        }
+      },
+      {
+        "id": "run_the_bucket_line",
+        "label": { "en": "Lead the bucket line instead", "es": "Comandar la línea de baldes en su lugar" },
+        "tag": "Leader",
+        "rarity": "rare",
+        "statDeltas": { "charisma": 3 },
+        "reputationDelta": 4,
+        "reputationFaction": "greywater",
+        "affinityDelta": 15,
+        "narrative": {
+          "en": "You don't go in — you get twenty strangers moving in one direction, and the roof comes down where the water already fell. The crate survives, half-scorched, and Grimble counts it as a miracle done by your hands at a distance. 'A whole street moved because you pointed,' he says. 'That's a merchant's kind of magic.'",
+          "es": "No entrás — ponés a veinte desconocidos moviéndose en una sola dirección, y el techo cae donde el agua ya había caído. El cajón sobrevive, medio quemado, y Grimble lo cuenta como un milagro hecho por tus manos a distancia. 'Una calle entera se movió porque señalaste', dice. 'Esa es la magia de un mercader.'"
+        }
+      },
+      {
+        "id": "watch_the_roof_fall",
+        "label": { "en": "Watch the roof fall with the crowd", "es": "Ver caer el techo con la multitud" },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": { "intelligence": 1 },
+        "affinityDelta": -25,
+        "narrative": {
+          "en": "You watch the roof fall with the crowd, and there's nothing heroic about it — just heat, and grief, and a merchant in his nightclothes staring at where his first year above water used to be. He doesn't blame you. That's the worst part.",
+          "es": "Ves caer el techo con la multitud, y no hay nada heroico en eso — solo calor, y pena, y un mercader en ropa de dormir mirando donde solía estar su primer año a flote. No te echa la culpa. Esa es la peor parte."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rel_velda_seance",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "requiresRelationshipId": "seer_velda",
+    "narrative": {
+      "en": "Velda's candles gutter out all at once, and the thing that answers her summons sits in the dark with a voice like a slate dragged through water. It says your name — your real name, the one you never told the seer. She grips your wrist, cold. 'This is not a spirit. This is something older, and it knew you before I called. Choose what we do with its attention.'",
+      "es": "Las velas de Velda se apagan todas a la vez, y lo que responde a su invocación se sienta en la oscuridad con una voz como una pizarra arrastrada por el agua. Dice tu nombre — tu nombre real, el que nunca le contaste a la vidente. Te aprieta la muñeca, fría. 'Esto no es un espíritu. Es algo más viejo, y te conocía antes de que yo llamara. Elegí qué hacemos con su atención.'"
+    },
+    "choices": [
+      {
+        "id": "speak_with_it",
+        "label": { "en": "Speak with it directly", "es": "Hablar con ello directamente" },
+        "tag": "Strategic",
+        "rarity": "rare",
+        "statDeltas": { "intelligence": 3 },
+        "countersDelta": { "lore_exchanged": 1 },
+        "affinityDelta": 25,
+        "narrative": {
+          "en": "You face it and speak plainly, and it answers plainly — for a value of plainly that takes the skin off the world. It tells you three true things: your mother's name, the road you're walking, and the name of the thing waiting at its end. Velda watches your back the whole time and pours you a shaking glass afterward. 'No one in my line talks to that and walks upright,' she says. 'You're either the bravest client I've ever had, or the only one it wanted.'",
+          "es": "Lo encarás y hablás claro, y responde claro — para un valor de 'claro' que le quita la piel al mundo. Te dice tres cosas verdaderas: el nombre de tu madre, el camino que estás recorriendo y el nombre de lo que espera al final. Velda te cuida las espaldas todo el tiempo y después te sirve un vaso que le tiembla la mano. 'Nadie en mi oficio habló con eso y salió derecho', dice. 'O sos el cliente más valiente que tuve, o el único que quería.'"
+        }
+      },
+      {
+        "id": "end_the_summoning",
+        "label": { "en": "Blow out the candles and end it", "es": "Apagar las velas y terminar con ello" },
+        "tag": "Humble",
+        "rarity": "uncommon",
+        "statDeltas": { "charisma": 2 },
+        "affinityDelta": 10,
+        "narrative": {
+          "en": "You blow out the candles and the dark goes ordinary again — a room, a frightened seer, the two of you breathing. It does not like being dismissed, but it goes. Velda lets out a breath she's been holding for years. 'Wise choice,' she says. 'The ones who say yes to that never get to change their minds.'",
+          "es": "Apagás las velas y la oscuridad vuelve a ser ordinaria — una habitación, una vidente asustada, ustedes dos respirando. No le gusta que lo despidan, pero se va. Velda suelta un aliento que venía conteniendo desde hacía años. 'Decisión sabia', dice. 'Los que le dicen que sí a eso nunca pueden cambiar de opinión.'"
+        }
+      },
+      {
+        "id": "feed_it_a_name",
+        "label": { "en": "Feed it a false name and see what sticks", "es": "Darle un nombre falso y ver qué pesca" },
+        "tag": "Cocky",
+        "rarity": "volatile",
+        "statDeltas": { "intelligence": 2 },
+        "goldDelta": 100,
+        "liabilityDelta": 10,
+        "affinityDelta": -10,
+        "narrative": {
+          "en": "You give it a false name, wrapped in a stranger's story, and it takes the bait — and then smiles in a way that means it knew the whole time. It takes the coin's worth of your secret anyway and leaves the candles relit. Velda looks at you with a new, careful fear. 'It remembers being lied to by you,' she says. 'That's not a good name to have in that world.'",
+          "es": "Le das un nombre falso, envuelto en la historia de otra persona, y muerde el anzuelo — y entonces sonríe de un modo que significa que lo supo todo el tiempo. Se queda igual con la parte de tu secreto que vale la moneda y deja las velas encendidas. Velda te mira con un miedo nuevo y cuidadoso. 'Recuerda que le mentiste', dice. 'No es un buen nombre para tener en ese mundo.'"
+        }
+      }
+    ]
+  },
+  {
+    "id": "rel_wulfric_training",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "requiresRelationshipId": "thane_wulfric",
+    "narrative": {
+      "en": "Wulfric's practice yard is bright with fresh chalk and fresh snow, and he calls you over with the flat of his sword. 'The north gives a man two lessons,' he says. 'One for how to hit, one for when to stand still. I've seen you win the first and skip the second. Today we drill the standing still. Hold this line with me until the light dies, and you'll learn why the quiet is the hardest blow.'",
+      "es": "El patio de práctica de Wulfric está brillante de tiza nueva y nieve nueva, y te llama con el plano de su espada. 'El norte le da al hombre dos lecciones', dice. 'Una para saber golpear, otra para saber cuándo quedarse quieto. Te vi ganar la primera y saltearte la segunda. Hoy entrenamos la quietud. Mantené esta línea conmigo hasta que muera la luz, y vas a aprender por qué el silencio es el golpe más difícil.'"
+    },
+    "choices": [
+      {
+        "id": "hold_the_line",
+        "label": { "en": "Hold the line in the cold with him", "es": "Mantener la línea en el frío con él" },
+        "tag": "Stoic",
+        "rarity": "rare",
+        "statDeltas": { "strength": 2, "constitution": 2 },
+        "staminaDelta": -10,
+        "affinityDelta": 25,
+        "narrative": {
+          "en": "You hold the line beside him until the light dies and the cold needs no sword, and somewhere in the long gray you understand what he meant: every time you've been steady, the whole world behind you has been steadier. Wulfric nods once, unreadable, and tells you the thing he saved for it: 'I stood in the shield-wall at the war's worst hour because the man beside me didn't run. I would stand again beside you on that same ground.'",
+          "es": "Mantenés la línea a su lado hasta que muere la luz y el frío ya no necesita espada, y en algún lugar de la larga penumbra entendés lo que quiso decir: cada vez que estuviste firme, todo el mundo detrás tuyo estuvo más firme. Wulfric asiente una sola vez, ilegible, y te dice lo que guardó para esto: 'Me paré en la muralla de escudos en la peor hora de la guerra porque el hombre de al lado no corrió. Volvería a pararme a tu lado en ese mismo terreno.'"
+        }
+      },
+      {
+        "id": "share_the_fire",
+        "label": { "en": "Trade drills for stories by the fire", "es": "Cambiar el entrenamiento por historias junto al fuego" },
+        "tag": "Funny",
+        "rarity": "uncommon",
+        "statDeltas": { "charisma": 2 },
+        "affinityDelta": 15,
+        "narrative": {
+          "en": "You'd rather learn the man than the line, so you talk him into the hall and the fire, and the practice becomes a long evening of war stories that get better every retelling — mostly because you both know the exaggerations by heart and keep them anyway. By the end he's laughed hard enough to crack that great stone face, and the north lets two brewers' voices carry till midnight.",
+          "es": "Preferís aprender al hombre antes que la línea, así que lo convences de ir al salón y al fuego, y el entrenamiento se vuelve una larga noche de historias de guerra que mejoran en cada relato — sobre todo porque los dos se saben las exageraciones de memoria y las conservan igual. Al final se rió tan fuerte que agrietó esa gran cara de piedra, y el norte deja que dos voces de taberna lleguen hasta la medianoche."
+        }
+      },
+      {
+        "id": "drop_the_lesson",
+        "label": { "en": "Turn down the drill and leave", "es": "Rechazar el entrenamiento e irte" },
+        "tag": "Aggressive",
+        "rarity": "common",
+        "statDeltas": { "strength": 1 },
+        "affinityDelta": -20,
+        "narrative": {
+          "en": "You tell him your sword is for your road, not his snow, and leave the chalk line unfinished. He doesn't argue the point — that's the north's way, too. But when the light dies, the shape of where you stood is still chalked on the yard, and some lessons only get more expensive after the teaching is refused.",
+          "es": "Le decís que tu espada es para tu camino, no para su nieve, y dejás la línea de tiza sin terminar. No discute el punto — esa también es la manera del norte. Pero cuando muere la luz, la forma de donde te paraste sigue marcada en el patio, y algunas lecciones salen más caras después de rechazarlas."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rel_lucian_second_chance",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "requiresRelationshipId": "court_spy_lucian",
+    "narrative": {
+      "en": "Lucian finds you in the tea-house with a letter creased along the same fold again and again. 'The court condemned a steward for documents he didn't write,' he says, quiet. 'I know who wrote them. Turning him in would settle a bet I owe in coin — putting the truth in your hands would settle the one I owe in sleep. I don't ask you to clean my conscience. I ask you to decide where this letter goes.'",
+      "es": "Lucian te encuentra en la casa de té con una carta doblada siempre por el mismo pliegue. 'La corte condenó a un administrador por documentos que no escribió', dice, bajo. 'Sé quién los escribió. Delatarlo saldaría una apuesta que debo en monedas — poner la verdad en tus manos saldaría la que debo en sueños. No te pido que me limpies la conciencia. Te pido que decidas adónde va esta carta.'"
+    },
+    "choices": [
+      {
+        "id": "take_the_letter",
+        "label": { "en": "Take the letter and free the steward", "es": "Tomar la carta y liberar al administrador" },
+        "tag": "Supportive",
+        "rarity": "rare",
+        "statDeltas": { "charisma": 2, "intelligence": 1 },
+        "countersDelta": { "lives_saved": 1 },
+        "affinityDelta": 20,
+        "narrative": {
+          "en": "You take the letter to the chamberlain signed in no one's name, and the steward walks free with his name stitched back together. Lucian ends the affair with the kind of clean sleep that coin never buys, and hands you a name in return — a small, true fact about the real writer, for the day you might need it. 'I deal in secrets,' he says. 'Tonight I paid for one to be told.'",
+          "es": "Llevás la carta al chambelán sin firmar con el nombre de nadie, y el administrador sale libre con su nombre recompuesto. Lucian termina el asunto con la clase de sueño limpio que la moneda nunca compra, y te entrega un nombre a cambio — un hecho pequeño y verdadero sobre el verdadero autor, para el día en que puedas necesitarlo. 'Yo trato en secretos', dice. 'Esta noche pagué por que uno se contara.'"
+        }
+      },
+      {
+        "id": "sell_it_for_silver",
+        "label": { "en": "Sell the letter back to its writer", "es": "Venderle la carta a su autor" },
+        "tag": "Strategic",
+        "rarity": "volatile",
+        "statDeltas": { "intelligence": 2 },
+        "goldDelta": 120,
+        "liabilityDelta": 8,
+        "affinityDelta": -30,
+        "narrative": {
+          "en": "A truth has a market, too, so you sell the letter back to the one who wrote it — at a price that covers a year of your road. Lucian watches the handoff with something hollow behind his eyes. 'You taught me that a secret is only currency when it's spent,' he says, 'but you spent my conscience instead of yours. That coin has your face on it, friend, and it will look for you.'",
+          "es": "Una verdad también tiene mercado, así que le vendés la carta al que la escribió — a un precio que cubre un año de tu camino. Lucian mira la entrega con algo hueco detrás de los ojos. 'Me enseñaste que un secreto solo es moneda cuando se gasta', dice, 'pero gastaste mi conciencia en vez de la tuya. Esa moneda tiene tu cara, amigo, y te va a buscar.'"
+        }
+      },
+      {
+        "id": "burn_the_letter",
+        "label": { "en": "Burn the letter and the whole affair", "es": "Quemar la carta y todo el asunto" },
+        "tag": "Humble",
+        "rarity": "common",
+        "statDeltas": { "intelligence": 1 },
+        "affinityDelta": 5,
+        "narrative": {
+          "en": "You burn it in the teapot's flame, and the affair follows the smoke. The steward stays condemned, the writer stays hidden, and the truth stays where it was: in no one's pocket. Lucian watches the ash fall and says, almost grateful, 'For a man who knows everything, you asked nothing. I'm not sure how to owe someone who won't cash the debt. I'll figure it out.'",
+          "es": "La quemás en la llama de la tetera, y el asunto se va con el humo. El administrador sigue condenado, el autor sigue escondido, y la verdad se queda donde estaba: en el bolsillo de nadie. Lucian mira caer la ceniza y dice, casi agradecido, 'Para un hombre que lo sabe todo, no pediste nada. No sé cómo deberle a alguien que no cobra la deuda. Ya lo voy a resolver.'"
+        }
+      }
+    ]
+  },
+  {
+    "id": "rel_kade_gift",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "requiresRelationshipId": "warden_kade",
+    "narrative": {
+      "en": "Kade stands at his gate with a length of dark leather in his hand, and a careful look. 'The old way says a traveler leaves a token with the gate,' he says. 'I've taken thousands and refused more. This is the first one I made instead. It's a bridle strap, oiled so it bends before it breaks. I can't tell you who it's for mine, or a fencepost's. You figure it out the way the road does.'",
+      "es": "Kade está en su portón con un tramo de cuero oscuro en la mano y una mirada cuidadosa. 'La vieja usanza dice que un viajero deja una prenda en el portón', dice. 'Recibí miles y rechacé más. Esta es la primera que hice yo. Es una correa de brida, engrasada para que se doble antes que se rompa. No puedo decirte si es para los míos o para un poste de cerca. Lo averiguás como lo averigua el camino.'"
+    },
+    "choices": [
+      {
+        "id": "accept_the_strap",
+        "label": { "en": "Take the strap and wear it on the road", "es": "Aceptar la correa y llevarla en el camino" },
+        "tag": "Humble",
+        "rarity": "rare",
+        "statDeltas": { "constitution": 2 },
+        "affinityDelta": 30,
+        "narrative": {
+          "en": "You take it, work it into a loop on your packsaddle, and ride out. The strap bends before it breaks, the way he said — through crossings and storms and one hard month of road. When you ride back through his gate a season later, he sees the leather worn to its true shape and says the thing that costs a man of the old way the most: 'It held. So will you. That's what I made it for.'",
+          "es": "La aceptás, la atás en un lazo al arzón y salís a cabalgar. La correa se dobla antes de romperse, como dijo — entre cruces de río, tormentas y un mes duro de camino. Cuando volvés a pasar por su portón una temporada después, él ve el cuero gastado hasta su forma verdadera y dice lo que más le cuesta decir a un hombre de la vieja usanza: 'Aguantó. Y vas a aguantar vos. Para eso la hice.'"
+        }
+      },
+      {
+        "id": "ask_what_it_means",
+        "label": { "en": "Ask him plainly what it means", "es": "Preguntarle sin vueltas qué significa" },
+        "tag": "Funny",
+        "rarity": "uncommon",
+        "statDeltas": { "charisma": 2 },
+        "affinityDelta": 15,
+        "narrative": {
+          "en": "You ask him outright, and for the first time in your knowing of him the warden is caught flat — then laughs a sound like gravel rolling downhill. 'It means,' he says, 'that I'd rather arm a traveler than count him. Take it or don't, but stop making an old man say the soft thing twice in one weather.'",
+          "es": "Se lo preguntás de frente, y por primera vez desde que lo conocés el guardián se queda sin respuesta — y entonces suelta una risa como piedras rodando cuesta abajo. 'Significa', dice, 'que prefiero armar a un viajero antes que contarlo. Tómala o no, pero no hagas que un viejo diga la cosa tierna dos veces en el mismo clima.'"
+        }
+      },
+      {
+        "id": "refuse_the_gift",
+        "label": { "en": "Refuse it — you owe no one knots", "es": "Rechazarla — no le debés nudos a nadie" },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": { "intelligence": 1 },
+        "affinityDelta": -15,
+        "narrative": {
+          "en": "You tell him you don't carry tokens, and the road owes its own weight. He nods, slow, and hangs the strap over the gatepost where it can pick a new traveler or a fencepost's job. The offer never comes again, and something in the old way's count of you settles one line lower.",
+          "es": "Le decís que no llevás prendas, y que el camino debe su propio peso. Asiente, lento, y cuelga la correa del poste del portón, donde podrá elegir a un nuevo viajero o el trabajo de un poste. La oferta no vuelve a repetirse, y algo en la cuenta que la vieja usanza lleva de vos se asienta una línea más abajo."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rel_aldric_armory",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "requiresRelationshipId": "ser_aldric",
+    "narrative": {
+      "en": "The armory of the old knight Ser Aldric is the quiet kind of museum — banners too heavy for wind, the echo of a hundred drills. He finds you at the wall of famous blades and asks, without turning, 'Do you know why I give my lessons instead of leading marches anymore? The order that raised me is gone, and a few of the swords it made are still in the world doing its work. I'd like to count you among them before the forge goes cold. Will you let me hand you a sword, not as a knight, but as a lesson?'",
+      "es": "La armería del viejo caballero Ser Aldric es la clase de museo quieto — estandartes demasiado pesados para el viento, el eco de cien ejercicios de armas. Te encuentra junto a la pared de las hojas famosas y pregunta, sin darse vuelta, '¿Sabés por qué ya doy clases en vez de liderar marchas? La orden que me crió ya no existe, y algunas de las espadas que forjó todavía andan por el mundo haciendo su trabajo. Me gustaría contarte entre ellas antes de que se apague la fragua. ¿Me dejás darte una espada, no como caballero, sino como lección?'"
+    },
+    "choices": [
+      {
+        "id": "kneel_for_the_lesson",
+        "label": { "en": "Kneel and take the lesson as given", "es": "Arrodillarte y tomar la lección tal como se da" },
+        "tag": "Humble",
+        "rarity": "rare",
+        "statDeltas": { "strength": 2, "charisma": 1 },
+        "affinityDelta": 30,
+        "narrative": {
+          "en": "You kneel the way the order knelt, and he lays a plain practice blade across your shoulders lighter than a banner. 'No oath,' he says, 'because oaths got the order buried. Just this: win your fights for the people who can't see them coming. That's the whole lesson.' He is old enough to know a dais from a grave, and he smiles like a man who has picked his successor. 'Rise,' he says. 'The forge isn't cold yet.'",
+          "es": "Te arrodillás como se arrodillaba la orden, y él apoya sobre tus hombros una simple espada de entrenamiento, más liviana que un estandarte. 'Ningún juramento', dice, 'porque los juramentos enterraron a la orden. Solo esto: ganá tus peleas por la gente que no puede verlas venir. Esa es toda la lección.' Es lo bastante viejo para distinguir un estrado de una tumba, y sonríe como un hombre que ha elegido a su sucesor. 'Levantate', dice. 'La fragua todavía no está fría.'"
+        }
+      },
+      {
+        "id": "ask_for_his_story",
+        "label": { "en": "Ask for the story behind the wall", "es": "Preguntarle la historia detrás de la pared" },
+        "tag": "Strategic",
+        "rarity": "uncommon",
+        "statDeltas": { "charisma": 2 },
+        "countersDelta": { "lore_exchanged": 1 },
+        "affinityDelta": 15,
+        "narrative": {
+          "en": "You don't take the sword — you take the afternoon, and he tells you the wall blade by blade: the war where the banner bearer stood taller than the order, the hop-farmer whose sword-arm was a debt of honor, the one with no name because its owner's story is the lesson itself. By evening you've been handed more than any oath could have. 'That wall,' he says, 'is the order I actually serve.'",
+          "es": "No tomás la espada — tomás la tarde, y te cuenta la pared hoja por hoja: la guerra donde el portador del estandarte se paró más alto que la orden, el labrador de lúpulo cuyo brazo de espada era una deuda de honor, la que no tiene nombre porque la historia de su dueño es la lección misma. Al atardecer te han dado más que cualquier juramento. 'Esa pared', dice, 'es la orden a la que de verdad sirvo.'"
+        }
+      },
+      {
+        "id": "nod_and_leave",
+        "label": { "en": "Nod, take no sword, and leave", "es": "Asentir, no tomar espada alguna, e irte" },
+        "tag": "Stoic",
+        "rarity": "common",
+        "statDeltas": { "intelligence": 1 },
+        "affinityDelta": -15,
+        "narrative": {
+          "en": "You thank him for the offer and tell him your road already has a sword's name on it. He nods the way old knights nod when they've heard that answer fewer times than they'd like — and the forge-bellows sigh once, as if counting the cold that's coming. You leave the wall of blades standing, and that is the only answer you can give that stays honest.",
+          "es": "Le agradecés la oferta y le decís que tu camino ya lleva el nombre de una espada. Asiente como asienten los caballeros viejos cuando oyen esa respuesta menos veces de las que quisieran — y el fuelle de la fragua suspira una vez, como contando el frío que viene. Dejás la pared de hojas en pie, y esa es la única respuesta que podés dar y seguir siendo honesto."
+        }
+      }
+    ]
   }
 ]

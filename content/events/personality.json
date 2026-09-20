@@ -728,5 +728,448 @@
         }
       }
     ]
+  },
+  {
+    "id": "personality_weigh_the_boast",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "narrative": {
+      "en": "Around the fire, a trader swears he outran a storm by lying down until it passed. Every boast lands a little louder, and the circle's eyes turn to you. They want to see the stranger outdo the weather.",
+      "es": "Alrededor del fuego, un mercader jura que le ganó a una tormenta acostándose hasta que pasara. Cada bravata aterriza un poco más fuerte, y las miradas del círculo se vuelven hacia vos. Quieren ver al desconocido ganarle al clima."
+    },
+    "choices": [
+      {
+        "id": "set_the_truth",
+        "label": {
+          "en": "Tell the truth with three words",
+          "es": "Decir la verdad con tres palabras"
+        },
+        "tag": "Humble",
+        "rarity": "rare",
+        "requiresStat": {
+          "stat": "charisma",
+          "value": 14
+        },
+        "wantedTags": {
+          "Humble": 0.2,
+          "Stoic": 0.1
+        },
+        "punishedTags": {
+          "Aggressive": -0.1
+        },
+        "statDeltas": {
+          "charisma": 2
+        },
+        "reputationDelta": 3,
+        "narrative": {
+          "en": "You wait for the silence and say it plain: 'I met that storm's little brother, and crossed its fields instead of fighting it.' The fire pops. The trader buys you a mug, and the circle retells your version all night — because a quiet truth outlives a loud one.",
+          "es": "Esperás el silencio y lo decís liso: 'Me crucé con el hermanito de esa tormenta, y crucé sus campos en vez de pelear con ella.' Cruje el fuego. El mercader te paga una jarra, y el círculo cuenta tu versión toda la noche — porque una verdad quieta sobrevive a una ruidosa."
+        }
+      },
+      {
+        "id": "outdo_the_storm",
+        "label": {
+          "en": "Tell a storm-story big enough to stand in",
+          "es": "Contar una historia de tormenta digna de pararse en ella"
+        },
+        "tag": "Cocky",
+        "rarity": "uncommon",
+        "wantedTags": {
+          "Cocky": 0.2
+        },
+        "punishedTags": {
+          "Humble": -0.1
+        },
+        "statDeltas": {
+          "charisma": 3
+        },
+        "reputationDelta": 4,
+        "narrative": {
+          "en": "You lean into the fire and give them a storm of your own — with a peak so high the snow remembers it. It isn't true, and they know it, and that's exactly why it works: the circle roars, and the trader raises his mug to the stranger who out-bragged the weather twice in one night.",
+          "es": "Te inclinás hacia el fuego y les das tu propia tormenta — con un pico tan alto que la nieve lo recuerda. No es verdad, y lo saben, y es exactamente por eso que funciona: el círculo ruge, y el mercader alza su jarra por el desconocido que le ganó al clima dos veces en una noche."
+        }
+      },
+      {
+        "id": "silence_the_fire",
+        "label": {
+          "en": "Let the fire have the last word",
+          "es": "Dejar que el fuego diga la última palabra"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "wantedTags": {
+          "Stoic": 0.2
+        },
+        "punishedTags": {
+          "Funny": -0.1
+        },
+        "statDeltas": {
+          "charisma": 1
+        },
+        "reputationDelta": 1,
+        "narrative": {
+          "en": "You take a long pull of your mug and say nothing, and the fire speaks for you: crackle, hiss, settle. By the time the coals are low, the circle has told your silence back to itself as a dozen different stories. Sometimes the weather only loses to someone who isn't trying to beat it.",
+          "es": "Tomás un largo trago de tu jarra y no decís nada, y el fuego habla por vos: crepita, silba, se asienta. Para cuando las brasas estén bajas, el círculo le habrá contado a tu silencio una docena de historias distintas. A veces el clima solo pierde contra alguien que no intenta ganarle."
+        }
+      }
+    ]
+  },
+  {
+    "id": "personality_charity_sacrifice",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "narrative": {
+      "en": "On the shrine steps, a child's coin-purse was cut this morning, and the whole market watched. She hasn't cried once — she just holds the empty string. The shrine's box is heavier than it's been all month. Your coat is warm enough to spare.",
+      "es": "En las escalinatas del santuario, a una niña le cortaron la bolsa de monedas esta mañana, y todo el mercado lo vio. No lloró ni una vez — solo sostiene el cordel vacío. La alcancía del santuario está más pesada que en todo el mes. Tu abrigo te sobra para compartirlo."
+    },
+    "choices": [
+      {
+        "id": "give_the_coat",
+        "label": {
+          "en": "Give her your coat and warm her hours",
+          "es": "Darle tu abrigo y calentarle las horas"
+        },
+        "tag": "Humble",
+        "rarity": "rare",
+        "wantedTags": {
+          "Humble": 0.25,
+          "Supportive": 0.1
+        },
+        "punishedTags": {
+          "Cocky": -0.1
+        },
+        "statDeltas": {
+          "charisma": 2
+        },
+        "goldDelta": -20,
+        "reputationDelta": 2,
+        "countersDelta": {
+          "temples_visited": 1
+        },
+        "narrative": {
+          "en": "You shrug off your coat and settle it around her shoulders like it was always hers. She doesn't thank you — she just looks at the shrine, then at you, and writes something in the dust with the empty string. What she writes is: 'one good thing.' Weeks later you'll hear that story told as hers: the stranger on the steps who measured a child's hour in cloth.",
+          "es": "Te sacás el abrigo y se lo acomodás sobre los hombros como si siempre hubiera sido de ella. No te agradece — solo mira al santuario, después a vos, y escribe algo en el polvo con el cordel vacío. Lo que escribe es: 'una cosa buena.' Semanas después oirás esa historia contada como propia: el desconocido de las escalinatas que midió la hora de una niña en tela."
+        }
+      },
+      {
+        "id": "offer_the_lesson",
+        "label": {
+          "en": "Teach her to see the cut before it lands",
+          "es": "Enseñarle a ver el corte antes de que caiga"
+        },
+        "tag": "Strategic",
+        "rarity": "uncommon",
+        "wantedTags": {
+          "Strategic": 0.2,
+          "Supportive": 0.1
+        },
+        "punishedTags": {
+          "Humble": -0.1
+        },
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "reputationDelta": 2,
+        "countersDelta": {
+          "students_trained": 1
+        },
+        "narrative": {
+          "en": "You crouch beside her and spend the next hour teaching her the street's quiet grammar: how a purse sits, how hands move, how a crowd leans. By dusk she can spot the setup before it lands. She files the lesson next to the shrine, and the street gets a little harder to rob — one careful child at a time.",
+          "es": "Te agachás a su lado y pasás la hora siguiente enseñándole la gramática callada de la calle: cómo se asienta una bolsa, cómo se mueven las manos, cómo se inclina una multitud. Al atardecer sabe ver la trampa antes de que caiga. Guarda la lección junto al santuario, y la calle se vuelve un poco más difícil de robar — una niña cuidadosa a la vez."
+        }
+      },
+      {
+        "id": "look_away",
+        "label": {
+          "en": "Keep walking past the empty string",
+          "es": "Seguir de largo ante el cordel vacío"
+        },
+        "tag": "Stoic",
+        "rarity": "common",
+        "wantedTags": {
+          "Stoic": 0.2
+        },
+        "punishedTags": {
+          "Supportive": -0.1
+        },
+        "statDeltas": {
+          "constitution": 1
+        },
+        "narrative": {
+          "en": "Some losses are markers for where the world's edges are, and you've learned to read them and keep walking. You pass the empty string and the shrine both. The cold that touches your neck on the way out is a fair price — you tell yourself — for a lesson you already paid for years ago.",
+          "es": "Algunas pérdidas son marcas del borde del mundo, y aprendiste a leerlas y seguir caminando. Pasás de largo junto al cordel vacío y al santuario. El frío que te toca el cuello al salir es un precio justo — te decís — por una lección que ya pagaste hace años."
+        }
+      }
+    ]
+  },
+  {
+    "id": "personality_fame_chooses",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 4,
+    "narrative": {
+      "en": "The far table is telling your story — your deeds warped into a tale you almost recognize. They've made you taller, kinder, and louder. The bard on the stage is about to sing the version that travels.",
+      "es": "En la mesa del fondo van contando tu historia — tus hazañas deformadas hasta un relato que casi reconocés. Te hicieron más alto, más bueno y más ruidoso. El bardo del escenario está a punto de cantar la versión que viaja."
+    },
+    "choices": [
+      {
+        "id": "keep_the_story_humble",
+        "label": {
+          "en": "Stand up and set the tale straight",
+          "es": "Levantarte y corregir la historia"
+        },
+        "tag": "Humble",
+        "rarity": "uncommon",
+        "wantedTags": {
+          "Humble": 0.2,
+          "Stoic": 0.1
+        },
+        "punishedTags": {
+          "Cocky": -0.1
+        },
+        "statDeltas": {
+          "charisma": 1
+        },
+        "reputationDelta": 1,
+        "countersDelta": {
+          "declined_offers": 1
+        },
+        "narrative": {
+          "en": "You stand and give them the boring truth — the mud, the luck, the part where you ran. The room goes quiet in that particular way a room does when you hand back their legend. The bard nods once and sings it true tonight. Fame that fits you is harder to carry than fame that doesn't, but it never cuts your shoulders.",
+          "es": "Te parás y les das la verdad aburrida — el barro, la suerte, la parte en que corriste. El salón se calla de ese modo particular en que se calla cuando les devolvés su leyenda. El bardo asiente una vez y esta noche la canta verdadera. La fama que te queda bien es más difícil de cargar que la que no, pero nunca te corta los hombros."
+        }
+      },
+      {
+        "id": "wear_the_story",
+        "label": {
+          "en": "Let the legend grow on you",
+          "es": "Dejar que la leyenda te crezca encima"
+        },
+        "tag": "Cocky",
+        "rarity": "uncommon",
+        "wantedTags": {
+          "Cocky": 0.25
+        },
+        "punishedTags": {
+          "Humble": -0.1
+        },
+        "statDeltas": {
+          "charisma": 3
+        },
+        "reputationDelta": 4,
+        "narrative": {
+          "en": "You lean back and let the taller legend stand where you sit. The bard catches your eye mid-song and, without missing a note, makes you four inches braver and one storm worse. By close, the whole town believes the version you nodded along to — and some mornings, so will you.",
+          "es": "Te reclinás y dejás que la leyenda más alta se pare donde te sentás. El bardo te cruza la mirada a mitad de canción y, sin perder una nota, te hace cuatro pulgadas más valiente y una tormenta peor. Para el cierre, todo el pueblo cree la versión a la que asentiste — y algunas mañanas, vos también."
+        }
+      },
+      {
+        "id": "pay_to_sink_it",
+        "label": {
+          "en": "Pay the bard to bury the tale",
+          "es": "Pagarle al bardo para enterrar el relato"
+        },
+        "tag": "Professional",
+        "rarity": "common",
+        "wantedTags": {
+          "Professional": 0.25
+        },
+        "punishedTags": {
+          "Funny": -0.1
+        },
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "goldDelta": -80,
+        "narrative": {
+          "en": "You slip the bard enough silver to pick a different song, and the version that travels becomes someone else's hero. The tale dies quiet in the corner where it started. It costs you coin and nothing else — which is the best deal fame has ever offered you.",
+          "es": "Le deslizás al bardo suficiente plata para que elija otra canción, y la versión que viaja se convierte en el héroe de otra persona. El relato muere en silencio en el rincón donde empezó. Te cuesta monedas y nada más — que es el mejor trato que la fama te ofreció jamás."
+        }
+      }
+    ]
+  },
+  {
+    "id": "personality_honor_betrayal_choice",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "narrative": {
+      "en": "A stranger finds you near the forge quarter and lays out gold and a name. The forger who guards your road once showed you his secret vault in confidence. The stranger offers you twice what the vault holds to point the way.",
+      "es": "Un desconocido te encuentra cerca del barrio de las fraguas y extiende oro y un nombre. El forjador que cuida tu camino te mostró una vez su bóveda secreta, en confianza. El desconocido te ofrece el doble de lo que guarda la bóveda por señalar el camino."
+    },
+    "choices": [
+      {
+        "id": "refuse_twice",
+        "label": {
+          "en": "Refuse twice — once for the gold, once for the asking",
+          "es": "Negarte dos veces — una por el oro, otra por el pedido"
+        },
+        "tag": "Humble",
+        "rarity": "rare",
+        "wantedTags": {
+          "Humble": 0.22,
+          "Stoic": 0.1
+        },
+        "punishedTags": {
+          "Aggressive": -0.1
+        },
+        "statDeltas": {
+          "charisma": 2
+        },
+        "reputationDelta": 2,
+        "countersDelta": {
+          "declined_dark_offers": 1
+        },
+        "narrative": {
+          "en": "You refuse twice, clean as a blade: once for the gold, once for the principle — because any fool can turn down an offer, but only some can turn down being asked. The stranger folds his coin and walks. The forger will never know anything was offered, which is exactly the point of the day.",
+          "es": "Te negás dos veces, limpio como una hoja: una por el oro, otra por el principio — porque cualquier tonto puede rechazar una oferta, pero solo algunos pueden rechazar que se lo pidan. El desconocido guarda sus monedas y se va. El forjador nunca sabrá que hubo una oferta, que es exactamente el punto del día."
+        }
+      },
+      {
+        "id": "sell_the_vault",
+        "label": {
+          "en": "Take the gold and point the way",
+          "es": "Tomar el oro y señalar el camino"
+        },
+        "tag": "Strategic",
+        "rarity": "volatile",
+        "wantedTags": {
+          "Strategic": 0.2
+        },
+        "punishedTags": {
+          "Humble": -0.15
+        },
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "goldDelta": 150,
+        "liabilityDelta": 10,
+        "narrative": {
+          "en": "The price is double, and the road is long, so you take it — and the stranger walks into the forger's trust with your direction on his lips. The vault survives anyway, because the forger's secret had a secret. But the way your name sits in that quarter now is a notch looser, and it's your own hand that carved it.",
+          "es": "El precio es el doble, y el camino es largo, así que lo tomás — y el desconocido entra en la confianza del forjador con tu indicación en la boca. La bóveda sobrevive igual, porque el secreto del forjador tenía un secreto. Pero el lugar que tu nombre ocupa ahora en ese barrio está una muesca más flojo, y es tu propia mano la que lo talló."
+        }
+      },
+      {
+        "id": "warn_the_forger",
+        "label": {
+          "en": "Spend the night warning the forger",
+          "es": "Pasar la noche avisándole al forjador"
+        },
+        "tag": "Professional",
+        "rarity": "common",
+        "wantedTags": {
+          "Professional": 0.2,
+          "Humble": 0.1
+        },
+        "punishedTags": {
+          "Cocky": -0.1
+        },
+        "statDeltas": {
+          "charisma": 2
+        },
+        "reputationDelta": 3,
+        "countersDelta": {
+          "lore_exchanged": 1
+        },
+        "narrative": {
+          "en": "You find the forger before the stranger does and tell him the shape of the day — no gold, no name, just the warning that trust earns. He moves the vault in one night, and the stranger finds an empty anvil room. 'Trust is a tool,' the forger says, 'and you just sharpened mine.'",
+          "es": "Encontrás al forjador antes que el desconocido y le contás la forma del día — sin oro, sin nombre, solo la advertencia que merece una confianza. Mueve la bóveda en una noche, y el desconocido encuentra una sala de yunques vacía. 'La confianza es una herramienta', dice el forjador, 'y recién afilaste la mía.'"
+        }
+      }
+    ]
+  },
+  {
+    "id": "personality_empty_promise",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "narrative": {
+      "en": "A widow at the crossroads asks you to carry word to her son across the border — a boy who may have been conscripted into a regiment you've never heard of. The words she wants you to carry are a promise you can't make.",
+      "es": "Una viuda en la encrucijada te pide que lleves una palabra a su hijo, al otro lado de la frontera — un muchacho que puede haber sido reclutado en un regimiento del que nunca oíste hablar. Las palabras que quiere que lleves son una promesa que no podés hacer."
+    },
+    "choices": [
+      {
+        "id": "admit_the_limit",
+        "label": {
+          "en": "Tell her the truth of what you can't promise",
+          "es": "Decirle la verdad de lo que no podés prometer"
+        },
+        "tag": "Humble",
+        "rarity": "uncommon",
+        "wantedTags": {
+          "Humble": 0.2,
+          "Stoic": 0.1
+        },
+        "punishedTags": {
+          "Cocky": -0.1
+        },
+        "statDeltas": {
+          "charisma": 2
+        },
+        "reputationDelta": 1,
+        "countersDelta": {
+          "declined_offers": 1
+        },
+        "narrative": {
+          "en": "You look her in the eye and tell her plainly: you will carry the word, but you cannot promise the boy lives, and you won't pretend that is a promise. She holds your look and takes the honest version, then presses a copper into your palm to carry exactly that truth. A promise you can't keep is a debt; a truth you can carry is a road.",
+          "es": "La mirás a los ojos y se lo decís liso: vas a llevar la palabra, pero no podés prometer que el muchacho viva, y no vas a fingir que eso es una promesa. Sostiene tu mirada, toma la versión honesta y después te aprieta un cobre en la palma para que lleves exactamente esa verdad. Una promesa que no podés cumplir es una deuda; una verdad que podés llevar es un camino."
+        }
+      },
+      {
+        "id": "let_it_slip",
+        "label": {
+          "en": "Let the promise slip like it was yours to make",
+          "es": "Dejar escapar la promesa como si fuera tuya para hacerla"
+        },
+        "tag": "Cocky",
+        "rarity": "uncommon",
+        "wantedTags": {
+          "Cocky": 0.2
+        },
+        "punishedTags": {
+          "Humble": -0.1
+        },
+        "statDeltas": {
+          "charisma": 1
+        },
+        "goldDelta": 10,
+        "liabilityDelta": 5,
+        "countersDelta": {
+          "volatile_greed": 1
+        },
+        "narrative": {
+          "en": "The words come out smooth and wrong: 'He'll come home to you.' She smiles, and you carry the lie across the border the way it carries you — a weight that grows with every mile. The copper she pressed into your hand goes into your pocket, and you know some coins weigh more in there than they did in the light.",
+          "es": "Las palabras salen suaves y equivocadas: 'Va a volver a casa contigo.' Ella sonríe, y llevás la mentira al otro lado de la frontera como ella te lleva a vos — un peso que crece con cada milla. El cobre que te dio va a tu bolsillo, y sabés que hay monedas que pesan más ahí dentro de lo que pesaban a la luz."
+        }
+      },
+      {
+        "id": "carry_the_small_task",
+        "label": {
+          "en": "Promise the small task you can actually keep",
+          "es": "Prometer la pequeña tarea que de verdad podés cumplir"
+        },
+        "tag": "Professional",
+        "rarity": "uncommon",
+        "wantedTags": {
+          "Professional": 0.2,
+          "Supportive": 0.1
+        },
+        "punishedTags": {
+          "Stoic": -0.1
+        },
+        "statDeltas": {
+          "intelligence": 2,
+          "charisma": 1
+        },
+        "countersDelta": {
+          "quests_completed": 1
+        },
+        "narrative": {
+          "en": "You won't make the big promise, but you make the small one: you will carry word, ask three questions, and bring back a true answer — no gold for it. You do exactly that, and the answer you bring is one the widow can build a life on, even if the boy is slower coming than the promise. Some roads are built from the promises a stranger could keep.",
+          "es": "No vas a hacer la promesa grande, pero hacés la chica: vas a llevar la palabra, hacer tres preguntas y traer una respuesta verdadera — sin oro por ello. Hacés exactamente eso, y la respuesta que traés es una sobre la que la viuda puede construir una vida, aunque el muchacho tarde más que la promesa. Algunos caminos se construyen con las promesas que una persona desconocida sí pudo cumplir."
+        }
+      }
+    ]
   }
 ]
