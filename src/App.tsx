@@ -14,7 +14,12 @@ import type {
   RunType,
   ServedEvent,
 } from "@shared/types"
-import { type AchievementView, api, type CombatMoveResponse, type MinigameMoveResponse } from "./api"
+import {
+  type AchievementView,
+  api,
+  type CombatMoveResponse,
+  type MinigameMoveResponse,
+} from "./api"
 import { makeT, t } from "./i18n/strings"
 import { t as resolveLocaleMap } from "@shared/i18n"
 import { readUnlockedClasses, stampUnlockedClass } from "./lib/archetypeUnlocks"
@@ -104,17 +109,13 @@ export default function App() {
       const err = e.reason
       const current = localeRef.current
       console.error("[client] unhandled rejection", err)
-      pushErrorToast([
-        { title: t(current, "errorTitle"), desc: errorMessage(err, current) },
-      ])
+      pushErrorToast([{ title: t(current, "errorTitle"), desc: errorMessage(err, current) }])
     }
     function onWindowError(e: ErrorEvent) {
       if (!e.error) return // resource-load failures have no stack worth reporting
       const current = localeRef.current
       console.error("[client] uncaught error", e.error)
-      pushErrorToast([
-        { title: t(current, "errorTitle"), desc: errorMessage(e.error, current) },
-      ])
+      pushErrorToast([{ title: t(current, "errorTitle"), desc: errorMessage(e.error, current) }])
     }
     window.addEventListener("unhandledrejection", onUnhandledRejection)
     window.addEventListener("error", onWindowError)
@@ -231,12 +232,17 @@ export default function App() {
     setScreen("game")
   }
 
-  async function choose(choiceId: string) {
+  async function choose(choiceId: string, playerAnswer?: string) {
     const currentRunId = runId
     if (!currentRunId) return
     let res: Awaited<ReturnType<typeof api.choose>>
     try {
-      res = await api.choose({ runId: currentRunId, choiceId, cardId: choiceId })
+      res = await api.choose({
+        runId: currentRunId,
+        choiceId,
+        cardId: choiceId,
+        playerAnswer,
+      })
     } catch (e) {
       // Check if the run still exists before abandoning.
       try {
@@ -247,9 +253,7 @@ export default function App() {
         // Run is still valid — transient error. Surface it (with its omen id)
         // and let the player try again.
         setTurnNarrative(t(locale, "fatesHesitate"))
-        pushErrorToast([
-          { title: t(locale, "errorTitle"), desc: errorMessage(e, locale) },
-        ])
+        pushErrorToast([{ title: t(locale, "errorTitle"), desc: errorMessage(e, locale) }])
         return
       } catch {
         // Run truly gone (server restart, DB reset, etc.). Recover gracefully.
@@ -258,9 +262,7 @@ export default function App() {
         setCharacter(null)
         setEvent(null)
         setScreen("creation")
-        pushErrorToast([
-          { title: t(locale, "errorTitle"), desc: errorMessage(e, locale) },
-        ])
+        pushErrorToast([{ title: t(locale, "errorTitle"), desc: errorMessage(e, locale) }])
         return
       }
     }
@@ -326,9 +328,7 @@ export default function App() {
         const state = await api.state(currentRunId)
         if (state.finished || !state.event) throw new Error("run finished or gone", { cause: e })
         setTurnNarrative(t(locale, "fatesHesitate"))
-        pushErrorToast([
-          { title: t(locale, "errorTitle"), desc: errorMessage(e, locale) },
-        ])
+        pushErrorToast([{ title: t(locale, "errorTitle"), desc: errorMessage(e, locale) }])
         return { status: "playing" } as MinigameMoveResponse
       } catch {
         localStorage.removeItem(RUN_KEY)
@@ -336,9 +336,7 @@ export default function App() {
         setCharacter(null)
         setEvent(null)
         setScreen("creation")
-        pushErrorToast([
-          { title: t(locale, "errorTitle"), desc: errorMessage(e, locale) },
-        ])
+        pushErrorToast([{ title: t(locale, "errorTitle"), desc: errorMessage(e, locale) }])
         return { status: "playing" } as MinigameMoveResponse
       }
     }
@@ -362,9 +360,7 @@ export default function App() {
         const state = await api.state(currentRunId)
         if (state.finished || !state.event) throw new Error("run finished or gone", { cause: e })
         setTurnNarrative(t(locale, "fatesHesitate"))
-        pushErrorToast([
-          { title: t(locale, "errorTitle"), desc: errorMessage(e, locale) },
-        ])
+        pushErrorToast([{ title: t(locale, "errorTitle"), desc: errorMessage(e, locale) }])
         return { status: "playing" } as CombatMoveResponse
       } catch {
         localStorage.removeItem(RUN_KEY)
@@ -372,9 +368,7 @@ export default function App() {
         setCharacter(null)
         setEvent(null)
         setScreen("creation")
-        pushErrorToast([
-          { title: t(locale, "errorTitle"), desc: errorMessage(e, locale) },
-        ])
+        pushErrorToast([{ title: t(locale, "errorTitle"), desc: errorMessage(e, locale) }])
         return { status: "playing" } as CombatMoveResponse
       }
     }

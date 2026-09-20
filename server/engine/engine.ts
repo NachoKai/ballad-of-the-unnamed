@@ -15,6 +15,8 @@ import type {
   ServedClanOffer,
   ServedEvent,
   StatDeltas,
+  ThreadContent,
+  ThreadReward,
 } from "../../shared/types.js"
 import { STAT_KEYS } from "../../shared/types.js"
 import { Rng } from "../../shared/rng.js"
@@ -33,6 +35,7 @@ import {
   adjustReputation,
   applyAgeDecline,
   applyClanBetrayal,
+  checkFlag,
   clearExpiredHunted,
   computeSeasonGrade,
   deductStamina,
@@ -389,6 +392,27 @@ export function selectEvent(c: CharacterState, registry: ContentRegistry, rng: R
       return picked
     }
   }
+  // Story threads: when a thread is active, its current beat replaces the
+  // normal event/minigame rotation for this turn. No rng draw is consumed — the
+  // minigame roll + weighted pick below are skipped entirely, so the seeded
+  // stream is identical whether or not a thread exists. A dangling beat (id no
+  // longer in the registry, index past the end) is dropped and the rotation
+  // resumes; an ineligible beat is kept so the thread can advance once it
+  // becomes eligible.
+  const thread = c.activeThread
+  if (thread) {
+    const content = thread ? registry.threadsById.get(thread.id) : undefined
+    const beatId =
+      content && thread.beatIndex >= 0 && thread.beatIndex < content.beats.length
+        ? content.beats[thread.beatIndex]
+        : undefined
+    const beatEvent = beatId ? registry.eventsById.get(beatId) : undefined
+    if (beatEvent && isEligible(beatEvent, c) && hasPlayableChoice(beatEvent, c)) {
+      c.lastEventId = beatEvent.id
+      return beatEvent
+    }
+    if (!beatEvent) c.activeThread = null
+  }
   // Occasionally offer a minigame instead of a normal event.
   const pool: EventContent[] = []
   const wantMinigame = rng.bool(0.28)
@@ -412,7 +436,16 @@ export function selectEvent(c: CharacterState, registry: ContentRegistry, rng: R
     // have no choices at all — they resolve move-by-move, so they are always
     // playable when eligible (subject to the per-run cap + cooldown above).
     if (isEligible(ev, c)) {
-      if (ev.resolution?.type === "interactive") {
+      if (ev.type === "dialogue") {
+        // Dialogue events are paced like interactive minigames: each id at most
+        // once per run, capped at maxDialogueEventsPerRun, spaced by cooldown.
+        const seen = c.dialogueEventsSeen ?? []
+        if (seen.includes(ev.id)) continue
+        if (seen.length >= GAME_CONFIG.maxDialogueEventsPerRun) continue
+        const lastDialogueTurn = c.counters["last_dialogue_turn"] ?? Number.NEGATIVE_INFINITY
+        if (c.turn - lastDialogueTurn < GAME_CONFIG.dialogueCooldownTurns) continue
+        pool.push(ev)
+      } else if (ev.resolution?.type === "interactive") {
         if (interactiveBudget <= 0 || !interactiveReady) continue
         pool.push(ev)
       } else if (hasPlayableChoice(ev, c)) {
@@ -440,6 +473,11 @@ export function selectEvent(c: CharacterState, registry: ContentRegistry, rng: R
   if (picked.resolution?.type === "interactive") {
     bumpCounter(c, "interactive_games_served")
     c.counters["last_interactive_turn"] = c.turn
+  }
+  // Track dialogue servings so each id plays once and the cap/cooldown hold.
+  if (picked.type === "dialogue") {
+    c.dialogueEventsSeen = [...(c.dialogueEventsSeen ?? []), picked.id]
+    c.counters["last_dialogue_turn"] = c.turn
   }
   return picked
 }
@@ -1100,16 +1138,23 @@ export function buildServedEvent(
   }
   const ev = selectEvent(c, registry, rng)
   markEventSeen(c, ev.id)
-  return {
-    event: ev,
-    served: serveEvent(ev, c, c.locale, registry, rng, false),
-    finaleStage: undefined,
+  const served = serveEvent(ev, c, c.locale, registry, rng, false)
+  // Surface the active storyline on the served event so the HUD can show its
+  // title chip while the run is mid-thread.
+  if (c.activeThread) {
+    const thread = registry.threadsById.get(c.activeThread.id)
+    if (thread) served.threadTitle = localize(thread.title, c.locale)
   }
+  return { event: ev, served, finaleStage: undefined }
 }
 
 // Resolve a season summary event: advance season, pay the faction stipend,
 // clean up expired inventory.
-export function resolveSeasonSummary(c: CharacterState, registry: ContentRegistry): void {
+export function resolveSeasonSummary(
+  c: CharacterState,
+  registry: ContentRegistry,
+  rng?: Rng,
+): void {
   c.seasonCount += 1
   c.turn += 1
   // The bards sing: renown earned this season (fame + standing with the current
@@ -1137,6 +1182,18 @@ export function resolveSeasonSummary(c: CharacterState, registry: ContentRegistr
     if (entry.expiresAtTurn && entry.expiresAtTurn <= c.turn) return false
     return true
   })
+  // A new season is the natural seam to open a new story thread. Without an
+  // rng (legacy callers/tests) the run simply never opens one.
+  if (rng) {
+    const plan = planThreadOpen(c, registry, rng)
+    if (plan.open) {
+      c.activeThread = { id: plan.fallbackPick.id, beatIndex: 0 }
+      c.threadCandidates = plan.candidates.map((t) => t.id)
+      // Phase 2: the route layer may refine the pick via a daily-cached Jev
+      // judgment using threadCandidates; the fallbackPick stands otherwise.
+      c.threadPickPending = true
+    }
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -1183,6 +1240,90 @@ function applyStatDeltas(c: CharacterState, deltas?: StatDeltas, multiplier = 1)
 
 export function bumpCounter(c: CharacterState, key: string, by = 1): void {
   c.counters[key] = (c.counters[key] ?? 0) + by
+}
+
+// ---------------------------------------------------------------------------
+// Story threads
+// ---------------------------------------------------------------------------
+
+// Advance the active thread after its current beat resolves. `playedEventId`
+// optionally guards against advancing when the resolved event is NOT the beat —
+// scheduled interludes (season summary, capstone, negotiation, tournament,
+// finale) preempt the beat turn and must not skip it. When the final beat
+// resolves the thread completes: activeThread clears, its id is recorded in
+// completedThreads, and the authored reward applies exactly once.
+export function advanceThread(
+  c: CharacterState,
+  registry: ContentRegistry,
+  playedEventId?: string,
+): void {
+  if (!c.activeThread) return
+  const thread = registry.threadsById.get(c.activeThread.id)
+  if (!thread) {
+    c.activeThread = null
+    return
+  }
+  const beatIndex = c.activeThread.beatIndex
+  if (playedEventId && thread.beats[beatIndex] !== playedEventId) return
+  const next = beatIndex + 1
+  if (next >= thread.beats.length) {
+    c.completedThreads = [...(c.completedThreads ?? []), thread.id]
+    c.activeThread = null
+    applyThreadReward(c, thread.reward)
+  } else {
+    c.activeThread = { id: thread.id, beatIndex: next }
+  }
+}
+
+function applyThreadReward(c: CharacterState, reward?: ThreadReward): void {
+  if (!reward) return
+  if (reward.goldDelta) c.gold += reward.goldDelta
+  if (reward.fameDelta) c.fame += reward.fameDelta
+  // Reputation is faction-scoped: mirror resolveChoice (engine.ts:1461).
+  if (reward.reputationDelta) {
+    adjustReputation(c, defaultFaction(c), reward.reputationDelta)
+  }
+  if (reward.statDeltas) applyStatDeltas(c, reward.statDeltas)
+  if (reward.setsFlag) for (const [k, v] of Object.entries(reward.setsFlag)) setFlag(c, k, v)
+}
+
+export interface ThreadOpenPlan {
+  candidates: ThreadContent[]
+  fallbackPick: ThreadContent
+  rngStateAfter: number
+}
+
+// Decide WHETHER a thread opens at a season boundary and (deterministically)
+// WHICH one. Exactly two draws are consumed when an open happens (bool for the
+// whether-roll, weighted for the which-roll) and zero when it bails. The
+// whether-roll failing consumes exactly one. The which-roll is ALWAYS consumed
+// on an open so a Phase-2 Jev override of the winner never perturbs the seeded
+// stream. `rngStateAfter` lets the route layer persist the post-pick state
+// before an async refinement decides the final winner.
+export function planThreadOpen(
+  c: CharacterState,
+  registry: ContentRegistry,
+  rng: Rng,
+): { open: false } | ({ open: true } & ThreadOpenPlan) {
+  if (c.activeThread) return { open: false }
+  const completed = new Set(c.completedThreads ?? [])
+  if (completed.size >= GAME_CONFIG.maxThreadsPerRun) return { open: false }
+  const candidates = registry.threads.filter((t) => threadEligible(t, c, completed))
+  if (candidates.length === 0) return { open: false }
+  if (!rng.bool(GAME_CONFIG.threadOpenChance)) return { open: false }
+  const fallbackPick = rng.weighted(candidates, (t) => t.weight ?? 1)
+  return { open: true, candidates, fallbackPick, rngStateAfter: rng.getState() }
+}
+
+function threadEligible(t: ThreadContent, c: CharacterState, completed: Set<string>): boolean {
+  if (completed.has(t.id)) return false
+  if (t.minAge != null && c.age < t.minAge) return false
+  if (t.maxAge != null && c.age > t.maxAge) return false
+  if (t.requiresArc && !t.requiresArc.includes(c.currentArc)) return false
+  if (t.requiresRegion && c.currentRegion !== t.requiresRegion) return false
+  if (t.requiresFlag && !checkFlag(c, t.requiresFlag)) return false
+  if (t.excludeIfFlag && checkFlag(c, t.excludeIfFlag)) return false
+  return true
 }
 
 // Track drawn-card rarity for the collection-style achievements.
@@ -1291,7 +1432,7 @@ export function resolveChoice(
 
   // Season summary handling.
   if (event.id === "__season_summary__") {
-    resolveSeasonSummary(c, registry)
+    resolveSeasonSummary(c, registry, rng)
     return {
       narrative: "",
       ended: false,
@@ -1461,6 +1602,8 @@ export function resolveChoice(
   recomputeDerived(c)
   ageUp(c)
   clearExpiredHunted(c)
+  // Story threads advance only when this turn actually played the active beat.
+  advanceThread(c, registry, event.id)
 
   // Death roll (skip if already retired or finale-pending).
   if (!ended && c.status !== "retired") {
@@ -1483,6 +1626,86 @@ export function resolveChoice(
     chosenRarity: choice.rarity,
     wonBattle,
     completedQuest,
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Resolve a dialogue event (free-text or shortcut → authored interpretation)
+// ---------------------------------------------------------------------------
+
+// Mirrors resolveChoice's effect tail, but the "choice" is an authored
+// interpretation selected by Jev (or a shortcut). Jev only picks the id — all
+// effects and prose are authored. The player's raw text is never echoed.
+export function resolveDialogue(
+  c: CharacterState,
+  event: EventContent,
+  interpretationId: string,
+  registry: ContentRegistry,
+  rng: Rng,
+): ResolveOutput {
+  const interp = (event.interpretations ?? []).find((i) => i.id === interpretationId)
+  if (!interp) throw new Error(`unknown choice ${interpretationId} for event ${event.id}`)
+
+  c.turn += 1
+  c.gold += GAME_CONFIG.goldPerTurn
+
+  // Personality: award the tag the interpretation carries.
+  if (interp.tag) c.personality[interp.tag] = (c.personality[interp.tag] ?? 0) + 1
+
+  const net = applyStatDeltas(c, interp.statDeltas)
+  applyStatDeltas(c, interp.tradeoffDeltas)
+  if (interp.goldDelta) c.gold += interp.goldDelta
+  if (interp.fameDelta) c.fame += interp.fameDelta
+  if (interp.reputationDelta) {
+    adjustReputation(c, defaultFaction(c), interp.reputationDelta)
+  }
+  if (interp.affinityDelta && event.requiresRelationshipId) {
+    adjustAffinity(c, event.requiresRelationshipId, interp.affinityDelta, c.turn)
+  }
+  if (interp.setsFlag) {
+    for (const [key, value] of Object.entries(interp.setsFlag)) setFlag(c, key, value)
+  }
+
+  bumpCounter(c, `event_${event.id}`)
+  logTurn(c, event.id, interp.id, interp.tag)
+
+  updateMomentum(c, net)
+  deductStamina(c)
+  updateMarketValue(c)
+  recomputeDerived(c)
+  ageUp(c)
+  clearExpiredHunted(c)
+
+  // Thread: an explicit branch overrides the linear advance; otherwise the
+  // dialogue advances the thread like any other beat (only if it played the beat).
+  let branched = false
+  if (interp.nextBeat && c.activeThread) {
+    const thread = registry.threadsById.get(c.activeThread.id)
+    const idx = thread?.beats.indexOf(interp.nextBeat) ?? -1
+    if (idx >= 0) {
+      c.activeThread = { id: c.activeThread.id, beatIndex: idx }
+      branched = true
+    }
+  }
+  if (!branched) advanceThread(c, registry, event.id)
+
+  let ended = false
+  let endingType: EndingType | undefined
+  if (c.status !== "retired") {
+    if (rollDeath(c, 0, rng) || c.age >= GAME_CONFIG.maxAge) {
+      c.status = "dead"
+      ended = true
+      endingType = heroicOrPeaceful(c, "death")
+    }
+  }
+
+  return {
+    narrative: fillSlots(localize(interp.outcomeNarrative, c.locale), c.locale, registry, rng, c),
+    ended,
+    endingType,
+    chosenRarity: "common" as Rarity,
+    wonBattle: false,
+    completedQuest: false,
   }
 }
 
@@ -1628,7 +1851,8 @@ export function applyMinigameOutcome(
       }
       // The run's story: only an actual victory is a memorable beat — a
       // runner-up finish is narrated by the honor beat, not the scrollback.
-      if (won) logTurn(c, "__tournament_win__", c.pendingTournament.nameKey, undefined, "tournament")
+      if (won)
+        logTurn(c, "__tournament_win__", c.pendingTournament.nameKey, undefined, "tournament")
       c.pendingTournament = null
     }
   }
@@ -1639,6 +1863,8 @@ export function applyMinigameOutcome(
   recomputeDerived(c)
   ageUp(c)
   clearExpiredHunted(c)
+  // Story threads advance only when this turn actually played the active beat.
+  advanceThread(c, registry, event.id)
 
   let ended = false
   let endingType: EndingType | undefined

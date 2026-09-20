@@ -387,6 +387,10 @@ export function isEligible(ev: EventContent, c: CharacterState): boolean {
   if (ev.requiresFlag) {
     if (!checkFlag(c, ev.requiresFlag)) return false
   }
+  // Dialogue/thread gating: only serve while the named thread is active.
+  if (ev.requiresThread) {
+    if (c.activeThread?.id !== ev.requiresThread) return false
+  }
   if (ev.requiresClanId) {
     if (c.currentClanId !== ev.requiresClanId) return false
   }
@@ -429,6 +433,8 @@ export function isEligible(ev: EventContent, c: CharacterState): boolean {
 // selectEvent so a player is never handed a card set they cannot act on — an
 // event whose choices are ALL stat-locked would soft-lock the run.
 export function hasPlayableChoice(ev: EventContent, c: CharacterState): boolean {
+  // Dialogue events present a free-text frame instead of choices; always actable.
+  if (ev.type === "dialogue") return true
   const choices = ev.choices ?? []
   if (choices.length === 0) return false
   return choices.some((ch) => !ch.requiresStat || c[ch.requiresStat.stat] >= ch.requiresStat.min)
@@ -500,6 +506,34 @@ export function serveEvent(
       flagLabel,
       hasTraps: false,
       interactive: { game: ev.resolution!.game ?? "tictactoe", opponentName, view },
+    }
+  }
+
+  // Dialogue: free-text answer classified by Jev. Serve the prompt plus any
+  // authored shortcuts. Jev never writes prose or numbers, so the whole frame is
+  // authored here; classification only selects which interpretation applies.
+  if (ev.type === "dialogue") {
+    const interpretations = ev.interpretations ?? []
+    const shortcuts = interpretations
+      .filter((i) => i.shortcutLabel)
+      .map((i) => ({
+        id: i.id,
+        label: fillSlots(localize(i.shortcutLabel!, locale), locale, registry, rng, c),
+        tag: i.tag,
+      }))
+    return {
+      eventId: ev.id,
+      narrative,
+      choices: [],
+      isRetirementOffer,
+      flagLabel,
+      hasTraps: false,
+      dialogue: {
+        prompt: fillSlots(localize(ev.dialoguePrompt!, locale), locale, registry, rng, c),
+        maxLength: ev.maxLength ?? GAME_CONFIG.dialogueMaxLength,
+        shortcuts,
+        fallbackId: ev.fallback!,
+      },
     }
   }
 

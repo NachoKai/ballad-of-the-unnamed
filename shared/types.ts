@@ -752,9 +752,73 @@ export interface MinigameResolution {
   rivalSkill?: number // 0..1 rival competence; higher player primaryStat lowers it
 }
 
+// A story thread: an authored, ordered chain of event beats that a run plays
+// through as a coherent main storyline. One thread is active at a time; beats
+// are served deterministically via the run rng.
+export interface ThreadReward {
+  goldDelta?: number
+  fameDelta?: number
+  reputationDelta?: number
+  statDeltas?: StatDeltas
+  setsFlag?: Record<string, boolean>
+}
+
+export interface ThreadContent {
+  id: string
+  // Localized title shown on the HUD storyline chip.
+  title: LocaleMap
+  minAge?: number
+  maxAge?: number
+  requiresArc?: Arc[]
+  requiresRegion?: string | null
+  requiresFlag?: Record<string, unknown>
+  excludeIfFlag?: Record<string, unknown>
+  weight?: number
+  // Ordered event ids. Each must resolve in the registry.
+  beats: string[]
+  reward?: ThreadReward
+}
+
+// One authored reading of a free-text dialogue answer. Jev classifies the
+// player's text into exactly one of these (or the event's fallback); all numbers
+// and all prose live here and in the event — Jev never invents either.
+export interface DialogueInterpretation {
+  id: string
+  // Authored rubric description Jev matches the player's intent against (never
+  // shown to the player).
+  intent: LocaleMap
+  // Outcome prose shown to the player after classification.
+  outcomeNarrative: LocaleMap
+  // Optional canned answer offered as a button; when present, this
+  // interpretation also appears as a shortcut (its id is the shortcut id) and
+  // bypasses Jev.
+  shortcutLabel?: LocaleMap
+  // Authored effects, reusing the ChoiceContent vocabulary.
+  tag?: PersonalityTag
+  statDeltas?: StatDeltas
+  tradeoffDeltas?: StatDeltas
+  goldDelta?: number
+  fameDelta?: number
+  reputationDelta?: number
+  affinityDelta?: number
+  setsFlag?: Record<string, boolean>
+  // Optional thread branch: if present, advances to this beat instead of the
+  // linear next beat.
+  nextBeat?: string
+}
+
+// The dialogue prompt as served to the client (localized, no rubric leaked).
+export interface ServedDialogue {
+  prompt: string
+  maxLength: number
+  // Canned shortcuts that skip Jev and behave like normal choices.
+  shortcuts: { id: string; label: string; tag?: PersonalityTag }[]
+  fallbackId: string
+}
+
 export interface EventContent {
   id: string
-  type?: "event" | "minigame" | "destiny" | "world" | "combat"
+  type?: "event" | "minigame" | "destiny" | "world" | "combat" | "dialogue"
   subtype?: string
   minAge: number
   maxAge: number
@@ -812,6 +876,17 @@ export interface EventContent {
   primaryStat?: StatKey
   // interactive minigame: the opponent's name shown in the game frame.
   opponent?: LocaleMap
+  // dialogue: the player answers in free text; Jev classifies it into exactly one
+  // of `interpretations`. `fallback` is used when Jev is unavailable or
+  // unconfident (must be an interpretation id).
+  dialoguePrompt?: LocaleMap
+  maxLength?: number
+  interpretations?: DialogueInterpretation[]
+  fallback?: string
+  // Only serve this dialogue while the named thread is active.
+  requiresThread?: string
+  // Authored instructions for Jev's classifier (never shown to the player).
+  rubricInstructions?: LocaleMap
 }
 
 export interface ClassContent {
@@ -988,6 +1063,20 @@ export interface CharacterState {
   pendingMinigame?: PendingMinigameState | null
   // in-progress combat encounter state, persisted across moves/reloads.
   pendingCombat?: PendingCombatState | null
+  // Story threads: the single active thread and its next beat index, plus the
+  // ids of threads already completed (never re-openable). Optional and
+  // legacy-safe, like seenEventIds/turnLog.
+  activeThread?: { id: string; beatIndex: number } | null
+  completedThreads?: string[]
+  // Set at the season boundary when a thread opens; the route-layer refinement
+  // may swap the rng fallbackPick, then clears this.
+  threadPickPending?: boolean
+  // Candidate thread ids persisted with the open plan so refinement does not
+  // re-derive eligibility from a possibly-advanced state.
+  threadCandidates?: string[]
+  // Dialogue-event pacing: ids seen this run (per-run cap + cooldown tracked
+  // via counters).
+  dialogueEventsSeen?: string[]
 }
 
 export interface ReputationState {
@@ -1052,6 +1141,11 @@ export interface ServedEvent {
   seasonFameGain?: number
   seasonReputationGain?: number
   flagLabel?: string
+  // Active story thread title, localized, shown as a HUD storyline chip.
+  threadTitle?: string
+  // Dialogue event: the free-text prompt frame. When present, `choices` is empty
+  // and the client renders a textarea + optional shortcut buttons.
+  dialogue?: ServedDialogue
   // Interactive minigame: a multi-move game frame instead of a card grid.
   // When present, `choices` is empty and the client renders a game component.
   interactive?: {

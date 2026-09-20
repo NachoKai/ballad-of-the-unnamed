@@ -38,6 +38,28 @@ export const GAME_CONFIG = {
   maxInteractiveMinigamesPerRun: 3,
   interactiveMinigameCooldownTurns: 20,
 
+  // Story threads: authored chains of beats that give a run a coherent main
+  // storyline. At most maxThreadsPerRun open per run (sequentially, never
+  // re-opened). threadOpenChance is the probability an open roll at a season
+  // boundary succeeds; the "which thread" pick consumes an rng draw and may be
+  // overridden by a daily-cached Jev judgment (Phase 2) without skewing the
+  // seeded stream. threadPace "every" = the next normal event turn serves the
+  // next beat (coherent back-to-back storyline); "every-n" = a beat, then
+  // threadPaceEveryTurns - 1 filler turns, then the next beat.
+  threadOpenChance: 0.5,
+  threadPace: "every",
+  threadPaceEveryTurns: 2,
+  maxThreadsPerRun: 3,
+
+  // Dialogue events: the player's free text is classified by Jev (daily-cached)
+  // into exactly one authored interpretation, whose effects the server applies.
+  // Paced like interactive minigames — at most maxDialogueEventsPerRun per run
+  // and never more often than dialogueCooldownTurns. dialogueMaxLength caps the
+  // textarea and is the server's hard reject length.
+  dialogueMaxLength: 300,
+  maxDialogueEventsPerRun: 3,
+  dialogueCooldownTurns: 20,
+
   // Bench mechanic: turns a character sits "on the bench" after over-
   // reaching into a clan far above their level (stat gains reduced meanwhile).
   benchDurationTurns: 6,
@@ -107,7 +129,6 @@ export const GAME_CONFIG = {
   combatConMitigation: 0.4, // player defense = floor(constitution * this)
   combatGuardFactor: 0.5, // defend halves incoming damage this round
   combatPoisonPerTurn: 3, // fallback dot for damage_over_time without dotPerTurn
-
 } as const
 
 import type { Arc, Rarity } from "./types.js"

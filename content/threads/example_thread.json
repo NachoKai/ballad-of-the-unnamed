@@ -1,0 +1,9 @@
+[
+  {
+    "id": "smoke_thread",
+    "title": { "en": "The Smoke Test", "es": "La Prueba de Humo" },
+    "weight": 1,
+    "beats": ["tavern_stranger", "tavern_gamble"],
+    "reward": { "fameDelta": 1, "setsFlag": { "smoke_thread_done": true } }
+  }
+]

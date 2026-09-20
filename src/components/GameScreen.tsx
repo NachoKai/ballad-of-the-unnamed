@@ -18,7 +18,7 @@ import { Hud } from "./Hud"
 import { MinigameFrame } from "./minigames/MinigameFrame"
 import { CombatGame } from "./combat/CombatGame"
 import { StatTag } from "./StatTag"
-import { LinkBtn } from "./ui/Button"
+import { LinkBtn, BtnPrimary, BtnGhost } from "./ui/Button"
 import { TextPretty } from "./ui/Text"
 import { rise } from "./ui/Animation"
 import { ElectricBorder } from "./ui/ElectricBorder"
@@ -36,7 +36,7 @@ interface Props {
   event: ServedEvent
   narrative: string | null
   turnNarrative: string | null
-  onChoose: (choiceId: string) => Promise<void>
+  onChoose: (choiceId: string, playerAnswer?: string) => Promise<void>
   onMinigameMove: (move: InteractiveMove) => Promise<MinigameMoveResponse>
   onMinigameFinished: () => void
   minigameFinishedResult: MinigameMoveResponse | null
@@ -68,13 +68,14 @@ export function GameScreen({
 }: Props) {
   const [busy, setBusy] = useState(false)
   const [selected, setSelected] = useState<string | null>(null)
+  const [answer, setAnswer] = useState("")
 
-  async function pick(id: string) {
+  async function pick(id: string, playerAnswer?: string) {
     if (busy) return
     setBusy(true)
-    setSelected(id)
+    if (id) setSelected(id)
     try {
-      await onChoose(id)
+      await onChoose(id, playerAnswer)
     } finally {
       setBusy(false)
       setSelected(null)
@@ -212,6 +213,7 @@ export function GameScreen({
       <Hud
         locale={locale}
         character={character}
+        threadTitle={event.threadTitle}
         onShopOpen={onShopOpen}
         onDetailsOpen={onDetailsOpen}
         canBuy={canBuy}
@@ -316,6 +318,16 @@ export function GameScreen({
             onMove={onMinigameMove}
             onFinished={onMinigameFinished}
             finishedResult={minigameFinishedResult}
+          />
+        ) : event.dialogue ? (
+          <DialogueFrame
+            locale={locale}
+            dialogue={event.dialogue}
+            busy={busy}
+            answer={answer}
+            onAnswer={setAnswer}
+            onSubmit={() => pick("", answer)}
+            onShortcut={(id) => pick(id)}
           />
         ) : (
           <ChoiceGrid role="group" aria-label={t(locale, "chooseAction")}>
@@ -922,4 +934,128 @@ const RivalUpdateBlock = styled.div`
   color: ${({ theme }) => theme.colors.bloodBright};
   font-size: 14px;
   letter-spacing: 0.04em;
+`
+
+// ---------------------------------------------------------------------------
+// Dialogue: free-text reply classified by Jev, plus authored shortcut buttons.
+// ---------------------------------------------------------------------------
+
+function DialogueFrame({
+  locale,
+  dialogue,
+  busy,
+  answer,
+  onAnswer,
+  onSubmit,
+  onShortcut,
+}: {
+  locale: Locale
+  dialogue: NonNullable<ServedEvent["dialogue"]>
+  busy: boolean
+  answer: string
+  onAnswer: (v: string) => void
+  onSubmit: () => void
+  onShortcut: (id: string) => void
+}) {
+  const canSubmit = answer.trim().length > 0 && !busy
+  return (
+    <DialogueBlock>
+      <DialoguePrompt>{dialogue.prompt}</DialoguePrompt>
+      <DialogueTextarea
+        value={answer}
+        onChange={(e) => onAnswer(e.target.value)}
+        maxLength={dialogue.maxLength}
+        placeholder={t(locale, "dialoguePlaceholder")}
+        rows={3}
+        disabled={busy}
+      />
+      <DialogueFooter>
+        <DialogueCounter>
+          {answer.length}/{dialogue.maxLength}
+        </DialogueCounter>
+        <BtnPrimary onClick={onSubmit} disabled={!canSubmit}>
+          {t(locale, "dialogueSubmit")}
+        </BtnPrimary>
+      </DialogueFooter>
+      {dialogue.shortcuts.length > 0 && (
+        <ShortcutRow>
+          <ShortcutLabel>{t(locale, "dialogueShortcutLabel")}</ShortcutLabel>
+          {dialogue.shortcuts.map((s) => (
+            <BtnGhost key={s.id} onClick={() => onShortcut(s.id)} disabled={busy}>
+              {s.label}
+            </BtnGhost>
+          ))}
+        </ShortcutRow>
+      )}
+    </DialogueBlock>
+  )
+}
+
+const DialogueBlock = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
+`
+
+const DialoguePrompt = styled.div`
+  font-size: 17px;
+  color: ${({ theme }) => theme.colors.parchment};
+  line-height: 1.5;
+`
+
+const DialogueTextarea = styled.textarea`
+  width: 100%;
+  min-height: 84px;
+  padding: 12px 14px;
+  background: ${({ theme }) => theme.colors.ink3};
+  border: 1px solid ${({ theme }) => theme.colors.line2};
+  border-radius: ${({ theme }) => theme.radii.sm};
+  color: ${({ theme }) => theme.colors.parchment};
+  font-family: ${({ theme }) => theme.fonts.body};
+  font-size: 16px;
+  line-height: 1.45;
+  resize: vertical;
+
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.muted2};
+  }
+
+  &:focus {
+    outline: none;
+    border-color: ${({ theme }) => theme.colors.gold};
+    box-shadow: 0 0 0 2px rgba(201, 164, 76, 0.15);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+  }
+`
+
+const DialogueFooter = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+`
+
+const DialogueCounter = styled.span`
+  font-size: 13px;
+  color: ${({ theme }) => theme.colors.muted2};
+  font-variant-numeric: tabular-nums;
+`
+
+const ShortcutRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+`
+
+const ShortcutLabel = styled.span`
+  font-size: 13px;
+  color: ${({ theme }) => theme.colors.muted};
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
 `

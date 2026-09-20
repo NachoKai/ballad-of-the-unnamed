@@ -230,7 +230,8 @@ async function jfetch<T>(url: string, opts: RequestInit = {}): Promise<T> {
       // a player-reported id matches the terminal log even when the body
       // didn't carry one.
       code: typeof body.error === "string" ? body.error : `http_${res.status}`,
-      errorId: (typeof body.errorId === "string" && body.errorId) || res.headers.get("x-request-id"),
+      errorId:
+        (typeof body.errorId === "string" && body.errorId) || res.headers.get("x-request-id"),
       detail: typeof body.detail === "string" ? body.detail : null,
     })
   }
@@ -276,7 +277,7 @@ export const api = {
       finished: boolean
     }>(`/api/game/state?runId=${runId}`),
 
-  choose: (input: { runId: string; choiceId?: string; cardId?: string }) =>
+  choose: (input: { runId: string; choiceId?: string; cardId?: string; playerAnswer?: string }) =>
     jfetch<ChooseResponse>("/api/game/choose", {
       method: "POST",
       body: JSON.stringify(input),

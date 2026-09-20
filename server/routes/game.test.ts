@@ -19,6 +19,7 @@ vi.mock("../store/runStore.js", () => ({
 }))
 
 import { Rng } from "../../shared/rng.js"
+import { GAME_CONFIG } from "../../shared/config.js"
 import { gameRouter } from "./game.js"
 import { createCharacter } from "../engine/engine.js"
 import { startCombatState } from "../engine/combat/index.js"
@@ -119,6 +120,46 @@ async function postChoose(run: CharacterState, pendingEvent: EventContent, cardI
     method: "POST",
     url: "/choose",
     body: { runId: run.id, cardId },
+    query: {},
+  } as unknown as Request
+  gameRouter(req, res, () => {})
+  return jsonPromise
+}
+
+// Drive POST /choose for a dialogue event with the given body.
+async function postDialogue(run: CharacterState, pendingEvent: EventContent, body: unknown) {
+  let statusCode = 200
+  let resolveJson!: (v: { statusCode: number; body: unknown }) => void
+  const res = {
+    status(code: number) {
+      statusCode = code
+      return this
+    },
+    json(body: unknown) {
+      resolveJson({ statusCode, body })
+      return this
+    },
+  } as unknown as Response
+  store.getRun.mockResolvedValue({
+    id: run.id,
+    runType: "standard",
+    seed: "s",
+    rngState: 1,
+    rivalRngState: 1,
+    locale: "en",
+    character: run,
+    pendingEvent,
+    finished: false,
+  })
+  store.saveRun.mockResolvedValue(undefined)
+
+  const jsonPromise = new Promise<{ statusCode: number; body: unknown }>((r) => {
+    resolveJson = r
+  })
+  const req = {
+    method: "POST",
+    url: "/choose",
+    body: { runId: run.id, ...(body as object) },
     query: {},
   } as unknown as Request
   gameRouter(req, res, () => {})
@@ -335,6 +376,86 @@ describe("POST /choose · interactive minigame guard", () => {
     expect(statusCode).toBe(400)
     const res = body as { error: string }
     expect(res.error).toBe("interactive_minigame")
+  })
+})
+
+describe("POST /choose · dialogue events", () => {
+  const dialogueEv: EventContent = {
+    id: "dialogue_route_test",
+    type: "dialogue",
+    minAge: 0,
+    maxAge: 99,
+    weight: 1,
+    narrative: { en: "A stranger waits.", es: "Un extranjero espera." },
+    dialoguePrompt: { en: "What do you say?", es: "¿Qué dices?" },
+    interpretations: [
+      {
+        id: "boast",
+        intent: { en: "boastful", es: "jactancioso" },
+        outcomeNarrative: { en: "They applaud.", es: "Aplauden." },
+        shortcutLabel: { en: "Boast", es: "Jactarse" },
+        tag: "Cocky",
+        goldDelta: 10,
+      },
+      {
+        id: "humble",
+        intent: { en: "modest", es: "modesto" },
+        outcomeNarrative: { en: "They nod.", es: "Asienten." },
+        tag: "Humble",
+        goldDelta: 1,
+      },
+    ],
+    fallback: "humble",
+  }
+
+  it("classifies free text and resolves the outcome (fallback without a Jev key)", async () => {
+    const c = makeLegendRun()
+    const { statusCode, body } = await postDialogue(c, dialogueEv, { playerAnswer: "nice" })
+    expect(statusCode).toBe(200)
+    const res = body as { character: CharacterState; narrative: string; ended: boolean }
+    expect(res.character.personality["Humble"]).toBe(1)
+    expect(res.character.gold).toBe(13000 + GAME_CONFIG.goldPerTurn + 1)
+    expect(res.narrative).toBe("They nod.")
+    expect(res.ended).toBe(false)
+  })
+
+  it("accepts a shortcut choiceId and applies that interpretation directly", async () => {
+    const c = makeLegendRun()
+    const { statusCode, body } = await postDialogue(c, dialogueEv, { choiceId: "boast" })
+    expect(statusCode).toBe(200)
+    const res = body as { character: CharacterState; narrative: string }
+    expect(res.character.personality["Cocky"]).toBe(1)
+    expect(res.character.gold).toBe(13000 + GAME_CONFIG.goldPerTurn + 10)
+    expect(res.narrative).toBe("They applaud.")
+  })
+
+  it("rejects a shortcut id that has no label, and an unknown id", async () => {
+    const c = makeLegendRun()
+    const { statusCode } = await postDialogue(c, dialogueEv, { choiceId: "humble" })
+    expect(statusCode).toBe(400)
+  })
+
+  it("rejects an answer over the event cap", async () => {
+    const capped: EventContent = { ...dialogueEv, maxLength: 5 }
+    const c = makeLegendRun()
+    const { statusCode, body } = await postDialogue(c, capped, {
+      playerAnswer: "this is way too long",
+    })
+    expect(statusCode).toBe(400)
+    const res = body as { error: string }
+    expect(res.error).toBe("answer_too_long")
+  })
+
+  it("never writes the playerAnswer into the served narrative", async () => {
+    const c = makeLegendRun()
+    const { statusCode, body } = await postDialogue(c, dialogueEv, {
+      playerAnswer: "SUPER-SECRET-SENTENCE",
+    })
+    expect(statusCode).toBe(200)
+    const res = body as { character: CharacterState; narrative: string; event?: unknown }
+    expect(JSON.stringify(res)).not.toContain("SUPER-SECRET-SENTENCE")
+    const served = res.event as { narrative?: string } | undefined
+    if (served?.narrative) expect(served.narrative).not.toContain("SUPER-SECRET-SENTENCE")
   })
 })
 

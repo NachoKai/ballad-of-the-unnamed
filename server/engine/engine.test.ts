@@ -1,16 +1,19 @@
-import { describe, expect, it } from "vitest"
+import { describe, afterEach, expect, it } from "vitest"
 import { Rng, hashSeed, rivalRngFor } from "../../shared/rng.js"
 import { computeScore, GAME_CONFIG, arcForAge, RIVAL_FOCUSES } from "../../shared/config.js"
 import {
   advanceRival,
+  advanceThread,
   applyMinigameOutcome,
   buildServedEvent,
   createCharacter,
   generateClanOffer,
   generateRival,
   negotiationFollowUpEvent,
+  planThreadOpen,
   resolveChoice,
   resolveMinigame,
+  resolveDialogue,
   resolveSeasonSummary,
   retirementOfferEvent,
   rollWorldEvents,
@@ -4636,5 +4639,338 @@ describe("combat in the event rotation", () => {
     // marker the guard checks.
     const ev = reg.combats.find((e) => e.id === "road_ambush")!
     expect(ev.combat).toBeDefined()
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Story threads — selectEvent serves beats
+// ---------------------------------------------------------------------------
+describe("story threads — selectEvent serves the active beat", () => {
+  // At turn 1 the only preemption inside selectEvent is the combat draw
+  // (destiny turns are gated to year multiples). Disable it so the beat is
+  // served deterministically regardless of seed.
+  const combatChanceBefore = (GAME_CONFIG as { combatEncounterChance: number })
+    .combatEncounterChance
+
+  afterEach(() => {
+    ;(GAME_CONFIG as { combatEncounterChance: number }).combatEncounterChance = combatChanceBefore
+  })
+
+  function noCombats(): void {
+    ;(GAME_CONFIG as { combatEncounterChance: number }).combatEncounterChance = 0
+  }
+
+  it("serves the current beat regardless of the random pool", () => {
+    noCombats()
+    const c = makeChar({ turn: 1, activeThread: { id: "smoke_thread", beatIndex: 0 } })
+    for (let seed = 1; seed <= 20; seed++) {
+      const picked = selectEvent(c, reg, new Rng(seed))
+      expect(picked.id).toBe("tavern_stranger")
+    }
+  })
+
+  it("serves the next beat once the current one is resolved", () => {
+    noCombats()
+    const c = makeChar({ turn: 1, activeThread: { id: "smoke_thread", beatIndex: 1 } })
+    const picked = selectEvent(c, reg, new Rng(3))
+    expect(picked.id).toBe("tavern_gamble")
+  })
+
+  it("falls back to the random pool when the beat references no event", () => {
+    noCombats()
+    const c = makeChar({ turn: 1, activeThread: { id: "smoke_thread", beatIndex: 99 } })
+    const picked = selectEvent(c, reg, new Rng(3))
+    expect(picked.id).toBeDefined()
+    expect(c.activeThread).toBeNull()
+  })
+
+  it("surfaces the active thread title on the served event", () => {
+    noCombats()
+    const c = makeChar({ turn: 1, activeThread: { id: "smoke_thread", beatIndex: 0 } })
+    const { served } = buildServedEvent(c, reg, new Rng(1))
+    expect(served.threadTitle).toBe("The Smoke Test")
+  })
+
+  it("omits the thread title when no thread is active", () => {
+    noCombats()
+    const { served } = buildServedEvent(makeChar({ turn: 1 }), reg, new Rng(1))
+    expect(served.threadTitle).toBeUndefined()
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Story threads — advanceThread + completion reward
+// ---------------------------------------------------------------------------
+describe("story threads — advanceThread", () => {
+  it("advances the beat index after one beat resolves", () => {
+    const c = makeChar({ activeThread: { id: "smoke_thread", beatIndex: 0 } })
+    advanceThread(c, reg)
+    expect(c.activeThread).toEqual({ id: "smoke_thread", beatIndex: 1 })
+    expect(c.completedThreads).toBeUndefined()
+  })
+
+  it("completes the thread on the final beat and applies the reward once", () => {
+    const c = makeChar({ activeThread: { id: "smoke_thread", beatIndex: 1 } })
+    advanceThread(c, reg)
+    expect(c.activeThread).toBeNull()
+    expect(c.completedThreads).toEqual(["smoke_thread"])
+    expect(c.fame).toBe(1)
+    expect(c.flags["smoke_thread_done"]).toBe(true)
+  })
+
+  it("does not advance when the resolved event is not the current beat (preemption)", () => {
+    const c = makeChar({ activeThread: { id: "smoke_thread", beatIndex: 0 } })
+    advanceThread(c, reg, "some_other_event")
+    expect(c.activeThread).toEqual({ id: "smoke_thread", beatIndex: 0 })
+    expect(c.fame).toBe(0)
+  })
+
+  it("advances through the beat chain to completion in order", () => {
+    const c = makeChar({ activeThread: { id: "smoke_thread", beatIndex: 0 } })
+    advanceThread(c, reg, "tavern_stranger")
+    expect(c.activeThread).toEqual({ id: "smoke_thread", beatIndex: 1 })
+    advanceThread(c, reg, "tavern_gamble")
+    expect(c.activeThread).toBeNull()
+    expect(c.completedThreads).toEqual(["smoke_thread"])
+    expect(c.fame).toBe(1)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Story threads — opening at the season boundary
+// ---------------------------------------------------------------------------
+describe("story threads — planThreadOpen", () => {
+  function findSeed(open: boolean): number {
+    for (let s = 1; s < 1000; s++) {
+      if (planThreadOpen(makeChar(), reg, new Rng(s)).open === open) return s
+    }
+    throw new Error(`no ${open ? "opening" : "closed"} seed found`)
+  }
+
+  it("opens deterministically from the same seed", () => {
+    const seed = findSeed(true)
+    const a = planThreadOpen(makeChar(), reg, new Rng(seed))
+    const b = planThreadOpen(makeChar(), reg, new Rng(seed))
+    expect(a.open).toBe(true)
+    expect(b.open).toBe(true)
+    if (a.open && b.open) {
+      expect(a.fallbackPick.id).toBe(b.fallbackPick.id)
+      expect(a.candidates.map((t) => t.id)).toEqual(b.candidates.map((t) => t.id))
+    }
+  })
+
+  it("does not open while a thread is already active", () => {
+    const c = makeChar({ activeThread: { id: "smoke_thread", beatIndex: 0 } })
+    expect(planThreadOpen(c, reg, new Rng(findSeed(true))).open).toBe(false)
+  })
+
+  it("does not open a thread that is already completed", () => {
+    const c = makeChar({ completedThreads: ["smoke_thread"] })
+    expect(planThreadOpen(c, reg, new Rng(findSeed(true))).open).toBe(false)
+  })
+
+  it("does not open past the per-run thread cap", () => {
+    const c = makeChar({
+      completedThreads: Array.from({ length: GAME_CONFIG.maxThreadsPerRun }, (_, i) => `t${i}`),
+    })
+    expect(planThreadOpen(c, reg, new Rng(findSeed(true))).open).toBe(false)
+  })
+
+  it("consumes exactly two draws when it opens", () => {
+    const seed = findSeed(true)
+    const rngA = new Rng(seed)
+    const plan = planThreadOpen(makeChar(), reg, rngA)
+    expect(plan.open).toBe(true)
+    const rngB = new Rng(seed)
+    rngB.bool(GAME_CONFIG.threadOpenChance)
+    if (!plan.open) throw new Error("unreachable")
+    rngB.weighted(plan.candidates, (t) => t.weight ?? 1)
+    expect(rngA.getState()).toBe(rngB.getState())
+  })
+
+  it("consumes exactly one draw when the whether-roll fails", () => {
+    const seed = findSeed(false)
+    const rngA = new Rng(seed)
+    expect(planThreadOpen(makeChar(), reg, rngA).open).toBe(false)
+    const rngB = new Rng(seed)
+    rngB.bool(GAME_CONFIG.threadOpenChance)
+    expect(rngA.getState()).toBe(rngB.getState())
+  })
+
+  it("consumes no draws when it bails before the roll", () => {
+    const c = makeChar({ activeThread: { id: "smoke_thread", beatIndex: 0 } })
+    const rng = new Rng(123)
+    const before = rng.getState()
+    expect(planThreadOpen(c, reg, rng).open).toBe(false)
+    expect(rng.getState()).toBe(before)
+  })
+})
+
+describe("story threads — resolveSeasonSummary opens one", () => {
+  function findOpenSeed(): number {
+    for (let s = 1; s < 1000; s++) {
+      if (planThreadOpen(makeChar(), reg, new Rng(s)).open) return s
+    }
+    throw new Error("no opening seed found")
+  }
+
+  it("sets activeThread, candidates, and a pending pick at the boundary", () => {
+    const seed = findOpenSeed()
+    const c = makeChar()
+    resolveSeasonSummary(c, reg, new Rng(seed))
+    expect(c.activeThread).not.toBeNull()
+    expect(c.activeThread!.beatIndex).toBe(0)
+    expect(c.threadCandidates).toContain(c.activeThread!.id)
+    expect(c.threadPickPending).toBe(true)
+  })
+
+  it("does not open a thread without an rng (legacy callers)", () => {
+    const c = makeChar()
+    resolveSeasonSummary(c, reg)
+    expect(c.activeThread ?? null).toBeNull()
+    expect(c.threadPickPending).toBeUndefined()
+  })
+})
+
+describe("dialogue events — serving", () => {
+  const dialogueEvent: EventContent = {
+    id: "test_dialogue",
+    type: "dialogue",
+    minAge: 0,
+    maxAge: 999,
+    weight: 1,
+    narrative: { en: "A stranger waits.", es: "Un extranjero espera." },
+    dialoguePrompt: { en: "What do you say?", es: "¿Qué dices?" },
+    rubricInstructions: { en: "Classify the intent.", es: "Clasifica la intención." },
+    interpretations: [
+      {
+        id: "boast",
+        intent: { en: "boastful", es: "jactancioso" },
+        outcomeNarrative: { en: "They applaud.", es: "Aplauden." },
+        shortcutLabel: { en: "Boast", es: "Jactarse" },
+        tag: "Cocky",
+      },
+      {
+        id: "humble",
+        intent: { en: "modest", es: "modesto" },
+        outcomeNarrative: { en: "They nod.", es: "Asienten." },
+      },
+    ],
+    fallback: "humble",
+  }
+
+  it("serves a dialogue frame with no choices", () => {
+    const served = serveEvent(dialogueEvent, makeChar(), "en", reg, new Rng(1), false)
+    expect(served.dialogue).toBeDefined()
+    expect(served.choices).toEqual([])
+    expect(served.dialogue!.prompt).toBe("What do you say?")
+    expect(served.dialogue!.fallbackId).toBe("humble")
+  })
+
+  it("defaults maxLength from GAME_CONFIG and honors an explicit cap", () => {
+    const c = makeChar()
+    const served = serveEvent(dialogueEvent, c, "en", reg, new Rng(1), false)
+    expect(served.dialogue!.maxLength).toBe(GAME_CONFIG.dialogueMaxLength)
+    const capped = serveEvent({ ...dialogueEvent, maxLength: 42 }, c, "en", reg, new Rng(1), false)
+    expect(capped.dialogue!.maxLength).toBe(42)
+  })
+
+  it("offers only labelled interpretations as shortcuts, carrying their tag", () => {
+    const served = serveEvent(dialogueEvent, makeChar(), "en", reg, new Rng(1), false)
+    expect(served.dialogue!.shortcuts).toEqual([{ id: "boast", label: "Boast", tag: "Cocky" }])
+  })
+
+  it("localizes the prompt", () => {
+    const served = serveEvent(dialogueEvent, makeChar(), "es", reg, new Rng(1), false)
+    expect(served.dialogue!.prompt).toBe("¿Qué dices?")
+  })
+
+  it("is playable and gates on the active thread", () => {
+    const c = makeChar({ activeThread: { id: "smoke_thread", beatIndex: 0 } })
+    expect(hasPlayableChoice(dialogueEvent, c)).toBe(true)
+    expect(isEligible({ ...dialogueEvent, requiresThread: "smoke_thread" }, c)).toBe(true)
+    expect(isEligible({ ...dialogueEvent, requiresThread: "other_thread" }, c)).toBe(false)
+  })
+})
+
+describe("dialogue events — resolution", () => {
+  const event: EventContent = {
+    id: "test_dialogue",
+    type: "dialogue",
+    weight: 1,
+    minAge: 0,
+    maxAge: 999,
+    narrative: { en: "A stranger waits.", es: "Un extranjero espera." },
+    dialoguePrompt: { en: "What do you say?", es: "¿Qué dices?" },
+    interpretations: [
+      {
+        id: "boast",
+        intent: { en: "boastful", es: "jactancioso" },
+        outcomeNarrative: { en: "They applaud.", es: "Aplauden." },
+        tag: "Cocky",
+        statDeltas: { charisma: 2 },
+        goldDelta: 10,
+        fameDelta: 3,
+        setsFlag: { boasted: true },
+      },
+      {
+        id: "humble",
+        intent: { en: "modest", es: "modesto" },
+        outcomeNarrative: { en: "They nod.", es: "Asienten." },
+        tag: "Humble",
+      },
+    ],
+    fallback: "humble",
+  }
+
+  it("applies authored effects, tag, and flag; advances a turn", () => {
+    const c = makeChar()
+    const out = resolveDialogue(c, event, "boast", reg, new Rng(1))
+    expect(c.turn).toBe(1)
+    expect(c.gold).toBe(100 + GAME_CONFIG.goldPerTurn + 10)
+    expect(c.fame).toBe(3)
+    expect(c.personality["Cocky"]).toBe(1)
+    expect(c.flags["boasted"]).toBe(true)
+    expect(out.narrative).toBe("They applaud.")
+    expect(out.ended).toBe(false)
+    expect(out.chosenRarity).toBe("common")
+  })
+
+  it("throws on an unknown interpretation id", () => {
+    expect(() => resolveDialogue(makeChar(), event, "nope", reg, new Rng(1))).toThrow(
+      /unknown choice/,
+    )
+  })
+
+  it("branches to nextBeat when the interpretation names one", () => {
+    const c = makeChar({ activeThread: { id: "smoke_thread", beatIndex: 0 } })
+    const branching: EventContent = {
+      ...event,
+      interpretations: [
+        { ...event.interpretations![0], nextBeat: "tavern_gamble" },
+        event.interpretations![1],
+      ],
+    }
+    resolveDialogue(c, branching, "boast", reg, new Rng(1))
+    expect(c.activeThread).toEqual({ id: "smoke_thread", beatIndex: 1 })
+  })
+
+  it("falls back to a linear thread advance without nextBeat", () => {
+    const miniReg = {
+      threads: [
+        {
+          id: "smoke_thread",
+          title: { en: "T", es: "T" },
+          beats: ["test_dialogue", "tavern_gamble"],
+        },
+      ],
+      threadsById: new Map([
+        ["smoke_thread", { id: "smoke_thread", beats: ["test_dialogue", "tavern_gamble"] }],
+      ]),
+      slots: {},
+    } as unknown as ContentRegistry
+    const c = makeChar({ activeThread: { id: "smoke_thread", beatIndex: 0 } })
+    resolveDialogue(c, event, "humble", miniReg, new Rng(1))
+    expect(c.activeThread).toEqual({ id: "smoke_thread", beatIndex: 1 })
   })
 })

@@ -167,3 +167,14 @@ CREATE INDEX IF NOT EXISTS idx_lb_tier ON leaderboard (leaderboard_tier, score D
 -- Dropped here so fresh installs don't create it and existing installs clean
 -- up the orphaned table on the next migration.
 DROP TABLE IF EXISTS leaderboard_entries;
+
+-- Phase 2: daily-cached Jev classifications. The cache key is derived from the
+-- UTC date plus coarse, PII-free run data (never the run id, turn log, or free
+-- text), so every player who faces the same decision that day shares one row and
+-- one Jev call.
+CREATE TABLE IF NOT EXISTS jev_cache (
+  cache_key   TEXT PRIMARY KEY,
+  choice      TEXT,
+  payload     JSONB,
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+);

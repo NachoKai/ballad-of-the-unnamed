@@ -6,6 +6,7 @@ import {
   Home,
   ScrollText,
   Skull,
+  Sparkles,
   Store,
   TriangleAlert,
 } from "lucide-react"
@@ -25,6 +26,7 @@ import { Tooltip } from "./ui/Tooltip"
 interface Props {
   character: CharacterState
   locale: Locale
+  threadTitle?: string
   onShopOpen?: () => void
   canBuy?: boolean
   onDetailsOpen?: () => void
@@ -36,7 +38,14 @@ function repFillPct(value: number): number {
   return Math.max(0, Math.min(100, value))
 }
 
-export function Hud({ character: c, locale, onShopOpen, canBuy, onDetailsOpen }: Props) {
+export function Hud({
+  character: c,
+  locale,
+  threadTitle,
+  onShopOpen,
+  canBuy,
+  onDetailsOpen,
+}: Props) {
   const t = (k: string) => translate(locale, k)
   const className = t(`class_${c.class}`)
   const inventoryCount = c.inventory?.reduce((s, i) => s + i.qty, 0) ?? 0
@@ -93,6 +102,13 @@ export function Hud({ character: c, locale, onShopOpen, canBuy, onDetailsOpen }:
             <Tooltip content={t("tooltip_hunted")}>
               <Tag $tone="blood">
                 <TriangleAlert size={12} /> {t("hunted")} {t(`faction_${c.huntedBy}`)}
+              </Tag>
+            </Tooltip>
+          )}
+          {threadTitle && (
+            <Tooltip content={t("tooltip_storyline")} side="bottom">
+              <Tag $tone="gold">
+                <Sparkles size={12} aria-hidden="true" /> {t("storyline")} · {threadTitle}
               </Tag>
             </Tooltip>
           )}

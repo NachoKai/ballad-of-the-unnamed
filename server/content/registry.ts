@@ -15,6 +15,7 @@ import type {
   LocaleMap,
   ShopItem,
   SlotPools,
+  ThreadContent,
 } from "../../shared/types.js"
 import { STAT_KEYS } from "../../shared/types.js"
 import { LOCALES } from "../../shared/i18n.js"
@@ -28,6 +29,92 @@ function readJson<T>(relPath: string): T {
 
 function assert(cond: unknown, msg: string): asserts cond {
   if (!cond) throw new Error(`[content] ${msg}`)
+}
+
+// Validate one thread against the event bank. Throws on any structural error
+// (missing id/title, too few beats, or a beat that names an unknown event).
+export function validateThread(t: ThreadContent, eventsById: Map<string, EventContent>): void {
+  assert(t.id, `thread missing id`)
+  validateLocaleMap(t.title, `thread ${t.id} title`)
+  assert(Array.isArray(t.beats) && t.beats.length >= 2, `thread ${t.id} must have at least 2 beats`)
+  for (const beatId of t.beats) {
+    assert(eventsById.has(beatId), `thread ${t.id} references unknown event ${beatId}`)
+  }
+}
+
+// Validate a dialogue event: the player's free text is classified into exactly
+// one authored interpretation, so every interpretation must be renderable and
+// the fallback must name a real interpretation.
+export function validateDialogueEvent(ev: EventContent): void {
+  validateLocaleMap(ev.narrative, `dialogue ${ev.id} narrative`)
+  validateLocaleMap(ev.dialoguePrompt, `dialogue ${ev.id} dialoguePrompt`)
+  if (ev.rubricInstructions) {
+    validateLocaleMap(ev.rubricInstructions, `dialogue ${ev.id} rubricInstructions`)
+  }
+  assert(
+    Array.isArray(ev.interpretations) && ev.interpretations.length >= 2,
+    `dialogue ${ev.id} needs at least 2 interpretations`,
+  )
+  const ids = new Set<string>()
+  for (const interp of ev.interpretations) {
+    assert(interp.id, `dialogue ${ev.id} interpretation missing id`)
+    assert(!ids.has(interp.id), `dialogue ${ev.id} duplicate interpretation ${interp.id}`)
+    ids.add(interp.id)
+    validateLocaleMap(interp.intent, `dialogue ${ev.id} interpretation ${interp.id} intent`)
+    validateLocaleMap(
+      interp.outcomeNarrative,
+      `dialogue ${ev.id} interpretation ${interp.id} outcomeNarrative`,
+    )
+    if (interp.shortcutLabel) {
+      validateLocaleMap(
+        interp.shortcutLabel,
+        `dialogue ${ev.id} interpretation ${interp.id} shortcutLabel`,
+      )
+    }
+  }
+  assert(ev.fallback, `dialogue ${ev.id} needs a fallback`)
+  assert(ids.has(ev.fallback), `dialogue ${ev.id} fallback ${ev.fallback} is not an interpretation`)
+  if (ev.maxLength !== undefined) {
+    assert(
+      Number.isInteger(ev.maxLength) && ev.maxLength > 0,
+      `dialogue ${ev.id} maxLength must be a positive integer`,
+    )
+  }
+}
+
+// Cross-event references (a dialogue branch targets an event id) can only be
+// resolved once the whole event bank is loaded, so run this after building it.
+export function validateDialogueBranches(
+  events: EventContent[],
+  eventsById: Map<string, EventContent>,
+) {
+  for (const ev of events) {
+    if (ev.type !== "dialogue") continue
+    for (const interp of ev.interpretations ?? []) {
+      if (interp.nextBeat) {
+        assert(
+          eventsById.has(interp.nextBeat),
+          `dialogue ${ev.id} interpretation ${interp.id} nextBeat ${interp.nextBeat} is unknown`,
+        )
+      }
+    }
+  }
+}
+
+// Load content/threads/*.json (an array per file) and validate every thread
+// against the event bank so a beat can never reference a missing event.
+function loadThreads(eventsById: Map<string, EventContent>): ThreadContent[] {
+  const dir = join(CONTENT_ROOT, "threads")
+  const threads: ThreadContent[] = []
+  for (const file of readdirSync(dir)) {
+    if (!file.endsWith(".json")) continue
+    const arr = readJson<ThreadContent[]>(join("threads", file))
+    for (const t of arr) {
+      validateThread(t, eventsById)
+      threads.push(t)
+    }
+  }
+  return threads
 }
 
 // Validate every LocaleMap has all supported locales so nothing renders blank.
@@ -62,6 +149,9 @@ export interface ContentRegistry {
   classKits: Record<string, ClassKit>
   creatures: CreatureContent[]
   creaturesById: Map<string, CreatureContent>
+  // Story threads: authored, ordered chains of event beats.
+  threads: ThreadContent[]
+  threadsById: Map<string, ThreadContent>
 }
 
 const CREATURE_RARITIES = ["common", "uncommon", "rare", "elite", "boss"] as const
@@ -169,6 +259,11 @@ export function loadContent(): ContentRegistry {
     const arr = readJson<EventContent[]>(join("events", file))
     for (const ev of arr) {
       validateLocaleMap(ev.narrative, `event ${ev.id} narrative`)
+      if (ev.type === "dialogue") {
+        validateDialogueEvent(ev)
+        events.push(ev)
+        continue
+      }
       assert(ev.choices && ev.choices.length > 0, `event ${ev.id} has no choices`)
       for (const ch of ev.choices) {
         validateLocaleMap(ch.label, `event ${ev.id} choice ${ch.id} label`)
@@ -415,6 +510,13 @@ export function loadContent(): ContentRegistry {
   const factionsById = new Map(factions.map((f) => [f.id, f]))
   const combatsById = new Map(combats.map((e) => [e.id, e]))
 
+  // Threads are validated against the event bank, so load them after eventsById.
+  const threads = loadThreads(eventsById)
+  const threadsById = new Map(threads.map((t) => [t.id, t]))
+
+  // Dialogue branches cross-reference event ids, resolvable only now.
+  validateDialogueBranches(events, eventsById)
+
   cached = {
     classes,
     classesById,
@@ -434,6 +536,8 @@ export function loadContent(): ContentRegistry {
     classKits,
     creatures,
     creaturesById,
+    threads,
+    threadsById,
   }
   return cached
 }

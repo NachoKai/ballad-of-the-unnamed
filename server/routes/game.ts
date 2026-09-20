@@ -12,6 +12,7 @@ import {
   createCharacter,
   generateRival,
   resolveChoice,
+  resolveDialogue,
   resolveMinigame,
   seasonStipendFor,
   type ResolveOutput,
@@ -22,6 +23,8 @@ import {
   interactiveView,
 } from "../engine/minigames/index.js"
 import { combatView, endCombat, resolveCombatRound } from "../engine/combat/index.js"
+import { refineThreadPick } from "../engine/threadPick.js"
+import { classifyDialogue, resolveDialogueShortcut } from "../engine/dialogue.js"
 import { evaluateAchievements } from "../engine/achievements.js"
 import {
   generateEpilogue,
@@ -141,92 +144,92 @@ gameRouter.post("/archetype-draw", (req: Request, res: Response) => {
 gameRouter.post(
   "/new",
   asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const name =
-      String(req.body?.name ?? "")
-        .trim()
-        .slice(0, 24) || "Wanderer"
-    const classId = String(req.body?.classId ?? "")
-    const archetypeId = String(req.body?.archetypeId ?? "").trim() || null
-    const runType: RunType = req.body?.runType === "daily" ? "daily" : "standard"
-    const locale = localeOf(req)
-    const gender: Gender =
-      req.body?.gender === "male" || req.body?.gender === "female" ? req.body.gender : "male"
-    // origin dial: humble (poor start, underdog pool) or established.
-    const origin = req.body?.origin === "established" ? "established" : "humble"
-    // Hidden master archetypes require the class's unlock (client-side set of
-    // classes with a finished run). Reject picks the client never unlocked.
-    const unlockedClasses: string[] = Array.isArray(req.body?.unlockedClasses)
-      ? req.body.unlockedClasses.filter((c: unknown): c is string => typeof c === "string")
-      : []
+    try {
+      const name =
+        String(req.body?.name ?? "")
+          .trim()
+          .slice(0, 24) || "Wanderer"
+      const classId = String(req.body?.classId ?? "")
+      const archetypeId = String(req.body?.archetypeId ?? "").trim() || null
+      const runType: RunType = req.body?.runType === "daily" ? "daily" : "standard"
+      const locale = localeOf(req)
+      const gender: Gender =
+        req.body?.gender === "male" || req.body?.gender === "female" ? req.body.gender : "male"
+      // origin dial: humble (poor start, underdog pool) or established.
+      const origin = req.body?.origin === "established" ? "established" : "humble"
+      // Hidden master archetypes require the class's unlock (client-side set of
+      // classes with a finished run). Reject picks the client never unlocked.
+      const unlockedClasses: string[] = Array.isArray(req.body?.unlockedClasses)
+        ? req.body.unlockedClasses.filter((c: unknown): c is string => typeof c === "string")
+        : []
 
-    if (!registry.classesById.has(classId)) {
-      return res.status(400).json({ error: "invalid_class" })
-    }
-
-    if (archetypeId) {
-      const archetype = (registry.archetypes[classId] ?? []).find((a) => a.id === archetypeId)
-      if (archetype?.hidden && !unlockedClasses.includes(classId)) {
-        return res.status(400).json({ error: "locked_archetype" })
+      if (!registry.classesById.has(classId)) {
+        return res.status(400).json({ error: "invalid_class" })
       }
+
+      if (archetypeId) {
+        const archetype = (registry.archetypes[classId] ?? []).find((a) => a.id === archetypeId)
+        if (archetype?.hidden && !unlockedClasses.includes(classId)) {
+          return res.status(400).json({ error: "locked_archetype" })
+        }
+      }
+
+      const seed = runType === "daily" ? todayDailySeed() : String(Date.now()) + Math.random()
+      const rng = new Rng(hashSeed(seed))
+      // The archrival lives on its own parallel stream derived from the same
+      // seed, so generating/advancing it never consumes — or perturbs — the
+      // player's main stream (daily runs stay identical for everyone).
+      const rivalRng = rivalRngFor(seed)
+
+      const character = createCharacter({
+        id: crypto.randomUUID(),
+        name,
+        gender,
+        classId,
+        archetypeId,
+        origin,
+        locale,
+        registry,
+      })
+
+      character.rival = generateRival(character, registry, rivalRng)
+
+      const run = await createRun({
+        runType,
+        seed,
+        rngState: rng.getState(),
+        rivalRngState: rivalRng.getState(),
+        locale,
+        character,
+      })
+
+      // Build the first offered event.
+      const rng2 = new Rng(run.rngState)
+      const rivalRng2 = new Rng(run.rivalRngState)
+      const { event, served } = buildServedEvent(character, registry, rng2, rivalRng2)
+      run.pendingEvent = event
+      run.rngState = rng2.getState()
+      run.rivalRngState = rivalRng2.getState()
+      run.character = character
+      await saveRun(run)
+
+      res.cookie(RUN_COOKIE, run.id, {
+        httpOnly: true,
+        sameSite: "lax",
+        maxAge: 1000 * 60 * 60 * 24 * 7,
+      })
+
+      return res.json({
+        runId: run.id,
+        runType,
+        character,
+        event: served,
+      })
+    } catch (err) {
+      // Logged with full stack + request context by the global error middleware
+      // (server/errors.ts); the response carries an errorId for the player.
+      next(err)
     }
-
-    const seed = runType === "daily" ? todayDailySeed() : String(Date.now()) + Math.random()
-    const rng = new Rng(hashSeed(seed))
-    // The archrival lives on its own parallel stream derived from the same
-    // seed, so generating/advancing it never consumes — or perturbs — the
-    // player's main stream (daily runs stay identical for everyone).
-    const rivalRng = rivalRngFor(seed)
-
-    const character = createCharacter({
-      id: crypto.randomUUID(),
-      name,
-      gender,
-      classId,
-      archetypeId,
-      origin,
-      locale,
-      registry,
-    })
-
-    character.rival = generateRival(character, registry, rivalRng)
-
-    const run = await createRun({
-      runType,
-      seed,
-      rngState: rng.getState(),
-      rivalRngState: rivalRng.getState(),
-      locale,
-      character,
-    })
-
-    // Build the first offered event.
-    const rng2 = new Rng(run.rngState)
-    const rivalRng2 = new Rng(run.rivalRngState)
-    const { event, served } = buildServedEvent(character, registry, rng2, rivalRng2)
-    run.pendingEvent = event
-    run.rngState = rng2.getState()
-    run.rivalRngState = rivalRng2.getState()
-    run.character = character
-    await saveRun(run)
-
-    res.cookie(RUN_COOKIE, run.id, {
-      httpOnly: true,
-      sameSite: "lax",
-      maxAge: 1000 * 60 * 60 * 24 * 7,
-    })
-
-    return res.json({
-      runId: run.id,
-      runType,
-      character,
-      event: served,
-    })
-  } catch (err) {
-    // Logged with full stack + request context by the global error middleware
-    // (server/errors.ts); the response carries an errorId for the player.
-    next(err)
-  }
   }),
 )
 
@@ -234,62 +237,70 @@ gameRouter.post(
 gameRouter.get(
   "/state",
   asyncHandler(async (req: Request, res: Response) => {
-  const run = await loadOwnedRun(req)
-  if (!run) return res.status(404).json({ error: "not_found" })
-  const locale = run.locale
-  let served = null
-  if (run.pendingEvent && !run.finished) {
-    // Re-serve the persisted pending event WITHOUT advancing rng state used for
-    // resolution (use a throwaway rng for slot text so display stays stable-ish).
-    const rng = new Rng(run.rngState)
-    const { serveEvent } = await import("../engine/helpers.js")
-    served = serveEvent(
-      run.pendingEvent,
-      run.character,
-      locale,
-      registry,
-      rng,
-      run.pendingEvent.id === "__retirement_offer__",
-    )
-    // Restore capstone flags for a pending capstone minigame.
-    if (run.pendingEvent.isCapstone) {
-      served.isCapstone = true
-      served.capstoneKind = run.pendingEvent.capstoneKind ?? "debate"
-    }
-    // Restore season summary flags.
-    if (run.pendingEvent.id === "__season_summary__") {
-      served.isSeasonSummary = true
-      const c = run.character
-      const capstone = c.pendingCapstoneResult ?? null
-      const grade = computeSeasonGrade(c, capstone?.gradeDelta ?? 0)
-      served.seasonGrade = grade
-      served.seasonHeadline = seasonHeadline(grade, locale)
-      if (capstone) served.capstoneResult = capstone
-
-      // Re-serve the renown dividend so a reload shows the same amounts that
-      // resolveSeasonSummary will apply when the player continues.
-      const renown = seasonRenownGains(c, capstone?.gradeDelta ?? 0)
-      served.seasonFameGain = renown.fame
-      if (renown.reputation > 0) served.seasonReputationGain = renown.reputation
-
-      // The stipend row used to silently disappear on reload — restore it so
-      // the resumed summary matches the live-served one.
-      if (c.currentClanId) {
-        served.stipendEarned = seasonStipendFor(c, c.currentClanId, registry)
+    const run = await loadOwnedRun(req)
+    if (!run) return res.status(404).json({ error: "not_found" })
+    const locale = run.locale
+    let served = null
+    if (run.pendingEvent && !run.finished) {
+      // A leftover Jev thread-pick (a run resumed before its refinement landed) is
+      // resolved once and persisted. No-op when no pick is pending.
+      if (await refineThreadPick(run.character, registry)) await saveRun(run)
+      // Re-serve the persisted pending event WITHOUT advancing rng state used for
+      // resolution (use a throwaway rng for slot text so display stays stable-ish).
+      const rng = new Rng(run.rngState)
+      const { serveEvent } = await import("../engine/helpers.js")
+      served = serveEvent(
+        run.pendingEvent,
+        run.character,
+        locale,
+        registry,
+        rng,
+        run.pendingEvent.id === "__retirement_offer__",
+      )
+      // Restore capstone flags for a pending capstone minigame.
+      if (run.pendingEvent.isCapstone) {
+        served.isCapstone = true
+        served.capstoneKind = run.pendingEvent.capstoneKind ?? "debate"
       }
+      // Restore season summary flags.
+      if (run.pendingEvent.id === "__season_summary__") {
+        served.isSeasonSummary = true
+        const c = run.character
+        const capstone = c.pendingCapstoneResult ?? null
+        const grade = computeSeasonGrade(c, capstone?.gradeDelta ?? 0)
+        served.seasonGrade = grade
+        served.seasonHeadline = seasonHeadline(grade, locale)
+        if (capstone) served.capstoneResult = capstone
 
-      if (run.character.rival) {
-        served.rivalUpdate = buildRivalUpdate(run.character, registry, locale)
+        // Re-serve the renown dividend so a reload shows the same amounts that
+        // resolveSeasonSummary will apply when the player continues.
+        const renown = seasonRenownGains(c, capstone?.gradeDelta ?? 0)
+        served.seasonFameGain = renown.fame
+        if (renown.reputation > 0) served.seasonReputationGain = renown.reputation
+
+        // The stipend row used to silently disappear on reload — restore it so
+        // the resumed summary matches the live-served one.
+        if (c.currentClanId) {
+          served.stipendEarned = seasonStipendFor(c, c.currentClanId, registry)
+        }
+
+        if (run.character.rival) {
+          served.rivalUpdate = buildRivalUpdate(run.character, registry, locale)
+        }
       }
     }
-  }
-  return res.json({
-    runId: run.id,
-    runType: run.runType,
-    character: run.character,
-    event: served,
-    finished: run.finished,
-  })
+    // Surface the active storyline title on resume, matching the live serve path.
+    if (served && run.character.activeThread) {
+      const thread = registry.threadsById.get(run.character.activeThread.id)
+      if (thread) served.threadTitle = localize(thread.title, locale)
+    }
+    return res.json({
+      runId: run.id,
+      runType: run.runType,
+      character: run.character,
+      event: served,
+      finished: run.finished,
+    })
   }),
 )
 
@@ -297,32 +308,32 @@ gameRouter.get(
 gameRouter.get(
   "/shop",
   asyncHandler(async (req: Request, res: Response) => {
-  const run = await loadOwnedRun(req)
-  if (!run) return res.status(404).json({ error: "not_found" })
-  const locale = run.locale
-  const c = run.character
-  const items = registry.shop
-    .filter((item) => {
-      // Arc-gated shop items.
-      if (item.requiresArc && item.requiresArc.length > 0) {
-        return item.requiresArc.includes(c.currentArc)
-      }
-      return true
-    })
-    .map((item) => ({
-      id: item.id,
-      category: item.category,
-      name: localize(item.name, locale),
-      cost: item.cost,
-      effect: item.effect,
-      icon: item.icon,
-      flavor: localize(item.flavor, locale),
-      duration: item.duration,
-      owned: c.inventory.find((inv) => inv.itemId === item.id)?.qty ?? 0,
-    }))
-  // Debug-level market listing — only useful when tracing a specific run.
-  log.debug("shop.list", { runId: run.id, items: items.length, gold: c.gold })
-  res.json({ items, gold: c.gold, inventory: c.inventory })
+    const run = await loadOwnedRun(req)
+    if (!run) return res.status(404).json({ error: "not_found" })
+    const locale = run.locale
+    const c = run.character
+    const items = registry.shop
+      .filter((item) => {
+        // Arc-gated shop items.
+        if (item.requiresArc && item.requiresArc.length > 0) {
+          return item.requiresArc.includes(c.currentArc)
+        }
+        return true
+      })
+      .map((item) => ({
+        id: item.id,
+        category: item.category,
+        name: localize(item.name, locale),
+        cost: item.cost,
+        effect: item.effect,
+        icon: item.icon,
+        flavor: localize(item.flavor, locale),
+        duration: item.duration,
+        owned: c.inventory.find((inv) => inv.itemId === item.id)?.qty ?? 0,
+      }))
+    // Debug-level market listing — only useful when tracing a specific run.
+    log.debug("shop.list", { runId: run.id, items: items.length, gold: c.gold })
+    res.json({ items, gold: c.gold, inventory: c.inventory })
   }),
 )
 
@@ -335,78 +346,78 @@ gameRouter.get(
 gameRouter.post(
   "/buy",
   asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const run = await loadOwnedRun(req)
-    if (!run) return res.status(404).json({ error: "not_found" })
-    if (run.finished) return res.status(409).json({ error: "run_finished" })
+    try {
+      const run = await loadOwnedRun(req)
+      if (!run) return res.status(404).json({ error: "not_found" })
+      if (run.finished) return res.status(409).json({ error: "run_finished" })
 
-    const itemId = String(req.body?.itemId ?? "")
-    const item = registry.shop.find((i) => i.id === itemId)
-    if (!item) return res.status(400).json({ error: "unknown_item" })
+      const itemId = String(req.body?.itemId ?? "")
+      const item = registry.shop.find((i) => i.id === itemId)
+      if (!item) return res.status(400).json({ error: "unknown_item" })
 
-    // Arc gate check.
-    if (item.requiresArc && item.requiresArc.length > 0) {
-      if (!item.requiresArc.includes(run.character.currentArc)) {
-        return res.status(400).json({ error: "item_not_available" })
+      // Arc gate check.
+      if (item.requiresArc && item.requiresArc.length > 0) {
+        if (!item.requiresArc.includes(run.character.currentArc)) {
+          return res.status(400).json({ error: "item_not_available" })
+        }
       }
+
+      const c = run.character
+      if (c.gold < item.cost) return res.status(400).json({ error: "not_enough_gold" })
+
+      // Deduct gold.
+      c.gold -= item.cost
+
+      // Add to inventory.
+      const existing = c.inventory.find((inv) => inv.itemId === itemId)
+      if (existing) {
+        existing.qty += 1
+      } else {
+        const expiresAtTurn =
+          item.duration && item.duration > 0
+            ? c.turn + item.duration * GAME_CONFIG.seasonLength
+            : null
+        c.inventory.push({ itemId, qty: 1, expiresAtTurn })
+      }
+
+      // The run's story: a purchase is a life beat (the ending screen's "Your
+      // Story" names the item, this run's locale). Logged before any rewards so
+      // the scrollback order mirrors the run's actual beats.
+      logTurn(c, "__shop__", itemId, undefined, "shop")
+
+      // Items can declare an achievementTrigger (e.g. the floating_realm luxury)
+      // — bump that counter and unlock the achievement right away so the purchase
+      // has a felt reward. `achievementTrigger` doubles as the counter key,
+      // matching the authored `jetset_life` achievement condition.
+      let newAchievements: AchievementContent[] = []
+      if (item.achievementTrigger) {
+        c.counters[item.achievementTrigger] = (c.counters[item.achievementTrigger] ?? 0) + 1
+        newAchievements = evaluateAchievements(c, registry)
+      }
+
+      run.character = c
+      await saveRun(run)
+
+      // Structured audit line for the market — which item, at what cost, and the
+      // gold left after. Greppable by runId (server/logger.ts).
+      log.info("shop.purchase", {
+        runId: run.id,
+        itemId,
+        cost: item.cost,
+        goldAfter: c.gold,
+        locale: run.locale,
+      })
+
+      return res.json({
+        character: c,
+        purchased: itemId,
+        gold: c.gold,
+        inventory: c.inventory,
+        newAchievements,
+      })
+    } catch (err) {
+      next(err)
     }
-
-    const c = run.character
-    if (c.gold < item.cost) return res.status(400).json({ error: "not_enough_gold" })
-
-    // Deduct gold.
-    c.gold -= item.cost
-
-    // Add to inventory.
-    const existing = c.inventory.find((inv) => inv.itemId === itemId)
-    if (existing) {
-      existing.qty += 1
-    } else {
-      const expiresAtTurn =
-        item.duration && item.duration > 0
-          ? c.turn + item.duration * GAME_CONFIG.seasonLength
-          : null
-      c.inventory.push({ itemId, qty: 1, expiresAtTurn })
-    }
-
-    // The run's story: a purchase is a life beat (the ending screen's "Your
-    // Story" names the item, this run's locale). Logged before any rewards so
-    // the scrollback order mirrors the run's actual beats.
-    logTurn(c, "__shop__", itemId, undefined, "shop")
-
-    // Items can declare an achievementTrigger (e.g. the floating_realm luxury)
-    // — bump that counter and unlock the achievement right away so the purchase
-    // has a felt reward. `achievementTrigger` doubles as the counter key,
-    // matching the authored `jetset_life` achievement condition.
-    let newAchievements: AchievementContent[] = []
-    if (item.achievementTrigger) {
-      c.counters[item.achievementTrigger] = (c.counters[item.achievementTrigger] ?? 0) + 1
-      newAchievements = evaluateAchievements(c, registry)
-    }
-
-    run.character = c
-    await saveRun(run)
-
-    // Structured audit line for the market — which item, at what cost, and the
-    // gold left after. Greppable by runId (server/logger.ts).
-    log.info("shop.purchase", {
-      runId: run.id,
-      itemId,
-      cost: item.cost,
-      goldAfter: c.gold,
-      locale: run.locale,
-    })
-
-    return res.json({
-      character: c,
-      purchased: itemId,
-      gold: c.gold,
-      inventory: c.inventory,
-      newAchievements,
-    })
-  } catch (err) {
-    next(err)
-  }
   }),
 )
 
@@ -500,6 +511,11 @@ async function finishResolvedTurn(
     }
   }
 
+  // Refine a just-opened storyline to Jev's daily-chosen candidate (if enabled)
+  // before serving the next event, so the first beat served is the chosen
+  // thread's. The engine already set a deterministic fallback, so this only ever
+  // swaps the winner — never the rng stream.
+  await refineThreadPick(c, registry)
   const { event, served } = buildServedEvent(c, registry, rng, rivalRng)
   run.pendingEvent = event
   run.rngState = rng.getState()
@@ -518,43 +534,62 @@ async function finishResolvedTurn(
 gameRouter.post(
   "/choose",
   asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const run = await loadOwnedRun(req)
-    if (!run) return res.status(404).json({ error: "not_found" })
-    if (run.finished) return res.status(409).json({ error: "run_finished" })
-    if (!run.pendingEvent) return res.status(409).json({ error: "no_pending_event" })
+    try {
+      const run = await loadOwnedRun(req)
+      if (!run) return res.status(404).json({ error: "not_found" })
+      if (run.finished) return res.status(409).json({ error: "run_finished" })
+      if (!run.pendingEvent) return res.status(409).json({ error: "no_pending_event" })
 
-    const event = run.pendingEvent
-    const rng = new Rng(run.rngState)
-    const rivalRng = new Rng(run.rivalRngState)
-    const isMinigame = event.type === "minigame" || Boolean(event.cards)
+      const event = run.pendingEvent
+      const rng = new Rng(run.rngState)
+      const rivalRng = new Rng(run.rivalRngState)
+      const isMinigame = event.type === "minigame" || Boolean(event.cards)
 
-    // Interactive minigames are multi-move and resolve through /minigame-move,
-    // never through a single card-pick — reject stray /choose calls.
-    const isInteractive = event.resolution?.type === "interactive"
-    if (isInteractive) return res.status(400).json({ error: "interactive_minigame" })
+      // Interactive minigames are multi-move and resolve through /minigame-move,
+      // never through a single card-pick — reject stray /choose calls.
+      const isInteractive = event.resolution?.type === "interactive"
+      if (isInteractive) return res.status(400).json({ error: "interactive_minigame" })
 
-    // Combat events resolve through /combat-move, never a single card-pick.
-    if (event.combat) return res.status(400).json({ error: "combat_event" })
+      // Combat events resolve through /combat-move, never a single card-pick.
+      if (event.combat) return res.status(400).json({ error: "combat_event" })
 
-    const outcome = isMinigame
-      ? resolveMinigame(run.character, event, String(req.body?.cardId ?? ""), registry, rng)
-      : resolveChoice(run.character, event, String(req.body?.choiceId ?? ""), registry, rng)
+      let outcome: ResolveOutput
+      if (event.type === "dialogue") {
+        const playerAnswer =
+          typeof req.body?.playerAnswer === "string" ? req.body.playerAnswer.trim() : ""
+        let interpretationId: string
+        if (playerAnswer) {
+          const maxLength = event.maxLength ?? GAME_CONFIG.dialogueMaxLength
+          if (playerAnswer.length > maxLength) {
+            return res.status(400).json({ error: "answer_too_long" })
+          }
+          interpretationId = await classifyDialogue(run.character, event, playerAnswer)
+        } else {
+          const shortcut = resolveDialogueShortcut(event, String(req.body?.choiceId ?? ""))
+          if (!shortcut) throw new HttpError(400, "invalid_choice")
+          interpretationId = shortcut
+        }
+        outcome = resolveDialogue(run.character, event, interpretationId, registry, rng)
+      } else {
+        outcome = isMinigame
+          ? resolveMinigame(run.character, event, String(req.body?.cardId ?? ""), registry, rng)
+          : resolveChoice(run.character, event, String(req.body?.choiceId ?? ""), registry, rng)
+      }
 
-    return res.json(await finishResolvedTurn(run, outcome, rng, rivalRng))
-  } catch (err) {
-    const msg = (err as Error).message
-    if (
-      msg.startsWith("unknown choice") ||
-      msg.startsWith("unknown card") ||
-      msg.startsWith("locked choice")
-    ) {
-      // Expected client error — rendered by the route-level error middleware
-      // as { error: "invalid_choice", errorId }.
-      throw new HttpError(400, "invalid_choice")
+      return res.json(await finishResolvedTurn(run, outcome, rng, rivalRng))
+    } catch (err) {
+      const msg = (err as Error).message
+      if (
+        msg.startsWith("unknown choice") ||
+        msg.startsWith("unknown card") ||
+        msg.startsWith("locked choice")
+      ) {
+        // Expected client error — rendered by the route-level error middleware
+        // as { error: "invalid_choice", errorId }.
+        throw new HttpError(400, "invalid_choice")
+      }
+      next(err)
     }
-    next(err)
-  }
   }),
 )
 
@@ -564,78 +599,78 @@ gameRouter.post(
 gameRouter.post(
   "/minigame-move",
   asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const run = await loadOwnedRun(req)
-    if (!run) return res.status(404).json({ error: "not_found" })
-    if (run.finished) return res.status(409).json({ error: "run_finished" })
-    const ev = run.pendingEvent
-    const c = run.character
-    if (!ev || ev.resolution?.type !== "interactive" || !c.pendingMinigame) {
-      return res.status(400).json({ error: "no_interactive_minigame" })
-    }
-    if (c.pendingMinigame.eventId !== ev.id) {
-      return res.status(400).json({ error: "interactive_mismatch" })
-    }
+    try {
+      const run = await loadOwnedRun(req)
+      if (!run) return res.status(404).json({ error: "not_found" })
+      if (run.finished) return res.status(409).json({ error: "run_finished" })
+      const ev = run.pendingEvent
+      const c = run.character
+      if (!ev || ev.resolution?.type !== "interactive" || !c.pendingMinigame) {
+        return res.status(400).json({ error: "no_interactive_minigame" })
+      }
+      if (c.pendingMinigame.eventId !== ev.id) {
+        return res.status(400).json({ error: "interactive_mismatch" })
+      }
 
-    const move = req.body?.move as InteractiveMove
-    if (!move || typeof move !== "object") {
-      return res.status(400).json({ error: "invalid_move" })
-    }
+      const move = req.body?.move as InteractiveMove
+      if (!move || typeof move !== "object") {
+        return res.status(400).json({ error: "invalid_move" })
+      }
 
-    const rng = new Rng(run.rngState)
-    const rivalRng = new Rng(run.rivalRngState)
-    const primaryStat = c[ev.primaryStat ?? "intelligence"] as number
+      const rng = new Rng(run.rngState)
+      const rivalRng = new Rng(run.rivalRngState)
+      const primaryStat = c[ev.primaryStat ?? "intelligence"] as number
 
-    const state = c.pendingMinigame
-    const locale = c.locale
-    const before = interactiveView(state, locale, c.gold)
-    // Reject moves after the match is already over: applyInteractiveMove has no
-    // guard against post-over moves (rps keeps counting wins, ttt throws on a
-    // full board), so the current view's over flag is the authoritative gate.
-    if (before.over) {
-      return res.status(400).json({ error: "match_already_finished" })
-    }
-    const { over } = applyInteractiveMove(state, move, primaryStat, rng, ev.resolution, c)
+      const state = c.pendingMinigame
+      const locale = c.locale
+      const before = interactiveView(state, locale, c.gold)
+      // Reject moves after the match is already over: applyInteractiveMove has no
+      // guard against post-over moves (rps keeps counting wins, ttt throws on a
+      // full board), so the current view's over flag is the authoritative gate.
+      if (before.over) {
+        return res.status(400).json({ error: "match_already_finished" })
+      }
+      const { over } = applyInteractiveMove(state, move, primaryStat, rng, ev.resolution, c)
 
-    if (!over) {
-      run.rngState = rng.getState()
-      await saveRun(run)
+      if (!over) {
+        run.rngState = rng.getState()
+        await saveRun(run)
+        return res.json({
+          status: "playing",
+          minigame: {
+            game: state.game,
+            view: interactiveView(state, locale, c.gold),
+          },
+          feedback: null,
+        })
+      }
+
+      // Game over: resolve the tier and clear the pending game. The final view
+      // rides along so the client can render the completed board under the
+      // result banner (the last move's state is never sent as a "playing" frame).
+      const tier = interactiveTier(state)
+      const finalView = interactiveView(state, locale, c.gold)
+      c.pendingMinigame = null
+      run.character = c
+      const outcome = applyMinigameOutcome(c, ev, tier, registry, rng)
+      const payload = await finishResolvedTurn(run, outcome, rng, rivalRng)
       return res.json({
-        status: "playing",
-        minigame: {
-          game: state.game,
-          view: interactiveView(state, locale, c.gold),
-        },
-        feedback: null,
+        status: "finished",
+        minigame: { game: state.game, view: finalView },
+        ...payload,
       })
+    } catch (err) {
+      const msg = (err as Error).message
+      if (
+        msg.startsWith("invalid tictactoe cell") ||
+        msg.startsWith("invalid memotest card") ||
+        msg.startsWith("invalid press option") ||
+        msg.startsWith("invalid move for")
+      ) {
+        throw new HttpError(400, "invalid_move")
+      }
+      next(err)
     }
-
-    // Game over: resolve the tier and clear the pending game. The final view
-    // rides along so the client can render the completed board under the
-    // result banner (the last move's state is never sent as a "playing" frame).
-    const tier = interactiveTier(state)
-    const finalView = interactiveView(state, locale, c.gold)
-    c.pendingMinigame = null
-    run.character = c
-    const outcome = applyMinigameOutcome(c, ev, tier, registry, rng)
-    const payload = await finishResolvedTurn(run, outcome, rng, rivalRng)
-    return res.json({
-      status: "finished",
-      minigame: { game: state.game, view: finalView },
-      ...payload,
-    })
-  } catch (err) {
-    const msg = (err as Error).message
-    if (
-      msg.startsWith("invalid tictactoe cell") ||
-      msg.startsWith("invalid memotest card") ||
-      msg.startsWith("invalid press option") ||
-      msg.startsWith("invalid move for")
-    ) {
-      throw new HttpError(400, "invalid_move")
-    }
-    next(err)
-  }
   }),
 )
 
@@ -646,76 +681,76 @@ gameRouter.post(
 gameRouter.post(
   "/combat-move",
   asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const run = await loadOwnedRun(req)
-    if (!run) return res.status(404).json({ error: "not_found" })
-    if (run.finished) return res.status(409).json({ error: "run_finished" })
-    const ev = run.pendingEvent
-    const c = run.character
-    if (!ev || !ev.combat || !c.pendingCombat) {
-      return res.status(400).json({ error: "no_pending_combat" })
-    }
-    if (c.pendingCombat.eventId !== ev.id) {
-      return res.status(400).json({ error: "combat_mismatch" })
-    }
-    const move = req.body?.move as CombatMove
-    if (
-      !move ||
-      typeof move !== "object" ||
-      !["attack", "ability", "defend", "flee"].includes(move.kind)
-    ) {
-      return res.status(400).json({ error: "invalid_move" })
-    }
-    const rng = new Rng(run.rngState)
-    const rivalRng = new Rng(run.rivalRngState)
-    const state = c.pendingCombat
-    const locale = c.locale
-    // Reject moves after the fight is already over: the round engine has no
-    // guard against post-over rounds (it would keep attacking a corpse), so
-    // the persisted state's over flag is the authoritative gate.
-    if (state.over) return res.status(400).json({ error: "combat_already_finished" })
-
-    let over: boolean
     try {
-      over = resolveCombatRound(state, c, registry.classKits[c.class], move, rng).over
-    } catch (err) {
-      const msg = (err as Error).message
+      const run = await loadOwnedRun(req)
+      if (!run) return res.status(404).json({ error: "not_found" })
+      if (run.finished) return res.status(409).json({ error: "run_finished" })
+      const ev = run.pendingEvent
+      const c = run.character
+      if (!ev || !ev.combat || !c.pendingCombat) {
+        return res.status(400).json({ error: "no_pending_combat" })
+      }
+      if (c.pendingCombat.eventId !== ev.id) {
+        return res.status(400).json({ error: "combat_mismatch" })
+      }
+      const move = req.body?.move as CombatMove
       if (
-        msg.startsWith("unknown ability") ||
-        msg.startsWith("locked ability") ||
-        msg.startsWith("insufficient resource")
+        !move ||
+        typeof move !== "object" ||
+        !["attack", "ability", "defend", "flee"].includes(move.kind)
       ) {
         return res.status(400).json({ error: "invalid_move" })
       }
-      throw err
-    }
+      const rng = new Rng(run.rngState)
+      const rivalRng = new Rng(run.rivalRngState)
+      const state = c.pendingCombat
+      const locale = c.locale
+      // Reject moves after the fight is already over: the round engine has no
+      // guard against post-over rounds (it would keep attacking a corpse), so
+      // the persisted state's over flag is the authoritative gate.
+      if (state.over) return res.status(400).json({ error: "combat_already_finished" })
 
-    if (!over) {
-      run.rngState = rng.getState()
-      await saveRun(run)
+      let over: boolean
+      try {
+        over = resolveCombatRound(state, c, registry.classKits[c.class], move, rng).over
+      } catch (err) {
+        const msg = (err as Error).message
+        if (
+          msg.startsWith("unknown ability") ||
+          msg.startsWith("locked ability") ||
+          msg.startsWith("insufficient resource")
+        ) {
+          return res.status(400).json({ error: "invalid_move" })
+        }
+        throw err
+      }
+
+      if (!over) {
+        run.rngState = rng.getState()
+        await saveRun(run)
+        return res.json({
+          status: "playing",
+          combat: { game: "combat", view: combatView(state, c, locale, registry) },
+          feedback: null,
+        })
+      }
+
+      // Fight over: apply rewards/death and serve the next beat.
+      const finalView = combatView(state, c, locale, registry)
+      const outcome = endCombat(c, ev, state, registry, rng)
+      const payload = await finishResolvedTurn(run, outcome, rng, rivalRng)
+      // Loot breakdown for the result screen — endCombat returns the exact
+      // amounts granted (CombatResolveOutput.rewards), null when nothing won.
+      const loot = outcome.rewards ?? null
       return res.json({
-        status: "playing",
-        combat: { game: "combat", view: combatView(state, c, locale, registry) },
-        feedback: null,
+        status: "finished",
+        combat: { game: "combat", view: finalView },
+        loot,
+        ...payload,
       })
+    } catch (err) {
+      next(err)
     }
-
-    // Fight over: apply rewards/death and serve the next beat.
-    const finalView = combatView(state, c, locale, registry)
-    const outcome = endCombat(c, ev, state, registry, rng)
-    const payload = await finishResolvedTurn(run, outcome, rng, rivalRng)
-    // Loot breakdown for the result screen — endCombat returns the exact
-    // amounts granted (CombatResolveOutput.rewards), null when nothing won.
-    const loot = outcome.rewards ?? null
-    return res.json({
-      status: "finished",
-      combat: { game: "combat", view: finalView },
-      loot,
-      ...payload,
-    })
-  } catch (err) {
-    next(err)
-  }
   }),
 )
 

@@ -23,7 +23,14 @@ import { GAME_CONFIG } from "../../../shared/config.js"
 // Deliberate cycle (mirrors minigames/pressConference.ts): engine -> helpers
 // -> combat -> engine. Safe because every symbol below is referenced only
 // inside function bodies (ESM live bindings resolve at call time).
-import { ageUp, bumpCounter, defaultFaction, heroicOrPeaceful, rollDeath } from "../engine.js"
+import {
+  advanceThread,
+  ageUp,
+  bumpCounter,
+  defaultFaction,
+  heroicOrPeaceful,
+  rollDeath,
+} from "../engine.js"
 import {
   activeMenace,
   adjustReputation,
@@ -597,6 +604,9 @@ export function endCombat(
   recomputeDerived(c)
   ageUp(c)
   clearExpiredHunted(c)
+  // Story threads advance only when this turn actually played the active beat
+  // (combat events are never beats, so normally a no-op).
+  advanceThread(c, registry, ev.id)
 
   let ended = false
   let endingType: EndingType | undefined
