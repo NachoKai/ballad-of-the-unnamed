@@ -272,5 +272,149 @@
         }
       }
     }
+  },
+  {
+    "id": "debate_war_songs",
+    "type": "minigame",
+    "subtype": "debate",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 10,
+    "isCapstone": true,
+    "capstoneKind": "debate",
+    "primaryStat": "charisma",
+    "narrative": {
+      "en": "The season ends with a march, and every ward argues which war song the drums should carry. {rivalName} takes the dais and praises a marching song about loyalty to the old banners — while the crowd splits between old pride and new names. The verse you champion will play all winter.",
+      "es": "La temporada termina con una marcha, y cada barrio discute qué canción de guerra deben llevar los tambores. {rivalName} sube al estrado y alaba una marcha sobre la lealtad a los viejos estandartes — mientras la multitud se divide entre el orgullo viejo y los nombres nuevos. La estrofa que defiendas sonará todo el invierno."
+    },
+    "cards": [
+      {
+        "id": "war_song_silence",
+        "icon": "brain",
+        "tag": "Strategic",
+        "wantedTags": {
+          "Strategic": 1,
+          "Professional": 0.5
+        },
+        "punishedTags": {
+          "Aggressive": 0.5
+        },
+        "label": {
+          "en": "Champion the verse of quiet strategy",
+          "es": "Defender la estrofa de la estrategia silenciosa"
+        }
+      },
+      {
+        "id": "war_song_defend",
+        "icon": "heart-handshake",
+        "tag": "Supportive",
+        "wantedTags": {
+          "Supportive": 1,
+          "Humble": 0.5
+        },
+        "punishedTags": {
+          "Cocky": 0.5
+        },
+        "label": {
+          "en": "Champion the verse that shields the ranks",
+          "es": "Defender la estrofa que protege las filas"
+        }
+      },
+      {
+        "id": "war_song_march",
+        "icon": "flame",
+        "tag": "Cocky",
+        "wantedTags": {
+          "Cocky": 1,
+          "Aggressive": 0.5
+        },
+        "punishedTags": {
+          "Supportive": 0.5
+        },
+        "label": {
+          "en": "Champion the verse of fire and bravado",
+          "es": "Defender la estrofa de fuego y fanfarronería"
+        }
+      },
+      {
+        "id": "war_song_verdict",
+        "icon": "gem",
+        "tag": "Confident",
+        "wantedTags": {
+          "Confident": 1
+        },
+        "punishedTags": {
+          "Humble": 0.5
+        },
+        "label": {
+          "en": "Champion the verse that names the victor",
+          "es": "Defender la estrofa que nombra a la vencedora"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.42,
+      "statInfluence": {
+        "charisma": 0.012,
+        "intelligence": 0.004
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "charisma": 2
+        },
+        "fameDelta": 6,
+        "reputationDelta": 3,
+        "verdict": {
+          "en": "GREAT +3",
+          "es": "GRAN +3"
+        },
+        "gradeDelta": 3,
+        "narrative": {
+          "en": "The drums take your verse, and the whole city marches to your rhythm to the season's end. {rivalName}'s song is forgotten by the second stanza of the first chorus. They watch the parade from a window — and seethe.",
+          "es": "Los tambores toman tu estrofa, y toda la ciudad marcha a tu ritmo hasta el final de la temporada. La canción de {rivalName} se olvida en la segunda estrofa del primer estribillo. Miran el desfile desde una ventana — y arden por dentro."
+        }
+      },
+      "success": {
+        "fameDelta": 3,
+        "reputationDelta": 1,
+        "verdict": {
+          "en": "GOOD +1",
+          "es": "BUENA +1"
+        },
+        "gradeDelta": 1,
+        "narrative": {
+          "en": "Your verse is chosen for the big streets, and {rivalName}'s for the narrow ones. Both songs play out somehow, but on the main avenue the drums are yours — and the season's last cheers are for your name.",
+          "es": "Tu estrofa queda para las calles grandes, y la de {rivalName} para las angostas. Ambas canciones suenan de algún modo, pero en la avenida principal los tambores son tuyos — y los últimos vítores de la temporada son para tu nombre."
+        }
+      },
+      "partial": {
+        "reputationDelta": -1,
+        "verdict": {
+          "en": "MIXED 0",
+          "es": "MIXTA 0"
+        },
+        "gradeDelta": 0,
+        "narrative": {
+          "en": "The crowd can't settle, so the march staggers along playing both songs in turns. Nobody remembers what they marched to, only that the drums argued the whole way — with you in the middle.",
+          "es": "La multitud no se decide, así que la marcha avanza cojeando y alterna ambas canciones. Nadie recuerda a qué marchó, solo que los tambores discutieron todo el camino — con vos en el medio."
+        }
+      },
+      "fail": {
+        "reputationDelta": -2,
+        "fameDelta": -1,
+        "verdict": {
+          "en": "BAD −2",
+          "es": "MALA −2"
+        },
+        "gradeDelta": -2,
+        "narrative": {
+          "en": "{rivalName}'s song carries the parade, and your verse dies among the last rows. The city hums their tune all winter, and every time the drums pass your door, the whole street looks your way on purpose.",
+          "es": "La canción de {rivalName} se lleva el desfile, y tu estrofa muere entre las últimas filas. La ciudad tararea su melodía todo el invierno, y cada vez que los tambores pasan ante tu puerta, toda la calle te mira a propósito."
+        }
+      }
+    }
   }
 ]

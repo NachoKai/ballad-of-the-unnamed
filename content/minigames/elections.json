@@ -1404,5 +1404,707 @@
         }
       }
     }
+  },
+  {
+    "id": "election_harbor_master",
+    "type": "minigame",
+    "subtype": "election",
+    "minAge": 18,
+    "maxAge": 99,
+    "weight": 8,
+    "isCapstone": true,
+    "capstoneKind": "election",
+    "primaryStat": "charisma",
+    "narrative": {
+      "en": "The harbor guild elects who holds the leash on every ship in the port, and the dock captains have stopped pretending to be friends. One candidate's lines are already tied to a shadow fleet that sails by night with no flag. Your word can swing the lantern.",
+      "es": "El gremio del puerto elige a quién darle la correa de cada barco de la dársena, y los capitanes de muelle dejaron de fingir amistad. Los amarres de una candidata ya están atados a una flota sombría que navega de noche sin bandera. Tu palabra puede girar el farol."
+    },
+    "cards": [
+      {
+        "id": "harbor_shadow_fleet",
+        "icon": "eye-off",
+        "trap": true,
+        "label": {
+          "en": "Back the shadow-fleet favorite",
+          "es": "Respaldar a la favorita de la flota sombría"
+        }
+      },
+      {
+        "id": "harbor_pilots_league",
+        "icon": "fish",
+        "label": {
+          "en": "Back the pilots' league",
+          "es": "Respaldar a la liga de pilotos"
+        }
+      },
+      {
+        "id": "harbor_charter_flag",
+        "icon": "handshake",
+        "label": {
+          "en": "Back the charter-flag's keeper",
+          "es": "Respaldar a la guardiana de la bandera de la carta"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.42,
+      "statInfluence": {
+        "charisma": 0.012,
+        "intelligence": 0.004
+      },
+      "cardModifiers": {
+        "harbor_pilots_league": {
+          "winChanceDelta": 0.05
+        },
+        "harbor_charter_flag": {
+          "winChanceDelta": 0.1
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "charisma": 2
+        },
+        "goldDelta": 200,
+        "fameDelta": 6,
+        "reputationDelta": 3,
+        "verdict": {
+          "en": "GREAT +3",
+          "es": "GRAN +3"
+        },
+        "gradeDelta": 3,
+        "narrative": {
+          "en": "The harbor chooses the charter-flag's keeper, and the shadow fleet finds every berth doubled and watched. Clean ships dock free, smugglers pay cedar price, and your name rides the tide through the whole season.",
+          "es": "El puerto elige a la guardiana de la bandera de la carta, y la flota sombría se encuentra con cada amarre duplicado y vigilado. Los barcos limpios atracan gratis, los contrabandistas pagan precio de cedro, y tu nombre cabalga la marea toda la temporada."
+        }
+      },
+      "success": {
+        "goldDelta": 60,
+        "fameDelta": 3,
+        "reputationDelta": 1,
+        "verdict": {
+          "en": "GOOD +1",
+          "es": "BUENA +1"
+        },
+        "gradeDelta": 1,
+        "narrative": {
+          "en": "A steady hand wins the harbor vote. The ledger balances, the fleet sails honest, and the dock bells ring a thank-you your way at breakfast.",
+          "es": "Una mano firme gana el voto del puerto. El libro de cuentas cierra, la flota navega honesta, y las campanas del muelle suenan un agradecimiento hacia vos en el desayuno."
+        }
+      },
+      "partial": {
+        "fameDelta": 1,
+        "reputationDelta": -1,
+        "verdict": {
+          "en": "MIXED 0",
+          "es": "MIXTA 0"
+        },
+        "gradeDelta": 0,
+        "narrative": {
+          "en": "The harbor splits its vote and the lantern goes to a compromise captain. Half the docks approve, half mutter about the shadow fleet's one quiet slip that no one mentions.",
+          "es": "El puerto divide su voto y el farol va a una capitana de consenso. La mitad de los muelles aprueba, la mitad murmura por el único amarre silencioso de la flota sombría del que nadie habla."
+        }
+      },
+      "fail": {
+        "reputationDelta": -2,
+        "fameDelta": -1,
+        "goldDelta": -80,
+        "verdict": {
+          "en": "BAD −2",
+          "es": "MALA −2"
+        },
+        "gradeDelta": -2,
+        "narrative": {
+          "en": "The shadow-fleet favorite takes the lantern with your name on the loudest voices. The harbor audits every ship you own, and your good name docks at the wrong pier for a season.",
+          "es": "La favorita de la flota sombría se lleva el farol con tu nombre en las voces más ruidosas. El puerto audita cada barco tuyo, y tu buen nombre atraca en el muelle equivocado durante toda una temporada."
+        }
+      }
+    }
+  },
+  {
+    "id": "election_head_judge",
+    "type": "minigame",
+    "subtype": "election",
+    "minAge": 18,
+    "maxAge": 99,
+    "weight": 9,
+    "isCapstone": true,
+    "capstoneKind": "election",
+    "primaryStat": "intelligence",
+    "narrative": {
+      "en": "The benches elect a head judge, and the brief is chalked above the courthouse door: the one who cannot be bought. The cartel disagrees, and has already refurnished one candidate's chambers. The season's rulings hang on the vote.",
+      "es": "Los estrados eligen a una juez principal, y el encargo está escrito con tiza sobre la puerta del tribunal: la que no se puede comprar. El cártel no está de acuerdo, y ya amuebló de nuevo la sala de una candidata. Los fallos de la temporada cuelgan del voto."
+    },
+    "cards": [
+      {
+        "id": "headjudge_cartel",
+        "icon": "hand-coins",
+        "trap": true,
+        "label": {
+          "en": "Back the cartel's new friend",
+          "es": "Respaldar a la nueva amiga del cártel"
+        }
+      },
+      {
+        "id": "headjudge_letter",
+        "icon": "scroll-text",
+        "label": {
+          "en": "Back the one the briefs trust",
+          "es": "Respaldar a quien los escritos respetan"
+        }
+      },
+      {
+        "id": "headjudge_commons",
+        "icon": "shield",
+        "label": {
+          "en": "Back the common bench's favorite",
+          "es": "Respaldar a la favorita del estrado común"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.44,
+      "statInfluence": {
+        "intelligence": 0.012,
+        "charisma": 0.004
+      },
+      "cardModifiers": {
+        "headjudge_letter": {
+          "winChanceDelta": 0.05
+        },
+        "headjudge_commons": {
+          "winChanceDelta": 0.1
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "fameDelta": 6,
+        "reputationDelta": 3,
+        "verdict": {
+          "en": "GREAT +3",
+          "es": "GRAN +3"
+        },
+        "gradeDelta": 3,
+        "narrative": {
+          "en": "The benches pick the judge the briefs trust, and the cartel's first case lands in front of her like clockwork — and loses. The chalk above the door is repainted; underneath, someone has chalked your name.",
+          "es": "Los estrados eligen a la juez que los escritos respetan, y el primer caso del cártel aterriza frente a ella como un reloj — y se pierde. Repintan la tiza sobre la puerta; debajo, alguien escribió tu nombre."
+        }
+      },
+      "success": {
+        "fameDelta": 3,
+        "reputationDelta": 1,
+        "verdict": {
+          "en": "GOOD +1",
+          "es": "BUENA +1"
+        },
+        "gradeDelta": 1,
+        "narrative": {
+          "en": "A fair judge is seated, and a season's rulings hold the line. The cartel peels off quietly, and the clerks whisper your name with approval.",
+          "es": "Se sienta una juez justa, y los fallos de la temporada se mantienen en la línea. El cártel se retira en silencio, y los escribanos susurran tu nombre con aprobación."
+        }
+      },
+      "partial": {
+        "fameDelta": 1,
+        "reputationDelta": -1,
+        "verdict": {
+          "en": "MIXED 0",
+          "es": "MIXTA 0"
+        },
+        "gradeDelta": 0,
+        "narrative": {
+          "en": "The vote lands on a compromise judge. Rulings stagger to the season's end, the cartel keeps one favor warm, and the benches never quite agree you chose well.",
+          "es": "El voto recae en una juez de consenso. Los fallos renquean hasta el final de la temporada, el cártel mantiene tibio un favor, y los estrados nunca terminan de coincidir en que elegiste bien."
+        }
+      },
+      "fail": {
+        "reputationDelta": -2,
+        "fameDelta": -1,
+        "goldDelta": -50,
+        "verdict": {
+          "en": "BAD −2",
+          "es": "MALA −2"
+        },
+        "gradeDelta": -2,
+        "narrative": {
+          "en": "The cartel's friend takes the bench, and the season's first inconvenient ruling comes out against you — with a fine to make the point. The clerk files it under 'influence,' and the chalk above the door stops mentioning your name.",
+          "es": "La amiga del cártel se sienta en el estrado, y el primer fallo incómodo de la temporada sale en tu contra — con una multa para dejar el punto claro. El escribano lo archiva bajo 'influencia', y la tiza sobre la puerta deja de mencionar tu nombre."
+        }
+      }
+    }
+  },
+  {
+    "id": "election_warming_bonfires",
+    "type": "minigame",
+    "subtype": "election",
+    "minAge": 18,
+    "maxAge": 99,
+    "weight": 8,
+    "isCapstone": true,
+    "capstoneKind": "election",
+    "primaryStat": "charisma",
+    "narrative": {
+      "en": "When the winter solstice comes, the town feeds one great bonfire to honor whose birthright gave the first warmth to these streets. The election chooses the name the ember carries — and each ward has already stacked its own wood high.",
+      "es": "Cuando llega el solsticio de invierno, el pueblo alimenta una gran fogata para honrar el derecho de nacimiento que dio el primer calor a estas calles. La elección decide el nombre que lleva la brasa — y cada barrio ya apiló su propia leña."
+    },
+    "cards": [
+      {
+        "id": "bonfire_silver_house",
+        "icon": "crown",
+        "trap": true,
+        "label": {
+          "en": "Honor the silver house's lineage",
+          "es": "Honrar el linaje de la casa de la plata"
+        }
+      },
+      {
+        "id": "bonfire_rotation",
+        "icon": "star",
+        "label": {
+          "en": "Honor the wards by turn",
+          "es": "Honrar a los barrios por turno"
+        }
+      },
+      {
+        "id": "bonfire_commons",
+        "icon": "flame",
+        "label": {
+          "en": "Honor the commons' hearth-founding",
+          "es": "Honrar el hogar fundador de las comunas"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.42,
+      "statInfluence": {
+        "charisma": 0.012,
+        "intelligence": 0.004
+      },
+      "cardModifiers": {
+        "bonfire_rotation": {
+          "winChanceDelta": 0.05
+        },
+        "bonfire_commons": {
+          "winChanceDelta": 0.1
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "charisma": 2
+        },
+        "fameDelta": 6,
+        "reputationDelta": 3,
+        "verdict": {
+          "en": "GREAT +3",
+          "es": "GRAN +3"
+        },
+        "gradeDelta": 3,
+        "narrative": {
+          "en": "The commons' name is carried into the flames, and the whole town warms itself on a story it can all share. The ember reaches your door, and the solstice word is yours all season.",
+          "es": "El nombre de las comunas es llevado a las llamas, y todo el pueblo se calienta con una historia que todos pueden compartir. La brasa llega a tu puerta, y la palabra del solsticio es tuya toda la temporada."
+        }
+      },
+      "success": {
+        "fameDelta": 3,
+        "reputationDelta": 1,
+        "verdict": {
+          "en": "GOOD +1",
+          "es": "BUENA +1"
+        },
+        "gradeDelta": 1,
+        "narrative": {
+          "en": "A fair rotation wins the vote, and the bonfire burns without a grudge. The wards call it a warm winter, with your name in the kindling.",
+          "es": "Una rotación justa gana el voto, y la fogata arde sin rencores. Los barrios la llaman un invierno cálido, con tu nombre en la leña."
+        }
+      },
+      "partial": {
+        "fameDelta": 1,
+        "reputationDelta": -1,
+        "verdict": {
+          "en": "MIXED 0",
+          "es": "MIXTA 0"
+        },
+        "gradeDelta": 0,
+        "narrative": {
+          "en": "The fire catches and sputters, the silver house grumbles, and the commons only half-warms. Your election is remembered as a charcoal season.",
+          "es": "El fuego prende y chisporrotea, la casa de la plata rezonga, y las comunas se calientan a medias. Recuerdan tu elección como una temporada de carbón."
+        }
+      },
+      "fail": {
+        "reputationDelta": -2,
+        "fameDelta": -1,
+        "goldDelta": -50,
+        "verdict": {
+          "en": "BAD −2",
+          "es": "MALA −2"
+        },
+        "gradeDelta": -2,
+        "narrative": {
+          "en": "The silver house takes the ember, and the commons' wood feeds a feast they don't attend. The town's goodwill freezes where it stood — and the cold is blamed on your name.",
+          "es": "La casa de la plata se lleva la brasa, y la leña de las comunas alimenta un banquete al que no asisten. La buena voluntad del pueblo se congela donde estaba — y el frío se le echa la culpa a tu nombre."
+        }
+      }
+    }
+  },
+  {
+    "id": "election_grain_supply",
+    "type": "minigame",
+    "subtype": "election",
+    "minAge": 18,
+    "maxAge": 99,
+    "weight": 9,
+    "isCapstone": true,
+    "capstoneKind": "election",
+    "primaryStat": "intelligence",
+    "narrative": {
+      "en": "The granary keepers elect who controls next year's bread, and every baker in the city weighs their loyalty in flour. The cartel's silo already holds more than the ledgers say. Whoever the granary trusts, the season eats.",
+      "es": "Los guardianes del granero eligen quién controla el pan del año próximo, y cada panadera de la ciudad pesa su lealtad en harina. El silo del cártel ya guarda más de lo que dicen los libros. A quien confíe el granero, de eso come la temporada."
+    },
+    "cards": [
+      {
+        "id": "grain_cartel_silo",
+        "icon": "hand-coins",
+        "trap": true,
+        "label": {
+          "en": "Hand the silo key to the cartel",
+          "es": "Entregar la llave del silo al cártel"
+        }
+      },
+      {
+        "id": "grain_bakers_guild",
+        "icon": "coins",
+        "label": {
+          "en": "Let the bakers' guild weigh the sacks",
+          "es": "Dejar que el gremio de panaderas pese los costales"
+        }
+      },
+      {
+        "id": "grain_commons_ration",
+        "icon": "leaf",
+        "label": {
+          "en": "Guarantee the commons' ration",
+          "es": "Garantizar la ración de las comunas"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.44,
+      "statInfluence": {
+        "intelligence": 0.012,
+        "charisma": 0.004
+      },
+      "cardModifiers": {
+        "grain_bakers_guild": {
+          "winChanceDelta": 0.05
+        },
+        "grain_commons_ration": {
+          "winChanceDelta": 0.1
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "goldDelta": 180,
+        "fameDelta": 6,
+        "reputationDelta": 3,
+        "verdict": {
+          "en": "GREAT +3",
+          "es": "GRAN +3"
+        },
+        "gradeDelta": 3,
+        "narrative": {
+          "en": "The granary reweighs every sack in the open, and the cartel's missing grain surfaces as a wagonload of fines. Bread stays cheap, the bakers toast your name, and the season eats well.",
+          "es": "El granero vuelve a pesar cada costal a la vista de todos, y el grano faltante del cártel sale a la luz como una carretada de multas. El pan se mantiene barato, las panaderas brindan por tu nombre, y la temporada come bien."
+        }
+      },
+      "success": {
+        "goldDelta": 60,
+        "fameDelta": 3,
+        "reputationDelta": 1,
+        "verdict": {
+          "en": "GOOD +1",
+          "es": "BUENA +1"
+        },
+        "gradeDelta": 1,
+        "narrative": {
+          "en": "A fair keeper is chosen and the price of bread steadies. The bakers set a loaf aside for you every market day — quiet thanks.",
+          "es": "Se elige a una guardiana justa y el precio del pan se estabiliza. Las panaderas te reservan un pan cada día de mercado — un agradecimiento silencioso."
+        }
+      },
+      "partial": {
+        "fameDelta": 1,
+        "reputationDelta": -1,
+        "verdict": {
+          "en": "MIXED 0",
+          "es": "MIXTA 0"
+        },
+        "gradeDelta": 0,
+        "narrative": {
+          "en": "The grain splits between the cartel's silo and the commons' table. Nobody starves, but the ledger keeps two columns, and your name sits in the crack between them.",
+          "es": "El grano se divide entre el silo del cártel y la mesa de las comunas. Nadie pasa hambre, pero el libro guarda dos columnas, y tu nombre queda en la grieta entre ambas."
+        }
+      },
+      "fail": {
+        "reputationDelta": -2,
+        "fameDelta": -1,
+        "goldDelta": -80,
+        "verdict": {
+          "en": "BAD −2",
+          "es": "MALA −2"
+        },
+        "gradeDelta": -2,
+        "narrative": {
+          "en": "The cartel takes the silo key, the price of bread climbs before solstice, and the bakers' shutters close when you pass. The empty shelves bear your name in chalk.",
+          "es": "El cártel toma la llave del silo, el precio del pan sube antes del solsticio, y los postigos de las panaderas se cierran a tu paso. Los estantes vacíos llevan tu nombre en tiza."
+        }
+      }
+    }
+  },
+  {
+    "id": "election_proclamation_scribe",
+    "type": "minigame",
+    "subtype": "election",
+    "minAge": 18,
+    "maxAge": 99,
+    "weight": 8,
+    "isCapstone": true,
+    "capstoneKind": "election",
+    "primaryStat": "charisma",
+    "narrative": {
+      "en": "The crown's proclamation scribe is chosen, and the wording of everything hangs on it — laws, pardons, the names in the death rolls. The pen is the real throne. One rival's nib is already paid for.",
+      "es": "Eligen a la escribana de proclamaciones de la corona, y de eso cuelga la redacción de todo — leyes, indultos, nombres en los registros de difuntos. La pluma es el trono verdadero. Ya pagaron la punta de la pluma de una contendiente."
+    },
+    "cards": [
+      {
+        "id": "scribe_patron_pen",
+        "icon": "eye-off",
+        "trap": true,
+        "label": {
+          "en": "Back the pen a patron already owns",
+          "es": "Respaldar la pluma que un mecenas ya compró"
+        }
+      },
+      {
+        "id": "scribe_chancery_hand",
+        "icon": "book-open",
+        "label": {
+          "en": "Back the chancery's steady hand",
+          "es": "Respaldar la mano firme de la cancillería"
+        }
+      },
+      {
+        "id": "scribe_town_crier",
+        "icon": "megaphone",
+        "label": {
+          "en": "Back the crier who reads to the commons",
+          "es": "Respaldar a la pregonera que lee ante las comunas"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.42,
+      "statInfluence": {
+        "charisma": 0.012,
+        "intelligence": 0.004
+      },
+      "cardModifiers": {
+        "scribe_chancery_hand": {
+          "winChanceDelta": 0.05
+        },
+        "scribe_town_crier": {
+          "winChanceDelta": 0.1
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "charisma": 2
+        },
+        "fameDelta": 6,
+        "reputationDelta": 3,
+        "verdict": {
+          "en": "GREAT +3",
+          "es": "GRAN +3"
+        },
+        "gradeDelta": 3,
+        "narrative": {
+          "en": "Your scribe takes the seal, and the season's proclamations carry your name in every preamble. Laws read fairly, pardons read kindly, and the whole town quotes your words as if they were its own.",
+          "es": "Tu escribana toma el sello, y las proclamaciones de la temporada llevan tu nombre en cada preámbulo. Las leyes se leen con justicia, los indultos con bondad, y todo el pueblo cita tus palabras como si fueran propias."
+        }
+      },
+      "success": {
+        "fameDelta": 3,
+        "reputationDelta": 1,
+        "verdict": {
+          "en": "GOOD +1",
+          "es": "BUENA +1"
+        },
+        "gradeDelta": 1,
+        "narrative": {
+          "en": "A steady pen wins the vote, and the season's words read clean and true. The criers call your name out in the square, once, with respect.",
+          "es": "Una pluma firme gana el voto, y las palabras de la temporada se leen limpias y verdaderas. Los pregoneros llaman tu nombre en la plaza, una vez, con respeto."
+        }
+      },
+      "partial": {
+        "fameDelta": 1,
+        "reputationDelta": -1,
+        "verdict": {
+          "en": "MIXED 0",
+          "es": "MIXTA 0"
+        },
+        "gradeDelta": 0,
+        "narrative": {
+          "en": "The vote lands on a middle-handed scribe. The proclamations read bland, the pardons arrive late, and the town waits — for a stronger word, or a sharper name.",
+          "es": "El voto recae en una escribana de mano intermedia. Las proclamaciones se leen insípidas, los indultos llegan tarde, y el pueblo espera — una palabra más fuerte, o un nombre más afilado."
+        }
+      },
+      "fail": {
+        "reputationDelta": -2,
+        "fameDelta": -1,
+        "goldDelta": -50,
+        "verdict": {
+          "en": "BAD −2",
+          "es": "MALA −2"
+        },
+        "gradeDelta": -2,
+        "narrative": {
+          "en": "The bought pen wins, and the season's first proclamation manages to name you the season's fool in three separate articles. The criers are too embarrassed to say it twice.",
+          "es": "Gana la pluma comprada, y la primera proclamación de la temporada consigue nombrarte el tonto de la temporada en tres artículos separados. A los pregoneros les da vergüenza decirlo dos veces."
+        }
+      }
+    }
+  },
+  {
+    "id": "election_watch_captain",
+    "type": "minigame",
+    "subtype": "election",
+    "minAge": 18,
+    "maxAge": 99,
+    "weight": 9,
+    "isCapstone": true,
+    "capstoneKind": "election",
+    "primaryStat": "intelligence",
+    "narrative": {
+      "en": "The city watch elects its captain, and the martinet and the people's friend both have money on the card. The night patrols, the courthouse guard, who gets beaten in the alleys — it all hangs on the vote.",
+      "es": "La guardia urbana elige a su capitana, y la marcial y la amiga del pueblo tienen las dos dinero sobre la mesa. Las patrullas nocturnas, la guardia del tribunal, a quién se golpea en los callejones — todo cuelga del voto."
+    },
+    "cards": [
+      {
+        "id": "watch_martinet",
+        "icon": "swords",
+        "trap": true,
+        "label": {
+          "en": "Back the martinet's iron discipline",
+          "es": "Respaldar la disciplina de hierro de la marcial"
+        }
+      },
+      {
+        "id": "watch_sergeant_honest",
+        "icon": "shield",
+        "label": {
+          "en": "Back the honest sergeant",
+          "es": "Respaldar a la sargenta honesta"
+        }
+      },
+      {
+        "id": "watch_peoples_friend",
+        "icon": "heart-handshake",
+        "label": {
+          "en": "Back the people's friend",
+          "es": "Respaldar a la amiga del pueblo"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.44,
+      "statInfluence": {
+        "intelligence": 0.012,
+        "charisma": 0.004
+      },
+      "cardModifiers": {
+        "watch_sergeant_honest": {
+          "winChanceDelta": 0.05
+        },
+        "watch_peoples_friend": {
+          "winChanceDelta": 0.1
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "goldDelta": 160,
+        "fameDelta": 6,
+        "reputationDelta": 3,
+        "verdict": {
+          "en": "GREAT +3",
+          "es": "GRAN +3"
+        },
+        "gradeDelta": 3,
+        "narrative": {
+          "en": "The honest sergeant wins the vote, and the patrols start walking the long beats again. The alleys quiet, the guards' cudgels stay sheathed, and your name is whispered as the one who cleaned the night.",
+          "es": "La sargenta honesta gana el voto, y las patrullas vuelven a caminar los turnos largos. Los callejones se calman, los garrotes de la guardia quedan envainados, y susurran tu nombre como el que limpió la noche."
+        }
+      },
+      "success": {
+        "goldDelta": 50,
+        "fameDelta": 3,
+        "reputationDelta": 1,
+        "verdict": {
+          "en": "GOOD +1",
+          "es": "BUENA +1"
+        },
+        "gradeDelta": 1,
+        "narrative": {
+          "en": "A steady captain is seated and the night patrols even out. The watch nods to you at the gates — a professional courtesy that costs them nothing and buys you everything.",
+          "es": "Se sienta una capitana firme y las patrullas nocturnas se nivelan. La guardia te saluda en las puertas — una cortesía profesional que no les cuesta nada y te compra todo."
+        }
+      },
+      "partial": {
+        "fameDelta": 1,
+        "reputationDelta": -1,
+        "verdict": {
+          "en": "MIXED 0",
+          "es": "MIXTA 0"
+        },
+        "gradeDelta": 0,
+        "narrative": {
+          "en": "The vote splits the watch down the middle, and the captain who wins loses half the force's trust. Two patrols pass you on every corner; neither salutes.",
+          "es": "El voto parte a la guardia por la mitad, y la capitana que gana pierde la confianza de medio cuerpo. Dos patrullas te cruzan en cada esquina; ninguna saluda."
+        }
+      },
+      "fail": {
+        "reputationDelta": -2,
+        "fameDelta": -1,
+        "goldDelta": -60,
+        "verdict": {
+          "en": "BAD −2",
+          "es": "MALA −2"
+        },
+        "gradeDelta": -2,
+        "narrative": {
+          "en": "The martinet takes the captaincy and the patrols turn heavy-handed. Every favor you owe gets called in, every hat you own gets tipped — the wrong way, by the wrong people.",
+          "es": "La marcial toma la capitanía y las patrullas se vuelven de mano dura. Cada favor que debés se cobra, cada sombrero que tenés se descubre — del modo equivocado, por la gente equivocada."
+        }
+      }
+    }
   }
 ]

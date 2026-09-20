@@ -307,5 +307,216 @@
         }
       }
     ]
+  },
+  {
+    "id": "destiny_midnight_oath",
+    "type": "destiny",
+    "minAge": 18,
+    "maxAge": 60,
+    "weight": 3,
+    "narrative": {
+      "en": "At midnight, a being made of old words steps out of the {slot:worldLocation} and blocks the road. It has no face, only the shape of a sentence waiting to be finished. 'Offer me one oath you have never said aloud,' it says, 'and I will give you a boon you have never dared to name.'",
+      "es": "A medianoche, un ser hecho de palabras antiguas sale de {slot:worldLocation} y bloquea el camino. No tiene rostro, solo la forma de una oración aguardando ser terminada. 'Ofréceme un juramento que nunca dijiste en voz alta', dice, 'y te daré un don que nunca te atreviste a nombrar'."
+    },
+    "choices": [
+      {
+        "id": "swear_the_oath",
+        "label": {
+          "en": "Swear the oath never spoken",
+          "es": "Jurar el juramento nunca dicho"
+        },
+        "tag": "Confident",
+        "rarity": "rare",
+        "statDeltas": {
+          "charisma": 6,
+          "intelligence": 3
+        },
+        "tradeoffDeltas": {
+          "constitution": -2
+        },
+        "fameDelta": 12,
+        "narrative": {
+          "en": "The words leave your mouth cold and heavy, and the being folds them into itself like a turned page. Power settles on your tongue like old honey — but the oath is now part of the world's grammar, and it will be called upon.",
+          "es": "Las palabras salen de tu boca frías y pesadas, y el ser las dobla dentro de sí como una página. El poder se asienta en tu lengua como miel añeja — pero el juramento ahora es parte de la gramática del mundo, y será reclamado."
+        }
+      },
+      {
+        "id": "swear_what_you_can_keep",
+        "label": {
+          "en": "Swear a smaller oath you can keep",
+          "es": "Jurar un juramento menor que puedas cumplir"
+        },
+        "tag": "Strategic",
+        "rarity": "uncommon",
+        "requiresStat": {
+          "stat": "charisma",
+          "min": 14
+        },
+        "statDeltas": {
+          "charisma": 4
+        },
+        "liabilityDelta": 2,
+        "narrative": {
+          "en": "You choose a small, ordinary promise — bread before vengeance, debts paid by spring. The being tastes it, nods, and gifts you a thread of its favor. Not every oath must shake the sky to be kept.",
+          "es": "Elegís una promesa pequeña y ordinaria — pan antes que venganza, deudas pagadas antes de la primavera. El ser la prueba, asiente, y te regala un hilo de su favor. No todo juramento debe estremecer el cielo para ser cumplido."
+        }
+      },
+      {
+        "id": "refuse_the_oath",
+        "label": {
+          "en": "Refuse and walk on",
+          "es": "Rechazar y seguir camino"
+        },
+        "tag": "Humble",
+        "rarity": "common",
+        "statDeltas": {
+          "constitution": 2
+        },
+        "fameDelta": 2,
+        "narrative": {
+          "en": "'My word is my own,' you say, and the being unravels into mist without argument. Somewhere behind you, a sentence goes unfinished forever — and you like it that way.",
+          "es": "'Mi palabra es mía', decís, y el ser se deshace en niebla sin discutir. En algún lugar detrás tuyo, una oración queda sin terminar para siempre — y así te gusta."
+        }
+      }
+    ]
+  },
+  {
+    "id": "destiny_shattered_omen",
+    "type": "destiny",
+    "minAge": 18,
+    "maxAge": 55,
+    "weight": 3,
+    "narrative": {
+      "en": "A blind seer hands you a glass omen at {locationName}: a bubble of fortune meant to be read whole. It shatters in your hands the moment you take it. The seer goes still. 'The omen broke because it was a lie,' you realize — the fortune is whatever you now choose to make of it.",
+      "es": "Una vidente ciega te entrega un presagio de vidrio en {locationName}: una burbuja de fortuna que debía leerse entera. Se hace pedazos en tus manos apenas la tomás. La vidente se queda quieta. 'El presagio se rompió porque era una mentira', comprendés — la fortuna es lo que vos elijas hacer de ella."
+    },
+    "choices": [
+      {
+        "id": "forge_the_fortune",
+        "label": {
+          "en": "Pick the richest possible reading",
+          "es": "Elegir la lectura más rica posible"
+        },
+        "tag": "Cocky",
+        "rarity": "rare",
+        "goldDelta": 400,
+        "fameDelta": 8,
+        "liabilityDelta": 6,
+        "narrative": {
+          "en": "You tell the seer what the glass said: gold, glory, a crown. She writes it down gravely, and by nightfall the rumor runs ahead of you to three separate treasuries. A fine lie — as long as nobody ever asks the glass again.",
+          "es": "Le contás a la vidente lo que dijo el vidrio: oro, gloria, una corona. Ella lo anota con gravedad, y al anochecer el rumor corre delante de vos hacia tres tesorerías distintas. Una mentira hermosa — mientras nadie vuelva a preguntarle al vidrio."
+        }
+      },
+      {
+        "id": "read_your_own_road",
+        "label": {
+          "en": "Read the shards as a true path",
+          "es": "Leer los fragmentos como un camino verdadero"
+        },
+        "tag": "Strategic",
+        "rarity": "rare",
+        "statDeltas": {
+          "intelligence": 6
+        },
+        "tradeoffDeltas": {
+          "charisma": -1
+        },
+        "fameDelta": 5,
+        "narrative": {
+          "en": "You piece the shards into a story you can actually walk: no thrones, no shortcuts — just the next five honest years. The seer tilts her head and smiles. 'That is the one reading the glass never dared show me.'",
+          "es": "Unís los fragmentos en una historia que de verdad podés caminar: sin tronos, sin atajos — solo los próximos cinco años honestos. La vidente inclina la cabeza y sonríe. 'Esa es la única lectura que el vidrio nunca se atrevió a mostrarme.'"
+        }
+      },
+      {
+        "id": "bury_the_shards",
+        "label": {
+          "en": "Bury the shards and the lie with them",
+          "es": "Enterrar los fragmentos y la mentira con ellos"
+        },
+        "tag": "Humble",
+        "rarity": "common",
+        "statDeltas": {
+          "constitution": 2
+        },
+        "healthDelta": 6,
+        "narrative": {
+          "en": "You press the glass into the dirt with your palm. The seer nods slowly. 'Fortunes are for people who have no plans,' she says. 'You may not need the glass at all.'",
+          "es": "Hundís el vidrio en la tierra con la palma. La vidente asiente despacio. 'Las fortunas son para quienes no tienen planes', dice. 'Quizás no necesites el vidrio para nada.'"
+        }
+      }
+    ]
+  },
+  {
+    "id": "destiny_first_thunder",
+    "type": "destiny",
+    "minAge": 20,
+    "maxAge": 65,
+    "weight": 3,
+    "narrative": {
+      "en": "The first thunder of the season rolls over the valley, and the sky opens exactly above you. Rain and lightning braid together over your head while the fields stay dry for a mile around. The old folk call it the sky choosing someone — fated, for better or worse.",
+      "es": "El primer trueno de la temporada rueda sobre el valle, y el cielo se abre exactamente encima de vos. La lluvia y el relámpago se trenzan sobre tu cabeza mientras los campos quedan secos a una milla a la redonda. Los viejos lo llaman el cielo eligiendo a alguien — destinado, para bien o para mal."
+    },
+    "choices": [
+      {
+        "id": "stand_in_the_storm",
+        "label": {
+          "en": "Stand in the storm and take the sky's measure",
+          "es": "Pararte en la tormenta y medirte con el cielo"
+        },
+        "tag": "Aggressive",
+        "rarity": "rare",
+        "statDeltas": {
+          "strength": 7,
+          "constitution": 3
+        },
+        "tradeoffDeltas": {
+          "dexterity": -1
+        },
+        "fameDelta": 10,
+        "narrative": {
+          "en": "Lightning does not strike you — it rings you, a fence of white fire a respectful stride away. The thunder rolls long and slow, and everyone in the valley watches the stranger who stood. The sky will remember your name now.",
+          "es": "El rayo no te golpea — te rodea, una valla de fuego blanco a un paso respetuoso. El trueno rueda largo y lento, y todos en el valle observan a la forastera que se quedó de pie. El cielo recordará tu nombre ahora."
+        }
+      },
+      {
+        "id": "bow_to_the_thunder",
+        "label": {
+          "en": "Bow to the thunder and keep your head down",
+          "es": "Inclinarte ante el trueno y agachar la cabeza"
+        },
+        "tag": "Humble",
+        "rarity": "uncommon",
+        "statDeltas": {
+          "charisma": 3
+        },
+        "fameDelta": 3,
+        "narrative": {
+          "en": "You bow, hands open, and the storm passes without a second glance. The old folk nod — a wise stranger knows the thunder doesn't choose; it only announces. The rain moves on, and the valley chats about you kindly.",
+          "es": "Te inclinás, con las manos abiertas, y la tormenta pasa sin una segunda mirada. Los viejos asienten — un forastero sabio sabe que el trueno no elige, solo anuncia. La lluvia se va, y el valle charla de vos con cariño."
+        }
+      },
+      {
+        "id": "call_the_lightning",
+        "label": {
+          "en": "Hold your arms wide and call the lightning",
+          "es": "Abrir los brazos y llamar al rayo"
+        },
+        "tag": "Confident",
+        "rarity": "rare",
+        "requiresStat": {
+          "stat": "constitution",
+          "min": 15
+        },
+        "statDeltas": {
+          "constitution": 5
+        },
+        "healthDelta": -8,
+        "fameDelta": 8,
+        "narrative": {
+          "en": "The sky accepts the challenge. Lightning finds your upraised hands and wraps them in a crown of sparks that lasts a full breath. You live — barely — and when the storm clears, you are smoking and grinning. Everyone who saw it will tell the story until they die.",
+          "es": "El cielo acepta el desafío. El rayo encuentra tus manos alzadas y las envuelve en una corona de chispas que dura un aliento entero. Vivís — por poco — y cuando la tormenta se despeja, estás humeando y sonriendo. Todos los que lo vieron contarán la historia hasta morir."
+        }
+      }
+    ]
   }
 ]

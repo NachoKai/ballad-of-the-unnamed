@@ -93,5 +93,100 @@
         }
       }
     }
+  },
+  {
+    "id": "press_gauntlet_02",
+    "type": "minigame",
+    "subtype": "press_conference",
+    "minAge": 18,
+    "maxAge": 99,
+    "weight": 14,
+    "primaryStat": "charisma",
+    "opponent": {
+      "en": "Rumor-columnist Cales",
+      "es": "Columnista de rumores Cales"
+    },
+    "narrative": {
+      "en": "Cales reviews notebooks and adjusts his spectacles. \"Three questions, hero. The realm will quote every word, so choose them carefully.\"",
+      "es": "Cales repasa los cuadernos y ajusta sus anteojos. \"Tres preguntas, héroe. El reino citará cada palabra, así que elegilas con cuidado.\""
+    },
+    "resolution": {
+      "type": "interactive",
+      "game": "press_conference",
+      "baseWinChance": 0.5,
+      "statInfluence": { "charisma": 0.012 }
+    },
+    "questions": [
+      {
+        "id": "q1",
+        "prompt": {
+          "en": "The papers whisper that you court only glory, not people. What do you tell the hawkers and the hands that sell your name?",
+          "es": "Los periódicos susurran que cortejás solo la gloria, no a la gente. ¿Qué le decís a los pregoneros y a las manos que venden tu nombre?"
+        },
+        "options": [
+          { "id": "q1_a", "icon": "gem", "tag": "Confident", "wantedTags": { "Confident": 1 } },
+          { "id": "q1_b", "icon": "flame", "tag": "Cocky", "wantedTags": { "Cocky": 1 } },
+          { "id": "q1_c", "icon": "hand", "tag": "Humble", "wantedTags": { "Humble": 1 } },
+          { "id": "q1_d", "icon": "heart", "tag": "Supportive", "wantedTags": { "Supportive": 1 } }
+        ]
+      },
+      {
+        "id": "q2",
+        "prompt": {
+          "en": "A rumor claims you left a friend behind on the way up. How do you answer it?",
+          "es": "Un rumor afirma que dejaste atrás a un amigo en el camino a la cima. ¿Cómo lo respondés?"
+        },
+        "options": [
+          { "id": "q2_a", "icon": "scroll-text", "tag": "Professional", "wantedTags": { "Professional": 1 } },
+          { "id": "q2_b", "icon": "eye", "tag": "Strategic", "wantedTags": { "Strategic": 1 } },
+          { "id": "q2_c", "icon": "fist", "tag": "Aggressive", "wantedTags": { "Aggressive": 1 } },
+          { "id": "q2_d", "icon": "heart-handshake", "tag": "Supportive", "wantedTags": { "Supportive": 1 } }
+        ]
+      },
+      {
+        "id": "q3",
+        "prompt": {
+          "en": "If the realm asked what you mean to build, and not what you mean to win — what would you say?",
+          "es": "Si el reino preguntara qué querés construir, y no qué querés ganar — ¿qué dirías?"
+        },
+        "options": [
+          { "id": "q3_a", "icon": "crown", "tag": "Leader", "wantedTags": { "Leader": 1 } },
+          { "id": "q3_b", "icon": "clock", "tag": "Stoic", "wantedTags": { "Stoic": 1 } },
+          { "id": "q3_c", "icon": "gem", "tag": "Confident", "wantedTags": { "Confident": 1 } },
+          { "id": "q3_d", "icon": "flame", "tag": "Cocky", "wantedTags": { "Cocky": 1 } }
+        ]
+      }
+    ],
+    "outcomes": {
+      "critical": {
+        "fameDelta": 6,
+        "reputationDelta": 3,
+        "narrative": {
+          "en": "Cales's notebook fills with lines that could write your legend in ink and iron. The front pages, the tavern talk, and the winter's song all carry your words — and they ring true.",
+          "es": "El cuaderno de Cales se llena de frases capaces de escribir tu leyenda en tinta y hierro. Las portadas, la charla de taberna y la canción del invierno llevan tus palabras — y suenan verdaderas."
+        }
+      },
+      "success": {
+        "fameDelta": 2,
+        "narrative": {
+          "en": "Cales prints a fair piece. A few strong quotes, a few soft edges, and the realm hears a name it can trust.",
+          "es": "Cales imprime una nota justa. Unas frases fuertes, unos bordes suaves, y el reino escucha un nombre en el que puede confiar."
+        }
+      },
+      "partial": {
+        "narrative": {
+          "en": "Cales polishes his questions around your answers until they don't quite fit. The piece reads both ways, and half the realm shrugs.",
+          "es": "Cales pule sus preguntas alrededor de tus respuestas hasta que no encajan del todo. La nota se lee en ambos sentidos, y medio reino se encoge de hombros."
+        }
+      },
+      "fail": {
+        "fameDelta": -2,
+        "reputationDelta": -2,
+        "narrative": {
+          "en": "Cales turns your words into the season's worst headline. Every paragraph twists a quote you don't recognize by the time he finishes. They print what they wanted to print.",
+          "es": "Cales convierte tus palabras en el peor titular de la temporada. Cada párrafo retuerce una cita que no reconocés apenas termina. Imprimen lo que querían imprimir."
+        }
+      }
+    }
   }
 ]

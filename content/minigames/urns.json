@@ -188,5 +188,100 @@
         }
       }
     }
+  },
+  {
+    "id": "urn_kings_food_vault",
+    "type": "minigame",
+    "subtype": "urn",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "primaryStat": "intelligence",
+    "narrative": {
+      "en": "The king's own food vault is sealed with a word, and the master of the larder offers you the pick of three locked urns: one holds saffron enough to buy a barony, one common salt, and one... one holds the taste that ended the last royal taster's career. The iron locks gleam as you weigh the keys.",
+      "es": "La bóveda de alimentos del rey se sella con una palabra, y el maestro del depósito te ofrece elegir entre tres urnas cerradas: una guarda azafrán suficiente para comprar un baronazgo, otra sal común, y una... una guarda el sabor que terminó con la carrera del último catador real. Los candados de hierro brillan mientras pesás las llaves."
+    },
+    "cards": [
+      {
+        "id": "urn_salt",
+        "icon": "flask-conical",
+        "label": {
+          "en": "The Salt Urn",
+          "es": "La Urna de Sal"
+        }
+      },
+      {
+        "id": "urn_saffron",
+        "icon": "gem",
+        "label": {
+          "en": "The Saffron Urn",
+          "es": "La Urna de Azafrán"
+        }
+      },
+      {
+        "id": "urn_feast_curse",
+        "icon": "skull",
+        "label": {
+          "en": "Urn of the Spoiled Feast",
+          "es": "La Urna del Festín Podrido"
+        },
+        "trap": true
+      }
+    ],
+    "resolution": {
+      "type": "grid_gamble",
+      "baseWinChance": 0.4,
+      "statInfluence": {},
+      "cardModifiers": {
+        "urn_saffron": {
+          "winChanceDelta": 0.1
+        },
+        "urn_salt": {
+          "winChanceDelta": 0.05
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "goldDelta": 300,
+        "fameDelta": 7,
+        "countersDelta": {
+          "urns_opened": 1
+        },
+        "narrative": {
+          "en": "The urn spills a fortune in saffron — enough to season a kingdom — along with the royal warrant that bought it. The master of the larder bows and calls you the king's luck itself. The vault's iron doors swing wide for your name.",
+          "es": "La urna derrama una fortuna en azafrán — suficiente para sazonar un reino — junto con la orden real que lo compró. El maestro del depósito se inclina y te llama la propia suerte del rey. Las puertas de hierro de la bóveda se abren de par en par para tu nombre."
+        }
+      },
+      "success": {
+        "goldDelta": 110,
+        "fameDelta": 2,
+        "countersDelta": {
+          "urns_opened": 1
+        },
+        "narrative": {
+          "en": "A heavy little sack of saffron, worth a season's farm, plus a warrant stamped with the royal spoon. The master of the larder concedes — a fair pick, and no one sent for the taster.",
+          "es": "Un saquito pesado de azafrán, que vale la cosecha de una temporada, más una orden sellada con la cuchara real. El maestro del depósito concede — una elección justa, y nadie llamó al catador."
+        }
+      },
+      "partial": {
+        "goldDelta": 20,
+        "countersReset": ["urn_streak"],
+        "narrative": {
+          "en": "The urn gives up a fistful of coarse salt and a single shriveled date. The master of the larder shrugs: 'Not every vault keeps its taste.'",
+          "es": "La urna entrega un puñado de sal gruesa y un único dátil arrugado. El maestro del depósito se encoge de hombros: 'No toda bóveda conserva su sabor.'"
+        }
+      },
+      "fail": {
+        "goldDelta": -30,
+        "injuryRiskDelta": 0.15,
+        "liabilityDelta": 8,
+        "countersReset": ["urn_streak"],
+        "narrative": {
+          "en": "ANULADA. A puff of black spice bursts from the urn the instant you break the seal — the Spoiled Feast that felled the last taster. The master's face goes pale: 'The king's tongue remembers.' You cough out the rot and the empty price of your gamble.",
+          "es": "ANULADA. Una bocanada de especia negra estalla desde la urna apenas rompés el sello — el Festín Podrido que tumbó al último catador. La cara del maestro palidece: 'La lengua del rey recuerda.' Tosés la podredumbre y el precio vacío de tu apuesta."
+        }
+      }
+    }
   }
 ]

@@ -148,5 +148,80 @@
         }
       }
     }
+  },
+  {
+    "id": "relic_sea_king_horde",
+    "type": "minigame",
+    "subtype": "interactive",
+    "minAge": 10,
+    "maxAge": 99,
+    "weight": 2,
+    "primaryStat": "intelligence",
+    "opponent": {
+      "en": "Keeper Orlun",
+      "es": "El guardián Orlun"
+    },
+    "narrative": {
+      "en": "The tide-keeper's vault lies below the salt chapel, and Keeper Orlun guards a hoard dragged from a drowned corsair king: coral crowns, sea-rotted swords, lockets still wet. He spreads fourteen tiles across the brine-stained altar — every treasure hidden behind two. 'Find the pairs, sailor, and the drowned king pays. Miss, and the sea takes its toll.'",
+      "es": "La bóveda del guardián de la marea yace bajo la capilla de sal, y el guardián Orlun custodia un tesoro rescatado de un rey corsario ahogado: coronas de coral, espadas podridas por el mar, medallones aún mojados. Extiende catorce losetas sobre el altar manchado de salmuera — cada tesoro oculto tras dos. 'Encontrá los pares, marinero, y el rey ahogado paga. Si fallás, el mar cobra su peaje.'"
+    },
+    "resolution": {
+      "type": "interactive",
+      "game": "memotest",
+      "baseWinChance": 0.5,
+      "statInfluence": {
+        "intelligence": 0.012
+      },
+      "statThreshold": 20,
+      "rivalSkill": 0.5
+    },
+    "outcomes": {
+      "critical": {
+        "goldDelta": 250,
+        "fameDelta": 6,
+        "reputationDelta": 3,
+        "reputationFaction": "arcanum",
+        "countersDelta": {
+          "relic_memotest_wins": 1,
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "Every pair found, every lock pulled clean from the salt. Orlun bows, and the chapel's brine seems to recede in respect. 'The drowned king has not paid out so freely in a tide.' He presses a pouch of gold and a crow's-nest-copper medallion into your hands.",
+          "es": "Cada par encontrado, cada candado arrancado limpio de la sal. Orlun se inclina, y la salmuera de la capilla parece retroceder en señal de respeto. 'El rey ahogado no pagaba tan a mano desde hace una marea.' Te mete una bolsa de oro y un medallón de cobre de nido de cuervo en las manos."
+        }
+      },
+      "success": {
+        "goldDelta": 100,
+        "fameDelta": 3,
+        "reputationDelta": 1,
+        "reputationFaction": "arcanum",
+        "countersDelta": {
+          "relic_memotest_wins": 1,
+          "battles_won": 1
+        },
+        "narrative": {
+          "en": "Your memory clears the salt-crusted altar. Orlun nods, satisfied, and pays from the drowned king's purse. 'The sea returns what it owes, sailor — and it owes you this.'",
+          "es": "Tu memoria despeja el altar cubierto de sal. Orlun asiente, satisfecho, y paga de la bolsa del rey ahogado. 'El mar devuelve lo que debe, marinero — y te debe esto.'"
+        }
+      },
+      "partial": {
+        "goldDelta": -20,
+        "countersReset": ["relic_memotest_streak"],
+        "narrative": {
+          "en": "The altar splits down the middle — as many treasures yours as his. Orlun keeps his toll with a thin smile. 'A draw stirs no tide, sailor.'",
+          "es": "El altar se divide por la mitad — tantos tesoros tuyos como suyos. Orlun se queda con su peaje con una sonrisa tenue. 'Un empate no levanta mareas, marinero.'"
+        }
+      },
+      "fail": {
+        "goldDelta": -60,
+        "reputationDelta": -1,
+        "reputationFaction": "arcanum",
+        "countersReset": ["relic_memotest_streak"],
+        "narrative": {
+          "en": "Orlun's memory is scoured by decades of brine — he claims pair after pair while yours sinks. He takes his toll from your purse and turns back toward the chapel, already forgetting your face above the waterline.",
+          "es": "La memoria de Orlun está tallada por décadas de salmuera — reclama par tras par mientras la tuya se hunde. Cobra su peaje de tu bolsa y vuelve hacia la capilla, olvidando ya tu cara por encima de la línea del agua."
+        }
+      }
+    }
   }
 ]

@@ -2096,5 +2096,1011 @@
         }
       }
     }
+  },
+  {
+    "id": "duel_watering_hole",
+    "type": "minigame",
+    "subtype": "brawl",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "primaryStat": "strength",
+    "narrative": {
+      "en": "The drought has shrunk the cattle's water hole to a single brackish scoop, and every hand in the camp is parched enough to fight over it. The herdlord's son claims first drink by right of birth. The camp clears a ring and bets slow: whoever wins the brawl drinks until they're sick.",
+      "es": "La sequía redujo el abrevadero del ganado a un único cucharón salobre, y cada mano del campamento está bastante sedienta como para pelear por él. El hijo del señor del rebaño reclama el primer trago por derecho de nacimiento. El campamento despeja un círculo y apuesta con calma: quien gane la pelea bebe hasta enfermarse."
+    },
+    "cards": [
+      {
+        "id": "drink_first",
+        "icon": "hand",
+        "label": {
+          "en": "Dive for the scoop",
+          "es": "Lanzarte al cucharón"
+        }
+      },
+      {
+        "id": "split_the_pool",
+        "icon": "shield",
+        "label": {
+          "en": "Split the water, end the fight",
+          "es": "Dividir el agua y terminar la pelea"
+        }
+      },
+      {
+        "id": "kick_hoof_sand",
+        "icon": "footprints",
+        "label": {
+          "en": "Kick hoof-dust in his eyes",
+          "es": "Echarle tierra de pezuña en los ojos"
+        }
+      },
+      {
+        "id": "flask_bait",
+        "icon": "beer",
+        "label": {
+          "en": "Bait him with your flask",
+          "es": "Provocarlo con tu frasco"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.42,
+      "statInfluence": {
+        "strength": 0.01,
+        "constitution": 0.006
+      },
+      "cardModifiers": {
+        "kick_hoof_sand": {
+          "winChanceDelta": 0.09
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "strength": 2
+        },
+        "goldDelta": 90,
+        "fameDelta": 4,
+        "countersDelta": {
+          "battles_won": 1,
+          "duels_won": 1,
+          "brawls_won": 1
+        },
+        "narrative": {
+          "en": "You let his first swing whistle past, step inside, and plant him in the dust to a camp-wide cheer. The herdlord's son drinks second, coughs, and grins through the mud on his face. The camp roars your name, and the scoop is yours.",
+          "es": "Dejás que su primer golpe silbe de largo, entrás a corta distancia y lo clavás en el polvo ante el griterío del campamento. El hijo del señor del rebaño bebe segundo, se atraganta y sonríe con el barro en la cara. El campamento ruge tu nombre, y el cucharón es tuyo."
+        }
+      },
+      "success": {
+        "goldDelta": 35,
+        "fameDelta": 2,
+        "countersDelta": {
+          "battles_won": 1,
+          "duels_won": 1
+        },
+        "narrative": {
+          "en": "A clean win — a hip throw, a hand on his collar, and he yields with a wheeze. He takes his water second and mutters that the drought made him clumsy.",
+          "es": "Una victoria limpia — una llave de cadera, una mano en su cuello, y cede con un resoplido. Toma su agua en segundo lugar y murmura que la sequía lo volvió torpe."
+        }
+      },
+      "partial": {
+        "goldDelta": -5,
+        "injuryRiskDelta": 0.12,
+        "countersReset": ["duel_streak"],
+        "narrative": {
+          "en": "The brawl goes on until the camp calls it even and both of you are spitting dust. You split the scoop — quarrelsome, but not killed.",
+          "es": "La pelea sigue hasta que el campamento la declara pareja y ambos escupen polvo. Dividís el cucharón — pendenciero, pero sin muertes."
+        }
+      },
+      "fail": {
+        "goldDelta": -15,
+        "injuryRiskDelta": 0.25,
+        "reputationDelta": -1,
+        "reputationFaction": "ironhold",
+        "countersReset": ["duel_streak"],
+        "narrative": {
+          "en": "The herdlord's son fights like a well-fed ox and puts you in the dirt first. The camp drinks on his word, and you eat your pride with dry bread.",
+          "es": "El hijo del señor del rebaño pelea como un buey bien alimentado y te tira al polvo primero. El campamento bebe bajo su palabra, y te comés el orgullo con pan seco."
+        }
+      }
+    }
+  },
+  {
+    "id": "duel_river_boat",
+    "type": "minigame",
+    "subtype": "duel_strike",
+    "minAge": 18,
+    "maxAge": 99,
+    "weight": 6,
+    "primaryStat": "dexterity",
+    "narrative": {
+      "en": "A river barge, a locked blade, and spectators who hold the rail. Every lunge rocks the deck, and below the planking the current runs cold and quick. First to fall in the drink loses — and owes the ferryman double.",
+      "es": "Una barcaza de río, una hoja trabada y espectadores que se aferran a la borda. Cada estocada mece la cubierta, y bajo los tablones la corriente corre fría y rápida. El primero que caiga al agua pierde — y le debe al barquero el doble."
+    },
+    "cards": [
+      {
+        "id": "ride_the_tilt",
+        "icon": "footprints",
+        "label": {
+          "en": "Ride the tilt and close",
+          "es": "Montar la inclinación y acercarte"
+        }
+      },
+      {
+        "id": "grab_the_gunnel",
+        "icon": "hand",
+        "label": {
+          "en": "Grab the gunwale, stay sharp",
+          "es": "Agarrarte de la borda y mantenerte firme"
+        }
+      },
+      {
+        "id": "splash_and_slip",
+        "icon": "wind",
+        "label": {
+          "en": "Feint and splash the deck",
+          "es": "Amagar y salpicar la cubierta"
+        }
+      },
+      {
+        "id": "lunge_for_the_keel",
+        "icon": "sword",
+        "label": {
+          "en": "Lunge as she heels over",
+          "es": "Estocar cuando se ladea"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.42,
+      "statInfluence": {
+        "dexterity": 0.014,
+        "intelligence": 0.003
+      },
+      "cardModifiers": {
+        "lunge_for_the_keel": {
+          "winChanceDelta": 0.09,
+          "critChanceDelta": 0.04
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "dexterity": 2
+        },
+        "goldDelta": 180,
+        "fameDelta": 6,
+        "countersDelta": {
+          "battles_won": 1,
+          "duels_won": 1,
+          "clutch_duels": 1
+        },
+        "narrative": {
+          "en": "You time the swell better than the deckhand. Mid-lunge the barge heels, your blade finds the empty inch in his guard, and he follows his foot into the river. The crowd fishes him out laughing, and the prize purse lands at your boots.",
+          "es": "Cronometrás la crecida mejor que el marinero. A media estocada la barcaza se ladea, tu hoja encuentra el hueco vacío en su guardia, y él sigue a su pie hasta el río. La multitud lo saca entre risas, y la bolsa del premio cae a tus botas."
+        }
+      },
+      "success": {
+        "goldDelta": 70,
+        "fameDelta": 3,
+        "countersDelta": {
+          "battles_won": 1,
+          "duels_won": 1
+        },
+        "narrative": {
+          "en": "A clean touch on the shoulder, and he steps back — a hair from the rail. He yields dripping sweat, and the ferryman pays out with a wary nod.",
+          "es": "Un toque limpio en el hombro, y él retrocede — a un pelo de la borda. Se rinde chorreando sudor, y el barquero paga con un gesto receloso."
+        }
+      },
+      "partial": {
+        "goldDelta": 15,
+        "injuryRiskDelta": 0.1,
+        "countersReset": ["duel_streak"],
+        "narrative": {
+          "en": "Wet planks and a rocking deck turn the duel into a stumble-and-lunge farce. The barge arrives before a victor does; the ferryman splits the pot and calls it a draw.",
+          "es": "Los tablones mojados y la cubierta que se mece convierten el duelo en una farsa de tropezones y estocadas. La barcaza llega antes que un vencedor; el barquero divide el pozo y lo declara empate."
+        }
+      },
+      "fail": {
+        "goldDelta": -40,
+        "reputationDelta": -1,
+        "reputationFaction": "greywater",
+        "injuryRiskDelta": 0.2,
+        "countersReset": ["duel_streak"],
+        "narrative": {
+          "en": "You mis-time the rock and step back off the plank. The river is quick and cold, and the crowd's laughter follows you all the way to shore.",
+          "es": "Cronometrás mal el balanceo y retrocedés fuera del tablón. El río es rápido y frío, y la risa de la multitud te sigue hasta la orilla."
+        }
+      }
+    }
+  },
+  {
+    "id": "duel_snowfield",
+    "type": "minigame",
+    "subtype": "duel_strike",
+    "minAge": 18,
+    "maxAge": 99,
+    "weight": 6,
+    "primaryStat": "dexterity",
+    "narrative": {
+      "en": "A duel in thigh-deep snow, at the edge of a field where a winter army once camped. Each plant of a boot is a decision; the footing is the true opponent. The challenger's blade gleams with the same cold as the drifts.",
+      "es": "Un duelo en nieve hasta el muslo, al borde de un campo donde acampó un ejército de invierno. Cada paso que hundís es una decisión; el terreno es el verdadero rival. La hoja de tu retador brilla con el mismo frío que la nieve."
+    },
+    "cards": [
+      {
+        "id": "plant_wide",
+        "icon": "footprints",
+        "label": {
+          "en": "Plant wide, hold ground",
+          "es": "Plantarte con las piernas abiertas y aguantar"
+        }
+      },
+      {
+        "id": "flurry_feint",
+        "icon": "wind",
+        "label": {
+          "en": "Flurry of snow-feints",
+          "es": "Ráfaga de amagues en la nieve"
+        }
+      },
+      {
+        "id": "drag_into_drift",
+        "icon": "hand",
+        "label": {
+          "en": "Drag him into the drift",
+          "es": "Arrastrarlo hacia el banco de nieve"
+        }
+      },
+      {
+        "id": "wrist_short_blade",
+        "icon": "sword",
+        "label": {
+          "en": "Short blade, tight wrist",
+          "es": "Hoja corta, muñeca firme"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.42,
+      "statInfluence": {
+        "dexterity": 0.012,
+        "constitution": 0.005
+      },
+      "cardModifiers": {
+        "flurry_feint": {
+          "winChanceDelta": 0.08,
+          "critChanceDelta": 0.04
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "dexterity": 2
+        },
+        "goldDelta": 200,
+        "fameDelta": 6,
+        "countersDelta": {
+          "battles_won": 1,
+          "duels_won": 1,
+          "clutch_duels": 1
+        },
+        "narrative": {
+          "en": "You use the drifts as walls, turning the snowfield into your own arena. His lunge dies in the powder, yours lands clean on the collar, and he has to sit down in the snow he was chasing. The camp wraps you both in blankets and declares you the winter.",
+          "es": "Usás los bancos de nieve como muros, convirtiendo el campo nevado en tu propia arena. Su estocada muere en el polvo, la tuya aterriza limpia en el cuello, y tiene que sentarse en la nieve que perseguía. El campamento abriga a ambos con mantas y te declara el invierno."
+        }
+      },
+      "success": {
+        "goldDelta": 80,
+        "fameDelta": 3,
+        "countersDelta": {
+          "battles_won": 1,
+          "duels_won": 1
+        },
+        "narrative": {
+          "en": "Your blade finds his shoulder before his boots find any purchase. He yields with a nod that turns his whole shiver into a bow.",
+          "es": "Tu hoja encuentra su hombro antes de que sus botas encuentren apoyo. Cede con un gesto que convierte su temblor en una reverencia."
+        }
+      },
+      "partial": {
+        "injuryRiskDelta": 0.1,
+        "countersReset": ["duel_streak"],
+        "narrative": {
+          "en": "The cold plays honest ref: you slide past each other, both blades miss, and a frost-slick patch steals the finish. The judges call it too cold to continue.",
+          "es": "El frío hace de árbitro honesto: se deslizan uno frente al otro, ambas hojas fallan, y una franja de escarcha roba el final. Los jueces la dan por demasiado fría para continuar."
+        }
+      },
+      "fail": {
+        "goldDelta": -20,
+        "injuryRiskDelta": 0.25,
+        "reputationDelta": -1,
+        "reputationFaction": "ironhold",
+        "countersReset": ["duel_streak"],
+        "narrative": {
+          "en": "Your foot finds a hidden drift and you go down face-first. He stands over you, courteous, and offers a hand that stings more than the cold.",
+          "es": "Tu pie encuentra un banco de nieve escondido y caés de cara. Se para sobre vos, cortés, y te ofrece una mano que pica más que el frío."
+        }
+      }
+    }
+  },
+  {
+    "id": "duel_bridge_champion",
+    "type": "minigame",
+    "subtype": "tournament",
+    "minAge": 18,
+    "maxAge": 99,
+    "weight": 5,
+    "primaryStat": "strength",
+    "narrative": {
+      "en": "The toll-bridge champion has defended the span nine years running, and the law ends where his tollbox begins. Pass without paying, and you pass through his steel. The tournament herald swears the bridge's planking remembers every duel it has carried.",
+      "es": "El campeón del puente defiende el paso nueve años seguidos, y la ley termina donde empieza su caseta de peaje. Para cruzar sin pagar, hay que pasar por su acero. El heraldo del torneo jura que los tablones del puente recuerdan cada duelo que llevaron."
+    },
+    "cards": [
+      {
+        "id": "shield_ram",
+        "icon": "shield",
+        "label": {
+          "en": "Ram the shield, close the bridge",
+          "es": "Embestir con el escudo y cerrar el paso"
+        }
+      },
+      {
+        "id": "sweep_the_planks",
+        "icon": "arrow-down",
+        "label": {
+          "en": "Sweep his legs off the planks",
+          "es": "Barrerle las piernas de los tablones"
+        }
+      },
+      {
+        "id": "the_press",
+        "icon": "sword",
+        "label": {
+          "en": "Press him back to the tollbox",
+          "es": "Presionarlo hasta la caseta"
+        }
+      },
+      {
+        "id": "bait_the_bridge",
+        "icon": "fist",
+        "label": {
+          "en": "Bait him to the very edge",
+          "es": "Provocarlo hasta el mismísimo borde"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.4,
+      "statInfluence": {
+        "strength": 0.012,
+        "dexterity": 0.005
+      },
+      "cardModifiers": {
+        "bait_the_bridge": {
+          "winChanceDelta": 0.09,
+          "critChanceDelta": 0.05
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "strength": 2
+        },
+        "goldDelta": 280,
+        "fameDelta": 8,
+        "reputationDelta": 3,
+        "reputationFaction": "crownguard",
+        "countersDelta": {
+          "battles_won": 1,
+          "duels_won": 1,
+          "tournaments_won": 1
+        },
+        "narrative": {
+          "en": "You bait him inch by inch to the upstream edge, then close the gap in two strides. His back foot touches air, his blade swings wide, and the bridge — and the tollbox — are yours. The herald writes your name above the arch.",
+          "es": "Lo provocás centímetro a centímetro hasta el borde contra la corriente, y luego cerrás la distancia en dos zancadas. Su pie trasero toca el aire, su hoja se abre de más, y el puente — y la caseta — son tuyos. El heraldo escribe tu nombre sobre el arco."
+        }
+      },
+      "success": {
+        "goldDelta": 120,
+        "fameDelta": 4,
+        "reputationDelta": 1,
+        "reputationFaction": "crownguard",
+        "countersDelta": {
+          "battles_won": 1,
+          "duels_won": 1
+        },
+        "narrative": {
+          "en": "A duel worth the toll. You beat his guard clean and he steps aside with a bow. The coin stays in your purse and his box stays open — out of respect.",
+          "es": "Un duelo digno del peaje. Vencés su guardia con limpieza y se hace a un lado con una reverencia. La moneda se queda en tu bolsa y su caseta queda abierta — por respeto."
+        }
+      },
+      "partial": {
+        "goldDelta": 20,
+        "injuryRiskDelta": 0.1,
+        "countersReset": ["duel_streak"],
+        "narrative": {
+          "en": "You cross but not cleanly — a toe-tap on the line the judges call a draw. The champion lets you pass under the arch, and the tollbox keeps your coin as the peace price.",
+          "es": "Cruzas pero no limpio — un roce de punta de pie en la línea que los jueces llaman empate. El campeón te deja pasar bajo el arco, y la caseta se queda con tu moneda como precio de la paz."
+        }
+      },
+      "fail": {
+        "goldDelta": -20,
+        "injuryRiskDelta": 0.25,
+        "reputationDelta": -2,
+        "reputationFaction": "crownguard",
+        "countersReset": ["duel_streak"],
+        "narrative": {
+          "en": "Nine years of tolls beat ten of technique. He reads your opening, answers it, and sends you over the rail with a splash the whole bridge shares. Crossing, then, is paid twice.",
+          "es": "Nueve años de peajes vencen diez de técnica. Lee tu apertura, la responde, y te manda sobre la baranda con un chapuzón que todo el puente comparte. Cruzar, entonces, se paga dos veces."
+        }
+      }
+    }
+  },
+  {
+    "id": "negotiation_mine_treaty",
+    "type": "minigame",
+    "subtype": "negotiation",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "primaryStat": "charisma",
+    "narrative": {
+      "en": "Two mining captains share one disputed vein, and their foremen have already drawn picks. The overseer of the mountain sends for you: settle the split with words before steel does. Both captains have pride, and both have pockets just deep enough to listen.",
+      "es": "Dos capitanas de mina comparten una veta disputada, y sus capataces ya desenvainaron los picos. La intendente de la montaña te manda llamar: resolvé el reparto con palabras antes de que lo haga el acero. Ambas capitanas tienen orgullo, y ambas tienen los bolsillos justamente llenos como para escuchar."
+    },
+    "cards": [
+      {
+        "id": "hear_both_claims",
+        "icon": "heart-handshake",
+        "label": {
+          "en": "Hear both claims first",
+          "es": "Escuchar primero ambos reclamos"
+        }
+      },
+      {
+        "id": "quote_the_survey",
+        "icon": "brain",
+        "label": {
+          "en": "Quote the old surveyor's map",
+          "es": "Citar el mapa del viejo agrimensor"
+        }
+      },
+      {
+        "id": "split_the_face",
+        "icon": "coins",
+        "label": {
+          "en": "Split the vein down the middle",
+          "es": "Dividir la veta por el medio"
+        }
+      },
+      {
+        "id": "walk_the_pick",
+        "icon": "door-open",
+        "label": {
+          "en": "Risk walking out mid-deal",
+          "es": "Arriesgarte a irte a mitad del trato"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.43,
+      "statInfluence": {
+        "charisma": 0.012,
+        "intelligence": 0.005
+      },
+      "cardModifiers": {
+        "quote_the_survey": {
+          "winChanceDelta": 0.09
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "charisma": 2
+        },
+        "goldDelta": 200,
+        "fameDelta": 5,
+        "reputationDelta": 3,
+        "reputationFaction": "thornwood",
+        "countersDelta": {
+          "negotiation_streak": 1,
+          "negotiations_won": 1
+        },
+        "narrative": {
+          "en": "You set the surveyor's map between their fists and the vein draws its own line. Both captains sign the same treaty, share a cup at the same fire, and the mountain pays you a finder's share in rare ore. The overseer calls it the cleanest split in a decade.",
+          "es": "Ponés el mapa del agrimensor entre sus puños y la veta se traza su propia línea. Ambas capitanas firman el mismo tratado, comparten una copa en el mismo fuego, y la montaña te paga una comisión en mineral raro. La intendente lo llama el reparto más limpio de la década."
+        }
+      },
+      "success": {
+        "goldDelta": 80,
+        "fameDelta": 2,
+        "reputationDelta": 1,
+        "reputationFaction": "thornwood",
+        "countersDelta": {
+          "negotiation_streak": 1,
+          "negotiations_won": 1
+        },
+        "narrative": {
+          "en": "A fair split, signed before either foreman swings. The captains shake over the treaty, and a modest share of the first cartload finds your saddlebag.",
+          "es": "Un reparto justo, firmado antes de que ningún capataz desenvaine. Las capitanas se dan la mano sobre el tratado, y una modesta parte de la primera carretada encuentra tu alforja."
+        }
+      },
+      "partial": {
+        "goldDelta": 20,
+        "countersReset": ["negotiation_streak"],
+        "narrative": {
+          "en": "The treaty holds, but only after you give both sides a little more than they asked. Everyone walks away grumbling in harmony — which is to say, it worked.",
+          "es": "El tratado se sostiene, pero solo después de darle a ambos un poco más de lo que pidieron. Todos se van refunfuñando en armonía — lo que quiere decir que funcionó."
+        }
+      },
+      "fail": {
+        "goldDelta": -40,
+        "reputationDelta": -2,
+        "reputationFaction": "thornwood",
+        "countersReset": ["negotiation_streak"],
+        "narrative": {
+          "en": "Your boundary line lands on a claim both captains hold sacred. They sign each other's treaty instead of yours, and the mountain's goodwill slopes away from your side.",
+          "es": "Tu línea divisoria cae sobre un reclamo que ambas capitanas consideran sagrado. Firman el tratado entre ellas en lugar del tuyo, y la buena voluntad de la montaña se aleja de tu lado."
+        }
+      }
+    }
+  },
+  {
+    "id": "brawl_mud_wrestling",
+    "type": "minigame",
+    "subtype": "brawl",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 5,
+    "primaryStat": "strength",
+    "narrative": {
+      "en": "A river-festival mud pit, a champion with a woven reed crown, and a crowd that has already picked its favorite. The rules are simple: pin your opponent, or be pinned. The mud does not care who is famous.",
+      "es": "Un pozo de barro del festival del río, una campeona con corona de juncos tejidos y una multitud que ya eligió a su favorita. Las reglas son simples: inmovilizá a tu rival, o que te inmovilicen. Al barro no le importa quién es famoso."
+    },
+    "cards": [
+      {
+        "id": "grip_high",
+        "icon": "hand",
+        "label": {
+          "en": "Grip high, break the crown",
+          "es": "Agarrar arriba y romper la corona"
+        }
+      },
+      {
+        "id": "trip_into_river",
+        "icon": "droplets",
+        "label": {
+          "en": "Trip her into the river edge",
+          "es": "Hacerla tropezar hacia el borde del río"
+        }
+      },
+      {
+        "id": "play_the_crowd",
+        "icon": "sparkles",
+        "label": {
+          "en": "Play the crowd and steal the moment",
+          "es": "Jugar a la multitud y robar la atención"
+        }
+      },
+      {
+        "id": "exhaust_and_pin",
+        "icon": "clock",
+        "label": {
+          "en": "Let her spend, then pin",
+          "es": "Dejarla agotarse y luego inmovilizar"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.42,
+      "statInfluence": {
+        "strength": 0.012,
+        "constitution": 0.006
+      },
+      "cardModifiers": {
+        "trip_into_river": {
+          "winChanceDelta": 0.09
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "strength": 2
+        },
+        "goldDelta": 100,
+        "fameDelta": 5,
+        "countersDelta": {
+          "battles_won": 1,
+          "duels_won": 1,
+          "brawls_won": 1
+        },
+        "narrative": {
+          "en": "You let her burn herself chasing the crowd's roar, then take her shoulders and pin her in a single splash. The festival crowns a new champion — you — with the same woven reeds, and the mud is the only thing keeping everyone humble.",
+          "es": "La dejás agotarse persiguiendo el rugido de la multitud, y después tomás sus hombros y la inmovilizás en una sola salpicadura. El festival corona a una nueva campeona — a vos — con el mismo junco tejido, y el barro es lo único que mantiene humilde a todos."
+        }
+      },
+      "success": {
+        "goldDelta": 40,
+        "fameDelta": 2,
+        "countersDelta": {
+          "battles_won": 1,
+          "duels_won": 1
+        },
+        "narrative": {
+          "en": "A clean takedown in the shallows. The champion hands you the title with a nod and a faceful of mud — the friendliest insult the festival has.",
+          "es": "Una derrota limpia en la orilla. La campeona te entrega el título con un gesto y una cara llena de barro — el insulto más amistoso del festival."
+        }
+      },
+      "partial": {
+        "injuryRiskDelta": 0.12,
+        "countersReset": ["duel_streak"],
+        "narrative": {
+          "en": "You trade pins until the mud is the only winner. The judges call it even, and the festival splits the purse between you and a good laugh.",
+          "es": "Intercambiás inmovilizaciones hasta que el barro es el único ganador. Los jueces lo declaran parejo, y el festival divide la bolsa entre los dos y una buena carcajada."
+        }
+      },
+      "fail": {
+        "goldDelta": -15,
+        "injuryRiskDelta": 0.2,
+        "reputationDelta": -1,
+        "reputationFaction": "ironhold",
+        "countersReset": ["duel_streak"],
+        "narrative": {
+          "en": "The champion reads your weight in the first grasp and puts you in the mud like a sack of festival grain. The crowd's favorite wins, and your exit is slippery.",
+          "es": "La campeona lee tu peso en el primer agarre y te hunde en el barro como un costal de grano del festival. La favorita gana, y tu salida es resbalosa."
+        }
+      }
+    }
+  },
+  {
+    "id": "arcane_duel_rune_theft",
+    "type": "minigame",
+    "subtype": "arcane_duel",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 6,
+    "primaryStat": "intelligence",
+    "narrative": {
+      "en": "An arcane scholar claims a rune was stolen from her sanctum, and her accusation walks straight at you before a square full of witnesses. Arcane duel law is simple: the pattern that reads the other first, wins. Light answers light, and the rune decides who it truly belongs to.",
+      "es": "Una erudita arcana afirma que le robaron una runa de su sanctum, y su acusación camina derechito hacia vos frente a una plaza llena de testigos. La ley del duelo arcano es simple: el patrón que lee al otro primero, gana. La luz responde a la luz, y la runa decide a quién pertenece de verdad."
+    },
+    "cards": [
+      {
+        "id": "raise_true_sigil",
+        "icon": "wand",
+        "label": {
+          "en": "Raise your true sigil",
+          "es": "Levantar tu sigilo verdadero"
+        }
+      },
+      {
+        "id": "counter_weave",
+        "icon": "ban",
+        "label": {
+          "en": "Counter-weave the accusation",
+          "es": "Contratejer la acusación"
+        }
+      },
+      {
+        "id": "scatter_the_rune",
+        "icon": "hexagon",
+        "label": {
+          "en": "Scatter the rune's light wide",
+          "es": "Dispersar la luz de la runa"
+        }
+      },
+      {
+        "id": "chant_overlap",
+        "icon": "zap",
+        "label": {
+          "en": "Overlap your chant into hers",
+          "es": "Superponer tu cántico al suyo"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.43,
+      "statInfluence": {
+        "intelligence": 0.014,
+        "charisma": 0.003
+      },
+      "cardModifiers": {
+        "scatter_the_rune": {
+          "winChanceDelta": 0.08,
+          "critChanceDelta": 0.06
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "intelligence": 2
+        },
+        "goldDelta": 60,
+        "fameDelta": 6,
+        "reputationDelta": 3,
+        "reputationFaction": "arcanum",
+        "countersDelta": {
+          "battles_won": 1,
+          "duels_won": 1,
+          "arcane_duels_won": 1
+        },
+        "narrative": {
+          "en": "You scatter your light wide and read her pattern in the middle of the glare. The rune answers your sigil, not her claim, and reconstitutes over your palm. She bows, the square applauds, and the scholar's accusation dissolves into the evening air.",
+          "es": "Dispersás tu luz en abanico y leés su patrón en el centro del resplandor. La runa responde a tu sigilo, no a su reclamo, y se reconstituye sobre tu palma. Ella se inclina, la plaza aplaude, y la acusación de la erudita se disuelve en el aire de la tarde."
+        }
+      },
+      "success": {
+        "goldDelta": 50,
+        "fameDelta": 2,
+        "reputationDelta": 1,
+        "reputationFaction": "arcanum",
+        "countersDelta": {
+          "battles_won": 1,
+          "duels_won": 1
+        },
+        "narrative": {
+          "en": "Your pattern holds against hers and the counter-weave leaves the accusation in shreds. She withdraws the charge with a thin-lipped nod, and the square grows quiet in your favor.",
+          "es": "Tu patrón resiste el suyo y el contratejido deja la acusación en jirones. Retira el cargo con un gesto de labios finos, y la plaza se queda en silencio a tu favor."
+        }
+      },
+      "partial": {
+        "injuryRiskDelta": 0.08,
+        "countersReset": ["duel_streak"],
+        "narrative": {
+          "en": "The patterns cancel in a hiss of steam and neither light wins the square. She calls it a draw; the rune sits between you, still unclaimed, and the crowd goes home half-satisfied.",
+          "es": "Los patrones se anulan en un siseo de vapor y ninguna luz gana la plaza. Lo llama empate; la runa queda entre los dos, todavía sin dueño, y la multitud se va a casa a medio satisfacer."
+        }
+      },
+      "fail": {
+        "injuryRiskDelta": 0.2,
+        "reputationDelta": -2,
+        "reputationFaction": "arcanum",
+        "countersReset": ["duel_streak"],
+        "narrative": {
+          "en": "Her pattern reads yours before the first syllable leaves you. Your light buckles, the rune flies to her hand, and the square sees a thief confess under duress. The scholars' quarter remembers it for a full season.",
+          "es": "Su patrón lee el tuyo antes de que la primera sílaba salga de vos. Tu luz se dobla, la runa vuela a su mano, y la plaza ve a un ladrón confesar bajo presión. El barrio de los eruditos lo recuerda una temporada entera."
+        }
+      }
+    }
+  },
+  {
+    "id": "street_fight_market_scrub",
+    "type": "minigame",
+    "subtype": "street_fight",
+    "minAge": 16,
+    "maxAge": 99,
+    "weight": 7,
+    "primaryStat": "dexterity",
+    "narrative": {
+      "en": "A 'market accident' — a stall friend's cart tips, your change scatters, and in the confusion three practiced roughers go for your purse while 'helping' you clean up. The crowd watches but no one speaks. The play is always the same: don't get caught, and don't make a scene.",
+      "es": "Un 'accidente de mercado' — el carro de tu amigo del puesto se vuelca, tu cambio se desparrama, y en la confusión tres matones de oficio van por tu bolsa mientras 'te ayudan' a recoger. La multitud mira pero nadie dice nada. La jugada es siempre la misma: no te dejes atrapar y no armes escándalo."
+    },
+    "cards": [
+      {
+        "id": "duck_under_stall",
+        "icon": "footprints",
+        "label": {
+          "en": "Duck under the stall, keep your coins",
+          "es": "Agacharte bajo el puesto y guardar tus monedas"
+        }
+      },
+      {
+        "id": "catch_the_wrist",
+        "icon": "hand",
+        "label": {
+          "en": "Catch a wrist mid-grab",
+          "es": "Atrapar una muñeca a mitad de robo"
+        }
+      },
+      {
+        "id": "scatter_the_trays",
+        "icon": "wind",
+        "label": {
+          "en": "Send the trays flying",
+          "es": "Hacer volar las bandejas"
+        }
+      },
+      {
+        "id": "do_magic",
+        "icon": "coins",
+        "label": {
+          "en": "Make the change 'vanish' on purpose",
+          "es": "Hacer que el cambio 'desaparezca' a propósito"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.4,
+      "statInfluence": {
+        "dexterity": 0.012,
+        "strength": 0.004
+      },
+      "cardModifiers": {
+        "scatter_the_trays": {
+          "winChanceDelta": 0.1
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "dexterity": 2
+        },
+        "goldDelta": 150,
+        "fameDelta": 4,
+        "countersDelta": {
+          "battles_won": 1,
+          "duels_won": 1,
+          "street_fights_won": 1
+        },
+        "narrative": {
+          "en": "You spin through the chaos, palm your own change, and scatter three trays under the roughers' heels. The crowd suddenly sees the whole scam, and the 'helpers' leave over the trestles. The stall keeper splits the day's take with you, and the market learns your name — the wrong way to test it.",
+          "es": "Girás en el caos, escondés tu propio cambio y desparramás tres bandejas bajo los talones de los matones. La multitud ve la estafa completa de golpe, y los 'ayudantes' se van por encima de los tablones. El dueño del puesto comparte contigo las ganancias del día, y el mercado aprende tu nombre — del modo equivocado, no para probarlo."
+        }
+      },
+      "success": {
+        "goldDelta": 60,
+        "fameDelta": 1,
+        "countersDelta": {
+          "battles_won": 1,
+          "duels_won": 1
+        },
+        "narrative": {
+          "en": "You catch the wrist with the coin already halfway out. The rougher mutters a 'kindness' about the market and backs off, and the crowd pretends it saw nothing — for you, this time.",
+          "es": "Atrapás la muñeca con la moneda ya a mitad de camino afuera. El matón murmura una 'gentileza' sobre el mercado y retrocede, y la multitud finge no ver nada — esta vez, a tu favor."
+        }
+      },
+      "partial": {
+        "goldDelta": -20,
+        "injuryRiskDelta": 0.12,
+        "countersReset": ["duel_streak"],
+        "narrative": {
+          "en": "You keep most of your coins but the escape is clumsy: a torn sleeve, a scraped knuckle, and two of them laughing as you slip out between the stalls with your purse half-ransacked.",
+          "es": "Guardás la mayor parte de tus monedas pero la huida es torpe: una manga rota, un nudillo raspado, y dos de ellos riéndose mientras te escapás entre los puestos con la bolsa a medio vaciar."
+        }
+      },
+      "fail": {
+        "goldDelta": -80,
+        "injuryRiskDelta": 0.3,
+        "reputationDelta": -1,
+        "reputationFaction": "ironhold",
+        "countersReset": ["duel_streak"],
+        "narrative": {
+          "en": "The 'accident' is staged on both sides of you. Before you find your footing, the purse is gone, the crowd is gone, and a stall keeper is staring at a half-empty day's till.",
+          "es": "El 'accidente' está montado a ambos lados tuyos. Antes de encontrar apoyo, la bolsa no está, la multitud se fue, y un dueño de puesto mira la mitad vacía de la caja del día."
+        }
+      }
+    }
+  },
+  {
+    "id": "tournament_royal_roster",
+    "type": "minigame",
+    "subtype": "tournament",
+    "minAge": 18,
+    "maxAge": 99,
+    "weight": 5,
+    "primaryStat": "strength",
+    "narrative": {
+      "en": "A royal roster bout: one duel to win a name in the crown's tournament elite, fought before the king's own favored stand. Rumor says the king watches for grace as much as steel — a loser who lands with dignity may out-earn a winner who lands with cruelty. The herald opens the lists.",
+      "es": "Un combate del padrón real: un duelo para ganarse un nombre entre la élite del torneo de la corona, peleado frente a la tribuna favorita del rey. El rumor dice que el rey mira tanto la elegancia como el acero — un perdedor que cae con dignidad puede ganar más que un vencedor que cae con crueldad. El heraldo abre las listas."
+    },
+    "cards": [
+      {
+        "id": "favor_tap",
+        "icon": "crown",
+        "label": {
+          "en": "Dedicate the bout with a favor",
+          "es": "Dedicar el combate con un favor"
+        }
+      },
+      {
+        "id": "read_royal_eye",
+        "icon": "eye",
+        "label": {
+          "en": "Read the royal eye first",
+          "es": "Leer primero la mirada real"
+        }
+      },
+      {
+        "id": "fierce_hearted",
+        "icon": "flame",
+        "label": {
+          "en": "Fight fierce but clean",
+          "es": "Pelear feroz pero limpio"
+        }
+      },
+      {
+        "id": "champion_toss",
+        "icon": "sword",
+        "label": {
+          "en": "End it in one clean throw",
+          "es": "Terminarlo con una llave limpia"
+        }
+      }
+    ],
+    "resolution": {
+      "type": "weighted_hidden_match",
+      "baseWinChance": 0.4,
+      "statInfluence": {
+        "strength": 0.012,
+        "dexterity": 0.005
+      },
+      "cardModifiers": {
+        "read_royal_eye": {
+          "winChanceDelta": 0.08,
+          "critChanceDelta": 0.04
+        }
+      }
+    },
+    "outcomes": {
+      "critical": {
+        "statDeltas": {
+          "strength": 2
+        },
+        "goldDelta": 320,
+        "fameDelta": 8,
+        "reputationDelta": 4,
+        "reputationFaction": "crownguard",
+        "countersDelta": {
+          "battles_won": 1,
+          "duels_won": 1,
+          "tournaments_won": 1
+        },
+        "narrative": {
+          "en": "You read the king's eye on your opening, fight fierce and clean, and end the bout with the gallant's throw that empties the stands of a breath. The king rises, your name is read into the roster, and the gold hits your boot before the dust does. The crowd chants it twice so the herald can write it down.",
+          "es": "Leés la mirada del rey en tu apertura, peleás feroz pero limpio, y terminás el combate con la llave del caballero que les quita el aliento a las tribunas. El rey se pone de pie, tu nombre es leído en el padrón, y el oro golpea tu bota antes que el polvo. La multitud lo canta dos veces para que el heraldo pueda escribirlo."
+        }
+      },
+      "success": {
+        "goldDelta": 140,
+        "fameDelta": 4,
+        "reputationDelta": 2,
+        "reputationFaction": "crownguard",
+        "countersDelta": {
+          "battles_won": 1,
+          "duels_won": 1
+        },
+        "narrative": {
+          "en": "A bout the court will quote: clean, fierce, and ended with respect. The roster takes your name, and the king's dwarf cheers you from the rail — the surest sign the royal house noticed.",
+          "es": "Un combate que la corte citará: limpio, feroz y terminado con respeto. El padrón toma tu nombre, y el enano del rey te vitorea desde la baranda — la señal más segura de que la casa real te vio."
+        }
+      },
+      "partial": {
+        "goldDelta": 40,
+        "injuryRiskDelta": 0.1,
+        "fameDelta": 1,
+        "countersReset": ["duel_streak"],
+        "narrative": {
+          "en": "A draw called before the crowd is ready — neither blade took the point cleanly. The judges wave you off the list with a nod, and the king's gaze passes like weather.",
+          "es": "Un empate declarado antes de que la multitud esté lista — ninguna hoja tomó el punto con limpieza. Los jueces te sacan de la lista con un gesto, y la mirada del rey pasa como el clima."
+        }
+      },
+      "fail": {
+        "goldDelta": -20,
+        "injuryRiskDelta": 0.25,
+        "fameDelta": -2,
+        "reputationDelta": -2,
+        "reputationFaction": "crownguard",
+        "countersReset": ["duel_streak"],
+        "narrative": {
+          "en": "Your opening is read like a child's handwriting. The roster takes your opponent's name, and you leave the lists to polite applause and a herald already rehearsing the next bout.",
+          "es": "Tu apertura se lee como la letra de un niño. El padrón toma el nombre de tu rival, y salís de las listas entre aplausos educados y un heraldo que ya ensaya el próximo combate."
+        }
+      }
+    }
   }
 ]
