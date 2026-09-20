@@ -1761,6 +1761,7 @@
         },
         "tag": "Strategic",
         "rarity": "common",
+        "goldDelta": -10,
         "staminaDelta": 20,
         "statDeltas": {
           "constitution": 1
@@ -1859,6 +1860,7 @@
         "rarity": "volatile",
         "staminaDelta": 45,
         "healthDelta": 5,
+        "injuryRiskDelta": 0.06,
         "statDeltas": {
           "constitution": 2
         },
@@ -2136,7 +2138,7 @@
           "es": "Atrapar una estrella fugaz y convertirla en deseo"
         },
         "tag": "Cocky",
-        "rarity": "volatile",
+        "rarity": "uncommon",
         "staminaDelta": 30,
         "healthDelta": 4,
         "statDeltas": {
