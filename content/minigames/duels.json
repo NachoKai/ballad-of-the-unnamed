@@ -2018,7 +2018,7 @@
       },
       {
         "id": "mirror_stance",
-        "icon": "moon",
+        "icon": "eye",
         "label": {
           "en": "Mirror their stance",
           "es": "Copiar su postura"
